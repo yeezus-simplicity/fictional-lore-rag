@@ -1,0 +1,25 @@
+# rag-kb 数据管道依赖
+# 安装：pip install -i https://pypi.org/simple -r requirements.txt
+# 注意：本环境 pip 默认清华镜像会导致解析失败，必须显式指定官方源
+
+# --- 抓取 ---
+requests>=2.34# HTTP 抓取
+beautifulsoup4>=4.15          # HTML 辅助解析
+lxml>=6.1.1                   # HTML/XML 解析（主力）
+html5lib>=1.1                 # 容错解析（备用）
+
+# --- 数据处理 ---
+pandas>=3.0.5
+
+# --- 数据库 ---
+psycopg2-binary>=2.9.13       # PostgreSQL 驱动
+sqlalchemy>=2.1.2             # ORM
+
+# --- 后续 M2/M3 需补充 ---
+# httpx>=0.28.1               # 异步 HTTP
+# FlagEmbedding             # bge-m3 embedding / reranker
+# sentence-transformers      # 文本编码
+# torch                      # 需匹配 CUDA 12.x
+# pgvector                   # 向量扩展（通过 docker-compose 装）
+# langgraph                  # M5 Agent 编排
+# prometheus-client          # M7 指标埋点

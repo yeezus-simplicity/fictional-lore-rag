@@ -43,3 +43,6 @@ tools/package-lock.json
 .vscode/
 .DS_Store
 Thumbs.db
+
+# ---- 模型权重（体积大，用 retrieval/fetch_model.py 重下）----
+models/

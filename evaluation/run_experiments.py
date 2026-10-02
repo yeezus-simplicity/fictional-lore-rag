@@ -152,12 +152,13 @@ def build_dense(corpus, verbose=True):
 
 
 def build_embedder():
+    """构建 embedder（用本地已下载模型，避免 HF 网络请求）。"""
     from dense import DenseEmbedder
-    emb = DenseEmbedder(str(MODEL_DIR) if MODEL_DIR.exists() else "BAAI/bge-m3")
+    emb = DenseEmbedder()          # 内部会优先解析 models/ 下的本地目录
     if emb.model is None:
         print(f"  embedder 不可用：{emb._load_error}")
         return None
-    print(f"  embedder: {emb.info()}")
+    print(f"  embedder: {emb.backend} | {emb.device} | dim={emb.dim}")
     return emb
 
 

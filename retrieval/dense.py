@@ -62,12 +62,24 @@ def cuda_available() -> bool:
     return torch.cuda.is_available()
 
 
+def resolve_model_path(model_name: str = MODEL_NAME) -> str:
+    """解析模型来源：**优先本地已下载目录**，其次 HF 名。
+
+    ★ 本环境 huggingface.co 被拦（502），必须用 fetch_model.py
+      下载到 models/ 后离线加载。直接用 HF 名会触发网络请求并失败。
+    """
+    local = ROOT / "models" / model_name.replace("/", "_")
+    if (local / "config.json").exists():
+        return str(local)
+    return model_name
+
+
 class DenseEmbedder:
     """bge-m3 embedding（fp16 优先，显存不足时回退 fp32/CPU）。"""
 
-    def __init__(self, model_name: str = MODEL_NAME,
+    def __init__(self, model_name: Optional[str] = None,
                  device: Optional[str] = None):
-        self.model_name = model_name
+        self.model_name = model_name or resolve_model_path()
         self.model = None
         self.device = device or ("cuda" if cuda_available() else "cpu")
         self.dim = MODEL_DIM
@@ -98,7 +110,11 @@ class DenseEmbedder:
                     continue
             self.model.max_seq_length = MAX_SEQ_LEN
             self.backend = f"sentence-transformers/{self.model_name}"
-            self.dim = self.model.get_sentence_embedding_dimension()
+            # ★ ST 6.x 改名为 get_embedding_dimension，旧名会发 FutureWarning
+            if hasattr(self.model, "get_embedding_dimension"):
+                self.dim = self.model.get_embedding_dimension()
+            else:
+                self.dim = self.model.get_sentence_embedding_dimension()
             try:
                 self.backend += f"/{self.model.dtype}"
             except Exception:

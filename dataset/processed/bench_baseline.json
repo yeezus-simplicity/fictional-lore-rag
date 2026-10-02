@@ -1,0 +1,1317 @@
+{
+  "v0_bm25": {
+    "name": "v0_bm25",
+    "config": {
+      "retrieval": "BM25 only",
+      "rerank": false,
+      "fusion": null,
+      "generation": "oracle"
+    },
+    "n_items": 176,
+    "answer": {
+      "n": 176,
+      "overall_mean": 1.0,
+      "by_type": {
+        "T1": {
+          "n": 40,
+          "mean": 1.0
+        },
+        "T2": {
+          "n": 30,
+          "mean": 1.0
+        },
+        "T3": {
+          "n": 25,
+          "mean": 1.0
+        },
+        "T4": {
+          "n": 25,
+          "mean": 1.0
+        },
+        "T5": {
+          "n": 21,
+          "mean": 1.0
+        },
+        "T6": {
+          "n": 20,
+          "mean": 1.0
+        },
+        "T7": {
+          "n": 15,
+          "mean": 1.0
+        }
+      },
+      "reason_distribution": {
+        "full": 110,
+        "exact_contained": 60,
+        "exact": 6
+      },
+      "accuracy": 1.0
+    },
+    "retrieval": {
+      "n_cases": 46,
+      "recall@1": 0.1522,
+      "precision@1": 0.1522,
+      "hit@1": 0.1522,
+      "ndcg@1": 0.1522,
+      "recall@3": 0.3261,
+      "precision@3": 0.1087,
+      "hit@3": 0.3261,
+      "ndcg@3": 0.2534,
+      "recall@5": 0.5272,
+      "precision@5": 0.1087,
+      "hit@5": 0.5435,
+      "ndcg@5": 0.3371,
+      "recall@10": 0.8098,
+      "precision@10": 0.0826,
+      "hit@10": 0.8261,
+      "ndcg@10": 0.428,
+      "mrr": 0.3223,
+      "stand_recall@1": 0.6723,
+      "stand_recall@3": 0.7181,
+      "stand_recall@5": 0.725
+    },
+    "abstain": {
+      "n_abstain_cases": 20,
+      "abstain_rate": 1.0,
+      "hallucination_rate": 0.0,
+      "empty_rate": 0.0
+    },
+    "route_accuracy": 0.8352,
+    "route_detail": [
+      {
+        "qid": "T1-001",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T1-002",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T1-003",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T1-004",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T1-005",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T1-006",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T1-007",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T1-008",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T1-009",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T1-010",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T1-011",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T1-012",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T1-013",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T1-014",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T1-015",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T1-016",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T1-017",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T1-018",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T1-019",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T1-020",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T1-021",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T1-022",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T1-023",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T1-024",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T1-025",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T1-026",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T1-027",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T1-028",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T1-029",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T1-030",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T1-031",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T1-032",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T1-033",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T1-034",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T1-035",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T1-036",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T1-037",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T1-038",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T1-039",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T1-040",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T2-001",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T2-002",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T2-003",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T2-004",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T2-005",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T2-006",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T2-007",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T2-008",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T2-009",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T2-010",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T2-011",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T2-012",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T2-013",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T2-014",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T2-015",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T2-016",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T2-017",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T2-018",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T2-019",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T2-020",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T2-021",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T2-022",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T2-023",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T2-024",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T2-025",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T2-026",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T2-027",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T2-028",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T2-029",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T2-030",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T3-001",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T3-002",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T3-003",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T3-004",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T3-005",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T3-006",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T3-007",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T3-008",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T3-009",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T3-010",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T3-011",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T3-012",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T3-013",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T3-014",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T3-015",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T3-016",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T3-017",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T3-018",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T3-019",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T3-020",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T3-021",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T3-022",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T3-023",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T3-024",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T3-025",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T4-001",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic",
+        "ok": true
+      },
+      {
+        "qid": "T4-002",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic",
+        "ok": true
+      },
+      {
+        "qid": "T4-003",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic",
+        "ok": true
+      },
+      {
+        "qid": "T4-004",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic",
+        "ok": true
+      },
+      {
+        "qid": "T4-005",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic",
+        "ok": true
+      },
+      {
+        "qid": "T4-006",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic",
+        "ok": true
+      },
+      {
+        "qid": "T4-007",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic",
+        "ok": true
+      },
+      {
+        "qid": "T4-008",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic",
+        "ok": true
+      },
+      {
+        "qid": "T4-009",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic",
+        "ok": true
+      },
+      {
+        "qid": "T4-010",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic",
+        "ok": true
+      },
+      {
+        "qid": "T4-011",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic",
+        "ok": true
+      },
+      {
+        "qid": "T4-012",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic",
+        "ok": true
+      },
+      {
+        "qid": "T4-013",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic",
+        "ok": true
+      },
+      {
+        "qid": "T4-014",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic",
+        "ok": true
+      },
+      {
+        "qid": "T4-015",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic",
+        "ok": true
+      },
+      {
+        "qid": "T4-016",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic",
+        "ok": true
+      },
+      {
+        "qid": "T4-017",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic",
+        "ok": true
+      },
+      {
+        "qid": "T4-018",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic",
+        "ok": true
+      },
+      {
+        "qid": "T4-019",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic",
+        "ok": true
+      },
+      {
+        "qid": "T4-020",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic",
+        "ok": true
+      },
+      {
+        "qid": "T4-021",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic",
+        "ok": true
+      },
+      {
+        "qid": "T4-022",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic",
+        "ok": true
+      },
+      {
+        "qid": "T4-023",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic",
+        "ok": true
+      },
+      {
+        "qid": "T4-024",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic",
+        "ok": true
+      },
+      {
+        "qid": "T4-025",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic",
+        "ok": true
+      },
+      {
+        "qid": "T5-001",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "structured",
+        "ok": false
+      },
+      {
+        "qid": "T5-002",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "structured",
+        "ok": false
+      },
+      {
+        "qid": "T5-003",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "structured",
+        "ok": false
+      },
+      {
+        "qid": "T5-004",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "structured",
+        "ok": false
+      },
+      {
+        "qid": "T5-005",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "structured",
+        "ok": false
+      },
+      {
+        "qid": "T5-006",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "structured",
+        "ok": false
+      },
+      {
+        "qid": "T5-007",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "structured",
+        "ok": false
+      },
+      {
+        "qid": "T5-008",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "structured",
+        "ok": false
+      },
+      {
+        "qid": "T5-009",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "structured",
+        "ok": false
+      },
+      {
+        "qid": "T5-010",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "structured",
+        "ok": false
+      },
+      {
+        "qid": "T5-011",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "structured",
+        "ok": false
+      },
+      {
+        "qid": "T5-012",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "structured",
+        "ok": false
+      },
+      {
+        "qid": "T5-013",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "structured",
+        "ok": false
+      },
+      {
+        "qid": "T5-014",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "structured",
+        "ok": false
+      },
+      {
+        "qid": "T5-015",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "structured",
+        "ok": false
+      },
+      {
+        "qid": "T5-016",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "structured",
+        "ok": false
+      },
+      {
+        "qid": "T5-017",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "structured",
+        "ok": false
+      },
+      {
+        "qid": "T5-018",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "structured",
+        "ok": false
+      },
+      {
+        "qid": "T5-019",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "structured",
+        "ok": false
+      },
+      {
+        "qid": "T5-020",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "structured",
+        "ok": false
+      },
+      {
+        "qid": "T5-021",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "structured",
+        "ok": false
+      },
+      {
+        "qid": "T6-001",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "abstain",
+        "ok": true
+      },
+      {
+        "qid": "T6-002",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "structured",
+        "ok": false
+      },
+      {
+        "qid": "T6-003",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "abstain",
+        "ok": true
+      },
+      {
+        "qid": "T6-004",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "abstain",
+        "ok": true
+      },
+      {
+        "qid": "T6-005",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "structured",
+        "ok": false
+      },
+      {
+        "qid": "T6-006",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "abstain",
+        "ok": true
+      },
+      {
+        "qid": "T6-007",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "structured",
+        "ok": false
+      },
+      {
+        "qid": "T6-008",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "abstain",
+        "ok": true
+      },
+      {
+        "qid": "T6-009",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "abstain",
+        "ok": true
+      },
+      {
+        "qid": "T6-010",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "structured",
+        "ok": false
+      },
+      {
+        "qid": "T6-011",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "abstain",
+        "ok": true
+      },
+      {
+        "qid": "T6-012",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "structured",
+        "ok": false
+      },
+      {
+        "qid": "T6-013",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "abstain",
+        "ok": true
+      },
+      {
+        "qid": "T6-014",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "abstain",
+        "ok": true
+      },
+      {
+        "qid": "T6-015",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "structured",
+        "ok": false
+      },
+      {
+        "qid": "T6-016",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "abstain",
+        "ok": true
+      },
+      {
+        "qid": "T6-017",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "structured",
+        "ok": false
+      },
+      {
+        "qid": "T6-018",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "abstain",
+        "ok": true
+      },
+      {
+        "qid": "T6-019",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "abstain",
+        "ok": true
+      },
+      {
+        "qid": "T6-020",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "structured",
+        "ok": false
+      },
+      {
+        "qid": "T7-001",
+        "type": "T7",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T7-002",
+        "type": "T7",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T7-003",
+        "type": "T7",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T7-004",
+        "type": "T7",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T7-005",
+        "type": "T7",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T7-006",
+        "type": "T7",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T7-007",
+        "type": "T7",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T7-008",
+        "type": "T7",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T7-009",
+        "type": "T7",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T7-010",
+        "type": "T7",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T7-011",
+        "type": "T7",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T7-012",
+        "type": "T7",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T7-013",
+        "type": "T7",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T7-014",
+        "type": "T7",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      },
+      {
+        "qid": "T7-015",
+        "type": "T7",
+        "expect": "structured",
+        "pred": "structured",
+        "ok": true
+      }
+    ],
+    "elapsed_sec": 0.08
+  }
+}

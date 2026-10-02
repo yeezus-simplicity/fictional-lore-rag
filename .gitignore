@@ -8,18 +8,18 @@ venv/
 .ruff_cache/
 .mypy_cache/
 
-# ---- 数据与模型（体积大，不入库）----
-data/
-!data/.gitkeep
+# ---- 原始抓取（体积大，可重跑）----
+dataset/sources/rendered/
+docs/字段映射/*.html
+
+# ---- 索引与模型（体积大）----
+index/
 models/
 *.gguf
 *.safetensors
-*.bin
-*.pt
-*.pth
-index/
 *.faiss
 *.npy
+data/
 
 # ---- 环境与密钥 ----
 .env
@@ -33,7 +33,10 @@ logs/
 *.log
 outputs/
 runs/
-wandb/
+
+# ---- Node ----
+node_modules/
+tools/package-lock.json
 
 # ---- IDE / OS ----
 .idea/

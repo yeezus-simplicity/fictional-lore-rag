@@ -4,6 +4,7 @@
   "n_warnings": 0,
   "errors": [],
   "warnings": [],
+  "chunk_validation": "ERROR 0 项 / WARN 0 项 -> 通过",
   "merge_report": {
     "n_stands": 154,
     "n_stats_rows": 154,
@@ -28,5 +29,33 @@
     "multi_form_stands": 3,
     "with_part": 144,
     "with_owner": 143
+  },
+  "chunk_report": {
+    "n_chunks": 2407,
+    "n_stands_covered": 148,
+    "total_chars": 696201,
+    "type_distribution": {
+      "section": 1678,
+      "ability_overview": 437,
+      "battle_record": 181,
+      "lore": 92,
+      "move": 19
+    },
+    "part_distribution": {
+      "3": 593,
+      "4": 417,
+      "5": 456,
+      "6": 404,
+      "7": 255,
+      "8": 125,
+      "None": 157
+    },
+    "len_stats": {
+      "min": 80,
+      "p50": 229,
+      "p85": 477,
+      "p95": 671,
+      "max": 2174
+    }
   }
 }

@@ -1,0 +1,13 @@
+{
+  "name": "rag-kb-tools",
+  "private": true,
+  "description": "渲染抓取工具（Playwright）",
+  "scripts": {
+    "fetch": "node render_fetch.js",
+    "fetch:full": "node render_fetch.js --delay 900",
+    "fetch:quick": "node render_fetch.js --limit 10 --delay 500"
+  },
+  "dependencies": {
+    "playwright": "^1.63.0"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "n_chunks": 2407,
+  "n_stands_covered": 148,
+  "total_chars": 696201,
+  "type_distribution": {
+    "section": 1678,
+    "ability_overview": 437,
+    "battle_record": 181,
+    "lore": 92,
+    "move": 19
+  },
+  "part_distribution": {
+    "3": 593,
+    "4": 417,
+    "5": 456,
+    "6": 404,
+    "7": 255,
+    "8": 125,
+    "None": 157
+  },
+  "len_stats": {
+    "min": 80,
+    "p50": 229,
+    "p85": 477,
+    "p95": 671,
+    "max": 2174
+  }
+}

@@ -1,0 +1,42 @@
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# ---- 数据与模型（体积大，不入库）----
+data/
+!data/.gitkeep
+models/
+*.gguf
+*.safetensors
+*.bin
+*.pt
+*.pth
+index/
+*.faiss
+*.npy
+
+# ---- 环境与密钥 ----
+.env
+.env.*
+!.env.example
+*.key
+secrets/
+
+# ---- 运行产物 ----
+logs/
+*.log
+outputs/
+runs/
+wandb/
+
+# ---- IDE / OS ----
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

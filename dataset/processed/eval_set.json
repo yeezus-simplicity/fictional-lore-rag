@@ -1,0 +1,5312 @@
+[
+  {
+    "qid": "T1-001",
+    "question": "Khnum 的速度是几级？",
+    "question_type": "T1",
+    "answer": "E（1）",
+    "answer_set": [
+      "1",
+      "E"
+    ],
+    "evidence": {
+      "struct": {
+        "khnum": [
+          "SPD"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "exact",
+    "note": "速度=E",
+    "extra": {}
+  },
+  {
+    "qid": "T1-002",
+    "question": "Marilyn Manson 的精密性是几级？",
+    "question_type": "T1",
+    "answer": "A（5）",
+    "answer_set": [
+      "5",
+      "A"
+    ],
+    "evidence": {
+      "struct": {
+        "marilyn_manson": [
+          "PRC"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "exact",
+    "note": "精密性=A",
+    "extra": {}
+  },
+  {
+    "qid": "T1-003",
+    "question": "D4C Love Train 的持续力是几级？",
+    "question_type": "T1",
+    "answer": "A（5）",
+    "answer_set": [
+      "5",
+      "A"
+    ],
+    "evidence": {
+      "struct": {
+        "d4c_love_train": [
+          "STA"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "exact",
+    "note": "持续力=A",
+    "extra": {}
+  },
+  {
+    "qid": "T1-004",
+    "question": "Oasis 的破坏力是几级？",
+    "question_type": "T1",
+    "answer": "A（5）",
+    "answer_set": [
+      "5",
+      "A"
+    ],
+    "evidence": {
+      "struct": {
+        "oasis": [
+          "PWR"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "exact",
+    "note": "破坏力=A",
+    "extra": {}
+  },
+  {
+    "qid": "T1-005",
+    "question": "Beach Boy 的破坏力是几级？",
+    "question_type": "T1",
+    "answer": "C（3）",
+    "answer_set": [
+      "3",
+      "C"
+    ],
+    "evidence": {
+      "struct": {
+        "beach_boy": [
+          "PWR"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "exact",
+    "note": "破坏力=C",
+    "extra": {}
+  },
+  {
+    "qid": "T1-006",
+    "question": "Ebony Devil 的破坏力是几级？",
+    "question_type": "T1",
+    "answer": "D（2）",
+    "answer_set": [
+      "2",
+      "D"
+    ],
+    "evidence": {
+      "struct": {
+        "ebony_devil": [
+          "PWR"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "exact",
+    "note": "破坏力=D",
+    "extra": {}
+  },
+  {
+    "qid": "T1-007",
+    "question": "Weather Report 的速度是几级？",
+    "question_type": "T1",
+    "answer": "B（4）",
+    "answer_set": [
+      "4",
+      "B"
+    ],
+    "evidence": {
+      "struct": {
+        "weather_report": [
+          "SPD"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "exact",
+    "note": "速度=B",
+    "extra": {}
+  },
+  {
+    "qid": "T1-008",
+    "question": "Born This Way 的成长性是几级？",
+    "question_type": "T1",
+    "answer": "E（1）",
+    "answer_set": [
+      "1",
+      "E"
+    ],
+    "evidence": {
+      "struct": {
+        "born_this_way": [
+          "DEV"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "exact",
+    "note": "成长性=E",
+    "extra": {}
+  },
+  {
+    "qid": "T1-009",
+    "question": "In a Silent Way 的速度是几级？",
+    "question_type": "T1",
+    "answer": "C（3）",
+    "answer_set": [
+      "3",
+      "C"
+    ],
+    "evidence": {
+      "struct": {
+        "in_a_silent_way": [
+          "SPD"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "exact",
+    "note": "速度=C",
+    "extra": {}
+  },
+  {
+    "qid": "T1-010",
+    "question": "Stone Free 的成长性是几级？",
+    "question_type": "T1",
+    "answer": "A（5）",
+    "answer_set": [
+      "5",
+      "A"
+    ],
+    "evidence": {
+      "struct": {
+        "stone_free": [
+          "DEV"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "exact",
+    "note": "成长性=A",
+    "extra": {}
+  },
+  {
+    "qid": "T1-011",
+    "question": "Soft Machine 的持续力是几级？",
+    "question_type": "T1",
+    "answer": "A（5）",
+    "answer_set": [
+      "5",
+      "A"
+    ],
+    "evidence": {
+      "struct": {
+        "soft_machine": [
+          "STA"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "exact",
+    "note": "持续力=A",
+    "extra": {}
+  },
+  {
+    "qid": "T1-012",
+    "question": "Justice 的精密性是几级？",
+    "question_type": "T1",
+    "answer": "E（1）",
+    "answer_set": [
+      "1",
+      "E"
+    ],
+    "evidence": {
+      "struct": {
+        "justice": [
+          "PRC"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "exact",
+    "note": "精密性=E",
+    "extra": {}
+  },
+  {
+    "qid": "T1-013",
+    "question": "Tower of Gray 的破坏力是几级？",
+    "question_type": "T1",
+    "answer": "E（1）",
+    "answer_set": [
+      "1",
+      "E"
+    ],
+    "evidence": {
+      "struct": {
+        "tower_of_gray": [
+          "PWR"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "exact",
+    "note": "破坏力=E",
+    "extra": {}
+  },
+  {
+    "qid": "T1-014",
+    "question": "Foo Fighters 的持续力是几级？",
+    "question_type": "T1",
+    "answer": "A（5）",
+    "answer_set": [
+      "5",
+      "A"
+    ],
+    "evidence": {
+      "struct": {
+        "foo_fighters": [
+          "STA"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "exact",
+    "note": "持续力=A",
+    "extra": {}
+  },
+  {
+    "qid": "T1-015",
+    "question": "Yellow Temperance 的持续力是几级？",
+    "question_type": "T1",
+    "answer": "A（5）",
+    "answer_set": [
+      "5",
+      "A"
+    ],
+    "evidence": {
+      "struct": {
+        "yellow_temperance": [
+          "STA"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "exact",
+    "note": "持续力=A",
+    "extra": {}
+  },
+  {
+    "qid": "T1-016",
+    "question": "Pearl Jam 的精密性是几级？",
+    "question_type": "T1",
+    "answer": "E（1）",
+    "answer_set": [
+      "1",
+      "E"
+    ],
+    "evidence": {
+      "struct": {
+        "pearl_jam": [
+          "PRC"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "exact",
+    "note": "精密性=E",
+    "extra": {}
+  },
+  {
+    "qid": "T1-017",
+    "question": "Man in the Mirror 的持续力是几级？",
+    "question_type": "T1",
+    "answer": "D（2）",
+    "answer_set": [
+      "2",
+      "D"
+    ],
+    "evidence": {
+      "struct": {
+        "man_in_the_mirror": [
+          "STA"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "exact",
+    "note": "持续力=D",
+    "extra": {}
+  },
+  {
+    "qid": "T1-018",
+    "question": "Voodoo Child 的精密性是几级？",
+    "question_type": "T1",
+    "answer": "B（4）",
+    "answer_set": [
+      "4",
+      "B"
+    ],
+    "evidence": {
+      "struct": {
+        "voodoo_child": [
+          "PRC"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "exact",
+    "note": "精密性=B",
+    "extra": {}
+  },
+  {
+    "qid": "T1-019",
+    "question": "Dirty Deeds Done Dirt Cheap 的射程是几级？",
+    "question_type": "T1",
+    "answer": "C（3）",
+    "answer_set": [
+      "3",
+      "C"
+    ],
+    "evidence": {
+      "struct": {
+        "dirty_deeds_done_dirt_cheap": [
+          "RNG"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "exact",
+    "note": "射程=C",
+    "extra": {}
+  },
+  {
+    "qid": "T1-020",
+    "question": "Hey Ya! 的精密性是几级？",
+    "question_type": "T1",
+    "answer": "E（1）",
+    "answer_set": [
+      "1",
+      "E"
+    ],
+    "evidence": {
+      "struct": {
+        "hey_ya": [
+          "PRC"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "exact",
+    "note": "精密性=E",
+    "extra": {}
+  },
+  {
+    "qid": "T1-021",
+    "question": "Black Sabbath 的破坏力是几级？",
+    "question_type": "T1",
+    "answer": "E（1）",
+    "answer_set": [
+      "1",
+      "E"
+    ],
+    "evidence": {
+      "struct": {
+        "black_sabbath": [
+          "PWR"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "exact",
+    "note": "破坏力=E",
+    "extra": {}
+  },
+  {
+    "qid": "T1-022",
+    "question": "Sex Pistols 的成长性是几级？",
+    "question_type": "T1",
+    "answer": "B（4）",
+    "answer_set": [
+      "4",
+      "B"
+    ],
+    "evidence": {
+      "struct": {
+        "sex_pistols": [
+          "DEV"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "exact",
+    "note": "成长性=B",
+    "extra": {}
+  },
+  {
+    "qid": "T1-023",
+    "question": "The Grateful Dead 的成长性是几级？",
+    "question_type": "T1",
+    "answer": "C（3）",
+    "answer_set": [
+      "3",
+      "C"
+    ],
+    "evidence": {
+      "struct": {
+        "the_grateful_dead": [
+          "DEV"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "exact",
+    "note": "成长性=C",
+    "extra": {}
+  },
+  {
+    "qid": "T1-024",
+    "question": "Talking Head 的破坏力是几级？",
+    "question_type": "T1",
+    "answer": "E（1）",
+    "answer_set": [
+      "1",
+      "E"
+    ],
+    "evidence": {
+      "struct": {
+        "talking_head": [
+          "PWR"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "exact",
+    "note": "破坏力=E",
+    "extra": {}
+  },
+  {
+    "qid": "T1-025",
+    "question": "Cheap Trick 的成长性是几级？",
+    "question_type": "T1",
+    "answer": "E（1）",
+    "answer_set": [
+      "1",
+      "E"
+    ],
+    "evidence": {
+      "struct": {
+        "cheap_trick": [
+          "DEV"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "exact",
+    "note": "成长性=E",
+    "extra": {}
+  },
+  {
+    "qid": "T1-026",
+    "question": "House of Holy 的精密性是几级？",
+    "question_type": "T1",
+    "answer": "D（2）",
+    "answer_set": [
+      "2",
+      "D"
+    ],
+    "evidence": {
+      "struct": {
+        "house_of_holy": [
+          "PRC"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "exact",
+    "note": "精密性=D",
+    "extra": {}
+  },
+  {
+    "qid": "T1-027",
+    "question": "Horus 的射程是几级？",
+    "question_type": "T1",
+    "answer": "D（2）",
+    "answer_set": [
+      "2",
+      "D"
+    ],
+    "evidence": {
+      "struct": {
+        "horus": [
+          "RNG"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "exact",
+    "note": "射程=D",
+    "extra": {}
+  },
+  {
+    "qid": "T1-028",
+    "question": "Atum 的成长性是几级？",
+    "question_type": "T1",
+    "answer": "D（2）",
+    "answer_set": [
+      "2",
+      "D"
+    ],
+    "evidence": {
+      "struct": {
+        "atum": [
+          "DEV"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "exact",
+    "note": "成长性=D",
+    "extra": {}
+  },
+  {
+    "qid": "T1-029",
+    "question": "Cream Starter 的射程是几级？",
+    "question_type": "T1",
+    "answer": "C（3）",
+    "answer_set": [
+      "3",
+      "C"
+    ],
+    "evidence": {
+      "struct": {
+        "cream_starter": [
+          "RNG"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "exact",
+    "note": "射程=C",
+    "extra": {}
+  },
+  {
+    "qid": "T1-030",
+    "question": "Surface 的破坏力是几级？",
+    "question_type": "T1",
+    "answer": "B（4）",
+    "answer_set": [
+      "4",
+      "B"
+    ],
+    "evidence": {
+      "struct": {
+        "surface": [
+          "PWR"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "exact",
+    "note": "破坏力=B",
+    "extra": {}
+  },
+  {
+    "qid": "T1-031",
+    "question": "Strength 的射程是几级？",
+    "question_type": "T1",
+    "answer": "D（2）",
+    "answer_set": [
+      "2",
+      "D"
+    ],
+    "evidence": {
+      "struct": {
+        "strength": [
+          "RNG"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "exact",
+    "note": "射程=D",
+    "extra": {}
+  },
+  {
+    "qid": "T1-032",
+    "question": "Fun Fun Fun 的持续力是几级？",
+    "question_type": "T1",
+    "answer": "A（5）",
+    "answer_set": [
+      "5",
+      "A"
+    ],
+    "evidence": {
+      "struct": {
+        "fun_fun_fun": [
+          "STA"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "exact",
+    "note": "持续力=A",
+    "extra": {}
+  },
+  {
+    "qid": "T1-033",
+    "question": "Echoes (ACT3) 的速度是几级？",
+    "question_type": "T1",
+    "answer": "B（4）",
+    "answer_set": [
+      "4",
+      "B"
+    ],
+    "evidence": {
+      "struct": {
+        "echoes_act3": [
+          "SPD"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "exact",
+    "note": "速度=B",
+    "extra": {}
+  },
+  {
+    "qid": "T1-034",
+    "question": "Star Platinum: The World 的持续力是几级？",
+    "question_type": "T1",
+    "answer": "E（1）",
+    "answer_set": [
+      "1",
+      "E"
+    ],
+    "evidence": {
+      "struct": {
+        "star_platinum_the_world": [
+          "STA"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "exact",
+    "note": "持续力=E",
+    "extra": {}
+  },
+  {
+    "qid": "T1-035",
+    "question": "Ball Breaker 的破坏力是几级？",
+    "question_type": "T1",
+    "answer": "A（5）",
+    "answer_set": [
+      "5",
+      "A"
+    ],
+    "evidence": {
+      "struct": {
+        "ball_breaker": [
+          "PWR"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "exact",
+    "note": "破坏力=A",
+    "extra": {}
+  },
+  {
+    "qid": "T1-036",
+    "question": "The Lock 的成长性是几级？",
+    "question_type": "T1",
+    "answer": "E（1）",
+    "answer_set": [
+      "1",
+      "E"
+    ],
+    "evidence": {
+      "struct": {
+        "the_lock": [
+          "DEV"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "exact",
+    "note": "成长性=E",
+    "extra": {}
+  },
+  {
+    "qid": "T1-037",
+    "question": "Enigma 的成长性是几级？",
+    "question_type": "T1",
+    "answer": "C（3）",
+    "answer_set": [
+      "3",
+      "C"
+    ],
+    "evidence": {
+      "struct": {
+        "enigma": [
+          "DEV"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "exact",
+    "note": "成长性=C",
+    "extra": {}
+  },
+  {
+    "qid": "T1-038",
+    "question": "Boku no Rhythm wo Kiitekure 的射程是几级？",
+    "question_type": "T1",
+    "answer": "C（3）",
+    "answer_set": [
+      "3",
+      "C"
+    ],
+    "evidence": {
+      "struct": {
+        "boku_no_rhythm_wo_kiitekure": [
+          "RNG"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "exact",
+    "note": "射程=C",
+    "extra": {}
+  },
+  {
+    "qid": "T1-039",
+    "question": "Bad Company 的精密性是几级？",
+    "question_type": "T1",
+    "answer": "C（3）",
+    "answer_set": [
+      "3",
+      "C"
+    ],
+    "evidence": {
+      "struct": {
+        "bad_company": [
+          "PRC"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "exact",
+    "note": "精密性=C",
+    "extra": {}
+  },
+  {
+    "qid": "T1-040",
+    "question": "Kraft Work 的速度是几级？",
+    "question_type": "T1",
+    "answer": "A（5）",
+    "answer_set": [
+      "5",
+      "A"
+    ],
+    "evidence": {
+      "struct": {
+        "kraft_work": [
+          "SPD"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "exact",
+    "note": "速度=A",
+    "extra": {}
+  },
+  {
+    "qid": "T2-001",
+    "question": "所有替身中，破坏力最高的是哪个？",
+    "question_type": "T2",
+    "answer": "Star Platinum, The World, Crazy Diamond, Killer Queen, Sheer Heart Attack, Red Hot Chili Pepper, Sticky Fingers, Purple Haze, Green Day, Kraft Work, Oasis, Soft Machine, Spice Girl, White Album, Stone Free, Star Platinum: The World, Diver Down, Kiss, Planet Waves, Weather Report, Ball Breaker, Dirty Deeds Done Dirt Cheap, D4C Love Train, Tusk ACT4, Dolly Dagger",
+    "answer_set": [
+      "Star Platinum",
+      "The World",
+      "Crazy Diamond",
+      "Killer Queen",
+      "Sheer Heart Attack",
+      "Red Hot Chili Pepper",
+      "Sticky Fingers",
+      "Purple Haze",
+      "Green Day",
+      "Kraft Work",
+      "Oasis",
+      "Soft Machine",
+      "Spice Girl",
+      "White Album",
+      "Stone Free",
+      "Star Platinum: The World",
+      "Diver Down",
+      "Kiss",
+      "Planet Waves",
+      "Weather Report",
+      "Ball Breaker",
+      "Dirty Deeds Done Dirt Cheap",
+      "D4C Love Train",
+      "Tusk ACT4",
+      "Dolly Dagger"
+    ],
+    "evidence": {
+      "struct": {
+        "star_platinum": [
+          "PWR"
+        ],
+        "the_world": [
+          "PWR"
+        ],
+        "crazy_diamond": [
+          "PWR"
+        ],
+        "killer_queen": [
+          "PWR"
+        ],
+        "sheer_heart_attack": [
+          "PWR"
+        ],
+        "red_hot_chili_pepper": [
+          "PWR"
+        ],
+        "sticky_fingers": [
+          "PWR"
+        ],
+        "purple_haze": [
+          "PWR"
+        ],
+        "green_day": [
+          "PWR"
+        ],
+        "kraft_work": [
+          "PWR"
+        ],
+        "oasis": [
+          "PWR"
+        ],
+        "soft_machine": [
+          "PWR"
+        ],
+        "spice_girl": [
+          "PWR"
+        ],
+        "white_album": [
+          "PWR"
+        ],
+        "stone_free": [
+          "PWR"
+        ],
+        "star_platinum_the_world": [
+          "PWR"
+        ],
+        "diver_down": [
+          "PWR"
+        ],
+        "kiss": [
+          "PWR"
+        ],
+        "planet_waves": [
+          "PWR"
+        ],
+        "weather_report": [
+          "PWR"
+        ],
+        "ball_breaker": [
+          "PWR"
+        ],
+        "dirty_deeds_done_dirt_cheap": [
+          "PWR"
+        ],
+        "d4c_love_train": [
+          "PWR"
+        ],
+        "tusk_act4": [
+          "PWR"
+        ],
+        "dolly_dagger": [
+          "PWR"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "set",
+    "note": "max(PWR)=5(A)",
+    "extra": {}
+  },
+  {
+    "qid": "T2-002",
+    "question": "所有替身中，速度最高的是哪个？",
+    "question_type": "T2",
+    "answer": "Hanged Man, Silver Chariot, Star Platinum, The World, Tower of Gray, Crazy Diamond, Red Hot Chili Pepper, Black Sabbath, Gold Experience, Sticky Fingers, Clash, Kraft Work, Oasis, Spice Girl, Star Platinum: The World, Diver Down, Foo Fighters, Kiss, Marilyn Manson, Ball Breaker, Dirty Deeds Done Dirt Cheap, D4C Love Train, Manic Depression, Voodoo Child, Dolly Dagger, Nightbird Flying",
+    "answer_set": [
+      "Hanged Man",
+      "Silver Chariot",
+      "Star Platinum",
+      "The World",
+      "Tower of Gray",
+      "Crazy Diamond",
+      "Red Hot Chili Pepper",
+      "Black Sabbath",
+      "Gold Experience",
+      "Sticky Fingers",
+      "Clash",
+      "Kraft Work",
+      "Oasis",
+      "Spice Girl",
+      "Star Platinum: The World",
+      "Diver Down",
+      "Foo Fighters",
+      "Kiss",
+      "Marilyn Manson",
+      "Ball Breaker",
+      "Dirty Deeds Done Dirt Cheap",
+      "D4C Love Train",
+      "Manic Depression",
+      "Voodoo Child",
+      "Dolly Dagger",
+      "Nightbird Flying"
+    ],
+    "evidence": {
+      "struct": {
+        "hanged_man": [
+          "SPD"
+        ],
+        "silver_chariot": [
+          "SPD"
+        ],
+        "star_platinum": [
+          "SPD"
+        ],
+        "the_world": [
+          "SPD"
+        ],
+        "tower_of_gray": [
+          "SPD"
+        ],
+        "crazy_diamond": [
+          "SPD"
+        ],
+        "red_hot_chili_pepper": [
+          "SPD"
+        ],
+        "black_sabbath": [
+          "SPD"
+        ],
+        "gold_experience": [
+          "SPD"
+        ],
+        "sticky_fingers": [
+          "SPD"
+        ],
+        "clash": [
+          "SPD"
+        ],
+        "kraft_work": [
+          "SPD"
+        ],
+        "oasis": [
+          "SPD"
+        ],
+        "spice_girl": [
+          "SPD"
+        ],
+        "star_platinum_the_world": [
+          "SPD"
+        ],
+        "diver_down": [
+          "SPD"
+        ],
+        "foo_fighters": [
+          "SPD"
+        ],
+        "kiss": [
+          "SPD"
+        ],
+        "marilyn_manson": [
+          "SPD"
+        ],
+        "ball_breaker": [
+          "SPD"
+        ],
+        "dirty_deeds_done_dirt_cheap": [
+          "SPD"
+        ],
+        "d4c_love_train": [
+          "SPD"
+        ],
+        "manic_depression": [
+          "SPD"
+        ],
+        "voodoo_child": [
+          "SPD"
+        ],
+        "dolly_dagger": [
+          "SPD"
+        ],
+        "nightbird_flying": [
+          "SPD"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "set",
+    "note": "max(SPD)=5(A)",
+    "extra": {}
+  },
+  {
+    "qid": "T2-003",
+    "question": "所有替身中，射程最高的是哪个？",
+    "question_type": "T2",
+    "answer": "Geb, High Priestess, Ebony Devil, Empress, Hanged Man, Hierophant Green, Justice, Lovers, Sun, Tower of Gray, Aqua Necklace, Harvest, Highway Star, Sheer Heart Attack, Bites the Dust, Red Hot Chili Pepper, The Lock, Black Sabbath, Moody Blues, Chariot Requiem, Green Day, Highway to Hell, Kiss, Manhattan Transfer, Marilyn Manson, Planet Waves, Yo-Yo Ma, Born This Way, All Along Watchtower, Nightbird Flying, Rainy Day Dream Away",
+    "answer_set": [
+      "Geb",
+      "High Priestess",
+      "Ebony Devil",
+      "Empress",
+      "Hanged Man",
+      "Hierophant Green",
+      "Justice",
+      "Lovers",
+      "Sun",
+      "Tower of Gray",
+      "Aqua Necklace",
+      "Harvest",
+      "Highway Star",
+      "Sheer Heart Attack",
+      "Bites the Dust",
+      "Red Hot Chili Pepper",
+      "The Lock",
+      "Black Sabbath",
+      "Moody Blues",
+      "Chariot Requiem",
+      "Green Day",
+      "Highway to Hell",
+      "Kiss",
+      "Manhattan Transfer",
+      "Marilyn Manson",
+      "Planet Waves",
+      "Yo-Yo Ma",
+      "Born This Way",
+      "All Along Watchtower",
+      "Nightbird Flying",
+      "Rainy Day Dream Away"
+    ],
+    "evidence": {
+      "struct": {
+        "geb": [
+          "RNG"
+        ],
+        "high_priestess": [
+          "RNG"
+        ],
+        "ebony_devil": [
+          "RNG"
+        ],
+        "empress": [
+          "RNG"
+        ],
+        "hanged_man": [
+          "RNG"
+        ],
+        "hierophant_green": [
+          "RNG"
+        ],
+        "justice": [
+          "RNG"
+        ],
+        "lovers": [
+          "RNG"
+        ],
+        "sun": [
+          "RNG"
+        ],
+        "tower_of_gray": [
+          "RNG"
+        ],
+        "aqua_necklace": [
+          "RNG"
+        ],
+        "harvest": [
+          "RNG"
+        ],
+        "highway_star": [
+          "RNG"
+        ],
+        "sheer_heart_attack": [
+          "RNG"
+        ],
+        "bites_the_dust": [
+          "RNG"
+        ],
+        "red_hot_chili_pepper": [
+          "RNG"
+        ],
+        "the_lock": [
+          "RNG"
+        ],
+        "black_sabbath": [
+          "RNG"
+        ],
+        "moody_blues": [
+          "RNG"
+        ],
+        "chariot_requiem": [
+          "RNG"
+        ],
+        "green_day": [
+          "RNG"
+        ],
+        "highway_to_hell": [
+          "RNG"
+        ],
+        "kiss": [
+          "RNG"
+        ],
+        "manhattan_transfer": [
+          "RNG"
+        ],
+        "marilyn_manson": [
+          "RNG"
+        ],
+        "planet_waves": [
+          "RNG"
+        ],
+        "yo_yo_ma": [
+          "RNG"
+        ],
+        "born_this_way": [
+          "RNG"
+        ],
+        "all_along_watchtower": [
+          "RNG"
+        ],
+        "nightbird_flying": [
+          "RNG"
+        ],
+        "rainy_day_dream_away": [
+          "RNG"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "set",
+    "note": "max(RNG)=5(A)",
+    "extra": {}
+  },
+  {
+    "qid": "T2-004",
+    "question": "所有替身中，持续力最高的是哪个？",
+    "question_type": "T2",
+    "answer": "Anubis, Bastet, High Priestess, Khnum, Tenore Sax, Tohth, Empress, Hermit Purple, Justice, Lovers, Star Platinum, Strength, Sun, The World, Wheel of Fortune, Yellow Temperance, Aqua Necklace, Boy II Man, Cheap Trick, Enigma, Harvest, Highway Star, Sheer Heart Attack, Bites the Dust, Love Deluxe, Pearl Jam, Red Hot Chili Pepper, The Lock, Black Sabbath, Metallica, Moody Blues, Sex Pistols, The Grateful Dead, Chariot Requiem, Clash, Green Day, Little Feet, Mr.President, Oasis, Soft Machine, Talking Head, White Album, Stone Free, Foo Fighters, Kiss, Jumpin' Jack Flash, Manhattan Transfer, Marilyn Manson, Planet Waves, Weather Report, Yo-Yo Ma, Cream Starter, Dirty Deeds Done Dirt Cheap, D4C Love Train, In a Silent Way, Scary Monsters, Sugar Mountain, Tubular Bells, Tusk ACT4, Born This Way, Fun Fun Fun, Nut King Call, All Along Watchtower, Dolly Dagger, Nightbird Flying, Rainy Day Dream Away, House of Holy",
+    "answer_set": [
+      "Anubis",
+      "Bastet",
+      "High Priestess",
+      "Khnum",
+      "Tenore Sax",
+      "Tohth",
+      "Empress",
+      "Hermit Purple",
+      "Justice",
+      "Lovers",
+      "Star Platinum",
+      "Strength",
+      "Sun",
+      "The World",
+      "Wheel of Fortune",
+      "Yellow Temperance",
+      "Aqua Necklace",
+      "Boy II Man",
+      "Cheap Trick",
+      "Enigma",
+      "Harvest",
+      "Highway Star",
+      "Sheer Heart Attack",
+      "Bites the Dust",
+      "Love Deluxe",
+      "Pearl Jam",
+      "Red Hot Chili Pepper",
+      "The Lock",
+      "Black Sabbath",
+      "Metallica",
+      "Moody Blues",
+      "Sex Pistols",
+      "The Grateful Dead",
+      "Chariot Requiem",
+      "Clash",
+      "Green Day",
+      "Little Feet",
+      "Mr.President",
+      "Oasis",
+      "Soft Machine",
+      "Talking Head",
+      "White Album",
+      "Stone Free",
+      "Foo Fighters",
+      "Kiss",
+      "Jumpin' Jack Flash",
+      "Manhattan Transfer",
+      "Marilyn Manson",
+      "Planet Waves",
+      "Weather Report",
+      "Yo-Yo Ma",
+      "Cream Starter",
+      "Dirty Deeds Done Dirt Cheap",
+      "D4C Love Train",
+      "In a Silent Way",
+      "Scary Monsters",
+      "Sugar Mountain",
+      "Tubular Bells",
+      "Tusk ACT4",
+      "Born This Way",
+      "Fun Fun Fun",
+      "Nut King Call",
+      "All Along Watchtower",
+      "Dolly Dagger",
+      "Nightbird Flying",
+      "Rainy Day Dream Away",
+      "House of Holy"
+    ],
+    "evidence": {
+      "struct": {
+        "anubis": [
+          "STA"
+        ],
+        "bastet": [
+          "STA"
+        ],
+        "high_priestess": [
+          "STA"
+        ],
+        "khnum": [
+          "STA"
+        ],
+        "tenore_sax": [
+          "STA"
+        ],
+        "tohth": [
+          "STA"
+        ],
+        "empress": [
+          "STA"
+        ],
+        "hermit_purple": [
+          "STA"
+        ],
+        "justice": [
+          "STA"
+        ],
+        "lovers": [
+          "STA"
+        ],
+        "star_platinum": [
+          "STA"
+        ],
+        "strength": [
+          "STA"
+        ],
+        "sun": [
+          "STA"
+        ],
+        "the_world": [
+          "STA"
+        ],
+        "wheel_of_fortune": [
+          "STA"
+        ],
+        "yellow_temperance": [
+          "STA"
+        ],
+        "aqua_necklace": [
+          "STA"
+        ],
+        "boy_ii_man": [
+          "STA"
+        ],
+        "cheap_trick": [
+          "STA"
+        ],
+        "enigma": [
+          "STA"
+        ],
+        "harvest": [
+          "STA"
+        ],
+        "highway_star": [
+          "STA"
+        ],
+        "sheer_heart_attack": [
+          "STA"
+        ],
+        "bites_the_dust": [
+          "STA"
+        ],
+        "love_deluxe": [
+          "STA"
+        ],
+        "pearl_jam": [
+          "STA"
+        ],
+        "red_hot_chili_pepper": [
+          "STA"
+        ],
+        "the_lock": [
+          "STA"
+        ],
+        "black_sabbath": [
+          "STA"
+        ],
+        "metallica": [
+          "STA"
+        ],
+        "moody_blues": [
+          "STA"
+        ],
+        "sex_pistols": [
+          "STA"
+        ],
+        "the_grateful_dead": [
+          "STA"
+        ],
+        "chariot_requiem": [
+          "STA"
+        ],
+        "clash": [
+          "STA"
+        ],
+        "green_day": [
+          "STA"
+        ],
+        "little_feet": [
+          "STA"
+        ],
+        "mr_president": [
+          "STA"
+        ],
+        "oasis": [
+          "STA"
+        ],
+        "soft_machine": [
+          "STA"
+        ],
+        "talking_head": [
+          "STA"
+        ],
+        "white_album": [
+          "STA"
+        ],
+        "stone_free": [
+          "STA"
+        ],
+        "foo_fighters": [
+          "STA"
+        ],
+        "kiss": [
+          "STA"
+        ],
+        "jumpin_jack_flash": [
+          "STA"
+        ],
+        "manhattan_transfer": [
+          "STA"
+        ],
+        "marilyn_manson": [
+          "STA"
+        ],
+        "planet_waves": [
+          "STA"
+        ],
+        "weather_report": [
+          "STA"
+        ],
+        "yo_yo_ma": [
+          "STA"
+        ],
+        "cream_starter": [
+          "STA"
+        ],
+        "dirty_deeds_done_dirt_cheap": [
+          "STA"
+        ],
+        "d4c_love_train": [
+          "STA"
+        ],
+        "in_a_silent_way": [
+          "STA"
+        ],
+        "scary_monsters": [
+          "STA"
+        ],
+        "sugar_mountain": [
+          "STA"
+        ],
+        "tubular_bells": [
+          "STA"
+        ],
+        "tusk_act4": [
+          "STA"
+        ],
+        "born_this_way": [
+          "STA"
+        ],
+        "fun_fun_fun": [
+          "STA"
+        ],
+        "nut_king_call": [
+          "STA"
+        ],
+        "all_along_watchtower": [
+          "STA"
+        ],
+        "dolly_dagger": [
+          "STA"
+        ],
+        "nightbird_flying": [
+          "STA"
+        ],
+        "rainy_day_dream_away": [
+          "STA"
+        ],
+        "house_of_holy": [
+          "STA"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "set",
+    "note": "max(STA)=5(A)",
+    "extra": {}
+  },
+  {
+    "qid": "T2-005",
+    "question": "所有替身中，精密性最高的是哪个？",
+    "question_type": "T2",
+    "answer": "Star Platinum, Cinderella, Sex Pistols, Clash, Star Platinum: The World, Manhattan Transfer, Marilyn Manson, Dirty Deeds Done Dirt Cheap, D4C Love Train, All Along Watchtower",
+    "answer_set": [
+      "Star Platinum",
+      "Cinderella",
+      "Sex Pistols",
+      "Clash",
+      "Star Platinum: The World",
+      "Manhattan Transfer",
+      "Marilyn Manson",
+      "Dirty Deeds Done Dirt Cheap",
+      "D4C Love Train",
+      "All Along Watchtower"
+    ],
+    "evidence": {
+      "struct": {
+        "star_platinum": [
+          "PRC"
+        ],
+        "cinderella": [
+          "PRC"
+        ],
+        "sex_pistols": [
+          "PRC"
+        ],
+        "clash": [
+          "PRC"
+        ],
+        "star_platinum_the_world": [
+          "PRC"
+        ],
+        "manhattan_transfer": [
+          "PRC"
+        ],
+        "marilyn_manson": [
+          "PRC"
+        ],
+        "dirty_deeds_done_dirt_cheap": [
+          "PRC"
+        ],
+        "d4c_love_train": [
+          "PRC"
+        ],
+        "all_along_watchtower": [
+          "PRC"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "set",
+    "note": "max(PRC)=5(A)",
+    "extra": {}
+  },
+  {
+    "qid": "T2-006",
+    "question": "所有替身中，成长性最高的是哪个？",
+    "question_type": "T2",
+    "answer": "Star Platinum, Heaven's Door, Killer Queen, Sheer Heart Attack, Bites the Dust, Red Hot Chili Pepper, Echoes (ACT1), Echoes (ACT2), Echoes (ACT3), Gold Experience, Beach Boy, Chariot Requiem, Green Day, Stone Free, Kiss, Weather Report, Dirty Deeds Done Dirt Cheap, Tusk ACT1, Tusk ACT2, Tusk ACT3, Nut King Call, Soft & Wet",
+    "answer_set": [
+      "Star Platinum",
+      "Heaven's Door",
+      "Killer Queen",
+      "Sheer Heart Attack",
+      "Bites the Dust",
+      "Red Hot Chili Pepper",
+      "Echoes (ACT1)",
+      "Echoes (ACT2)",
+      "Echoes (ACT3)",
+      "Gold Experience",
+      "Beach Boy",
+      "Chariot Requiem",
+      "Green Day",
+      "Stone Free",
+      "Kiss",
+      "Weather Report",
+      "Dirty Deeds Done Dirt Cheap",
+      "Tusk ACT1",
+      "Tusk ACT2",
+      "Tusk ACT3",
+      "Nut King Call",
+      "Soft & Wet"
+    ],
+    "evidence": {
+      "struct": {
+        "star_platinum": [
+          "DEV"
+        ],
+        "heaven_s_door": [
+          "DEV"
+        ],
+        "killer_queen": [
+          "DEV"
+        ],
+        "sheer_heart_attack": [
+          "DEV"
+        ],
+        "bites_the_dust": [
+          "DEV"
+        ],
+        "red_hot_chili_pepper": [
+          "DEV"
+        ],
+        "echoes_act1": [
+          "DEV"
+        ],
+        "echoes_act2": [
+          "DEV"
+        ],
+        "echoes_act3": [
+          "DEV"
+        ],
+        "gold_experience": [
+          "DEV"
+        ],
+        "beach_boy": [
+          "DEV"
+        ],
+        "chariot_requiem": [
+          "DEV"
+        ],
+        "green_day": [
+          "DEV"
+        ],
+        "stone_free": [
+          "DEV"
+        ],
+        "kiss": [
+          "DEV"
+        ],
+        "weather_report": [
+          "DEV"
+        ],
+        "dirty_deeds_done_dirt_cheap": [
+          "DEV"
+        ],
+        "tusk_act1": [
+          "DEV"
+        ],
+        "tusk_act2": [
+          "DEV"
+        ],
+        "tusk_act3": [
+          "DEV"
+        ],
+        "nut_king_call": [
+          "DEV"
+        ],
+        "soft_wet": [
+          "DEV"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "set",
+    "note": "max(DEV)=5(A)",
+    "extra": {}
+  },
+  {
+    "qid": "T2-007",
+    "question": "Stardust Crusaders（第3部）中，精密性为最高等级的替身有哪些？",
+    "question_type": "T2",
+    "answer": "Star Platinum",
+    "answer_set": [
+      "Star Platinum"
+    ],
+    "evidence": {
+      "struct": {
+        "star_platinum": [
+          "PRC"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "set",
+    "note": "part=3 max(PRC)=5",
+    "extra": {}
+  },
+  {
+    "qid": "T2-008",
+    "question": "Diamond is Unbreakable（第4部）中，破坏力为最高等级的替身有哪些？",
+    "question_type": "T2",
+    "answer": "Crazy Diamond, Killer Queen, Sheer Heart Attack, Red Hot Chili Pepper",
+    "answer_set": [
+      "Crazy Diamond",
+      "Killer Queen",
+      "Sheer Heart Attack",
+      "Red Hot Chili Pepper"
+    ],
+    "evidence": {
+      "struct": {
+        "crazy_diamond": [
+          "PWR"
+        ],
+        "killer_queen": [
+          "PWR"
+        ],
+        "sheer_heart_attack": [
+          "PWR"
+        ],
+        "red_hot_chili_pepper": [
+          "PWR"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "set",
+    "note": "part=4 max(PWR)=5",
+    "extra": {}
+  },
+  {
+    "qid": "T2-009",
+    "question": "Vento Aureo（第5部）中，成长性为最高等级的替身有哪些？",
+    "question_type": "T2",
+    "answer": "Gold Experience, Beach Boy, Chariot Requiem, Green Day",
+    "answer_set": [
+      "Gold Experience",
+      "Beach Boy",
+      "Chariot Requiem",
+      "Green Day"
+    ],
+    "evidence": {
+      "struct": {
+        "gold_experience": [
+          "DEV"
+        ],
+        "beach_boy": [
+          "DEV"
+        ],
+        "chariot_requiem": [
+          "DEV"
+        ],
+        "green_day": [
+          "DEV"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "set",
+    "note": "part=5 max(DEV)=5",
+    "extra": {}
+  },
+  {
+    "qid": "T2-010",
+    "question": "Stone Ocean（第6部）中，射程为最高等级的替身有哪些？",
+    "question_type": "T2",
+    "answer": "Highway to Hell, Kiss, Manhattan Transfer, Marilyn Manson, Planet Waves, Yo-Yo Ma",
+    "answer_set": [
+      "Highway to Hell",
+      "Kiss",
+      "Manhattan Transfer",
+      "Marilyn Manson",
+      "Planet Waves",
+      "Yo-Yo Ma"
+    ],
+    "evidence": {
+      "struct": {
+        "highway_to_hell": [
+          "RNG"
+        ],
+        "kiss": [
+          "RNG"
+        ],
+        "manhattan_transfer": [
+          "RNG"
+        ],
+        "marilyn_manson": [
+          "RNG"
+        ],
+        "planet_waves": [
+          "RNG"
+        ],
+        "yo_yo_ma": [
+          "RNG"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "set",
+    "note": "part=6 max(RNG)=5",
+    "extra": {}
+  },
+  {
+    "qid": "T2-011",
+    "question": "Steel Ball Run（第7部）中，成长性为最高等级的替身有哪些？",
+    "question_type": "T2",
+    "answer": "Dirty Deeds Done Dirt Cheap, Tusk ACT1, Tusk ACT2, Tusk ACT3",
+    "answer_set": [
+      "Dirty Deeds Done Dirt Cheap",
+      "Tusk ACT1",
+      "Tusk ACT2",
+      "Tusk ACT3"
+    ],
+    "evidence": {
+      "struct": {
+        "dirty_deeds_done_dirt_cheap": [
+          "DEV"
+        ],
+        "tusk_act1": [
+          "DEV"
+        ],
+        "tusk_act2": [
+          "DEV"
+        ],
+        "tusk_act3": [
+          "DEV"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "set",
+    "note": "part=7 max(DEV)=5",
+    "extra": {}
+  },
+  {
+    "qid": "T2-012",
+    "question": "JoJolion（第8部）中，精密性为最高等级的替身有哪些？",
+    "question_type": "T2",
+    "answer": "Paper Moon King",
+    "answer_set": [
+      "Paper Moon King"
+    ],
+    "evidence": {
+      "struct": {
+        "paper_moon_king": [
+          "PRC"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "set",
+    "note": "part=8 max(PRC)=4",
+    "extra": {}
+  },
+  {
+    "qid": "T2-013",
+    "question": "有多少个替身的破坏力达到 A 级（5）？",
+    "question_type": "T2",
+    "answer": "25",
+    "answer_set": [
+      "25"
+    ],
+    "evidence": {
+      "struct": {
+        "star_platinum": [
+          "PWR"
+        ],
+        "the_world": [
+          "PWR"
+        ],
+        "crazy_diamond": [
+          "PWR"
+        ],
+        "killer_queen": [
+          "PWR"
+        ],
+        "sheer_heart_attack": [
+          "PWR"
+        ],
+        "red_hot_chili_pepper": [
+          "PWR"
+        ],
+        "sticky_fingers": [
+          "PWR"
+        ],
+        "purple_haze": [
+          "PWR"
+        ],
+        "green_day": [
+          "PWR"
+        ],
+        "kraft_work": [
+          "PWR"
+        ],
+        "oasis": [
+          "PWR"
+        ],
+        "soft_machine": [
+          "PWR"
+        ],
+        "spice_girl": [
+          "PWR"
+        ],
+        "white_album": [
+          "PWR"
+        ],
+        "stone_free": [
+          "PWR"
+        ],
+        "star_platinum_the_world": [
+          "PWR"
+        ],
+        "diver_down": [
+          "PWR"
+        ],
+        "kiss": [
+          "PWR"
+        ],
+        "planet_waves": [
+          "PWR"
+        ],
+        "weather_report": [
+          "PWR"
+        ],
+        "ball_breaker": [
+          "PWR"
+        ],
+        "dirty_deeds_done_dirt_cheap": [
+          "PWR"
+        ],
+        "d4c_love_train": [
+          "PWR"
+        ],
+        "tusk_act4": [
+          "PWR"
+        ],
+        "dolly_dagger": [
+          "PWR"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "exact",
+    "note": "count(PWR=5)=25",
+    "extra": {}
+  },
+  {
+    "qid": "T2-014",
+    "question": "有多少个替身的速度达到 A 级（5）？",
+    "question_type": "T2",
+    "answer": "26",
+    "answer_set": [
+      "26"
+    ],
+    "evidence": {
+      "struct": {
+        "hanged_man": [
+          "SPD"
+        ],
+        "silver_chariot": [
+          "SPD"
+        ],
+        "star_platinum": [
+          "SPD"
+        ],
+        "the_world": [
+          "SPD"
+        ],
+        "tower_of_gray": [
+          "SPD"
+        ],
+        "crazy_diamond": [
+          "SPD"
+        ],
+        "red_hot_chili_pepper": [
+          "SPD"
+        ],
+        "black_sabbath": [
+          "SPD"
+        ],
+        "gold_experience": [
+          "SPD"
+        ],
+        "sticky_fingers": [
+          "SPD"
+        ],
+        "clash": [
+          "SPD"
+        ],
+        "kraft_work": [
+          "SPD"
+        ],
+        "oasis": [
+          "SPD"
+        ],
+        "spice_girl": [
+          "SPD"
+        ],
+        "star_platinum_the_world": [
+          "SPD"
+        ],
+        "diver_down": [
+          "SPD"
+        ],
+        "foo_fighters": [
+          "SPD"
+        ],
+        "kiss": [
+          "SPD"
+        ],
+        "marilyn_manson": [
+          "SPD"
+        ],
+        "ball_breaker": [
+          "SPD"
+        ],
+        "dirty_deeds_done_dirt_cheap": [
+          "SPD"
+        ],
+        "d4c_love_train": [
+          "SPD"
+        ],
+        "manic_depression": [
+          "SPD"
+        ],
+        "voodoo_child": [
+          "SPD"
+        ],
+        "dolly_dagger": [
+          "SPD"
+        ],
+        "nightbird_flying": [
+          "SPD"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "exact",
+    "note": "count(SPD=5)=26",
+    "extra": {}
+  },
+  {
+    "qid": "T2-015",
+    "question": "有多少个替身的射程达到 A 级（5）？",
+    "question_type": "T2",
+    "answer": "31",
+    "answer_set": [
+      "31"
+    ],
+    "evidence": {
+      "struct": {
+        "geb": [
+          "RNG"
+        ],
+        "high_priestess": [
+          "RNG"
+        ],
+        "ebony_devil": [
+          "RNG"
+        ],
+        "empress": [
+          "RNG"
+        ],
+        "hanged_man": [
+          "RNG"
+        ],
+        "hierophant_green": [
+          "RNG"
+        ],
+        "justice": [
+          "RNG"
+        ],
+        "lovers": [
+          "RNG"
+        ],
+        "sun": [
+          "RNG"
+        ],
+        "tower_of_gray": [
+          "RNG"
+        ],
+        "aqua_necklace": [
+          "RNG"
+        ],
+        "harvest": [
+          "RNG"
+        ],
+        "highway_star": [
+          "RNG"
+        ],
+        "sheer_heart_attack": [
+          "RNG"
+        ],
+        "bites_the_dust": [
+          "RNG"
+        ],
+        "red_hot_chili_pepper": [
+          "RNG"
+        ],
+        "the_lock": [
+          "RNG"
+        ],
+        "black_sabbath": [
+          "RNG"
+        ],
+        "moody_blues": [
+          "RNG"
+        ],
+        "chariot_requiem": [
+          "RNG"
+        ],
+        "green_day": [
+          "RNG"
+        ],
+        "highway_to_hell": [
+          "RNG"
+        ],
+        "kiss": [
+          "RNG"
+        ],
+        "manhattan_transfer": [
+          "RNG"
+        ],
+        "marilyn_manson": [
+          "RNG"
+        ],
+        "planet_waves": [
+          "RNG"
+        ],
+        "yo_yo_ma": [
+          "RNG"
+        ],
+        "born_this_way": [
+          "RNG"
+        ],
+        "all_along_watchtower": [
+          "RNG"
+        ],
+        "nightbird_flying": [
+          "RNG"
+        ],
+        "rainy_day_dream_away": [
+          "RNG"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "exact",
+    "note": "count(RNG=5)=31",
+    "extra": {}
+  },
+  {
+    "qid": "T2-016",
+    "question": "有多少个替身的持续力达到 A 级（5）？",
+    "question_type": "T2",
+    "answer": "67",
+    "answer_set": [
+      "67"
+    ],
+    "evidence": {
+      "struct": {
+        "anubis": [
+          "STA"
+        ],
+        "bastet": [
+          "STA"
+        ],
+        "high_priestess": [
+          "STA"
+        ],
+        "khnum": [
+          "STA"
+        ],
+        "tenore_sax": [
+          "STA"
+        ],
+        "tohth": [
+          "STA"
+        ],
+        "empress": [
+          "STA"
+        ],
+        "hermit_purple": [
+          "STA"
+        ],
+        "justice": [
+          "STA"
+        ],
+        "lovers": [
+          "STA"
+        ],
+        "star_platinum": [
+          "STA"
+        ],
+        "strength": [
+          "STA"
+        ],
+        "sun": [
+          "STA"
+        ],
+        "the_world": [
+          "STA"
+        ],
+        "wheel_of_fortune": [
+          "STA"
+        ],
+        "yellow_temperance": [
+          "STA"
+        ],
+        "aqua_necklace": [
+          "STA"
+        ],
+        "boy_ii_man": [
+          "STA"
+        ],
+        "cheap_trick": [
+          "STA"
+        ],
+        "enigma": [
+          "STA"
+        ],
+        "harvest": [
+          "STA"
+        ],
+        "highway_star": [
+          "STA"
+        ],
+        "sheer_heart_attack": [
+          "STA"
+        ],
+        "bites_the_dust": [
+          "STA"
+        ],
+        "love_deluxe": [
+          "STA"
+        ],
+        "pearl_jam": [
+          "STA"
+        ],
+        "red_hot_chili_pepper": [
+          "STA"
+        ],
+        "the_lock": [
+          "STA"
+        ],
+        "black_sabbath": [
+          "STA"
+        ],
+        "metallica": [
+          "STA"
+        ],
+        "moody_blues": [
+          "STA"
+        ],
+        "sex_pistols": [
+          "STA"
+        ],
+        "the_grateful_dead": [
+          "STA"
+        ],
+        "chariot_requiem": [
+          "STA"
+        ],
+        "clash": [
+          "STA"
+        ],
+        "green_day": [
+          "STA"
+        ],
+        "little_feet": [
+          "STA"
+        ],
+        "mr_president": [
+          "STA"
+        ],
+        "oasis": [
+          "STA"
+        ],
+        "soft_machine": [
+          "STA"
+        ],
+        "talking_head": [
+          "STA"
+        ],
+        "white_album": [
+          "STA"
+        ],
+        "stone_free": [
+          "STA"
+        ],
+        "foo_fighters": [
+          "STA"
+        ],
+        "kiss": [
+          "STA"
+        ],
+        "jumpin_jack_flash": [
+          "STA"
+        ],
+        "manhattan_transfer": [
+          "STA"
+        ],
+        "marilyn_manson": [
+          "STA"
+        ],
+        "planet_waves": [
+          "STA"
+        ],
+        "weather_report": [
+          "STA"
+        ],
+        "yo_yo_ma": [
+          "STA"
+        ],
+        "cream_starter": [
+          "STA"
+        ],
+        "dirty_deeds_done_dirt_cheap": [
+          "STA"
+        ],
+        "d4c_love_train": [
+          "STA"
+        ],
+        "in_a_silent_way": [
+          "STA"
+        ],
+        "scary_monsters": [
+          "STA"
+        ],
+        "sugar_mountain": [
+          "STA"
+        ],
+        "tubular_bells": [
+          "STA"
+        ],
+        "tusk_act4": [
+          "STA"
+        ],
+        "born_this_way": [
+          "STA"
+        ],
+        "fun_fun_fun": [
+          "STA"
+        ],
+        "nut_king_call": [
+          "STA"
+        ],
+        "all_along_watchtower": [
+          "STA"
+        ],
+        "dolly_dagger": [
+          "STA"
+        ],
+        "nightbird_flying": [
+          "STA"
+        ],
+        "rainy_day_dream_away": [
+          "STA"
+        ],
+        "house_of_holy": [
+          "STA"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "exact",
+    "note": "count(STA=5)=67",
+    "extra": {}
+  },
+  {
+    "qid": "T2-017",
+    "question": "有多少个替身的精密性达到 A 级（5）？",
+    "question_type": "T2",
+    "answer": "10",
+    "answer_set": [
+      "10"
+    ],
+    "evidence": {
+      "struct": {
+        "star_platinum": [
+          "PRC"
+        ],
+        "cinderella": [
+          "PRC"
+        ],
+        "sex_pistols": [
+          "PRC"
+        ],
+        "clash": [
+          "PRC"
+        ],
+        "star_platinum_the_world": [
+          "PRC"
+        ],
+        "manhattan_transfer": [
+          "PRC"
+        ],
+        "marilyn_manson": [
+          "PRC"
+        ],
+        "dirty_deeds_done_dirt_cheap": [
+          "PRC"
+        ],
+        "d4c_love_train": [
+          "PRC"
+        ],
+        "all_along_watchtower": [
+          "PRC"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "exact",
+    "note": "count(PRC=5)=10",
+    "extra": {}
+  },
+  {
+    "qid": "T2-018",
+    "question": "有多少个替身的成长性达到 A 级（5）？",
+    "question_type": "T2",
+    "answer": "22",
+    "answer_set": [
+      "22"
+    ],
+    "evidence": {
+      "struct": {
+        "star_platinum": [
+          "DEV"
+        ],
+        "heaven_s_door": [
+          "DEV"
+        ],
+        "killer_queen": [
+          "DEV"
+        ],
+        "sheer_heart_attack": [
+          "DEV"
+        ],
+        "bites_the_dust": [
+          "DEV"
+        ],
+        "red_hot_chili_pepper": [
+          "DEV"
+        ],
+        "echoes_act1": [
+          "DEV"
+        ],
+        "echoes_act2": [
+          "DEV"
+        ],
+        "echoes_act3": [
+          "DEV"
+        ],
+        "gold_experience": [
+          "DEV"
+        ],
+        "beach_boy": [
+          "DEV"
+        ],
+        "chariot_requiem": [
+          "DEV"
+        ],
+        "green_day": [
+          "DEV"
+        ],
+        "stone_free": [
+          "DEV"
+        ],
+        "kiss": [
+          "DEV"
+        ],
+        "weather_report": [
+          "DEV"
+        ],
+        "dirty_deeds_done_dirt_cheap": [
+          "DEV"
+        ],
+        "tusk_act1": [
+          "DEV"
+        ],
+        "tusk_act2": [
+          "DEV"
+        ],
+        "tusk_act3": [
+          "DEV"
+        ],
+        "nut_king_call": [
+          "DEV"
+        ],
+        "soft_wet": [
+          "DEV"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "exact",
+    "note": "count(DEV=5)=22",
+    "extra": {}
+  },
+  {
+    "qid": "T2-019",
+    "question": "同时满足「速度为 B」与「精密性为 A」的替身有哪些？",
+    "question_type": "T2",
+    "answer": "All Along Watchtower",
+    "answer_set": [
+      "All Along Watchtower"
+    ],
+    "evidence": {
+      "struct": {
+        "all_along_watchtower": [
+          "SPD",
+          "PRC"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "set",
+    "note": "filter(SPD=4 AND PRC=5) -> 1 个",
+    "extra": {}
+  },
+  {
+    "qid": "T2-020",
+    "question": "同时满足「持续力为 B」与「破坏力为 A」的替身有哪些？",
+    "question_type": "T2",
+    "answer": "Crazy Diamond, Killer Queen, Spice Girl, Ball Breaker",
+    "answer_set": [
+      "Crazy Diamond",
+      "Killer Queen",
+      "Spice Girl",
+      "Ball Breaker"
+    ],
+    "evidence": {
+      "struct": {
+        "crazy_diamond": [
+          "STA",
+          "PWR"
+        ],
+        "killer_queen": [
+          "STA",
+          "PWR"
+        ],
+        "spice_girl": [
+          "STA",
+          "PWR"
+        ],
+        "ball_breaker": [
+          "STA",
+          "PWR"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "set",
+    "note": "filter(STA=4 AND PWR=5) -> 4 个",
+    "extra": {}
+  },
+  {
+    "qid": "T2-021",
+    "question": "同时满足「射程为 B」与「速度为 A」的替身有哪些？",
+    "question_type": "T2",
+    "answer": "Clash, Oasis",
+    "answer_set": [
+      "Clash",
+      "Oasis"
+    ],
+    "evidence": {
+      "struct": {
+        "clash": [
+          "RNG",
+          "SPD"
+        ],
+        "oasis": [
+          "RNG",
+          "SPD"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "set",
+    "note": "filter(RNG=4 AND SPD=5) -> 2 个",
+    "extra": {}
+  },
+  {
+    "qid": "T2-022",
+    "question": "同时满足「精密性为 B」与「破坏力为 A」的替身有哪些？",
+    "question_type": "T2",
+    "answer": "The World, Crazy Diamond, Killer Queen, Diver Down, Tusk ACT4, Dolly Dagger",
+    "answer_set": [
+      "The World",
+      "Crazy Diamond",
+      "Killer Queen",
+      "Diver Down",
+      "Tusk ACT4",
+      "Dolly Dagger"
+    ],
+    "evidence": {
+      "struct": {
+        "the_world": [
+          "PRC",
+          "PWR"
+        ],
+        "crazy_diamond": [
+          "PRC",
+          "PWR"
+        ],
+        "killer_queen": [
+          "PRC",
+          "PWR"
+        ],
+        "diver_down": [
+          "PRC",
+          "PWR"
+        ],
+        "tusk_act4": [
+          "PRC",
+          "PWR"
+        ],
+        "dolly_dagger": [
+          "PRC",
+          "PWR"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "set",
+    "note": "filter(PRC=4 AND PWR=5) -> 6 个",
+    "extra": {}
+  },
+  {
+    "qid": "T2-023",
+    "question": "同时满足「精密性为 A」与「成长性为 B」的替身有哪些？",
+    "question_type": "T2",
+    "answer": "Sex Pistols",
+    "answer_set": [
+      "Sex Pistols"
+    ],
+    "evidence": {
+      "struct": {
+        "sex_pistols": [
+          "PRC",
+          "DEV"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "set",
+    "note": "filter(PRC=5 AND DEV=4) -> 1 个",
+    "extra": {}
+  },
+  {
+    "qid": "T2-024",
+    "question": "同时满足「精密性为 A」与「速度为 B」的替身有哪些？",
+    "question_type": "T2",
+    "answer": "All Along Watchtower",
+    "answer_set": [
+      "All Along Watchtower"
+    ],
+    "evidence": {
+      "struct": {
+        "all_along_watchtower": [
+          "PRC",
+          "SPD"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "set",
+    "note": "filter(PRC=5 AND SPD=4) -> 1 个",
+    "extra": {}
+  },
+  {
+    "qid": "T2-025",
+    "question": "同时满足「成长性为 A」与「射程为 B」的替身有哪些？",
+    "question_type": "T2",
+    "answer": "Heaven's Door, Echoes (ACT1), Echoes (ACT2), Beach Boy",
+    "answer_set": [
+      "Heaven's Door",
+      "Echoes (ACT1)",
+      "Echoes (ACT2)",
+      "Beach Boy"
+    ],
+    "evidence": {
+      "struct": {
+        "heaven_s_door": [
+          "DEV",
+          "RNG"
+        ],
+        "echoes_act1": [
+          "DEV",
+          "RNG"
+        ],
+        "echoes_act2": [
+          "DEV",
+          "RNG"
+        ],
+        "beach_boy": [
+          "DEV",
+          "RNG"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "set",
+    "note": "filter(DEV=5 AND RNG=4) -> 4 个",
+    "extra": {}
+  },
+  {
+    "qid": "T2-026",
+    "question": "同时满足「破坏力为 B」与「速度为 A」的替身有哪些？",
+    "question_type": "T2",
+    "answer": "Foo Fighters, Voodoo Child",
+    "answer_set": [
+      "Foo Fighters",
+      "Voodoo Child"
+    ],
+    "evidence": {
+      "struct": {
+        "foo_fighters": [
+          "PWR",
+          "SPD"
+        ],
+        "voodoo_child": [
+          "PWR",
+          "SPD"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "set",
+    "note": "filter(PWR=4 AND SPD=5) -> 2 个",
+    "extra": {}
+  },
+  {
+    "qid": "T2-027",
+    "question": "同时满足「射程为 B」与「破坏力为 A」的替身有哪些？",
+    "question_type": "T2",
+    "answer": "Oasis",
+    "answer_set": [
+      "Oasis"
+    ],
+    "evidence": {
+      "struct": {
+        "oasis": [
+          "RNG",
+          "PWR"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "set",
+    "note": "filter(RNG=4 AND PWR=5) -> 1 个",
+    "extra": {}
+  },
+  {
+    "qid": "T2-028",
+    "question": "同时满足「破坏力为 B」与「成长性为 A」的替身有哪些？",
+    "question_type": "T2",
+    "answer": "Bites the Dust, Echoes (ACT3)",
+    "answer_set": [
+      "Bites the Dust",
+      "Echoes (ACT3)"
+    ],
+    "evidence": {
+      "struct": {
+        "bites_the_dust": [
+          "PWR",
+          "DEV"
+        ],
+        "echoes_act3": [
+          "PWR",
+          "DEV"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "set",
+    "note": "filter(PWR=4 AND DEV=5) -> 2 个",
+    "extra": {}
+  },
+  {
+    "qid": "T2-029",
+    "question": "同时满足「破坏力为 A」与「成长性为 B」的替身有哪些？",
+    "question_type": "T2",
+    "answer": "The World, Purple Haze, Diver Down, Ball Breaker",
+    "answer_set": [
+      "The World",
+      "Purple Haze",
+      "Diver Down",
+      "Ball Breaker"
+    ],
+    "evidence": {
+      "struct": {
+        "the_world": [
+          "PWR",
+          "DEV"
+        ],
+        "purple_haze": [
+          "PWR",
+          "DEV"
+        ],
+        "diver_down": [
+          "PWR",
+          "DEV"
+        ],
+        "ball_breaker": [
+          "PWR",
+          "DEV"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "set",
+    "note": "filter(PWR=5 AND DEV=4) -> 4 个",
+    "extra": {}
+  },
+  {
+    "qid": "T2-030",
+    "question": "同时满足「精密性为 A」与「速度为 B」的替身有哪些？",
+    "question_type": "T2",
+    "answer": "All Along Watchtower",
+    "answer_set": [
+      "All Along Watchtower"
+    ],
+    "evidence": {
+      "struct": {
+        "all_along_watchtower": [
+          "PRC",
+          "SPD"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "set",
+    "note": "filter(PRC=5 AND SPD=4) -> 1 个",
+    "extra": {}
+  },
+  {
+    "qid": "T3-001",
+    "question": "Gold Experience 的使用者是谁？这位使用者出现在第几部？",
+    "question_type": "T3",
+    "answer": "Giorno Giovanna，第5部（Vento Aureo）",
+    "answer_set": [
+      "Giorno Giovanna",
+      "5",
+      "Vento Aureo"
+    ],
+    "evidence": {
+      "struct": {
+        "gold_experience": []
+      },
+      "part": 5
+    },
+    "route_expect": "structured",
+    "judge": "contains",
+    "note": "替身→owner→part 两跳",
+    "extra": {}
+  },
+  {
+    "qid": "T3-002",
+    "question": "Green, Green Grass of Home 的使用者是谁？这位使用者出现在第几部？",
+    "question_type": "T3",
+    "answer": "The Green Baby，第6部（Stone Ocean）",
+    "answer_set": [
+      "The Green Baby",
+      "6",
+      "Stone Ocean"
+    ],
+    "evidence": {
+      "struct": {
+        "green_green_grass_of_home": []
+      },
+      "part": 6
+    },
+    "route_expect": "structured",
+    "judge": "contains",
+    "note": "替身→owner→part 两跳",
+    "extra": {}
+  },
+  {
+    "qid": "T3-003",
+    "question": "Survivor 的使用者是谁？这位使用者出现在第几部？",
+    "question_type": "T3",
+    "answer": "Unnamed Mountain Lodge Owner (originally)Guccio (DISC)，第6部（Stone Ocean）",
+    "answer_set": [
+      "Unnamed Mountain Lodge Owner (originally)Guccio (DISC)",
+      "6",
+      "Stone Ocean"
+    ],
+    "evidence": {
+      "struct": {
+        "survivor": []
+      },
+      "part": 6
+    },
+    "route_expect": "structured",
+    "judge": "contains",
+    "note": "替身→owner→part 两跳",
+    "extra": {}
+  },
+  {
+    "qid": "T3-004",
+    "question": "Super Fly 的使用者是谁？这位使用者出现在第几部？",
+    "question_type": "T3",
+    "answer": "Toyohiro Kanedaichi，第4部（Diamond is Unbreakable）",
+    "answer_set": [
+      "Toyohiro Kanedaichi",
+      "4",
+      "Diamond is Unbreakable"
+    ],
+    "evidence": {
+      "struct": {
+        "super_fly": []
+      },
+      "part": 4
+    },
+    "route_expect": "structured",
+    "judge": "contains",
+    "note": "替身→owner→part 两跳",
+    "extra": {}
+  },
+  {
+    "qid": "T3-005",
+    "question": "Diver Down 的使用者是谁？这位使用者出现在第几部？",
+    "question_type": "T3",
+    "answer": "Narciso Anasui，第6部（Stone Ocean）",
+    "answer_set": [
+      "Narciso Anasui",
+      "6",
+      "Stone Ocean"
+    ],
+    "evidence": {
+      "struct": {
+        "diver_down": []
+      },
+      "part": 6
+    },
+    "route_expect": "structured",
+    "judge": "contains",
+    "note": "替身→owner→part 两跳",
+    "extra": {}
+  },
+  {
+    "qid": "T3-006",
+    "question": "Jumpin' Jack Flash 的使用者是谁？这位使用者出现在第几部？",
+    "question_type": "T3",
+    "answer": "Lang Rangler，第6部（Stone Ocean）",
+    "answer_set": [
+      "Lang Rangler",
+      "6",
+      "Stone Ocean"
+    ],
+    "evidence": {
+      "struct": {
+        "jumpin_jack_flash": []
+      },
+      "part": 6
+    },
+    "route_expect": "structured",
+    "judge": "contains",
+    "note": "替身→owner→part 两跳",
+    "extra": {}
+  },
+  {
+    "qid": "T3-007",
+    "question": "Killer Queen 的使用者是谁？这位使用者出现在第几部？",
+    "question_type": "T3",
+    "answer": "Yoshikage Kira，第4部（Diamond is Unbreakable）",
+    "answer_set": [
+      "Yoshikage Kira",
+      "4",
+      "Diamond is Unbreakable"
+    ],
+    "evidence": {
+      "struct": {
+        "killer_queen": []
+      },
+      "part": 4
+    },
+    "route_expect": "structured",
+    "judge": "contains",
+    "note": "替身→owner→part 两跳",
+    "extra": {}
+  },
+  {
+    "qid": "T3-008",
+    "question": "Highway to Hell 的使用者是谁？这位使用者出现在第几部？",
+    "question_type": "T3",
+    "answer": "Whitesnake's Unknown Victim (Original user) Thunder McQueen (DISC)，第6部（Stone Ocean）",
+    "answer_set": [
+      "Whitesnake's Unknown Victim (Original user) Thunder McQueen (DISC)",
+      "6",
+      "Stone Ocean"
+    ],
+    "evidence": {
+      "struct": {
+        "highway_to_hell": []
+      },
+      "part": 6
+    },
+    "route_expect": "structured",
+    "judge": "contains",
+    "note": "替身→owner→part 两跳",
+    "extra": {}
+  },
+  {
+    "qid": "T3-009",
+    "question": "Hanged Man 的使用者是谁？这位使用者出现在第几部？",
+    "question_type": "T3",
+    "answer": "J. Geil，第3部（Stardust Crusaders）",
+    "answer_set": [
+      "J. Geil",
+      "3",
+      "Stardust Crusaders"
+    ],
+    "evidence": {
+      "struct": {
+        "hanged_man": []
+      },
+      "part": 3
+    },
+    "route_expect": "structured",
+    "judge": "contains",
+    "note": "替身→owner→part 两跳",
+    "extra": {}
+  },
+  {
+    "qid": "T3-010",
+    "question": "Green Day 的使用者是谁？这位使用者出现在第几部？",
+    "question_type": "T3",
+    "answer": "Cioccolata，第5部（Vento Aureo）",
+    "answer_set": [
+      "Cioccolata",
+      "5",
+      "Vento Aureo"
+    ],
+    "evidence": {
+      "struct": {
+        "green_day": []
+      },
+      "part": 5
+    },
+    "route_expect": "structured",
+    "judge": "contains",
+    "note": "替身→owner→part 两跳",
+    "extra": {}
+  },
+  {
+    "qid": "T3-011",
+    "question": "Enigma 的使用者是谁？这位使用者出现在第几部？",
+    "question_type": "T3",
+    "answer": "Terunosuke Miyamoto，第4部（Diamond is Unbreakable）",
+    "answer_set": [
+      "Terunosuke Miyamoto",
+      "4",
+      "Diamond is Unbreakable"
+    ],
+    "evidence": {
+      "struct": {
+        "enigma": []
+      },
+      "part": 4
+    },
+    "route_expect": "structured",
+    "judge": "contains",
+    "note": "替身→owner→part 两跳",
+    "extra": {}
+  },
+  {
+    "qid": "T3-012",
+    "question": "The Grateful Dead 的使用者是谁？这位使用者出现在第几部？",
+    "question_type": "T3",
+    "answer": "Prosciutto，第5部（Vento Aureo）",
+    "answer_set": [
+      "Prosciutto",
+      "5",
+      "Vento Aureo"
+    ],
+    "evidence": {
+      "struct": {
+        "the_grateful_dead": []
+      },
+      "part": 5
+    },
+    "route_expect": "structured",
+    "judge": "contains",
+    "note": "替身→owner→part 两跳",
+    "extra": {}
+  },
+  {
+    "qid": "T3-013",
+    "question": "使用者 Yoshikage Kira 有哪些替身？",
+    "question_type": "T3",
+    "answer": "Killer Queen, Sheer Heart Attack",
+    "answer_set": [
+      "Killer Queen",
+      "Sheer Heart Attack"
+    ],
+    "evidence": {
+      "struct": {
+        "killer_queen": [],
+        "sheer_heart_attack": []
+      }
+    },
+    "route_expect": "structured",
+    "judge": "set",
+    "note": "owner→stands 反向查询，2 个",
+    "extra": {}
+  },
+  {
+    "qid": "T3-014",
+    "question": "使用者 Giorno Giovanna 有哪些替身？",
+    "question_type": "T3",
+    "answer": "Gold Experience, Gold Experience Requiem",
+    "answer_set": [
+      "Gold Experience",
+      "Gold Experience Requiem"
+    ],
+    "evidence": {
+      "struct": {
+        "gold_experience": [],
+        "gold_experience_requiem": []
+      }
+    },
+    "route_expect": "structured",
+    "judge": "set",
+    "note": "owner→stands 反向查询，2 个",
+    "extra": {}
+  },
+  {
+    "qid": "T3-015",
+    "question": "使用者 Pannacotta Fugo 有哪些替身？",
+    "question_type": "T3",
+    "answer": "Purple Haze, Purple Haze Distortion",
+    "answer_set": [
+      "Purple Haze",
+      "Purple Haze Distortion"
+    ],
+    "evidence": {
+      "struct": {
+        "purple_haze": [],
+        "purple_haze_distortion": []
+      }
+    },
+    "route_expect": "structured",
+    "judge": "set",
+    "note": "owner→stands 反向查询，2 个",
+    "extra": {}
+  },
+  {
+    "qid": "T3-016",
+    "question": "使用者 Enrico Pucci 有哪些替身？",
+    "question_type": "T3",
+    "answer": "Whitesnake, C-MOON, Made in Heaven",
+    "answer_set": [
+      "Whitesnake",
+      "C-MOON",
+      "Made in Heaven"
+    ],
+    "evidence": {
+      "struct": {
+        "whitesnake": [],
+        "c_moon": [],
+        "made_in_heaven": []
+      }
+    },
+    "route_expect": "structured",
+    "judge": "set",
+    "note": "owner→stands 反向查询，3 个",
+    "extra": {}
+  },
+  {
+    "qid": "T3-017",
+    "question": "Star Platinum 有几个形态？它的形态链是怎样的？",
+    "question_type": "T3",
+    "answer": "3 个形态：star_platinum__f0, star_platinum__f1, star_platinum__f2",
+    "answer_set": [
+      "3",
+      "star_platinum__f0",
+      "star_platinum__f1",
+      "star_platinum__f2"
+    ],
+    "evidence": {
+      "struct": {
+        "star_platinum": []
+      },
+      "forms": [
+        "star_platinum__f0",
+        "star_platinum__f1",
+        "star_platinum__f2"
+      ]
+    },
+    "route_expect": "structured",
+    "judge": "contains",
+    "note": "stand→form_chain 展开",
+    "extra": {}
+  },
+  {
+    "qid": "T3-018",
+    "question": "Gold Experience 有几个形态？它的形态链是怎样的？",
+    "question_type": "T3",
+    "answer": "2 个形态：gold_experience__f0, gold_experience__f1",
+    "answer_set": [
+      "2",
+      "gold_experience__f0",
+      "gold_experience__f1"
+    ],
+    "evidence": {
+      "struct": {
+        "gold_experience": []
+      },
+      "forms": [
+        "gold_experience__f0",
+        "gold_experience__f1"
+      ]
+    },
+    "route_expect": "structured",
+    "judge": "contains",
+    "note": "stand→form_chain 展开",
+    "extra": {}
+  },
+  {
+    "qid": "T3-019",
+    "question": "Sticky Fingers 有几个形态？它的形态链是怎样的？",
+    "question_type": "T3",
+    "answer": "2 个形态：sticky_fingers__f0, sticky_fingers__f1",
+    "answer_set": [
+      "2",
+      "sticky_fingers__f0",
+      "sticky_fingers__f1"
+    ],
+    "evidence": {
+      "struct": {
+        "sticky_fingers": []
+      },
+      "forms": [
+        "sticky_fingers__f0",
+        "sticky_fingers__f1"
+      ]
+    },
+    "route_expect": "structured",
+    "judge": "contains",
+    "note": "stand→form_chain 展开",
+    "extra": {}
+  },
+  {
+    "qid": "T3-020",
+    "question": "Stardust Crusaders（第3部）中有明确使用者记录的替身有哪些？",
+    "question_type": "T3",
+    "answer": "33 个：Anubis, Atum, Bastet, Cream, Death Thirteen, Geb, High Priestess, Horus, Judgement, Khnum, Osiris, Sethan, Tenore Sax, Tohth, Dark Blue Moon, Emperor, Ebony Devil, Empress, Hanged Man, Hermit Purple, Hierophant Green, Justice, Lovers, Magician's Red, Silver Chariot, Star Platinum, Strength, Sun, The Fool, The World, Tower of Gray, Wheel of Fortune, Yellow Temperance",
+    "answer_set": [
+      "Anubis",
+      "Atum",
+      "Bastet",
+      "Cream",
+      "Death Thirteen",
+      "Geb",
+      "High Priestess",
+      "Horus",
+      "Judgement",
+      "Khnum",
+      "Osiris",
+      "Sethan",
+      "Tenore Sax",
+      "Tohth",
+      "Dark Blue Moon",
+      "Emperor",
+      "Ebony Devil",
+      "Empress",
+      "Hanged Man",
+      "Hermit Purple",
+      "Hierophant Green",
+      "Justice",
+      "Lovers",
+      "Magician's Red",
+      "Silver Chariot",
+      "Star Platinum",
+      "Strength",
+      "Sun",
+      "The Fool",
+      "The World",
+      "Tower of Gray",
+      "Wheel of Fortune",
+      "Yellow Temperance"
+    ],
+    "evidence": {
+      "struct": {
+        "anubis": [],
+        "atum": [],
+        "bastet": [],
+        "cream": [],
+        "death_thirteen": [],
+        "geb": [],
+        "high_priestess": [],
+        "horus": [],
+        "judgement": [],
+        "khnum": [],
+        "osiris": [],
+        "sethan": [],
+        "tenore_sax": [],
+        "tohth": [],
+        "dark_blue_moon": [],
+        "emperor": [],
+        "ebony_devil": [],
+        "empress": [],
+        "hanged_man": [],
+        "hermit_purple": [],
+        "hierophant_green": [],
+        "justice": [],
+        "lovers": [],
+        "magician_s_red": [],
+        "silver_chariot": [],
+        "star_platinum": [],
+        "strength": [],
+        "sun": [],
+        "the_fool": [],
+        "the_world": [],
+        "tower_of_gray": [],
+        "wheel_of_fortune": [],
+        "yellow_temperance": []
+      }
+    },
+    "route_expect": "structured",
+    "judge": "set",
+    "note": "part=3 聚合，33 个",
+    "extra": {}
+  },
+  {
+    "qid": "T3-021",
+    "question": "Diamond is Unbreakable（第4部）中有明确使用者记录的替身有哪些？",
+    "question_type": "T3",
+    "answer": "25 个：Achtung Baby, Aqua Necklace, Atom Heart Father, Bad Company, Boy II Man, Cheap Trick, Cinderella, Crazy Diamond, Enigma, Earth Wind and Fire, Harvest, Heaven's Door, Highway Star, Killer Queen, Sheer Heart Attack, Bites the Dust, Love Deluxe, Pearl Jam, Ratt, Red Hot Chili Pepper, Super Fly, Surface, The Lock, The Hand, Stray Cat",
+    "answer_set": [
+      "Achtung Baby",
+      "Aqua Necklace",
+      "Atom Heart Father",
+      "Bad Company",
+      "Boy II Man",
+      "Cheap Trick",
+      "Cinderella",
+      "Crazy Diamond",
+      "Enigma",
+      "Earth Wind and Fire",
+      "Harvest",
+      "Heaven's Door",
+      "Highway Star",
+      "Killer Queen",
+      "Sheer Heart Attack",
+      "Bites the Dust",
+      "Love Deluxe",
+      "Pearl Jam",
+      "Ratt",
+      "Red Hot Chili Pepper",
+      "Super Fly",
+      "Surface",
+      "The Lock",
+      "The Hand",
+      "Stray Cat"
+    ],
+    "evidence": {
+      "struct": {
+        "achtung_baby": [],
+        "aqua_necklace": [],
+        "atom_heart_father": [],
+        "bad_company": [],
+        "boy_ii_man": [],
+        "cheap_trick": [],
+        "cinderella": [],
+        "crazy_diamond": [],
+        "enigma": [],
+        "earth_wind_and_fire": [],
+        "harvest": [],
+        "heaven_s_door": [],
+        "highway_star": [],
+        "killer_queen": [],
+        "sheer_heart_attack": [],
+        "bites_the_dust": [],
+        "love_deluxe": [],
+        "pearl_jam": [],
+        "ratt": [],
+        "red_hot_chili_pepper": [],
+        "super_fly": [],
+        "surface": [],
+        "the_lock": [],
+        "the_hand": [],
+        "stray_cat": []
+      }
+    },
+    "route_expect": "structured",
+    "judge": "set",
+    "note": "part=4 聚合，25 个",
+    "extra": {}
+  },
+  {
+    "qid": "T3-022",
+    "question": "Vento Aureo（第5部）中有明确使用者记录的替身有哪些？",
+    "question_type": "T3",
+    "answer": "27 个：Black Sabbath, Baby Face, Gold Experience, Sticky Fingers, Metallica, Purple Haze, Moody Blues, Sex Pistols, The Grateful Dead, Aerosmith, Beach Boy, Man in the Mirror, Chariot Requiem, Clash, Gold Experience Requiem, Green Day, King Crimson, Kraft Work, Little Feet, Mr.President, Notorious B.I.G, Oasis, Rolling Stones, Soft Machine, Spice Girl, Talking Head, White Album",
+    "answer_set": [
+      "Black Sabbath",
+      "Baby Face",
+      "Gold Experience",
+      "Sticky Fingers",
+      "Metallica",
+      "Purple Haze",
+      "Moody Blues",
+      "Sex Pistols",
+      "The Grateful Dead",
+      "Aerosmith",
+      "Beach Boy",
+      "Man in the Mirror",
+      "Chariot Requiem",
+      "Clash",
+      "Gold Experience Requiem",
+      "Green Day",
+      "King Crimson",
+      "Kraft Work",
+      "Little Feet",
+      "Mr.President",
+      "Notorious B.I.G",
+      "Oasis",
+      "Rolling Stones",
+      "Soft Machine",
+      "Spice Girl",
+      "Talking Head",
+      "White Album"
+    ],
+    "evidence": {
+      "struct": {
+        "black_sabbath": [],
+        "baby_face": [],
+        "gold_experience": [],
+        "sticky_fingers": [],
+        "metallica": [],
+        "purple_haze": [],
+        "moody_blues": [],
+        "sex_pistols": [],
+        "the_grateful_dead": [],
+        "aerosmith": [],
+        "beach_boy": [],
+        "man_in_the_mirror": [],
+        "chariot_requiem": [],
+        "clash": [],
+        "gold_experience_requiem": [],
+        "green_day": [],
+        "king_crimson": [],
+        "kraft_work": [],
+        "little_feet": [],
+        "mr_president": [],
+        "notorious_b_i_g": [],
+        "oasis": [],
+        "rolling_stones": [],
+        "soft_machine": [],
+        "spice_girl": [],
+        "talking_head": [],
+        "white_album": []
+      }
+    },
+    "route_expect": "structured",
+    "judge": "set",
+    "note": "part=5 聚合，27 个",
+    "extra": {}
+  },
+  {
+    "qid": "T3-023",
+    "question": "Stone Ocean（第6部）中有明确使用者记录的替身有哪些？",
+    "question_type": "T3",
+    "answer": "22 个：Whitesnake, C-MOON, Jail House Lock, Stone Free, Goo Goo Dolls, Under World, Sky High, Bohemian Rhapsody, Burning Down the House, Diver Down, Dragon's Dream, Green, Green Grass of Home, Highway to Hell, Kiss, Jumpin' Jack Flash, Limp Bizkit, Made in Heaven, Manhattan Transfer, Marilyn Manson, Planet Waves, Survivor, Yo-Yo Ma",
+    "answer_set": [
+      "Whitesnake",
+      "C-MOON",
+      "Jail House Lock",
+      "Stone Free",
+      "Goo Goo Dolls",
+      "Under World",
+      "Sky High",
+      "Bohemian Rhapsody",
+      "Burning Down the House",
+      "Diver Down",
+      "Dragon's Dream",
+      "Green, Green Grass of Home",
+      "Highway to Hell",
+      "Kiss",
+      "Jumpin' Jack Flash",
+      "Limp Bizkit",
+      "Made in Heaven",
+      "Manhattan Transfer",
+      "Marilyn Manson",
+      "Planet Waves",
+      "Survivor",
+      "Yo-Yo Ma"
+    ],
+    "evidence": {
+      "struct": {
+        "whitesnake": [],
+        "c_moon": [],
+        "jail_house_lock": [],
+        "stone_free": [],
+        "goo_goo_dolls": [],
+        "under_world": [],
+        "sky_high": [],
+        "bohemian_rhapsody": [],
+        "burning_down_the_house": [],
+        "diver_down": [],
+        "dragon_s_dream": [],
+        "green_green_grass_of_home": [],
+        "highway_to_hell": [],
+        "kiss": [],
+        "jumpin_jack_flash": [],
+        "limp_bizkit": [],
+        "made_in_heaven": [],
+        "manhattan_transfer": [],
+        "marilyn_manson": [],
+        "planet_waves": [],
+        "survivor": [],
+        "yo_yo_ma": []
+      }
+    },
+    "route_expect": "structured",
+    "judge": "set",
+    "note": "part=6 聚合，22 个",
+    "extra": {}
+  },
+  {
+    "qid": "T3-024",
+    "question": "Steel Ball Run（第7部）中有明确使用者记录的替身有哪些？",
+    "question_type": "T3",
+    "answer": "19 个：20th Century BOY, Ball Breaker, Boku no Rhythm wo Kiitekure, Catch the Rainbow, Chocolate Disco, Civil War, Cream Starter, Dirty Deeds Done Dirt Cheap, D4C Love Train, Hey Ya!, In a Silent Way, Mandom, Oh! Lonesome Me, Scary Monsters, TATOO YOU!, Ticket to Ride, Tomb of the Boom 1 2 3, Tubular Bells, Wired",
+    "answer_set": [
+      "20th Century BOY",
+      "Ball Breaker",
+      "Boku no Rhythm wo Kiitekure",
+      "Catch the Rainbow",
+      "Chocolate Disco",
+      "Civil War",
+      "Cream Starter",
+      "Dirty Deeds Done Dirt Cheap",
+      "D4C Love Train",
+      "Hey Ya!",
+      "In a Silent Way",
+      "Mandom",
+      "Oh! Lonesome Me",
+      "Scary Monsters",
+      "TATOO YOU!",
+      "Ticket to Ride",
+      "Tomb of the Boom 1 2 3",
+      "Tubular Bells",
+      "Wired"
+    ],
+    "evidence": {
+      "struct": {
+        "20th_century_boy": [],
+        "ball_breaker": [],
+        "boku_no_rhythm_wo_kiitekure": [],
+        "catch_the_rainbow": [],
+        "chocolate_disco": [],
+        "civil_war": [],
+        "cream_starter": [],
+        "dirty_deeds_done_dirt_cheap": [],
+        "d4c_love_train": [],
+        "hey_ya": [],
+        "in_a_silent_way": [],
+        "mandom": [],
+        "oh_lonesome_me": [],
+        "scary_monsters": [],
+        "tatoo_you": [],
+        "ticket_to_ride": [],
+        "tomb_of_the_boom_1_2_3": [],
+        "tubular_bells": [],
+        "wired": []
+      }
+    },
+    "route_expect": "structured",
+    "judge": "set",
+    "note": "part=7 聚合，19 个",
+    "extra": {}
+  },
+  {
+    "qid": "T3-025",
+    "question": "JoJolion（第8部）中有明确使用者记录的替身有哪些？",
+    "question_type": "T3",
+    "answer": "7 个：Born This Way, California King Bed, Fun Fun Fun, Nut King Call, Paisley Park, Paper Moon King, Soft & Wet",
+    "answer_set": [
+      "Born This Way",
+      "California King Bed",
+      "Fun Fun Fun",
+      "Nut King Call",
+      "Paisley Park",
+      "Paper Moon King",
+      "Soft & Wet"
+    ],
+    "evidence": {
+      "struct": {
+        "born_this_way": [],
+        "california_king_bed": [],
+        "fun_fun_fun": [],
+        "nut_king_call": [],
+        "paisley_park": [],
+        "paper_moon_king": [],
+        "soft_wet": []
+      }
+    },
+    "route_expect": "structured",
+    "judge": "set",
+    "note": "part=8 聚合，7 个",
+    "extra": {}
+  },
+  {
+    "qid": "T4-001",
+    "question": "Yellow Temperance的PHYSICAL IMPERVIOUSNESS方面有哪些描述？",
+    "question_type": "T4",
+    "answer": "With its blob-like nature, Yellow Temperance has the capacity to absorb great amounts of physical punishment and impacts, allowing it to be used as an armor by Rubber Soul. It is f",
+    "answer_set": [
+      "With its blob-like nature, Yellow Temperance has the capacity to absorb great am"
+    ],
+    "evidence": {
+      "chunks": [
+        2390
+      ]
+    },
+    "route_expect": "semantic",
+    "judge": "contains",
+    "note": "chunk_type=section label=PHYSICAL IMPERVIOUSNESS",
+    "extra": {}
+  },
+  {
+    "qid": "T4-002",
+    "question": "Green, Green Grass of Home的外观形态方面有哪些描述？",
+    "question_type": "T4",
+    "answer": "The Stand resembles a humanoid in a dark, bodysuit with a mask with four eyes. It has two turbine-like constructions mounted on the sides of its head. Long spikes sprout from the t",
+    "answer_set": [
+      "The Stand resembles a humanoid in a dark, bodysuit with a mask with four eyes. I"
+    ],
+    "evidence": {
+      "chunks": [
+        871
+      ]
+    },
+    "route_expect": "semantic",
+    "judge": "contains",
+    "note": "chunk_type=section label=外观形态",
+    "extra": {}
+  },
+  {
+    "qid": "T4-003",
+    "question": "Limp Bizkit的INVISIBLE REANIMATION方面有哪些描述？",
+    "question_type": "T4",
+    "answer": "These zombies all gain similar characteristics: being enhanced strength, the ability to walk along any surface and permanent invisibility. They can be killed a second time through ",
+    "answer_set": [
+      "These zombies all gain similar characteristics: being enhanced strength, the abi"
+    ],
+    "evidence": {
+      "chunks": [
+        1245
+      ]
+    },
+    "route_expect": "semantic",
+    "judge": "contains",
+    "note": "chunk_type=section label=INVISIBLE REANIMATION",
+    "extra": {}
+  },
+  {
+    "qid": "T4-004",
+    "question": "Highway to Hell的整体能力概述是什么？",
+    "question_type": "T4",
+    "answer": "Highway to Hell appears as a set of four protrusions with miniature propellers on end that jut out of the medium that McQueen uses to attempt suicide. The same four protrusions app",
+    "answer_set": [
+      "Highway to Hell appears as a set of four protrusions with miniature propellers o"
+    ],
+    "evidence": {
+      "chunks": [
+        1032
+      ]
+    },
+    "route_expect": "semantic",
+    "judge": "contains",
+    "note": "chunk_type=ability_overview label=ability_overview",
+    "extra": {}
+  },
+  {
+    "qid": "T4-005",
+    "question": "Aqua Necklace的名称或设定来源是什么？",
+    "question_type": "T4",
+    "answer": "Aqua Necklace's design is based on dogū figurines from the late Jōmon period. It has thin eyes and small irises, along with a prominent nose and lips. Aqua Necklace also has sharp ",
+    "answer_set": [
+      "Aqua Necklace's design is based on dogū figurines from the late Jōmon period. It"
+    ],
+    "evidence": {
+      "chunks": [
+        77
+      ]
+    },
+    "route_expect": "semantic",
+    "judge": "contains",
+    "note": "chunk_type=lore label=lore",
+    "extra": {}
+  },
+  {
+    "qid": "T4-006",
+    "question": "C-MOON的性格方面有哪些描述？",
+    "question_type": "T4",
+    "answer": "C-MOON vocalizes USHAAAAAA! (ウシャアアアアアア) or SHAA! (シャア) occasionally when it throws a punch, a tendency carried over from its prior form.",
+    "answer_set": [
+      "C-MOON vocalizes USHAAAAAA! (ウシャアアアアアア) or SHAA! (シャア) occasionally when it thro"
+    ],
+    "evidence": {
+      "chunks": [
+        309
+      ]
+    },
+    "route_expect": "semantic",
+    "judge": "contains",
+    "note": "chunk_type=section label=性格",
+    "extra": {}
+  },
+  {
+    "qid": "T4-007",
+    "question": "Sugar Mountain的历史背景方面有哪些描述？",
+    "question_type": "T4",
+    "answer": "She encounters Gyro and Johnny while they search for the ears and right arm of the Saint's Corpse after she steals one of Gyro's Steel Balls. After a brief introduction, Gyro attem",
+    "answer_set": [
+      "She encounters Gyro and Johnny while they search for the ears and right arm of t"
+    ],
+    "evidence": {
+      "chunks": [
+        1944
+      ]
+    },
+    "route_expect": "semantic",
+    "judge": "contains",
+    "note": "chunk_type=section label=历史背景",
+    "extra": {}
+  },
+  {
+    "qid": "T4-008",
+    "question": "Cheap Trick的ATTACHMENT方面有哪些描述？",
+    "question_type": "T4",
+    "answer": "Cheap Trick's signature ability is to attach itself to its user's back, beginning with Masazo Kinoto.",
+    "answer_set": [
+      "Cheap Trick's signature ability is to attach itself to its user's back, beginnin"
+    ],
+    "evidence": {
+      "chunks": [
+        398
+      ]
+    },
+    "route_expect": "semantic",
+    "judge": "contains",
+    "note": "chunk_type=section label=ATTACHMENT",
+    "extra": {}
+  },
+  {
+    "qid": "T4-009",
+    "question": "Foo Fighters的GUARDING THE STAND DISCS方面有哪些描述？",
+    "question_type": "T4",
+    "answer": "As Jolyne pursues Foo Fighters's main body, Ermes attacks its sub-body in the water with Kiss. The sub-body cuts Kiss's arm, but Ermes reveals that she created a decoy arm to occup",
+    "answer_set": [
+      "As Jolyne pursues Foo Fighters's main body, Ermes attacks its sub-body in the wa"
+    ],
+    "evidence": {
+      "chunks": [
+        751
+      ]
+    },
+    "route_expect": "semantic",
+    "judge": "contains",
+    "note": "chunk_type=section label=GUARDING THE STAND DISCS",
+    "extra": {}
+  },
+  {
+    "qid": "T4-010",
+    "question": "Limp Bizkit的能力方面有哪些描述？",
+    "question_type": "T4",
+    "answer": "Limp Bizkit is an unusual ability Stand as it persists even after the death of the user, allowing Sports Maxx to control it after he expires. After becoming undead himself, his com",
+    "answer_set": [
+      "Limp Bizkit is an unusual ability Stand as it persists even after the death of t"
+    ],
+    "evidence": {
+      "chunks": [
+        1242
+      ]
+    },
+    "route_expect": "semantic",
+    "judge": "contains",
+    "note": "chunk_type=section label=能力",
+    "extra": {}
+  },
+  {
+    "qid": "T4-011",
+    "question": "Ball Breaker的名称或设定来源是什么？",
+    "question_type": "T4",
+    "answer": "Ball Breaker is a relatively small Stand, roughly the size of the Steel Ball it originates from. It's vaguely humanoid in shape, with a hunched back and hoof-like feet. There are s",
+    "answer_set": [
+      "Ball Breaker is a relatively small Stand, roughly the size of the Steel Ball it "
+    ],
+    "evidence": {
+      "chunks": [
+        162
+      ]
+    },
+    "route_expect": "semantic",
+    "judge": "contains",
+    "note": "chunk_type=lore label=lore",
+    "extra": {}
+  },
+  {
+    "qid": "T4-012",
+    "question": "Notorious B.I.G的SPEED DETECTION方面有哪些描述？",
+    "question_type": "T4",
+    "answer": "While Notorious B.I.G is blind, it can detect movement around itself, driving it to automatically attack the fastest moving object within range. After detecting the object moving f",
+    "answer_set": [
+      "While Notorious B.I.G is blind, it can detect movement around itself, driving it"
+    ],
+    "evidence": {
+      "chunks": [
+        1451
+      ]
+    },
+    "route_expect": "semantic",
+    "judge": "contains",
+    "note": "chunk_type=section label=SPEED DETECTION",
+    "extra": {}
+  },
+  {
+    "qid": "T4-013",
+    "question": "Ebony Devil的ANGER EMPOWERMENT方面有哪些描述？",
+    "question_type": "T4",
+    "answer": "Ebony Devil's power is fueled by its User's own resentment against his intended victim, which increases the strength and speed of the doll. The greater the pain Devo feels, the gre",
+    "answer_set": [
+      "Ebony Devil's power is fueled by its User's own resentment against his intended "
+    ],
+    "evidence": {
+      "chunks": [
+        663
+      ]
+    },
+    "route_expect": "semantic",
+    "judge": "contains",
+    "note": "chunk_type=section label=ANGER EMPOWERMENT",
+    "extra": {}
+  },
+  {
+    "qid": "T4-014",
+    "question": "Boy II Man的能量吸取方面有哪些描述？",
+    "question_type": "T4",
+    "answer": "If Ken proposes to play a game of RPS and the opponent formally accepts, Boy II Man sets up a best-of-five game of RPS with the following rules:",
+    "answer_set": [
+      "If Ken proposes to play a game of RPS and the opponent formally accepts, Boy II "
+    ],
+    "evidence": {
+      "chunks": [
+        281
+      ]
+    },
+    "route_expect": "semantic",
+    "judge": "contains",
+    "note": "chunk_type=section label=能量吸取",
+    "extra": {}
+  },
+  {
+    "qid": "T4-015",
+    "question": "Empress的整体能力概述是什么？",
+    "question_type": "T4",
+    "answer": "Empress is a continuously growing Stand. It begins as a drop of blood that turns into a large wart upon making contact with another person's skin. This wart utters \"Chumimin\" and g",
+    "answer_set": [
+      "Empress is a continuously growing Stand. It begins as a drop of blood that turns"
+    ],
+    "evidence": {
+      "chunks": [
+        710
+      ]
+    },
+    "route_expect": "semantic",
+    "judge": "contains",
+    "note": "chunk_type=ability_overview label=ability_overview",
+    "extra": {}
+  },
+  {
+    "qid": "T4-016",
+    "question": "Wheel of Fortune的TRANSFORMATION方面有哪些描述？",
+    "question_type": "T4",
+    "answer": "Wheel of Fortune is a Stand that manifests by using a car as a catalyst, dramatically enhancing the vehicle's appearance and capabilities. It allows even an ordinary, run-down car ",
+    "answer_set": [
+      "Wheel of Fortune is a Stand that manifests by using a car as a catalyst, dramati"
+    ],
+    "evidence": {
+      "chunks": [
+        2321
+      ]
+    },
+    "route_expect": "semantic",
+    "judge": "contains",
+    "note": "chunk_type=section label=TRANSFORMATION",
+    "extra": {}
+  },
+  {
+    "qid": "T4-017",
+    "question": "Yo-Yo Ma的ACID SALIVA方面有哪些描述？",
+    "question_type": "T4",
+    "answer": "It is able to dissolve whole chunks of flesh without causing pain or blood loss. The dissolution of flesh is completely silent and abrupt, capable of destroying Foo Fighters's jaw ",
+    "answer_set": [
+      "It is able to dissolve whole chunks of flesh without causing pain or blood loss."
+    ],
+    "evidence": {
+      "chunks": [
+        2405
+      ]
+    },
+    "route_expect": "semantic",
+    "judge": "contains",
+    "note": "chunk_type=section label=ACID SALIVA",
+    "extra": {}
+  },
+  {
+    "qid": "T4-018",
+    "question": "Stone Free的PUZZLE & DRAGONS (ANDROID/IOS)方面有哪些描述？",
+    "question_type": "T4",
+    "answer": "Stone Free was obtainable for a limited time as an Assist Evolution in the mobile game Puzzle & Dragons.",
+    "answer_set": [
+      "Stone Free was obtainable for a limited time as an Assist Evolution in the mobil"
+    ],
+    "evidence": {
+      "chunks": [
+        1905
+      ]
+    },
+    "route_expect": "semantic",
+    "judge": "contains",
+    "note": "chunk_type=section label=PUZZLE & DRAGONS (ANDROID/IOS)",
+    "extra": {}
+  },
+  {
+    "qid": "T4-019",
+    "question": "Tubular Bells的METAL BLOWING方面有哪些描述？",
+    "question_type": "T4",
+    "answer": "Tubular Bells grants its user Mike O. the ability to inflate metal items by blowing into them like balloons, and likewise shape them into automatic drones he can command.",
+    "answer_set": [
+      "Tubular Bells grants its user Mike O. the ability to inflate metal items by blow"
+    ],
+    "evidence": {
+      "chunks": [
+        2208
+      ]
+    },
+    "route_expect": "semantic",
+    "judge": "contains",
+    "note": "chunk_type=section label=METAL BLOWING",
+    "extra": {}
+  },
+  {
+    "qid": "T4-020",
+    "question": "Star Platinum的The World 形态方面有哪些描述？",
+    "question_type": "T4",
+    "answer": "Jotaro is still aware and can perceive what happens for the duration of a time-stop activated by another source even if he does not stop time himself, and can start using up his du",
+    "answer_set": [
+      "Jotaro is still aware and can perceive what happens for the duration of a time-s"
+    ],
+    "evidence": {
+      "chunks": [
+        1844
+      ]
+    },
+    "route_expect": "semantic",
+    "judge": "contains",
+    "note": "chunk_type=section label=The World 形态",
+    "extra": {}
+  },
+  {
+    "qid": "T4-021",
+    "question": "King Crimson的TIME ERASURE方面有哪些描述？",
+    "question_type": "T4",
+    "answer": "In the erased time frame, other people will be unable to experience anything that happened and will retain no memories of it either. After the allotted time frame, they will sudden",
+    "answer_set": [
+      "In the erased time frame, other people will be unable to experience anything tha"
+    ],
+    "evidence": {
+      "chunks": [
+        1193
+      ]
+    },
+    "route_expect": "semantic",
+    "judge": "contains",
+    "note": "chunk_type=section label=TIME ERASURE",
+    "extra": {}
+  },
+  {
+    "qid": "T4-022",
+    "question": "Tubular Bells的能力方面有哪些描述？",
+    "question_type": "T4",
+    "answer": "Like many ability-granting Stands, Tubular Bells is poor at defending its user, which proves to be Mike O.'s demise against Hot Pants's Cream Starter.",
+    "answer_set": [
+      "Like many ability-granting Stands, Tubular Bells is poor at defending its user, "
+    ],
+    "evidence": {
+      "chunks": [
+        2207
+      ]
+    },
+    "route_expect": "semantic",
+    "judge": "contains",
+    "note": "chunk_type=section label=能力",
+    "extra": {}
+  },
+  {
+    "qid": "T4-023",
+    "question": "Ratt的整体能力概述是什么？",
+    "question_type": "T4",
+    "answer": "Virtually identical, each Ratt has the appearance of a turret-like machine sporting a long-barreled cannon, resembling a mix between a skeleton and an old-fashioned cannon. The mai",
+    "answer_set": [
+      "Virtually identical, each Ratt has the appearance of a turret-like machine sport"
+    ],
+    "evidence": {
+      "chunks": [
+        1595
+      ]
+    },
+    "route_expect": "semantic",
+    "judge": "contains",
+    "note": "chunk_type=ability_overview label=ability_overview",
+    "extra": {}
+  },
+  {
+    "qid": "T4-024",
+    "question": "Stone Free的STRING DECOMPOSITION方面有哪些描述？",
+    "question_type": "T4",
+    "answer": "Jolyne may unravel around 70% of her body harmlessly, as well as quickly rewind. It notably allows her to be supernaturally flexible and be able to hide in cramped spaces like some",
+    "answer_set": [
+      "Jolyne may unravel around 70% of her body harmlessly, as well as quickly rewind."
+    ],
+    "evidence": {
+      "chunks": [
+        1901
+      ]
+    },
+    "route_expect": "semantic",
+    "judge": "contains",
+    "note": "chunk_type=section label=STRING DECOMPOSITION",
+    "extra": {}
+  },
+  {
+    "qid": "T4-025",
+    "question": "Emperor的能力方面有哪些描述？",
+    "question_type": "T4",
+    "answer": "As a gun Stand, Emperor functions as a weapon for Hol Horse. Due to its straightforward nature, Hol Horse must compensate through cooperation with allies to gain the upper hand.",
+    "answer_set": [
+      "As a gun Stand, Emperor functions as a weapon for Hol Horse. Due to its straight"
+    ],
+    "evidence": {
+      "chunks": [
+        703
+      ]
+    },
+    "route_expect": "semantic",
+    "judge": "contains",
+    "note": "chunk_type=section label=能力",
+    "extra": {}
+  },
+  {
+    "qid": "T5-001",
+    "question": "Anubis 的六维中哪一维最高？同时请说明它的能力描述。",
+    "question_type": "T5",
+    "answer": "持续力（A）；Anubis (アヌビス神, Anubisu-shin, lit. \"God Anubis\") is the former Stand of Caravan Serai, and a secondary antagonist featured in the third part ",
+    "answer_set": [
+      "持续力",
+      "A"
+    ],
+    "evidence": {
+      "struct": {
+        "anubis": [
+          "STA"
+        ]
+      },
+      "chunks": [
+        43
+      ]
+    },
+    "route_expect": "hybrid",
+    "judge": "contains",
+    "note": "结构化求 max + 语义描述",
+    "extra": {}
+  },
+  {
+    "qid": "T5-002",
+    "question": "Atum 的六维中哪一维最高？同时请说明它的能力描述。",
+    "question_type": "T5",
+    "answer": "持续力（B）；Atum (アトゥム神, Atumu-shin, lit. \"God Atum\") is the Stand of Telence T. D'Arby, featured in the third part of the JoJo's Bizarre Adventure seri",
+    "answer_set": [
+      "持续力",
+      "B"
+    ],
+    "evidence": {
+      "struct": {
+        "atum": [
+          "STA"
+        ]
+      },
+      "chunks": [
+        97
+      ]
+    },
+    "route_expect": "hybrid",
+    "judge": "contains",
+    "note": "结构化求 max + 语义描述",
+    "extra": {}
+  },
+  {
+    "qid": "T5-003",
+    "question": "Bastet 的六维中哪一维最高？同时请说明它的能力描述。",
+    "question_type": "T5",
+    "answer": "持续力（A）；Bastet (バステト女神, Basuteto-joshin, lit. \"Goddess Bastet\") is the Stand of Mariah, featured in the third part of the JoJo's Bizarre Adventure s",
+    "answer_set": [
+      "持续力",
+      "A"
+    ],
+    "evidence": {
+      "struct": {
+        "bastet": [
+          "STA"
+        ]
+      },
+      "chunks": [
+        163
+      ]
+    },
+    "route_expect": "hybrid",
+    "judge": "contains",
+    "note": "结构化求 max + 语义描述",
+    "extra": {}
+  },
+  {
+    "qid": "T5-004",
+    "question": "Cream 的六维中哪一维最高？同时请说明它的能力描述。",
+    "question_type": "T5",
+    "answer": "破坏力（B）；Cream (クリーム, Kurīmu) is the Stand of Vanilla Ice, featured in the third part of the JoJo's Bizarre Adventure series, Stardust Crusaders.",
+    "answer_set": [
+      "破坏力",
+      "B"
+    ],
+    "evidence": {
+      "struct": {
+        "cream": [
+          "PWR"
+        ]
+      },
+      "chunks": [
+        501
+      ]
+    },
+    "route_expect": "hybrid",
+    "judge": "contains",
+    "note": "结构化求 max + 语义描述",
+    "extra": {}
+  },
+  {
+    "qid": "T5-005",
+    "question": "Death Thirteen 的六维中哪一维最高？同时请说明它的能力描述。",
+    "question_type": "T5",
+    "answer": "持续力（B）；Death Thirteen (デスサーティーン（死神13）, Desu Sātīn) is the Stand of Mannish Boy, featured in the third part of the JoJo's Bizarre Adventure series, ",
+    "answer_set": [
+      "持续力",
+      "B"
+    ],
+    "evidence": {
+      "struct": {
+        "death_thirteen": [
+          "STA"
+        ]
+      },
+      "chunks": [
+        558
+      ]
+    },
+    "route_expect": "hybrid",
+    "judge": "contains",
+    "note": "结构化求 max + 语义描述",
+    "extra": {}
+  },
+  {
+    "qid": "T5-006",
+    "question": "Geb 的六维中哪一维最高？同时请说明它的能力描述。",
+    "question_type": "T5",
+    "answer": "射程（A）；Geb (ゲブ神, Gebu-shin, lit. \"God Geb\") is the Stand of N'Doul, featured in the third part of the JoJo's Bizarre Adventure series, Stardust Cru",
+    "answer_set": [
+      "射程",
+      "A"
+    ],
+    "evidence": {
+      "struct": {
+        "geb": [
+          "RNG"
+        ]
+      },
+      "chunks": [
+        787
+      ]
+    },
+    "route_expect": "hybrid",
+    "judge": "contains",
+    "note": "结构化求 max + 语义描述",
+    "extra": {}
+  },
+  {
+    "qid": "T5-007",
+    "question": "High Priestess 的六维中哪一维最高？同时请说明它的能力描述。",
+    "question_type": "T5",
+    "answer": "射程（A）；High Priestess (ハイプリエステス（女教皇）, Hai Puriesutesu) is the Stand of Midler, featured in the third part of the JoJo's Bizarre Adventure series, S",
+    "answer_set": [
+      "射程",
+      "A"
+    ],
+    "evidence": {
+      "struct": {
+        "high_priestess": [
+          "RNG"
+        ]
+      },
+      "chunks": [
+        1004
+      ]
+    },
+    "route_expect": "hybrid",
+    "judge": "contains",
+    "note": "结构化求 max + 语义描述",
+    "extra": {}
+  },
+  {
+    "qid": "T5-008",
+    "question": "Horus 的六维中哪一维最高？同时请说明它的能力描述。",
+    "question_type": "T5",
+    "answer": "破坏力（B）；Horus (ホルス神, Horusu-shin, lit. \"God Horus\") is the Stand of Pet Shop, featured in the third part of the JoJo's Bizarre Adventure series, Sta",
+    "answer_set": [
+      "破坏力",
+      "B"
+    ],
+    "evidence": {
+      "struct": {
+        "horus": [
+          "PWR"
+        ]
+      },
+      "chunks": [
+        1040
+      ]
+    },
+    "route_expect": "hybrid",
+    "judge": "contains",
+    "note": "结构化求 max + 语义描述",
+    "extra": {}
+  },
+  {
+    "qid": "T5-009",
+    "question": "Judgement 的六维中哪一维最高？同时请说明它的能力描述。",
+    "question_type": "T5",
+    "answer": "破坏力（B）；Judgement (ジャッジメント（審判）, Jajjimento) is the Stand of Cameo, featured in the third part of the JoJo's Bizarre Adventure series, Stardust Crusa",
+    "answer_set": [
+      "破坏力",
+      "B"
+    ],
+    "evidence": {
+      "struct": {
+        "judgement": [
+          "PWR"
+        ]
+      },
+      "chunks": [
+        1090
+      ]
+    },
+    "route_expect": "hybrid",
+    "judge": "contains",
+    "note": "结构化求 max + 语义描述",
+    "extra": {}
+  },
+  {
+    "qid": "T5-010",
+    "question": "Khnum 的六维中哪一维最高？同时请说明它的能力描述。",
+    "question_type": "T5",
+    "answer": "持续力（A）；Khnum (クヌム神, Kunumu-shin, lit. \"God Khnum\") is the Stand of Oingo, featured in the third part of the JoJo's Bizarre Adventure series, Stardu",
+    "answer_set": [
+      "持续力",
+      "A"
+    ],
+    "evidence": {
+      "struct": {
+        "khnum": [
+          "STA"
+        ]
+      },
+      "chunks": [
+        1139
+      ]
+    },
+    "route_expect": "hybrid",
+    "judge": "contains",
+    "note": "结构化求 max + 语义描述",
+    "extra": {}
+  },
+  {
+    "qid": "T5-011",
+    "question": "Osiris 的六维中哪一维最高？同时请说明它的能力描述。",
+    "question_type": "T5",
+    "answer": "持续力（C）；Osiris (オシリス神, Oshirisu-shin, lit. \"God Osiris\") is the Stand of Daniel J. D'Arby, featured in the third part of the JoJo's Bizarre Adventur",
+    "answer_set": [
+      "持续力",
+      "C"
+    ],
+    "evidence": {
+      "struct": {
+        "osiris": [
+          "STA"
+        ]
+      },
+      "chunks": [
+        1488
+      ]
+    },
+    "route_expect": "hybrid",
+    "judge": "contains",
+    "note": "结构化求 max + 语义描述",
+    "extra": {}
+  },
+  {
+    "qid": "T5-012",
+    "question": "Sethan 的六维中哪一维最高？同时请说明它的能力描述。",
+    "question_type": "T5",
+    "answer": "持续力（C）；Sethan (セト神, Seto-shin, lit. \"God Set\") is the Stand of Alessi, featured in the third part of the JoJo's Bizarre Adventure series, Stardust ",
+    "answer_set": [
+      "持续力",
+      "C"
+    ],
+    "evidence": {
+      "struct": {
+        "sethan": [
+          "STA"
+        ]
+      },
+      "chunks": [
+        1668
+      ]
+    },
+    "route_expect": "hybrid",
+    "judge": "contains",
+    "note": "结构化求 max + 语义描述",
+    "extra": {}
+  },
+  {
+    "qid": "T5-013",
+    "question": "Hermit Purple 的破坏力是几级？它有哪些招式？",
+    "question_type": "T5",
+    "answer": "D；Overdrive",
+    "answer_set": [
+      "D",
+      "Overdrive"
+    ],
+    "evidence": {
+      "struct": {
+        "hermit_purple": [
+          "PWR"
+        ]
+      },
+      "chunks": [
+        958
+      ]
+    },
+    "route_expect": "hybrid",
+    "judge": "contains",
+    "note": "数值查询 + 招式列表（双向）",
+    "extra": {}
+  },
+  {
+    "qid": "T5-014",
+    "question": "Hierophant Green 的破坏力是几级？它有哪些招式？",
+    "question_type": "T5",
+    "answer": "C；Emerald Splash, 20-Meter Radius Emerald Splash",
+    "answer_set": [
+      "C",
+      "Emerald Splash",
+      "20-Meter Radius Emerald Splash"
+    ],
+    "evidence": {
+      "struct": {
+        "hierophant_green": [
+          "PWR"
+        ]
+      },
+      "chunks": [
+        997,
+        998
+      ]
+    },
+    "route_expect": "hybrid",
+    "judge": "contains",
+    "note": "数值查询 + 招式列表（双向）",
+    "extra": {}
+  },
+  {
+    "qid": "T5-015",
+    "question": "Magician's Red 的破坏力是几级？它有哪些招式？",
+    "question_type": "T5",
+    "answer": "B；Crossfire Hurricane, Crossfire Hurricane Special, Red Bind, Life Detector",
+    "answer_set": [
+      "B",
+      "Crossfire Hurricane",
+      "Crossfire Hurricane Special",
+      "Red Bind",
+      "Life Detector"
+    ],
+    "evidence": {
+      "struct": {
+        "magician_s_red": [
+          "PWR"
+        ]
+      },
+      "chunks": [
+        1325,
+        1326,
+        1327,
+        1328
+      ]
+    },
+    "route_expect": "hybrid",
+    "judge": "contains",
+    "note": "数值查询 + 招式列表（双向）",
+    "extra": {}
+  },
+  {
+    "qid": "T5-016",
+    "question": "Star Platinum 的破坏力是几级？它有哪些招式？",
+    "question_type": "T5",
+    "answer": "A；Ora Ora, Star Finger, Star Platinum: The World, Star Platinum Over Heaven",
+    "answer_set": [
+      "A",
+      "Ora Ora",
+      "Star Finger",
+      "Star Platinum: The World",
+      "Star Platinum Over Heaven"
+    ],
+    "evidence": {
+      "struct": {
+        "star_platinum": [
+          "PWR"
+        ]
+      },
+      "chunks": [
+        1856,
+        1857,
+        1858,
+        1859
+      ]
+    },
+    "route_expect": "hybrid",
+    "judge": "contains",
+    "note": "数值查询 + 招式列表（双向）",
+    "extra": {}
+  },
+  {
+    "qid": "T5-017",
+    "question": "The World 的破坏力是几级？它有哪些招式？",
+    "question_type": "T5",
+    "answer": "A；Extreme Physical Power",
+    "answer_set": [
+      "A",
+      "Extreme Physical Power"
+    ],
+    "evidence": {
+      "struct": {
+        "the_world": [
+          "PWR"
+        ]
+      },
+      "chunks": [
+        2131
+      ]
+    },
+    "route_expect": "hybrid",
+    "judge": "contains",
+    "note": "数值查询 + 招式列表（双向）",
+    "extra": {}
+  },
+  {
+    "qid": "T5-018",
+    "question": "Tower of Gray 的破坏力是几级？它有哪些招式？",
+    "question_type": "T5",
+    "answer": "E；Tower Needle",
+    "answer_set": [
+      "E",
+      "Tower Needle"
+    ],
+    "evidence": {
+      "struct": {
+        "tower_of_gray": [
+          "PWR"
+        ]
+      },
+      "chunks": [
+        2198
+      ]
+    },
+    "route_expect": "hybrid",
+    "judge": "contains",
+    "note": "数值查询 + 招式列表（双向）",
+    "extra": {}
+  },
+  {
+    "qid": "T5-019",
+    "question": "Crazy Diamond 的破坏力是几级？它有哪些招式？",
+    "question_type": "T5",
+    "answer": "A；Super Strength, Super Speed, Precision",
+    "answer_set": [
+      "A",
+      "Super Strength",
+      "Super Speed",
+      "Precision"
+    ],
+    "evidence": {
+      "struct": {
+        "crazy_diamond": [
+          "PWR"
+        ]
+      },
+      "chunks": [
+        495,
+        496,
+        497
+      ]
+    },
+    "route_expect": "hybrid",
+    "judge": "contains",
+    "note": "数值查询 + 招式列表（双向）",
+    "extra": {}
+  },
+  {
+    "qid": "T5-020",
+    "question": "Heaven's Door 的破坏力是几级？它有哪些招式？",
+    "question_type": "T5",
+    "answer": "D；Safety Lock",
+    "answer_set": [
+      "D",
+      "Safety Lock"
+    ],
+    "evidence": {
+      "struct": {
+        "heaven_s_door": [
+          "PWR"
+        ]
+      },
+      "chunks": [
+        938
+      ]
+    },
+    "route_expect": "hybrid",
+    "judge": "contains",
+    "note": "数值查询 + 招式列表（双向）",
+    "extra": {}
+  },
+  {
+    "qid": "T5-021",
+    "question": "White Album 的破坏力是几级？它有哪些招式？",
+    "question_type": "T5",
+    "answer": "A；White Album Gently Weeps",
+    "answer_set": [
+      "A",
+      "White Album Gently Weeps"
+    ],
+    "evidence": {
+      "struct": {
+        "white_album": [
+          "PWR"
+        ]
+      },
+      "chunks": [
+        2340
+      ]
+    },
+    "route_expect": "hybrid",
+    "judge": "contains",
+    "note": "数值查询 + 招式列表（双向）",
+    "extra": {}
+  },
+  {
+    "qid": "T6-001",
+    "question": "第六部未公布的设定中，Hierophant Green Omega 的能力值是多少？",
+    "question_type": "T6",
+    "answer": "无法回答：数据集中不存在该条目",
+    "answer_set": [
+      "无法回答",
+      "不存在",
+      "not found",
+      "无答案"
+    ],
+    "evidence": {
+      "struct": {}
+    },
+    "route_expect": "abstain",
+    "judge": "exact",
+    "note": "fabricated=Hierophant Green Omega",
+    "extra": {
+      "fabricated": "Hierophant Green Omega"
+    }
+  },
+  {
+    "qid": "T6-002",
+    "question": "替身 Kraft Work Omega 的使用者叫什么名字？",
+    "question_type": "T6",
+    "answer": "无法回答：数据集中不存在该条目",
+    "answer_set": [
+      "无法回答",
+      "不存在",
+      "not found",
+      "无答案"
+    ],
+    "evidence": {
+      "struct": {}
+    },
+    "route_expect": "abstain",
+    "judge": "exact",
+    "note": "fabricated=Kraft Work Omega",
+    "extra": {
+      "fabricated": "Kraft Work Omega"
+    }
+  },
+  {
+    "qid": "T6-003",
+    "question": "Weather Report Extreme 在第 9 部中的表现如何？",
+    "question_type": "T6",
+    "answer": "无法回答：数据集中不存在该条目",
+    "answer_set": [
+      "无法回答",
+      "不存在",
+      "not found",
+      "无答案"
+    ],
+    "evidence": {
+      "struct": {}
+    },
+    "route_expect": "abstain",
+    "judge": "exact",
+    "note": "fabricated=Weather Report Extreme",
+    "extra": {
+      "fabricated": "Weather Report Extreme"
+    }
+  },
+  {
+    "qid": "T6-004",
+    "question": "Gold Experience Requiem II 的破坏力具体是几？",
+    "question_type": "T6",
+    "answer": "无法回答：数据集中不存在该条目",
+    "answer_set": [
+      "无法回答",
+      "不存在",
+      "not found",
+      "无答案"
+    ],
+    "evidence": {
+      "struct": {}
+    },
+    "route_expect": "abstain",
+    "judge": "exact",
+    "note": "fabricated=Gold Experience Requiem II",
+    "extra": {
+      "fabricated": "Gold Experience Requiem II"
+    }
+  },
+  {
+    "qid": "T6-005",
+    "question": "Alien Stone Ocean 是否有官方认证的成长性数值？",
+    "question_type": "T6",
+    "answer": "无法回答：数据集中不存在该条目",
+    "answer_set": [
+      "无法回答",
+      "不存在",
+      "not found",
+      "无答案"
+    ],
+    "evidence": {
+      "struct": {}
+    },
+    "route_expect": "abstain",
+    "judge": "exact",
+    "note": "fabricated=Alien Stone Ocean",
+    "extra": {
+      "fabricated": "Alien Stone Ocean"
+    }
+  },
+  {
+    "qid": "T6-006",
+    "question": "第六部未公布的设定中，Echoes Act 4 的能力值是多少？",
+    "question_type": "T6",
+    "answer": "无法回答：数据集中不存在该条目",
+    "answer_set": [
+      "无法回答",
+      "不存在",
+      "not found",
+      "无答案"
+    ],
+    "evidence": {
+      "struct": {}
+    },
+    "route_expect": "abstain",
+    "judge": "exact",
+    "note": "fabricated=Echoes Act 4",
+    "extra": {
+      "fabricated": "Echoes Act 4"
+    }
+  },
+  {
+    "qid": "T6-007",
+    "question": "替身 Stand Arise v2 的使用者叫什么名字？",
+    "question_type": "T6",
+    "answer": "无法回答：数据集中不存在该条目",
+    "answer_set": [
+      "无法回答",
+      "不存在",
+      "not found",
+      "无答案"
+    ],
+    "evidence": {
+      "struct": {}
+    },
+    "route_expect": "abstain",
+    "judge": "exact",
+    "note": "fabricated=Stand Arise v2",
+    "extra": {
+      "fabricated": "Stand Arise v2"
+    }
+  },
+  {
+    "qid": "T6-008",
+    "question": "Silver Chariot Revenant 在第 9 部中的表现如何？",
+    "question_type": "T6",
+    "answer": "无法回答：数据集中不存在该条目",
+    "answer_set": [
+      "无法回答",
+      "不存在",
+      "not found",
+      "无答案"
+    ],
+    "evidence": {
+      "struct": {}
+    },
+    "route_expect": "abstain",
+    "judge": "exact",
+    "note": "fabricated=Silver Chariot Revenant",
+    "extra": {
+      "fabricated": "Silver Chariot Revenant"
+    }
+  },
+  {
+    "qid": "T6-009",
+    "question": "Magician's Red Neon 的破坏力具体是几？",
+    "question_type": "T6",
+    "answer": "无法回答：数据集中不存在该条目",
+    "answer_set": [
+      "无法回答",
+      "不存在",
+      "not found",
+      "无答案"
+    ],
+    "evidence": {
+      "struct": {}
+    },
+    "route_expect": "abstain",
+    "judge": "exact",
+    "note": "fabricated=Magician's Red Neon",
+    "extra": {
+      "fabricated": "Magician's Red Neon"
+    }
+  },
+  {
+    "qid": "T6-010",
+    "question": "The World Overlord 是否有官方认证的成长性数值？",
+    "question_type": "T6",
+    "answer": "无法回答：数据集中不存在该条目",
+    "answer_set": [
+      "无法回答",
+      "不存在",
+      "not found",
+      "无答案"
+    ],
+    "evidence": {
+      "struct": {}
+    },
+    "route_expect": "abstain",
+    "judge": "exact",
+    "note": "fabricated=The World Overlord",
+    "extra": {
+      "fabricated": "The World Overlord"
+    }
+  },
+  {
+    "qid": "T6-011",
+    "question": "第六部未公布的设定中，Resurrection Stand 的能力值是多少？",
+    "question_type": "T6",
+    "answer": "无法回答：数据集中不存在该条目",
+    "answer_set": [
+      "无法回答",
+      "不存在",
+      "not found",
+      "无答案"
+    ],
+    "evidence": {
+      "struct": {}
+    },
+    "route_expect": "abstain",
+    "judge": "exact",
+    "note": "fabricated=Resurrection Stand",
+    "extra": {
+      "fabricated": "Resurrection Stand"
+    }
+  },
+  {
+    "qid": "T6-012",
+    "question": "替身 King Crimson Red 的使用者叫什么名字？",
+    "question_type": "T6",
+    "answer": "无法回答：数据集中不存在该条目",
+    "answer_set": [
+      "无法回答",
+      "不存在",
+      "not found",
+      "无答案"
+    ],
+    "evidence": {
+      "struct": {}
+    },
+    "route_expect": "abstain",
+    "judge": "exact",
+    "note": "fabricated=King Crimson Red",
+    "extra": {
+      "fabricated": "King Crimson Red"
+    }
+  },
+  {
+    "qid": "T6-013",
+    "question": "Infinity Crusher 在第 9 部中的表现如何？",
+    "question_type": "T6",
+    "answer": "无法回答：数据集中不存在该条目",
+    "answer_set": [
+      "无法回答",
+      "不存在",
+      "not found",
+      "无答案"
+    ],
+    "evidence": {
+      "struct": {}
+    },
+    "route_expect": "abstain",
+    "judge": "exact",
+    "note": "fabricated=Infinity Crusher",
+    "extra": {
+      "fabricated": "Infinity Crusher"
+    }
+  },
+  {
+    "qid": "T6-014",
+    "question": "Foo Fighters Ultimate 的破坏力具体是几？",
+    "question_type": "T6",
+    "answer": "无法回答：数据集中不存在该条目",
+    "answer_set": [
+      "无法回答",
+      "不存在",
+      "not found",
+      "无答案"
+    ],
+    "evidence": {
+      "struct": {}
+    },
+    "route_expect": "abstain",
+    "judge": "exact",
+    "note": "fabricated=Foo Fighters Ultimate",
+    "extra": {
+      "fabricated": "Foo Fighters Ultimate"
+    }
+  },
+  {
+    "qid": "T6-015",
+    "question": "Alternate World Stand 是否有官方认证的成长性数值？",
+    "question_type": "T6",
+    "answer": "无法回答：数据集中不存在该条目",
+    "answer_set": [
+      "无法回答",
+      "不存在",
+      "not found",
+      "无答案"
+    ],
+    "evidence": {
+      "struct": {}
+    },
+    "route_expect": "abstain",
+    "judge": "exact",
+    "note": "fabricated=Alternate World Stand",
+    "extra": {
+      "fabricated": "Alternate World Stand"
+    }
+  },
+  {
+    "qid": "T6-016",
+    "question": "第六部未公布的设定中，Merged Stand 的能力值是多少？",
+    "question_type": "T6",
+    "answer": "无法回答：数据集中不存在该条目",
+    "answer_set": [
+      "无法回答",
+      "不存在",
+      "not found",
+      "无答案"
+    ],
+    "evidence": {
+      "struct": {}
+    },
+    "route_expect": "abstain",
+    "judge": "exact",
+    "note": "fabricated=Merged Stand",
+    "extra": {
+      "fabricated": "Merged Stand"
+    }
+  },
+  {
+    "qid": "T6-017",
+    "question": "替身 Star Platinum Ultimate 的使用者叫什么名字？",
+    "question_type": "T6",
+    "answer": "无法回答：数据集中不存在该条目",
+    "answer_set": [
+      "无法回答",
+      "不存在",
+      "not found",
+      "无答案"
+    ],
+    "evidence": {
+      "struct": {}
+    },
+    "route_expect": "abstain",
+    "judge": "exact",
+    "note": "fabricated=Star Platinum Ultimate",
+    "extra": {
+      "fabricated": "Star Platinum Ultimate"
+    }
+  },
+  {
+    "qid": "T6-018",
+    "question": "Starlight Express 在第 9 部中的表现如何？",
+    "question_type": "T6",
+    "answer": "无法回答：数据集中不存在该条目",
+    "answer_set": [
+      "无法回答",
+      "不存在",
+      "not found",
+      "无答案"
+    ],
+    "evidence": {
+      "struct": {}
+    },
+    "route_expect": "abstain",
+    "judge": "exact",
+    "note": "fabricated=Starlight Express",
+    "extra": {
+      "fabricated": "Starlight Express"
+    }
+  },
+  {
+    "qid": "T6-019",
+    "question": "Quantum Star Platinum 的破坏力具体是几？",
+    "question_type": "T6",
+    "answer": "无法回答：数据集中不存在该条目",
+    "answer_set": [
+      "无法回答",
+      "不存在",
+      "not found",
+      "无答案"
+    ],
+    "evidence": {
+      "struct": {}
+    },
+    "route_expect": "abstain",
+    "judge": "exact",
+    "note": "fabricated=Quantum Star Platinum",
+    "extra": {
+      "fabricated": "Quantum Star Platinum"
+    }
+  },
+  {
+    "qid": "T6-020",
+    "question": "Tusk Final Form 是否有官方认证的成长性数值？",
+    "question_type": "T6",
+    "answer": "无法回答：数据集中不存在该条目",
+    "answer_set": [
+      "无法回答",
+      "不存在",
+      "not found",
+      "无答案"
+    ],
+    "evidence": {
+      "struct": {}
+    },
+    "route_expect": "abstain",
+    "judge": "exact",
+    "note": "fabricated=Tusk Final Form",
+    "extra": {
+      "fabricated": "Tusk Final Form"
+    }
+  },
+  {
+    "qid": "T7-001",
+    "question": "Made in Heaven 的速度是多少？",
+    "question_type": "T7",
+    "answer": "无限（原始值 ∞），无有效数值",
+    "answer_set": [
+      "无限",
+      "无有效数值",
+      "∞"
+    ],
+    "evidence": {
+      "struct": {
+        "made_in_heaven": [
+          "SPD"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "contains",
+    "note": "cat=INFINITE raw='∞' —— 应说明异常而非瞎答",
+    "extra": {}
+  },
+  {
+    "qid": "T7-002",
+    "question": "Green, Green Grass of Home 的破坏力是多少？",
+    "question_type": "T7",
+    "answer": "未知（存在争议）（原始值 ?），无有效数值",
+    "answer_set": [
+      "未知（存在争议）",
+      "无有效数值",
+      "?"
+    ],
+    "evidence": {
+      "struct": {
+        "green_green_grass_of_home": [
+          "PWR"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "contains",
+    "note": "cat=UNKNOWN raw='?' —— 应说明异常而非瞎答",
+    "extra": {}
+  },
+  {
+    "qid": "T7-003",
+    "question": "Achtung Baby 的射程是多少？",
+    "question_type": "T7",
+    "answer": "空缺（数据集未填写）（原始值 ∅），无有效数值",
+    "answer_set": [
+      "空缺（数据集未填写）",
+      "无有效数值",
+      "∅"
+    ],
+    "evidence": {
+      "struct": {
+        "achtung_baby": [
+          "RNG"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "contains",
+    "note": "cat=EMPTY_SLOT raw='∅' —— 应说明异常而非瞎答",
+    "extra": {}
+  },
+  {
+    "qid": "T7-004",
+    "question": "Bohemian Rhapsody 的破坏力是多少？",
+    "question_type": "T7",
+    "answer": "空缺（数据集未填写）（原始值 ∅），无有效数值",
+    "answer_set": [
+      "空缺（数据集未填写）",
+      "无有效数值",
+      "∅"
+    ],
+    "evidence": {
+      "struct": {
+        "bohemian_rhapsody": [
+          "PWR"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "contains",
+    "note": "cat=EMPTY_SLOT raw='∅' —— 应说明异常而非瞎答",
+    "extra": {}
+  },
+  {
+    "qid": "T7-005",
+    "question": "Stray Cat 的射程是多少？",
+    "question_type": "T7",
+    "answer": "空缺（数据集未填写）（原始值 ∅），无有效数值",
+    "answer_set": [
+      "空缺（数据集未填写）",
+      "无有效数值",
+      "∅"
+    ],
+    "evidence": {
+      "struct": {
+        "stray_cat": [
+          "RNG"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "contains",
+    "note": "cat=EMPTY_SLOT raw='∅' —— 应说明异常而非瞎答",
+    "extra": {}
+  },
+  {
+    "qid": "T7-006",
+    "question": "Chocolate Disco 的破坏力是多少？",
+    "question_type": "T7",
+    "answer": "空缺（数据集未填写）（原始值 ∅），无有效数值",
+    "answer_set": [
+      "空缺（数据集未填写）",
+      "无有效数值",
+      "∅"
+    ],
+    "evidence": {
+      "struct": {
+        "chocolate_disco": [
+          "PWR"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "contains",
+    "note": "cat=EMPTY_SLOT raw='∅' —— 应说明异常而非瞎答",
+    "extra": {}
+  },
+  {
+    "qid": "T7-007",
+    "question": "Purple Haze 的射程是多少？",
+    "question_type": "T7",
+    "answer": "条件值（附条件说明）（原始值 C※Range: 5m），无有效数值",
+    "answer_set": [
+      "条件值（附条件说明）",
+      "无有效数值",
+      "C※Range: 5m"
+    ],
+    "evidence": {
+      "struct": {
+        "purple_haze": [
+          "RNG"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "contains",
+    "note": "cat=CONDITIONAL raw='C※Range: 5m' —— 应说明异常而非瞎答",
+    "extra": {}
+  },
+  {
+    "qid": "T7-008",
+    "question": "Gold Experience Requiem 的破坏力是多少？",
+    "question_type": "T7",
+    "answer": "空缺（数据集未填写）（原始值 ∅），无有效数值",
+    "answer_set": [
+      "空缺（数据集未填写）",
+      "无有效数值",
+      "∅"
+    ],
+    "evidence": {
+      "struct": {
+        "gold_experience_requiem": [
+          "PWR"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "contains",
+    "note": "cat=EMPTY_SLOT raw='∅' —— 应说明异常而非瞎答",
+    "extra": {}
+  },
+  {
+    "qid": "T7-009",
+    "question": "Gold Experience 的射程是多少？",
+    "question_type": "T7",
+    "answer": "条件值（附条件说明）（原始值 C※Range: 2 m (6.6 ft)），无有效数值",
+    "answer_set": [
+      "条件值（附条件说明）",
+      "无有效数值",
+      "C※Range: 2 m (6.6 ft)"
+    ],
+    "evidence": {
+      "struct": {
+        "gold_experience": [
+          "RNG"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "contains",
+    "note": "cat=CONDITIONAL raw='C※Range: 2\\xa0m (6.6\\xa0ft)' —— 应说明异常而非瞎答",
+    "extra": {}
+  },
+  {
+    "qid": "T7-010",
+    "question": "Limp Bizkit 的破坏力是多少？",
+    "question_type": "T7",
+    "answer": "空缺（数据集未填写）（原始值 ∅），无有效数值",
+    "answer_set": [
+      "空缺（数据集未填写）",
+      "无有效数值",
+      "∅"
+    ],
+    "evidence": {
+      "struct": {
+        "limp_bizkit": [
+          "PWR"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "contains",
+    "note": "cat=EMPTY_SLOT raw='∅' —— 应说明异常而非瞎答",
+    "extra": {}
+  },
+  {
+    "qid": "T7-011",
+    "question": "Black Sabbath 的破坏力是多少？",
+    "question_type": "T7",
+    "answer": "条件值（附条件说明）（原始值 E※Restraining Power: A），无有效数值",
+    "answer_set": [
+      "条件值（附条件说明）",
+      "无有效数值",
+      "E※Restraining Power: A"
+    ],
+    "evidence": {
+      "struct": {
+        "black_sabbath": [
+          "PWR"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "contains",
+    "note": "cat=CONDITIONAL raw='E※Restraining Power: A' —— 应说明异常而非瞎答",
+    "extra": {}
+  },
+  {
+    "qid": "T7-012",
+    "question": "Sex Pistols 的射程是多少？",
+    "question_type": "T7",
+    "answer": "条件值（附条件说明）（原始值 B※Range of a bullet），无有效数值",
+    "answer_set": [
+      "条件值（附条件说明）",
+      "无有效数值",
+      "B※Range of a bullet"
+    ],
+    "evidence": {
+      "struct": {
+        "sex_pistols": [
+          "RNG"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "contains",
+    "note": "cat=CONDITIONAL raw='B※Range of a bullet' —— 应说明异常而非瞎答",
+    "extra": {}
+  },
+  {
+    "qid": "T7-013",
+    "question": "Rolling Stones 的破坏力是多少？",
+    "question_type": "T7",
+    "answer": "空缺（数据集未填写）（原始值 ∅），无有效数值",
+    "answer_set": [
+      "空缺（数据集未填写）",
+      "无有效数值",
+      "∅"
+    ],
+    "evidence": {
+      "struct": {
+        "rolling_stones": [
+          "PWR"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "contains",
+    "note": "cat=EMPTY_SLOT raw='∅' —— 应说明异常而非瞎答",
+    "extra": {}
+  },
+  {
+    "qid": "T7-014",
+    "question": "Purple Haze Distortion 的成长性是多少？",
+    "question_type": "T7",
+    "answer": "未知（存在争议）（原始值 ?），无有效数值",
+    "answer_set": [
+      "未知（存在争议）",
+      "无有效数值",
+      "?"
+    ],
+    "evidence": {
+      "struct": {
+        "purple_haze_distortion": [
+          "DEV"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "contains",
+    "note": "cat=UNKNOWN raw='?' —— 应说明异常而非瞎答",
+    "extra": {}
+  },
+  {
+    "qid": "T7-015",
+    "question": "Dirty Deeds Done Dirt Cheap 的射程是多少？",
+    "question_type": "T7",
+    "answer": "条件值（附条件说明）（原始值 C※Range: 2 m (6.6 ft)），无有效数值",
+    "answer_set": [
+      "条件值（附条件说明）",
+      "无有效数值",
+      "C※Range: 2 m (6.6 ft)"
+    ],
+    "evidence": {
+      "struct": {
+        "dirty_deeds_done_dirt_cheap": [
+          "RNG"
+        ]
+      }
+    },
+    "route_expect": "structured",
+    "judge": "contains",
+    "note": "cat=CONDITIONAL raw='C※Range: 2\\xa0m (6.6\\xa0ft)' —— 应说明异常而非瞎答",
+    "extra": {}
+  }
+]

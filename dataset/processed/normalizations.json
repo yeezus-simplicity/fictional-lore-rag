@@ -1,0 +1,884 @@
+[
+  {
+    "stand_id": "achtung_baby",
+    "stat_dim": "RNG",
+    "primary_raw": "∅",
+    "other_raw": "None",
+    "source": "csv_topology",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "NONE"
+  },
+  {
+    "stand_id": "atom_heart_father",
+    "stat_dim": "RNG",
+    "primary_raw": "∅",
+    "other_raw": "None",
+    "source": "csv_topology",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "NONE"
+  },
+  {
+    "stand_id": "earth_wind_and_fire",
+    "stat_dim": "RNG",
+    "primary_raw": "∅",
+    "other_raw": "None",
+    "source": "csv_topology",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "NONE"
+  },
+  {
+    "stand_id": "super_fly",
+    "stat_dim": "RNG",
+    "primary_raw": "∅",
+    "other_raw": "none",
+    "source": "csv_bogdan",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "NONE"
+  },
+  {
+    "stand_id": "super_fly",
+    "stat_dim": "RNG",
+    "primary_raw": "∅",
+    "other_raw": "None",
+    "source": "csv_topology",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "NONE"
+  },
+  {
+    "stand_id": "stray_cat",
+    "stat_dim": "RNG",
+    "primary_raw": "∅",
+    "other_raw": "None",
+    "source": "csv_topology",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "NONE"
+  },
+  {
+    "stand_id": "black_sabbath",
+    "stat_dim": "PWR",
+    "primary_raw": "E※Restraining Power: A",
+    "other_raw": "E",
+    "source": "csv_bogdan",
+    "primary_cat": "CONDITIONAL",
+    "other_cat": "RANKED"
+  },
+  {
+    "stand_id": "gold_experience",
+    "stat_dim": "RNG",
+    "primary_raw": "C※Range: 2 m (6.6 ft)",
+    "other_raw": "C",
+    "source": "csv_bogdan",
+    "primary_cat": "CONDITIONAL",
+    "other_cat": "RANKED"
+  },
+  {
+    "stand_id": "gold_experience",
+    "stat_dim": "RNG",
+    "primary_raw": "C※Range: 2 m (6.6 ft)",
+    "other_raw": "C",
+    "source": "csv_topology",
+    "primary_cat": "CONDITIONAL",
+    "other_cat": "RANKED"
+  },
+  {
+    "stand_id": "sticky_fingers",
+    "stat_dim": "RNG",
+    "primary_raw": "C※Range: 2 m (6.6 ft)",
+    "other_raw": "C",
+    "source": "csv_bogdan",
+    "primary_cat": "CONDITIONAL",
+    "other_cat": "RANKED"
+  },
+  {
+    "stand_id": "sticky_fingers",
+    "stat_dim": "RNG",
+    "primary_raw": "C※Range: 2 m (6.6 ft)",
+    "other_raw": "C",
+    "source": "csv_topology",
+    "primary_cat": "CONDITIONAL",
+    "other_cat": "RANKED"
+  },
+  {
+    "stand_id": "metallica",
+    "stat_dim": "RNG",
+    "primary_raw": "C※Range: 5 - 10m",
+    "other_raw": "C",
+    "source": "csv_bogdan",
+    "primary_cat": "CONDITIONAL",
+    "other_cat": "RANKED"
+  },
+  {
+    "stand_id": "metallica",
+    "stat_dim": "RNG",
+    "primary_raw": "C※Range: 5 - 10m",
+    "other_raw": "C",
+    "source": "csv_topology",
+    "primary_cat": "CONDITIONAL",
+    "other_cat": "RANKED"
+  },
+  {
+    "stand_id": "purple_haze",
+    "stat_dim": "RNG",
+    "primary_raw": "C※Range: 5m",
+    "other_raw": "C",
+    "source": "csv_bogdan",
+    "primary_cat": "CONDITIONAL",
+    "other_cat": "RANKED"
+  },
+  {
+    "stand_id": "purple_haze",
+    "stat_dim": "RNG",
+    "primary_raw": "C※Range: 5m",
+    "other_raw": "C",
+    "source": "csv_topology",
+    "primary_cat": "CONDITIONAL",
+    "other_cat": "RANKED"
+  },
+  {
+    "stand_id": "moody_blues",
+    "stat_dim": "RNG",
+    "primary_raw": "A※Only during replays",
+    "other_raw": "A",
+    "source": "csv_bogdan",
+    "primary_cat": "CONDITIONAL",
+    "other_cat": "RANKED"
+  },
+  {
+    "stand_id": "moody_blues",
+    "stat_dim": "RNG",
+    "primary_raw": "A※Only during replays",
+    "other_raw": "A",
+    "source": "csv_topology",
+    "primary_cat": "CONDITIONAL",
+    "other_cat": "RANKED"
+  },
+  {
+    "stand_id": "sex_pistols",
+    "stat_dim": "RNG",
+    "primary_raw": "B※Range of a bullet",
+    "other_raw": "B",
+    "source": "csv_bogdan",
+    "primary_cat": "CONDITIONAL",
+    "other_cat": "RANKED"
+  },
+  {
+    "stand_id": "sex_pistols",
+    "stat_dim": "RNG",
+    "primary_raw": "B※Range of a bullet",
+    "other_raw": "B",
+    "source": "csv_topology",
+    "primary_cat": "CONDITIONAL",
+    "other_cat": "RANKED"
+  },
+  {
+    "stand_id": "the_grateful_dead",
+    "stat_dim": "RNG",
+    "primary_raw": "B※Extends to an entire train",
+    "other_raw": "B",
+    "source": "csv_bogdan",
+    "primary_cat": "CONDITIONAL",
+    "other_cat": "RANKED"
+  },
+  {
+    "stand_id": "the_grateful_dead",
+    "stat_dim": "RNG",
+    "primary_raw": "B※Extends to an entire train",
+    "other_raw": "B",
+    "source": "csv_topology",
+    "primary_cat": "CONDITIONAL",
+    "other_cat": "RANKED"
+  },
+  {
+    "stand_id": "aerosmith",
+    "stat_dim": "RNG",
+    "primary_raw": "B※Tens of meters",
+    "other_raw": "B",
+    "source": "csv_bogdan",
+    "primary_cat": "CONDITIONAL",
+    "other_cat": "RANKED"
+  },
+  {
+    "stand_id": "aerosmith",
+    "stat_dim": "RNG",
+    "primary_raw": "B※Tens of meters",
+    "other_raw": "B",
+    "source": "csv_topology",
+    "primary_cat": "CONDITIONAL",
+    "other_cat": "RANKED"
+  },
+  {
+    "stand_id": "beach_boy",
+    "stat_dim": "RNG",
+    "primary_raw": "B※The length of the string",
+    "other_raw": "B",
+    "source": "csv_bogdan",
+    "primary_cat": "CONDITIONAL",
+    "other_cat": "RANKED"
+  },
+  {
+    "stand_id": "beach_boy",
+    "stat_dim": "RNG",
+    "primary_raw": "B※The length of the string",
+    "other_raw": "B",
+    "source": "csv_topology",
+    "primary_cat": "CONDITIONAL",
+    "other_cat": "RANKED"
+  },
+  {
+    "stand_id": "man_in_the_mirror",
+    "stat_dim": "RNG",
+    "primary_raw": "B※100s of meters in mirror world",
+    "other_raw": "B",
+    "source": "csv_bogdan",
+    "primary_cat": "CONDITIONAL",
+    "other_cat": "RANKED"
+  },
+  {
+    "stand_id": "man_in_the_mirror",
+    "stat_dim": "RNG",
+    "primary_raw": "B※100s of meters in mirror world",
+    "other_raw": "B",
+    "source": "csv_topology",
+    "primary_cat": "CONDITIONAL",
+    "other_cat": "RANKED"
+  },
+  {
+    "stand_id": "gold_experience_requiem",
+    "stat_dim": "PWR",
+    "primary_raw": "∅",
+    "other_raw": "infinite",
+    "source": "csv_bogdan",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "INFINITE"
+  },
+  {
+    "stand_id": "gold_experience_requiem",
+    "stat_dim": "PWR",
+    "primary_raw": "∅",
+    "other_raw": "Infi",
+    "source": "csv_topology",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "INFINITE"
+  },
+  {
+    "stand_id": "gold_experience_requiem",
+    "stat_dim": "SPD",
+    "primary_raw": "∅",
+    "other_raw": "infinite",
+    "source": "csv_bogdan",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "INFINITE"
+  },
+  {
+    "stand_id": "gold_experience_requiem",
+    "stat_dim": "SPD",
+    "primary_raw": "∅",
+    "other_raw": "Infi",
+    "source": "csv_topology",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "INFINITE"
+  },
+  {
+    "stand_id": "gold_experience_requiem",
+    "stat_dim": "RNG",
+    "primary_raw": "∅",
+    "other_raw": "infinite",
+    "source": "csv_bogdan",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "INFINITE"
+  },
+  {
+    "stand_id": "gold_experience_requiem",
+    "stat_dim": "RNG",
+    "primary_raw": "∅",
+    "other_raw": "Infi",
+    "source": "csv_topology",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "INFINITE"
+  },
+  {
+    "stand_id": "gold_experience_requiem",
+    "stat_dim": "STA",
+    "primary_raw": "∅",
+    "other_raw": "infinite",
+    "source": "csv_bogdan",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "INFINITE"
+  },
+  {
+    "stand_id": "gold_experience_requiem",
+    "stat_dim": "PRC",
+    "primary_raw": "∅",
+    "other_raw": "infinite",
+    "source": "csv_bogdan",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "INFINITE"
+  },
+  {
+    "stand_id": "gold_experience_requiem",
+    "stat_dim": "PRC",
+    "primary_raw": "∅",
+    "other_raw": "Infi",
+    "source": "csv_topology",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "INFINITE"
+  },
+  {
+    "stand_id": "gold_experience_requiem",
+    "stat_dim": "DEV",
+    "primary_raw": "∅",
+    "other_raw": "infinite",
+    "source": "csv_bogdan",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "INFINITE"
+  },
+  {
+    "stand_id": "gold_experience_requiem",
+    "stat_dim": "DEV",
+    "primary_raw": "∅",
+    "other_raw": "Infi",
+    "source": "csv_topology",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "INFINITE"
+  },
+  {
+    "stand_id": "king_crimson",
+    "stat_dim": "DEV",
+    "primary_raw": "?",
+    "other_raw": "Infi",
+    "source": "csv_topology",
+    "primary_cat": "UNKNOWN",
+    "other_cat": "INFINITE"
+  },
+  {
+    "stand_id": "rolling_stones",
+    "stat_dim": "PWR",
+    "primary_raw": "∅",
+    "other_raw": "None",
+    "source": "csv_topology",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "NONE"
+  },
+  {
+    "stand_id": "rolling_stones",
+    "stat_dim": "DEV",
+    "primary_raw": "∅",
+    "other_raw": "None",
+    "source": "csv_topology",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "NONE"
+  },
+  {
+    "stand_id": "whitesnake",
+    "stat_dim": "SPD",
+    "primary_raw": "D※Speed: Refers to \"Melt your Heart\" Ability (JoJoveller p.245)",
+    "other_raw": "D",
+    "source": "csv_bogdan",
+    "primary_cat": "CONDITIONAL",
+    "other_cat": "RANKED"
+  },
+  {
+    "stand_id": "whitesnake",
+    "stat_dim": "SPD",
+    "primary_raw": "D※Speed: Refers to \"Melt your Heart\" Ability (JoJoveller p.245)",
+    "other_raw": "D",
+    "source": "csv_topology",
+    "primary_cat": "CONDITIONAL",
+    "other_cat": "RANKED"
+  },
+  {
+    "stand_id": "c_moon",
+    "stat_dim": "PWR",
+    "primary_raw": "∅",
+    "other_raw": "None",
+    "source": "csv_topology",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "NONE"
+  },
+  {
+    "stand_id": "c_moon",
+    "stat_dim": "RNG",
+    "primary_raw": "B※About 3km in all directions",
+    "other_raw": "B",
+    "source": "csv_bogdan",
+    "primary_cat": "CONDITIONAL",
+    "other_cat": "RANKED"
+  },
+  {
+    "stand_id": "c_moon",
+    "stat_dim": "RNG",
+    "primary_raw": "B※About 3km in all directions",
+    "other_raw": "B",
+    "source": "csv_topology",
+    "primary_cat": "CONDITIONAL",
+    "other_cat": "RANKED"
+  },
+  {
+    "stand_id": "jail_house_lock",
+    "stat_dim": "PWR",
+    "primary_raw": "∅",
+    "other_raw": "None",
+    "source": "csv_topology",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "NONE"
+  },
+  {
+    "stand_id": "jail_house_lock",
+    "stat_dim": "RNG",
+    "primary_raw": "B※Walls of G.D. St. Prison",
+    "other_raw": "B",
+    "source": "csv_bogdan",
+    "primary_cat": "CONDITIONAL",
+    "other_cat": "RANKED"
+  },
+  {
+    "stand_id": "jail_house_lock",
+    "stat_dim": "RNG",
+    "primary_raw": "B※Walls of G.D. St. Prison",
+    "other_raw": "B",
+    "source": "csv_topology",
+    "primary_cat": "CONDITIONAL",
+    "other_cat": "RANKED"
+  },
+  {
+    "stand_id": "jail_house_lock",
+    "stat_dim": "PRC",
+    "primary_raw": "∅",
+    "other_raw": "None",
+    "source": "csv_topology",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "NONE"
+  },
+  {
+    "stand_id": "jail_house_lock",
+    "stat_dim": "DEV",
+    "primary_raw": "∅",
+    "other_raw": "None",
+    "source": "csv_topology",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "NONE"
+  },
+  {
+    "stand_id": "stone_free",
+    "stat_dim": "RNG",
+    "primary_raw": "C※1-2 meters",
+    "other_raw": "C",
+    "source": "csv_bogdan",
+    "primary_cat": "CONDITIONAL",
+    "other_cat": "RANKED"
+  },
+  {
+    "stand_id": "stone_free",
+    "stat_dim": "RNG",
+    "primary_raw": "C※1-2 meters",
+    "other_raw": "C",
+    "source": "csv_topology",
+    "primary_cat": "CONDITIONAL",
+    "other_cat": "RANKED"
+  },
+  {
+    "stand_id": "goo_goo_dolls",
+    "stat_dim": "RNG",
+    "primary_raw": "B※20-30 meters",
+    "other_raw": "B",
+    "source": "csv_bogdan",
+    "primary_cat": "CONDITIONAL",
+    "other_cat": "RANKED"
+  },
+  {
+    "stand_id": "goo_goo_dolls",
+    "stat_dim": "RNG",
+    "primary_raw": "B※20-30 meters",
+    "other_raw": "B",
+    "source": "csv_topology",
+    "primary_cat": "CONDITIONAL",
+    "other_cat": "RANKED"
+  },
+  {
+    "stand_id": "under_world",
+    "stat_dim": "PWR",
+    "primary_raw": "∅",
+    "other_raw": "None",
+    "source": "csv_topology",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "NONE"
+  },
+  {
+    "stand_id": "under_world",
+    "stat_dim": "RNG",
+    "primary_raw": "A※Approximately entire Orlando, Florida",
+    "other_raw": "A",
+    "source": "csv_bogdan",
+    "primary_cat": "CONDITIONAL",
+    "other_cat": "RANKED"
+  },
+  {
+    "stand_id": "under_world",
+    "stat_dim": "RNG",
+    "primary_raw": "A※Approximately entire Orlando, Florida",
+    "other_raw": "A",
+    "source": "csv_topology",
+    "primary_cat": "CONDITIONAL",
+    "other_cat": "RANKED"
+  },
+  {
+    "stand_id": "under_world",
+    "stat_dim": "PRC",
+    "primary_raw": "∅",
+    "other_raw": "None",
+    "source": "csv_topology",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "NONE"
+  },
+  {
+    "stand_id": "under_world",
+    "stat_dim": "DEV",
+    "primary_raw": "∅",
+    "other_raw": "None",
+    "source": "csv_topology",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "NONE"
+  },
+  {
+    "stand_id": "sky_high",
+    "stat_dim": "PWR",
+    "primary_raw": "∅",
+    "other_raw": "None",
+    "source": "csv_topology",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "NONE"
+  },
+  {
+    "stand_id": "sky_high",
+    "stat_dim": "SPD",
+    "primary_raw": "∅",
+    "other_raw": "None",
+    "source": "csv_topology",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "NONE"
+  },
+  {
+    "stand_id": "sky_high",
+    "stat_dim": "RNG",
+    "primary_raw": "B※Line of Sight",
+    "other_raw": "B",
+    "source": "csv_bogdan",
+    "primary_cat": "CONDITIONAL",
+    "other_cat": "RANKED"
+  },
+  {
+    "stand_id": "sky_high",
+    "stat_dim": "RNG",
+    "primary_raw": "B※Line of Sight",
+    "other_raw": "B",
+    "source": "csv_topology",
+    "primary_cat": "CONDITIONAL",
+    "other_cat": "RANKED"
+  },
+  {
+    "stand_id": "sky_high",
+    "stat_dim": "PRC",
+    "primary_raw": "∅",
+    "other_raw": "None",
+    "source": "csv_topology",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "NONE"
+  },
+  {
+    "stand_id": "sky_high",
+    "stat_dim": "DEV",
+    "primary_raw": "∅",
+    "other_raw": "None",
+    "source": "csv_topology",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "NONE"
+  },
+  {
+    "stand_id": "bohemian_rhapsody",
+    "stat_dim": "PWR",
+    "primary_raw": "∅",
+    "other_raw": "None",
+    "source": "csv_topology",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "NONE"
+  },
+  {
+    "stand_id": "bohemian_rhapsody",
+    "stat_dim": "SPD",
+    "primary_raw": "∅",
+    "other_raw": "None",
+    "source": "csv_topology",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "NONE"
+  },
+  {
+    "stand_id": "bohemian_rhapsody",
+    "stat_dim": "PRC",
+    "primary_raw": "∅",
+    "other_raw": "None",
+    "source": "csv_topology",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "NONE"
+  },
+  {
+    "stand_id": "bohemian_rhapsody",
+    "stat_dim": "DEV",
+    "primary_raw": "∅",
+    "other_raw": "None",
+    "source": "csv_topology",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "NONE"
+  },
+  {
+    "stand_id": "burning_down_the_house",
+    "stat_dim": "PWR",
+    "primary_raw": "∅",
+    "other_raw": "None",
+    "source": "csv_topology",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "NONE"
+  },
+  {
+    "stand_id": "burning_down_the_house",
+    "stat_dim": "SPD",
+    "primary_raw": "∅",
+    "other_raw": "None",
+    "source": "csv_topology",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "NONE"
+  },
+  {
+    "stand_id": "burning_down_the_house",
+    "stat_dim": "RNG",
+    "primary_raw": "∅",
+    "other_raw": "None",
+    "source": "csv_topology",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "NONE"
+  },
+  {
+    "stand_id": "burning_down_the_house",
+    "stat_dim": "PRC",
+    "primary_raw": "∅",
+    "other_raw": "None",
+    "source": "csv_topology",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "NONE"
+  },
+  {
+    "stand_id": "burning_down_the_house",
+    "stat_dim": "DEV",
+    "primary_raw": "∅",
+    "other_raw": "None",
+    "source": "csv_topology",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "NONE"
+  },
+  {
+    "stand_id": "dragon_s_dream",
+    "stat_dim": "PWR",
+    "primary_raw": "∅",
+    "other_raw": "None",
+    "source": "csv_topology",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "NONE"
+  },
+  {
+    "stand_id": "dragon_s_dream",
+    "stat_dim": "SPD",
+    "primary_raw": "∅",
+    "other_raw": "None",
+    "source": "csv_topology",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "NONE"
+  },
+  {
+    "stand_id": "dragon_s_dream",
+    "stat_dim": "RNG",
+    "primary_raw": "∅",
+    "other_raw": "None",
+    "source": "csv_topology",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "NONE"
+  },
+  {
+    "stand_id": "dragon_s_dream",
+    "stat_dim": "PRC",
+    "primary_raw": "∅",
+    "other_raw": "None",
+    "source": "csv_topology",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "NONE"
+  },
+  {
+    "stand_id": "dragon_s_dream",
+    "stat_dim": "DEV",
+    "primary_raw": "∅",
+    "other_raw": "None",
+    "source": "csv_topology",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "NONE"
+  },
+  {
+    "stand_id": "limp_bizkit",
+    "stat_dim": "PWR",
+    "primary_raw": "∅",
+    "other_raw": "None",
+    "source": "csv_topology",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "NONE"
+  },
+  {
+    "stand_id": "20th_century_boy",
+    "stat_dim": "PWR",
+    "primary_raw": "∅",
+    "other_raw": "None",
+    "source": "csv_topology",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "NONE"
+  },
+  {
+    "stand_id": "20th_century_boy",
+    "stat_dim": "RNG",
+    "primary_raw": "∅",
+    "other_raw": "None",
+    "source": "csv_topology",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "NONE"
+  },
+  {
+    "stand_id": "chocolate_disco",
+    "stat_dim": "PWR",
+    "primary_raw": "∅",
+    "other_raw": "None",
+    "source": "csv_topology",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "NONE"
+  },
+  {
+    "stand_id": "civil_war",
+    "stat_dim": "PWR",
+    "primary_raw": "∅",
+    "other_raw": "None",
+    "source": "csv_topology",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "NONE"
+  },
+  {
+    "stand_id": "civil_war",
+    "stat_dim": "DEV",
+    "primary_raw": "∅",
+    "other_raw": "None",
+    "source": "csv_topology",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "NONE"
+  },
+  {
+    "stand_id": "dirty_deeds_done_dirt_cheap",
+    "stat_dim": "RNG",
+    "primary_raw": "C※Range: 2 m (6.6 ft)",
+    "other_raw": "C",
+    "source": "csv_bogdan",
+    "primary_cat": "CONDITIONAL",
+    "other_cat": "RANKED"
+  },
+  {
+    "stand_id": "dirty_deeds_done_dirt_cheap",
+    "stat_dim": "RNG",
+    "primary_raw": "C※Range: 2 m (6.6 ft)",
+    "other_raw": "C",
+    "source": "csv_topology",
+    "primary_cat": "CONDITIONAL",
+    "other_cat": "RANKED"
+  },
+  {
+    "stand_id": "mandom",
+    "stat_dim": "PWR",
+    "primary_raw": "∅",
+    "other_raw": "None",
+    "source": "csv_topology",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "NONE"
+  },
+  {
+    "stand_id": "mandom",
+    "stat_dim": "RNG",
+    "primary_raw": "∅",
+    "other_raw": "None",
+    "source": "csv_topology",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "NONE"
+  },
+  {
+    "stand_id": "mandom",
+    "stat_dim": "PRC",
+    "primary_raw": "∅",
+    "other_raw": "None",
+    "source": "csv_topology",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "NONE"
+  },
+  {
+    "stand_id": "tatoo_you",
+    "stat_dim": "PWR",
+    "primary_raw": "∅",
+    "other_raw": "None",
+    "source": "csv_topology",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "NONE"
+  },
+  {
+    "stand_id": "california_king_bed",
+    "stat_dim": "PWR",
+    "primary_raw": "∅",
+    "other_raw": "None",
+    "source": "csv_topology",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "NONE"
+  },
+  {
+    "stand_id": "california_king_bed",
+    "stat_dim": "SPD",
+    "primary_raw": "∅",
+    "other_raw": "None",
+    "source": "csv_topology",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "NONE"
+  },
+  {
+    "stand_id": "paisley_park",
+    "stat_dim": "PWR",
+    "primary_raw": "∅",
+    "other_raw": "None",
+    "source": "csv_topology",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "NONE"
+  },
+  {
+    "stand_id": "paisley_park",
+    "stat_dim": "SPD",
+    "primary_raw": "∅",
+    "other_raw": "None",
+    "source": "csv_topology",
+    "primary_cat": "EMPTY_SLOT",
+    "other_cat": "NONE"
+  },
+  {
+    "stand_id": "rainy_day_dream_away",
+    "stat_dim": "SPD",
+    "primary_raw": "B※Speed of Rain",
+    "other_raw": "B",
+    "source": "csv_bogdan",
+    "primary_cat": "CONDITIONAL",
+    "other_cat": "RANKED"
+  },
+  {
+    "stand_id": "rainy_day_dream_away",
+    "stat_dim": "SPD",
+    "primary_raw": "B※Speed of Rain",
+    "other_raw": "B",
+    "source": "csv_topology",
+    "primary_cat": "CONDITIONAL",
+    "other_cat": "RANKED"
+  }
+]

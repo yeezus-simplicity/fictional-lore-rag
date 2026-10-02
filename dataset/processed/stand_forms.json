@@ -1,0 +1,2192 @@
+[
+  {
+    "form_id": "anubis__f0",
+    "stand_id": "anubis",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "B",
+      "SPD": "B",
+      "RNG": "E",
+      "STA": "A",
+      "PRC": "E",
+      "DEV": "C"
+    }
+  },
+  {
+    "form_id": "atum__f0",
+    "stand_id": "atum",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "D",
+      "SPD": "C",
+      "RNG": "D",
+      "STA": "B",
+      "PRC": "D",
+      "DEV": "D"
+    }
+  },
+  {
+    "form_id": "bastet__f0",
+    "stand_id": "bastet",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "E",
+      "SPD": "E",
+      "RNG": "B",
+      "STA": "A",
+      "PRC": "E",
+      "DEV": "E"
+    }
+  },
+  {
+    "form_id": "cream__f0",
+    "stand_id": "cream",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "B",
+      "SPD": "B",
+      "RNG": "D",
+      "STA": "C",
+      "PRC": "C",
+      "DEV": "D"
+    }
+  },
+  {
+    "form_id": "death_thirteen__f0",
+    "stand_id": "death_thirteen",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "C",
+      "SPD": "C",
+      "RNG": "E",
+      "STA": "B",
+      "PRC": "D",
+      "DEV": "B"
+    }
+  },
+  {
+    "form_id": "geb__f0",
+    "stand_id": "geb",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "C",
+      "SPD": "B",
+      "RNG": "A",
+      "STA": "B",
+      "PRC": "D",
+      "DEV": "D"
+    }
+  },
+  {
+    "form_id": "high_priestess__f0",
+    "stand_id": "high_priestess",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "C",
+      "SPD": "B",
+      "RNG": "A",
+      "STA": "A",
+      "PRC": "D",
+      "DEV": "D"
+    }
+  },
+  {
+    "form_id": "horus__f0",
+    "stand_id": "horus",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "B",
+      "SPD": "B",
+      "RNG": "D",
+      "STA": "C",
+      "PRC": "E",
+      "DEV": "C"
+    }
+  },
+  {
+    "form_id": "judgement__f0",
+    "stand_id": "judgement",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "B",
+      "SPD": "B",
+      "RNG": "C",
+      "STA": "B",
+      "PRC": "D",
+      "DEV": "D"
+    }
+  },
+  {
+    "form_id": "khnum__f0",
+    "stand_id": "khnum",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "E",
+      "SPD": "E",
+      "RNG": "E",
+      "STA": "A",
+      "PRC": "E",
+      "DEV": "E"
+    }
+  },
+  {
+    "form_id": "osiris__f0",
+    "stand_id": "osiris",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "E",
+      "SPD": "D",
+      "RNG": "D",
+      "STA": "C",
+      "PRC": "D",
+      "DEV": "D"
+    }
+  },
+  {
+    "form_id": "sethan__f0",
+    "stand_id": "sethan",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "D",
+      "SPD": "D",
+      "RNG": "E",
+      "STA": "C",
+      "PRC": "D",
+      "DEV": "D"
+    }
+  },
+  {
+    "form_id": "tenore_sax__f0",
+    "stand_id": "tenore_sax",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "E",
+      "SPD": "E",
+      "RNG": "D",
+      "STA": "A",
+      "PRC": "E",
+      "DEV": "E"
+    }
+  },
+  {
+    "form_id": "tohth__f0",
+    "stand_id": "tohth",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "E",
+      "SPD": "E",
+      "RNG": "E",
+      "STA": "A",
+      "PRC": "E",
+      "DEV": "E"
+    }
+  },
+  {
+    "form_id": "dark_blue_moon__f0",
+    "stand_id": "dark_blue_moon",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "C",
+      "SPD": "C",
+      "RNG": "C",
+      "STA": "B",
+      "PRC": "C",
+      "DEV": "D"
+    }
+  },
+  {
+    "form_id": "emperor__f0",
+    "stand_id": "emperor",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "B",
+      "SPD": "B",
+      "RNG": "B",
+      "STA": "C",
+      "PRC": "E",
+      "DEV": "E"
+    }
+  },
+  {
+    "form_id": "ebony_devil__f0",
+    "stand_id": "ebony_devil",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "D",
+      "SPD": "D",
+      "RNG": "A",
+      "STA": "B",
+      "PRC": "D",
+      "DEV": "B"
+    }
+  },
+  {
+    "form_id": "empress__f0",
+    "stand_id": "empress",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "C",
+      "SPD": "E",
+      "RNG": "A",
+      "STA": "A",
+      "PRC": "D",
+      "DEV": "D"
+    }
+  },
+  {
+    "form_id": "hanged_man__f0",
+    "stand_id": "hanged_man",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "C",
+      "SPD": "A",
+      "RNG": "A",
+      "STA": "B",
+      "PRC": "D",
+      "DEV": "D"
+    }
+  },
+  {
+    "form_id": "hermit_purple__f0",
+    "stand_id": "hermit_purple",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "D",
+      "SPD": "C",
+      "RNG": "D",
+      "STA": "A",
+      "PRC": "D",
+      "DEV": "E"
+    }
+  },
+  {
+    "form_id": "hierophant_green__f0",
+    "stand_id": "hierophant_green",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "C",
+      "SPD": "B",
+      "RNG": "A",
+      "STA": "B",
+      "PRC": "C",
+      "DEV": "D"
+    }
+  },
+  {
+    "form_id": "justice__f0",
+    "stand_id": "justice",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "D",
+      "SPD": "E",
+      "RNG": "A",
+      "STA": "A",
+      "PRC": "E",
+      "DEV": "E"
+    }
+  },
+  {
+    "form_id": "lovers__f0",
+    "stand_id": "lovers",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "E",
+      "SPD": "D",
+      "RNG": "A",
+      "STA": "A",
+      "PRC": "D",
+      "DEV": "E"
+    }
+  },
+  {
+    "form_id": "magician_s_red__f0",
+    "stand_id": "magician_s_red",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "B",
+      "SPD": "B",
+      "RNG": "C",
+      "STA": "B",
+      "PRC": "C",
+      "DEV": "D"
+    }
+  },
+  {
+    "form_id": "silver_chariot__f0",
+    "stand_id": "silver_chariot",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "C",
+      "SPD": "A",
+      "RNG": "C",
+      "STA": "B",
+      "PRC": "B",
+      "DEV": "C"
+    }
+  },
+  {
+    "form_id": "star_platinum__f0",
+    "stand_id": "star_platinum",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "A",
+      "SPD": "A",
+      "RNG": "C",
+      "STA": "A",
+      "PRC": "A",
+      "DEV": "A"
+    }
+  },
+  {
+    "form_id": "star_platinum__f1",
+    "stand_id": "star_platinum",
+    "form_name": "form_1",
+    "form_type": "evolved",
+    "raw_order": 1,
+    "values": {
+      "PWR": "A",
+      "SPD": "A",
+      "RNG": "C",
+      "STA": "A",
+      "PRC": "A",
+      "DEV": "Complete"
+    }
+  },
+  {
+    "form_id": "star_platinum__f2",
+    "stand_id": "star_platinum",
+    "form_name": "form_2",
+    "form_type": "evolved",
+    "raw_order": 2,
+    "values": {
+      "PWR": "A",
+      "SPD": "A",
+      "RNG": "C",
+      "STA": "E",
+      "PRC": "A",
+      "DEV": "C"
+    }
+  },
+  {
+    "form_id": "strength__f0",
+    "stand_id": "strength",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "B",
+      "SPD": "D",
+      "RNG": "D",
+      "STA": "A",
+      "PRC": "E",
+      "DEV": "E"
+    }
+  },
+  {
+    "form_id": "sun__f0",
+    "stand_id": "sun",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "B",
+      "SPD": "E",
+      "RNG": "A",
+      "STA": "A",
+      "PRC": "E",
+      "DEV": "E"
+    }
+  },
+  {
+    "form_id": "the_fool__f0",
+    "stand_id": "the_fool",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "B",
+      "SPD": "C",
+      "RNG": "D",
+      "STA": "C",
+      "PRC": "D",
+      "DEV": "C"
+    }
+  },
+  {
+    "form_id": "the_world__f0",
+    "stand_id": "the_world",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "A",
+      "SPD": "A",
+      "RNG": "C",
+      "STA": "A",
+      "PRC": "B",
+      "DEV": "B"
+    }
+  },
+  {
+    "form_id": "tower_of_gray__f0",
+    "stand_id": "tower_of_gray",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "E",
+      "SPD": "A",
+      "RNG": "A",
+      "STA": "C",
+      "PRC": "E",
+      "DEV": "E"
+    }
+  },
+  {
+    "form_id": "wheel_of_fortune__f0",
+    "stand_id": "wheel_of_fortune",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "B",
+      "SPD": "D",
+      "RNG": "D",
+      "STA": "A",
+      "PRC": "E",
+      "DEV": "D"
+    }
+  },
+  {
+    "form_id": "yellow_temperance__f0",
+    "stand_id": "yellow_temperance",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "D",
+      "SPD": "C",
+      "RNG": "E",
+      "STA": "A",
+      "PRC": "E",
+      "DEV": "D"
+    }
+  },
+  {
+    "form_id": "achtung_baby__f0",
+    "stand_id": "achtung_baby",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "E",
+      "SPD": "E",
+      "RNG": "Null",
+      "STA": "A",
+      "PRC": "E",
+      "DEV": "A"
+    }
+  },
+  {
+    "form_id": "aqua_necklace__f0",
+    "stand_id": "aqua_necklace",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "C",
+      "SPD": "C",
+      "RNG": "A",
+      "STA": "A",
+      "PRC": "C",
+      "DEV": "E"
+    }
+  },
+  {
+    "form_id": "atom_heart_father__f0",
+    "stand_id": "atom_heart_father",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "E",
+      "SPD": "E",
+      "RNG": "Null",
+      "STA": "A",
+      "PRC": "E",
+      "DEV": "E"
+    }
+  },
+  {
+    "form_id": "bad_company__f0",
+    "stand_id": "bad_company",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "B",
+      "SPD": "B",
+      "RNG": "C",
+      "STA": "B",
+      "PRC": "C",
+      "DEV": "C"
+    }
+  },
+  {
+    "form_id": "boy_ii_man__f0",
+    "stand_id": "boy_ii_man",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "C",
+      "SPD": "B",
+      "RNG": "C",
+      "STA": "A",
+      "PRC": "C",
+      "DEV": "C"
+    }
+  },
+  {
+    "form_id": "cheap_trick__f0",
+    "stand_id": "cheap_trick",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "E",
+      "SPD": "E",
+      "RNG": "E",
+      "STA": "A",
+      "PRC": "E",
+      "DEV": "E"
+    }
+  },
+  {
+    "form_id": "cinderella__f0",
+    "stand_id": "cinderella",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "D",
+      "SPD": "C",
+      "RNG": "C",
+      "STA": "C",
+      "PRC": "A",
+      "DEV": "C"
+    }
+  },
+  {
+    "form_id": "crazy_diamond__f0",
+    "stand_id": "crazy_diamond",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "A",
+      "SPD": "A",
+      "RNG": "D",
+      "STA": "B",
+      "PRC": "B",
+      "DEV": "C"
+    }
+  },
+  {
+    "form_id": "enigma__f0",
+    "stand_id": "enigma",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "E",
+      "SPD": "E",
+      "RNG": "C",
+      "STA": "A",
+      "PRC": "C",
+      "DEV": "C"
+    }
+  },
+  {
+    "form_id": "earth_wind_and_fire__f0",
+    "stand_id": "earth_wind_and_fire",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "C",
+      "SPD": "C",
+      "RNG": "N/A",
+      "STA": "A",
+      "PRC": "C",
+      "DEV": "C"
+    }
+  },
+  {
+    "form_id": "harvest__f0",
+    "stand_id": "harvest",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "E",
+      "SPD": "B",
+      "RNG": "A",
+      "STA": "A",
+      "PRC": "E",
+      "DEV": "C"
+    }
+  },
+  {
+    "form_id": "heaven_s_door__f0",
+    "stand_id": "heaven_s_door",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "D",
+      "SPD": "B",
+      "RNG": "B",
+      "STA": "B",
+      "PRC": "C",
+      "DEV": "A"
+    }
+  },
+  {
+    "form_id": "highway_star__f0",
+    "stand_id": "highway_star",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "C",
+      "SPD": "B",
+      "RNG": "A",
+      "STA": "A",
+      "PRC": "E",
+      "DEV": "C"
+    }
+  },
+  {
+    "form_id": "killer_queen__f0",
+    "stand_id": "killer_queen",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "A",
+      "SPD": "B",
+      "RNG": "D",
+      "STA": "B",
+      "PRC": "B",
+      "DEV": "A"
+    }
+  },
+  {
+    "form_id": "sheer_heart_attack__f0",
+    "stand_id": "sheer_heart_attack",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "A",
+      "SPD": "C",
+      "RNG": "A",
+      "STA": "A",
+      "PRC": "E",
+      "DEV": "A"
+    }
+  },
+  {
+    "form_id": "bites_the_dust__f0",
+    "stand_id": "bites_the_dust",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "B",
+      "SPD": "B",
+      "RNG": "A",
+      "STA": "A",
+      "PRC": "D",
+      "DEV": "A"
+    }
+  },
+  {
+    "form_id": "love_deluxe__f0",
+    "stand_id": "love_deluxe",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "B",
+      "SPD": "B",
+      "RNG": "C*",
+      "STA": "A",
+      "PRC": "E",
+      "DEV": "B"
+    }
+  },
+  {
+    "form_id": "pearl_jam__f0",
+    "stand_id": "pearl_jam",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "E",
+      "SPD": "C",
+      "RNG": "B",
+      "STA": "A",
+      "PRC": "E",
+      "DEV": "C"
+    }
+  },
+  {
+    "form_id": "ratt__f0",
+    "stand_id": "ratt",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "B",
+      "SPD": "C",
+      "RNG": "D",
+      "STA": "B",
+      "PRC": "E",
+      "DEV": "C"
+    }
+  },
+  {
+    "form_id": "red_hot_chili_pepper__f0",
+    "stand_id": "red_hot_chili_pepper",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "A",
+      "SPD": "A",
+      "RNG": "A",
+      "STA": "A",
+      "PRC": "C",
+      "DEV": "A"
+    }
+  },
+  {
+    "form_id": "super_fly__f0",
+    "stand_id": "super_fly",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "E",
+      "SPD": "E",
+      "RNG": "Null",
+      "STA": "A",
+      "PRC": "E",
+      "DEV": "E"
+    }
+  },
+  {
+    "form_id": "surface__f0",
+    "stand_id": "surface",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "B",
+      "SPD": "B",
+      "RNG": "C",
+      "STA": "B",
+      "PRC": "C",
+      "DEV": "C"
+    }
+  },
+  {
+    "form_id": "the_lock__f0",
+    "stand_id": "the_lock",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "E",
+      "SPD": "E",
+      "RNG": "A",
+      "STA": "A",
+      "PRC": "E",
+      "DEV": "E"
+    }
+  },
+  {
+    "form_id": "the_hand__f0",
+    "stand_id": "the_hand",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "B",
+      "SPD": "B",
+      "RNG": "D",
+      "STA": "C",
+      "PRC": "C",
+      "DEV": "C"
+    }
+  },
+  {
+    "form_id": "stray_cat__f0",
+    "stand_id": "stray_cat",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "B",
+      "SPD": "E",
+      "RNG": "Null",
+      "STA": "A",
+      "PRC": "E",
+      "DEV": "C"
+    }
+  },
+  {
+    "form_id": "black_sabbath__f0",
+    "stand_id": "black_sabbath",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "E",
+      "SPD": "A",
+      "RNG": "A",
+      "STA": "A",
+      "PRC": "E",
+      "DEV": "E"
+    }
+  },
+  {
+    "form_id": "baby_face__f0",
+    "stand_id": "baby_face",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "A",
+      "SPD": "B",
+      "RNG": "A",
+      "STA": "A",
+      "PRC": "※ Depending on Education",
+      "DEV": "※ Depending on Education"
+    }
+  },
+  {
+    "form_id": "gold_experience__f0",
+    "stand_id": "gold_experience",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "C",
+      "SPD": "A",
+      "RNG": "C",
+      "STA": "D",
+      "PRC": "C",
+      "DEV": "A"
+    }
+  },
+  {
+    "form_id": "gold_experience__f1",
+    "stand_id": "gold_experience",
+    "form_name": "form_1",
+    "form_type": "evolved",
+    "raw_order": 1,
+    "values": {
+      "PWR": "C",
+      "SPD": "A",
+      "RNG": "E",
+      "STA": "D",
+      "PRC": "C",
+      "DEV": "A"
+    }
+  },
+  {
+    "form_id": "sticky_fingers__f0",
+    "stand_id": "sticky_fingers",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "A",
+      "SPD": "A",
+      "RNG": "C",
+      "STA": "D",
+      "PRC": "C",
+      "DEV": "D"
+    }
+  },
+  {
+    "form_id": "sticky_fingers__f1",
+    "stand_id": "sticky_fingers",
+    "form_name": "form_1",
+    "form_type": "evolved",
+    "raw_order": 1,
+    "values": {
+      "PWR": "A",
+      "SPD": "A",
+      "RNG": "E",
+      "STA": "D",
+      "PRC": "C",
+      "DEV": "D"
+    }
+  },
+  {
+    "form_id": "metallica__f0",
+    "stand_id": "metallica",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "C",
+      "SPD": "C",
+      "RNG": "C",
+      "STA": "A",
+      "PRC": "C",
+      "DEV": "C"
+    }
+  },
+  {
+    "form_id": "purple_haze__f0",
+    "stand_id": "purple_haze",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "A",
+      "SPD": "B",
+      "RNG": "C",
+      "STA": "E",
+      "PRC": "E",
+      "DEV": "B"
+    }
+  },
+  {
+    "form_id": "moody_blues__f0",
+    "stand_id": "moody_blues",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "C",
+      "SPD": "C",
+      "RNG": "A",
+      "STA": "A",
+      "PRC": "C",
+      "DEV": "C"
+    }
+  },
+  {
+    "form_id": "sex_pistols__f0",
+    "stand_id": "sex_pistols",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "E",
+      "SPD": "C",
+      "RNG": "B",
+      "STA": "A",
+      "PRC": "A",
+      "DEV": "B"
+    }
+  },
+  {
+    "form_id": "the_grateful_dead__f0",
+    "stand_id": "the_grateful_dead",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "B",
+      "SPD": "E",
+      "RNG": "B",
+      "STA": "A",
+      "PRC": "E",
+      "DEV": "C"
+    }
+  },
+  {
+    "form_id": "aerosmith__f0",
+    "stand_id": "aerosmith",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "B",
+      "SPD": "B",
+      "RNG": "B (Tens of meters)",
+      "STA": "C",
+      "PRC": "E",
+      "DEV": "C"
+    }
+  },
+  {
+    "form_id": "beach_boy__f0",
+    "stand_id": "beach_boy",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "C",
+      "SPD": "B",
+      "RNG": "B (The length of the string)",
+      "STA": "C",
+      "PRC": "C",
+      "DEV": "A"
+    }
+  },
+  {
+    "form_id": "man_in_the_mirror__f0",
+    "stand_id": "man_in_the_mirror",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "C",
+      "SPD": "C",
+      "RNG": "B",
+      "STA": "D",
+      "PRC": "C",
+      "DEV": "E"
+    }
+  },
+  {
+    "form_id": "chariot_requiem__f0",
+    "stand_id": "chariot_requiem",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "E",
+      "SPD": "E",
+      "RNG": "A",
+      "STA": "A",
+      "PRC": "E",
+      "DEV": "A"
+    }
+  },
+  {
+    "form_id": "clash__f0",
+    "stand_id": "clash",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "D",
+      "SPD": "A",
+      "RNG": "B",
+      "STA": "A",
+      "PRC": "A",
+      "DEV": "C"
+    }
+  },
+  {
+    "form_id": "gold_experience_requiem__f0",
+    "stand_id": "gold_experience_requiem",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "Null",
+      "SPD": "Null",
+      "RNG": "Null",
+      "STA": "Null",
+      "PRC": "Null",
+      "DEV": "Null"
+    }
+  },
+  {
+    "form_id": "green_day__f0",
+    "stand_id": "green_day",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "A",
+      "SPD": "C",
+      "RNG": "A",
+      "STA": "A",
+      "PRC": "E",
+      "DEV": "A"
+    }
+  },
+  {
+    "form_id": "king_crimson__f0",
+    "stand_id": "king_crimson",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "A",
+      "SPD": "A",
+      "RNG": "E",
+      "STA": "E",
+      "PRC": "?",
+      "DEV": "?"
+    }
+  },
+  {
+    "form_id": "kraft_work__f0",
+    "stand_id": "kraft_work",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "A",
+      "SPD": "A",
+      "RNG": "E",
+      "STA": "C",
+      "PRC": "E",
+      "DEV": "E"
+    }
+  },
+  {
+    "form_id": "little_feet__f0",
+    "stand_id": "little_feet",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "D",
+      "SPD": "B",
+      "RNG": "E",
+      "STA": "A",
+      "PRC": "D",
+      "DEV": "C"
+    }
+  },
+  {
+    "form_id": "mr_president__f0",
+    "stand_id": "mr_president",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "E",
+      "SPD": "E",
+      "RNG": "E",
+      "STA": "A",
+      "PRC": "E",
+      "DEV": "E"
+    }
+  },
+  {
+    "form_id": "notorious_b_i_g__f0",
+    "stand_id": "notorious_b_i_g",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "A",
+      "SPD": "∞",
+      "RNG": "∞",
+      "STA": "∞",
+      "PRC": "E",
+      "DEV": "A"
+    }
+  },
+  {
+    "form_id": "oasis__f0",
+    "stand_id": "oasis",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "A",
+      "SPD": "A",
+      "RNG": "B",
+      "STA": "A",
+      "PRC": "E",
+      "DEV": "C"
+    }
+  },
+  {
+    "form_id": "rolling_stones__f0",
+    "stand_id": "rolling_stones",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "Null",
+      "SPD": "B",
+      "RNG": "A",
+      "STA": "A",
+      "PRC": "E",
+      "DEV": "Null"
+    }
+  },
+  {
+    "form_id": "soft_machine__f0",
+    "stand_id": "soft_machine",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "A",
+      "SPD": "C",
+      "RNG": "E",
+      "STA": "A",
+      "PRC": "D",
+      "DEV": "E"
+    }
+  },
+  {
+    "form_id": "spice_girl__f0",
+    "stand_id": "spice_girl",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "A",
+      "SPD": "A",
+      "RNG": "C",
+      "STA": "B",
+      "PRC": "D",
+      "DEV": "C"
+    }
+  },
+  {
+    "form_id": "talking_head__f0",
+    "stand_id": "talking_head",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "E",
+      "SPD": "E",
+      "RNG": "B",
+      "STA": "A",
+      "PRC": "E",
+      "DEV": "E"
+    }
+  },
+  {
+    "form_id": "white_album__f0",
+    "stand_id": "white_album",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "A",
+      "SPD": "C",
+      "RNG": "C",
+      "STA": "A",
+      "PRC": "E",
+      "DEV": "E"
+    }
+  },
+  {
+    "form_id": "whitesnake__f0",
+    "stand_id": "whitesnake",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "?",
+      "SPD": "D",
+      "RNG": "? (20 m)",
+      "STA": "A",
+      "PRC": "?",
+      "DEV": "?"
+    }
+  },
+  {
+    "form_id": "c_moon__f0",
+    "stand_id": "c_moon",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "Null",
+      "SPD": "B",
+      "RNG": "B",
+      "STA": "?",
+      "PRC": "?",
+      "DEV": "?"
+    }
+  },
+  {
+    "form_id": "jail_house_lock__f0",
+    "stand_id": "jail_house_lock",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "Null",
+      "SPD": "C",
+      "RNG": "B",
+      "STA": "A",
+      "PRC": "Null",
+      "DEV": "Null"
+    }
+  },
+  {
+    "form_id": "stone_free__f0",
+    "stand_id": "stone_free",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "A",
+      "SPD": "B",
+      "RNG": "C",
+      "STA": "A",
+      "PRC": "C",
+      "DEV": "A"
+    }
+  },
+  {
+    "form_id": "goo_goo_dolls__f0",
+    "stand_id": "goo_goo_dolls",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "D",
+      "SPD": "C",
+      "RNG": "B",
+      "STA": "D",
+      "PRC": "B",
+      "DEV": "B"
+    }
+  },
+  {
+    "form_id": "under_world__f0",
+    "stand_id": "under_world",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "Null",
+      "SPD": "C",
+      "RNG": "A",
+      "STA": "C",
+      "PRC": "Null",
+      "DEV": "Null"
+    }
+  },
+  {
+    "form_id": "sky_high__f0",
+    "stand_id": "sky_high",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "Null",
+      "SPD": "Null",
+      "RNG": "B",
+      "STA": "C",
+      "PRC": "Null",
+      "DEV": "Null"
+    }
+  },
+  {
+    "form_id": "bohemian_rhapsody__f0",
+    "stand_id": "bohemian_rhapsody",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "Null",
+      "SPD": "Null",
+      "RNG": "∞",
+      "STA": "A",
+      "PRC": "Null",
+      "DEV": "Null"
+    }
+  },
+  {
+    "form_id": "burning_down_the_house__f0",
+    "stand_id": "burning_down_the_house",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "Null",
+      "SPD": "Null",
+      "RNG": "Null",
+      "STA": "Null",
+      "PRC": "Null",
+      "DEV": "Null"
+    }
+  },
+  {
+    "form_id": "diver_down__f0",
+    "stand_id": "diver_down",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "A",
+      "SPD": "A",
+      "RNG": "E",
+      "STA": "C",
+      "PRC": "B",
+      "DEV": "B"
+    }
+  },
+  {
+    "form_id": "dragon_s_dream__f0",
+    "stand_id": "dragon_s_dream",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "Null",
+      "SPD": "Null",
+      "RNG": "Null",
+      "STA": "A",
+      "PRC": "Null",
+      "DEV": "Null"
+    }
+  },
+  {
+    "form_id": "green_green_grass_of_home__f0",
+    "stand_id": "green_green_grass_of_home",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "?",
+      "SPD": "?",
+      "RNG": "?",
+      "STA": "?",
+      "PRC": "?",
+      "DEV": "?"
+    }
+  },
+  {
+    "form_id": "highway_to_hell__f0",
+    "stand_id": "highway_to_hell",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "C",
+      "SPD": "C",
+      "RNG": "A",
+      "STA": "C",
+      "PRC": "C",
+      "DEV": "C"
+    }
+  },
+  {
+    "form_id": "kiss__f0",
+    "stand_id": "kiss",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "A",
+      "SPD": "A",
+      "RNG": "A",
+      "STA": "A",
+      "PRC": "C",
+      "DEV": "A"
+    }
+  },
+  {
+    "form_id": "limp_bizkit__f0",
+    "stand_id": "limp_bizkit",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "Null",
+      "SPD": "B",
+      "RNG": "B",
+      "STA": "A",
+      "PRC": "C",
+      "DEV": "E"
+    }
+  },
+  {
+    "form_id": "made_in_heaven__f0",
+    "stand_id": "made_in_heaven",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "B",
+      "SPD": "∞",
+      "RNG": "C",
+      "STA": "A",
+      "PRC": "C",
+      "DEV": "A"
+    }
+  },
+  {
+    "form_id": "manhattan_transfer__f0",
+    "stand_id": "manhattan_transfer",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "E",
+      "SPD": "E",
+      "RNG": "A",
+      "STA": "A",
+      "PRC": "A",
+      "DEV": "C"
+    }
+  },
+  {
+    "form_id": "marilyn_manson__f0",
+    "stand_id": "marilyn_manson",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "E",
+      "SPD": "A",
+      "RNG": "A",
+      "STA": "A",
+      "PRC": "A",
+      "DEV": "C"
+    }
+  },
+  {
+    "form_id": "planet_waves__f0",
+    "stand_id": "planet_waves",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "A",
+      "SPD": "B",
+      "RNG": "A",
+      "STA": "A",
+      "PRC": "E",
+      "DEV": "E"
+    }
+  },
+  {
+    "form_id": "survivor__f0",
+    "stand_id": "survivor",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "E",
+      "SPD": "E",
+      "RNG": "E",
+      "STA": "C",
+      "PRC": "E",
+      "DEV": "E"
+    }
+  },
+  {
+    "form_id": "yo_yo_ma__f0",
+    "stand_id": "yo_yo_ma",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "C",
+      "SPD": "D",
+      "RNG": "A",
+      "STA": "A",
+      "PRC": "D",
+      "DEV": "C"
+    }
+  },
+  {
+    "form_id": "20th_century_boy__f0",
+    "stand_id": "20th_century_boy",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "Null",
+      "SPD": "C",
+      "RNG": "Null",
+      "STA": "A",
+      "PRC": "D",
+      "DEV": "C"
+    }
+  },
+  {
+    "form_id": "ball_breaker__f0",
+    "stand_id": "ball_breaker",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "A",
+      "SPD": "A",
+      "RNG": "D",
+      "STA": "B",
+      "PRC": "C",
+      "DEV": "B"
+    }
+  },
+  {
+    "form_id": "boku_no_rhythm_wo_kiitekure__f0",
+    "stand_id": "boku_no_rhythm_wo_kiitekure",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "B",
+      "SPD": "C",
+      "RNG": "C",
+      "STA": "B",
+      "PRC": "E",
+      "DEV": "C"
+    }
+  },
+  {
+    "form_id": "catch_the_rainbow__f0",
+    "stand_id": "catch_the_rainbow",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "C",
+      "SPD": "C",
+      "RNG": "B",
+      "STA": "B",
+      "PRC": "D",
+      "DEV": "D"
+    }
+  },
+  {
+    "form_id": "chocolate_disco__f0",
+    "stand_id": "chocolate_disco",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "Null",
+      "SPD": "C",
+      "RNG": "C",
+      "STA": "B",
+      "PRC": "A",
+      "DEV": "D"
+    }
+  },
+  {
+    "form_id": "civil_war__f0",
+    "stand_id": "civil_war",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "Null",
+      "SPD": "C",
+      "RNG": "C",
+      "STA": "B",
+      "PRC": "C",
+      "DEV": "Null"
+    }
+  },
+  {
+    "form_id": "cream_starter__f0",
+    "stand_id": "cream_starter",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "D",
+      "SPD": "C",
+      "RNG": "C",
+      "STA": "A",
+      "PRC": "E",
+      "DEV": "B"
+    }
+  },
+  {
+    "form_id": "dirty_deeds_done_dirt_cheap__f0",
+    "stand_id": "dirty_deeds_done_dirt_cheap",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "A",
+      "SPD": "A",
+      "RNG": "C",
+      "STA": "A",
+      "PRC": "A",
+      "DEV": "A"
+    }
+  },
+  {
+    "form_id": "d4c_love_train__f0",
+    "stand_id": "d4c_love_train",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "A",
+      "SPD": "A",
+      "RNG": "C",
+      "STA": "A",
+      "PRC": "A",
+      "DEV": "C"
+    }
+  },
+  {
+    "form_id": "hey_ya__f0",
+    "stand_id": "hey_ya",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "E",
+      "SPD": "E",
+      "RNG": "E",
+      "STA": "B",
+      "PRC": "E",
+      "DEV": "E"
+    }
+  },
+  {
+    "form_id": "in_a_silent_way__f0",
+    "stand_id": "in_a_silent_way",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "C",
+      "SPD": "C",
+      "RNG": "D",
+      "STA": "A",
+      "PRC": "D",
+      "DEV": "B"
+    }
+  },
+  {
+    "form_id": "mandom__f0",
+    "stand_id": "mandom",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "Null",
+      "SPD": "A",
+      "RNG": "Null",
+      "STA": "E",
+      "PRC": "Null",
+      "DEV": "C"
+    }
+  },
+  {
+    "form_id": "oh_lonesome_me__f0",
+    "stand_id": "oh_lonesome_me",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "E",
+      "SPD": "C",
+      "RNG": "C",
+      "STA": "B",
+      "PRC": "C",
+      "DEV": "D"
+    }
+  },
+  {
+    "form_id": "scary_monsters__f0",
+    "stand_id": "scary_monsters",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "B",
+      "SPD": "B",
+      "RNG": "D",
+      "STA": "A",
+      "PRC": "C",
+      "DEV": "B"
+    }
+  },
+  {
+    "form_id": "tatoo_you__f0",
+    "stand_id": "tatoo_you",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "Null",
+      "SPD": "E",
+      "RNG": "C",
+      "STA": "B",
+      "PRC": "E",
+      "DEV": "E"
+    }
+  },
+  {
+    "form_id": "ticket_to_ride__f0",
+    "stand_id": "ticket_to_ride",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "E",
+      "SPD": "E",
+      "RNG": "E",
+      "STA": "C",
+      "PRC": "E",
+      "DEV": "C"
+    }
+  },
+  {
+    "form_id": "tomb_of_the_boom_1_2_3__f0",
+    "stand_id": "tomb_of_the_boom_1_2_3",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "D",
+      "SPD": "C",
+      "RNG": "C",
+      "STA": "B",
+      "PRC": "C",
+      "DEV": "C"
+    }
+  },
+  {
+    "form_id": "tubular_bells__f0",
+    "stand_id": "tubular_bells",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "D",
+      "SPD": "D",
+      "RNG": "D",
+      "STA": "A",
+      "PRC": "E",
+      "DEV": "B"
+    }
+  },
+  {
+    "form_id": "wired__f0",
+    "stand_id": "wired",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "D",
+      "SPD": "B",
+      "RNG": "B",
+      "STA": "B",
+      "PRC": "D",
+      "DEV": "D"
+    }
+  },
+  {
+    "form_id": "born_this_way__f0",
+    "stand_id": "born_this_way",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "C",
+      "SPD": "B",
+      "RNG": "A",
+      "STA": "A",
+      "PRC": "E",
+      "DEV": "E"
+    }
+  },
+  {
+    "form_id": "california_king_bed__f0",
+    "stand_id": "california_king_bed",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "Null",
+      "SPD": "Null",
+      "RNG": "E",
+      "STA": "B",
+      "PRC": "E",
+      "DEV": "E"
+    }
+  },
+  {
+    "form_id": "fun_fun_fun__f0",
+    "stand_id": "fun_fun_fun",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "E",
+      "SPD": "C",
+      "RNG": "D",
+      "STA": "A",
+      "PRC": "E",
+      "DEV": "E"
+    }
+  },
+  {
+    "form_id": "nut_king_call__f0",
+    "stand_id": "nut_king_call",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "C",
+      "SPD": "D",
+      "RNG": "C",
+      "STA": "A",
+      "PRC": "E",
+      "DEV": "A"
+    }
+  },
+  {
+    "form_id": "paisley_park__f0",
+    "stand_id": "paisley_park",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "Null",
+      "SPD": "Null",
+      "RNG": "A",
+      "STA": "A",
+      "PRC": "D",
+      "DEV": "C"
+    }
+  },
+  {
+    "form_id": "paper_moon_king__f0",
+    "stand_id": "paper_moon_king",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "E",
+      "SPD": "E",
+      "RNG": "C",
+      "STA": "C",
+      "PRC": "B",
+      "DEV": "E"
+    }
+  },
+  {
+    "form_id": "soft_wet__f0",
+    "stand_id": "soft_wet",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "C",
+      "SPD": "B",
+      "RNG": "D",
+      "STA": "B",
+      "PRC": "C",
+      "DEV": "A"
+    }
+  },
+  {
+    "form_id": "manic_depression__f0",
+    "stand_id": "manic_depression",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "C",
+      "SPD": "A",
+      "RNG": "E",
+      "STA": "B",
+      "PRC": "B",
+      "DEV": "C"
+    }
+  },
+  {
+    "form_id": "voodoo_child__f0",
+    "stand_id": "voodoo_child",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "B",
+      "SPD": "A",
+      "RNG": "E",
+      "STA": "E",
+      "PRC": "B",
+      "DEV": "B"
+    }
+  },
+  {
+    "form_id": "all_along_watchtower__f0",
+    "stand_id": "all_along_watchtower",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "C",
+      "SPD": "B",
+      "RNG": "A",
+      "STA": "A",
+      "PRC": "A",
+      "DEV": "E"
+    }
+  },
+  {
+    "form_id": "dolly_dagger__f0",
+    "stand_id": "dolly_dagger",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "A",
+      "SPD": "A",
+      "RNG": "C",
+      "STA": "A",
+      "PRC": "B",
+      "DEV": "C"
+    }
+  },
+  {
+    "form_id": "nightbird_flying__f0",
+    "stand_id": "nightbird_flying",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "E",
+      "SPD": "A",
+      "RNG": "A",
+      "STA": "A",
+      "PRC": "E",
+      "DEV": "E"
+    }
+  },
+  {
+    "form_id": "purple_haze_distortion__f0",
+    "stand_id": "purple_haze_distortion",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "A",
+      "SPD": "B",
+      "RNG": "E",
+      "STA": "E",
+      "PRC": "C",
+      "DEV": "?"
+    }
+  },
+  {
+    "form_id": "rainy_day_dream_away__f0",
+    "stand_id": "rainy_day_dream_away",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "E",
+      "SPD": "B",
+      "RNG": "A",
+      "STA": "A",
+      "PRC": "E",
+      "DEV": "E"
+    }
+  },
+  {
+    "form_id": "remote_romance__f0",
+    "stand_id": "remote_romance",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "E",
+      "SPD": "D",
+      "RNG": "∞",
+      "STA": "B",
+      "PRC": "C",
+      "DEV": "E"
+    }
+  },
+  {
+    "form_id": "house_of_holy__f0",
+    "stand_id": "house_of_holy",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "E",
+      "SPD": "B",
+      "RNG": "C",
+      "STA": "A",
+      "PRC": "D",
+      "DEV": "D"
+    }
+  },
+  {
+    "form_id": "smallfaces__f0",
+    "stand_id": "smallfaces",
+    "form_name": "form_0",
+    "form_type": "base",
+    "raw_order": 0,
+    "values": {
+      "PWR": "E",
+      "SPD": "C",
+      "RNG": "C",
+      "STA": "A",
+      "PRC": "?",
+      "DEV": "A"
+    }
+  }
+]

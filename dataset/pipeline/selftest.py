@@ -39,14 +39,21 @@ CASES = [
     ("E", 1, Category.RANKED, None),
     # 规则 5：明确无能力
     ("None", 0, Category.NONE, None),
+    ("none", 0, Category.NONE, None),
     # 规则 6：空位（多源字面量）
     ("∅", None, Category.EMPTY_SLOT, None),
     ("undefined", None, Category.EMPTY_SLOT, None),
     ("N/A", None, Category.EMPTY_SLOT, None),
     # 规则 7：未知（独立语义，不并入空位）
     ("?", None, Category.UNKNOWN, None),
+    ("unknown", None, Category.UNKNOWN, None),
     # 规则 8：无限
     ("∞", None, Category.INFINITE, None),
+    ("Infi", None, Category.INFINITE, None),
+    # 规则 8b：随情境变化（镜像源表达条件值的方式）
+    ("situational", None, Category.CONDITIONAL_NO_BASE, "varies by context"),
+    # 空字符串 = 该源未提供，不是「值为空」
+    ("", None, Category.NOT_APPLICABLE, None),
     # 规则 1：条件值有基础等级（括号必须完整保留）
     ("B※20-30 meters", 4, Category.CONDITIONAL, "20-30 meters"),
     ("C※Range: 2 m (6.6 ft)", 3, Category.CONDITIONAL, "Range: 2 m (6.6 ft)"),

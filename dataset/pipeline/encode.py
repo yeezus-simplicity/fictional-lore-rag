@@ -36,9 +36,25 @@ RANK_VALUE = {
 }
 
 # 空值字面量白名单（数据规范 §1.3，v1.1 新增）
-# 不同源用不同字面量表示同一语义，统一归一为 EMPTY_SLOT
+# 不同数据源用不同字面量表示同一语义，统一归一为 EMPTY_SLOT
 # 注意：? 不在此列表，见 UNKNOWN
-EMPTY_SLOT_TOKENS = {"∅", "undefined", "N/A", "none", "null", "NULL", "-", "—"}
+#
+# v1.1 补充：跨源字面量实测全表
+#   主源(jojowiki)   : ∅ / ? / ∞ / ※...
+#   镜像 A(bogdan)   : None / none / undefined / N/A / unknown / situational / Infi
+#   镜像 B(topology) : None / none / undefined
+#
+# 语义映射（关键：不同源的同一字面量可能语义不同）
+#   EMPTY_SLOT       明确「这一格是空的」：∅ undefined N/A
+#   NONE             明确「无此能力」：None none
+#   UNKNOWN          明确「不确定」：? unknown
+#   INFINITE         明确「无限」：∞ Infinite infinite Infi
+EMPTY_SLOT_TOKENS = {"∅", "undefined", "N/A", "null", "NULL", "-", "—"}
+NONE_TOKENS = {"None", "none"}
+UNKNOWN_TOKENS = {"?", "unknown", "Unknown"}
+INFINITE_TOKENS = {"∞", "Infinite", "infinite", "Infi", "INFINITE"}
+# 「随情境变化」——条件值的一种，数值不可用
+SITUATIONAL_TOKENS = {"situational", "variable", "varies"}
 
 # 六维字段名
 STAT_DIMS = ["PWR", "SPD", "RNG", "STA", "PRC", "DEV"]
@@ -146,13 +162,9 @@ def normalize(raw: str) -> str:
 # ------------------------------------------------------------------
 
 _RE_RANK_COND = re.compile(r"^([A-E])\s*※\s*(.+)$")
-_RE_SPECIAL_COND = re.compile(r"^([?∅∞]|None|none)\s*※\s*(.+)$")
+_RE_SPECIAL_COND = re.compile(r"^([?∅∞]|None|none|Infi|unknown)\s*※\s*(.+)$")
 _RE_COND_LEAD = re.compile(r"^※\s*(.+)$")
 _RE_RANK_ONLY = re.compile(r"^([A-E])$")
-_RE_SPECIAL_ONLY = re.compile(r"^(None|none)$")
-_RE_EMPTY = re.compile(r"^(∅|undefined|N/A|null|NULL|-|—)$")
-_RE_UNKNOWN = re.compile(r"^\?$")
-_RE_INFINITE = re.compile(r"^(∞|Infinite|infinite)$")
 
 
 def encode_stat(raw: str) -> EncodedStat:
@@ -177,7 +189,10 @@ def encode_stat(raw: str) -> EncodedStat:
     s = normalize(original)
 
     if s == "":
-        return EncodedStat(None, Category.EMPTY_SLOT, None, original)
+        # 空字符串 = 数据源根本没有该字段/该记录（CSV 里的空格子），
+        # 语义是「该源未提供」，**不是**「值为空」。
+        # 用 NOT_APPLICABLE 而非 EMPTY_SLOT，以便与「明确空位」区分开。
+        return EncodedStat(None, Category.NOT_APPLICABLE, None, original)
 
     # 规则 1：X※描述 —— 有基础等级，条件值
     m = _RE_RANK_COND.match(s)
@@ -204,20 +219,25 @@ def encode_stat(raw: str) -> EncodedStat:
         return EncodedStat(RANK_VALUE[m.group(1)], Category.RANKED, None, original)
 
     # 规则 5：None —— 明确无此能力，数值为 0
-    if _RE_SPECIAL_ONLY.match(s):
+    if s in NONE_TOKENS:
         return EncodedStat(0, Category.NONE, None, original)
 
-    # 规则 6：空位字面量（白名单）
-    if _RE_EMPTY.match(s):
+    # 规则 6：空位字面量
+    if s in EMPTY_SLOT_TOKENS:
         return EncodedStat(None, Category.EMPTY_SLOT, None, original)
 
-    # 规则 7：? —— 未知。注意这是独立语义，不并入 EMPTY_SLOT
-    if _RE_UNKNOWN.match(s):
+    # 规则 7：未知。注意这是独立语义，不并入 EMPTY_SLOT
+    if s in UNKNOWN_TOKENS:
         return EncodedStat(None, Category.UNKNOWN, None, original)
 
-    # 规则 8：∞ —— 无限，保留原值
-    if _RE_INFINITE.match(s):
+    # 规则 8：无限
+    if s in INFINITE_TOKENS:
         return EncodedStat(None, Category.INFINITE, None, original)
+
+    # 规则 8b：随情境变化（镜像源用于表达条件值）
+    if s in SITUATIONAL_TOKENS:
+        return EncodedStat(None, Category.CONDITIONAL_NO_BASE,
+                           "varies by context", original)
 
     # 规则 9：兜底 —— 需人工介入
     return EncodedStat(None, Category.UNPARSED, s, original)

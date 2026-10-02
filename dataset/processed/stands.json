@@ -1,0 +1,3984 @@
+[
+  {
+    "stand_id": "anubis",
+    "name_en": "Anubis",
+    "name_raw": "Anubis",
+    "part": 3,
+    "part_name_en": "Stardust Crusaders",
+    "owner_id": null,
+    "owner_name": "Caravan Serai (Originally)Chaka (Possessed)Four Unnamed mice (Possessed)Khan (Possessed)Jean Pierre Polnareff (Possessed)Unnamed boy (Possessed)Cow (Possessed)",
+    "stand_type": "AutomaticMaterializedPsychological AssaultArtificial Non-HumanoidMulti-UserSentient",
+    "reference": null,
+    "name_ja": "アヌビス神",
+    "name_romaji": "Anubisu-shin",
+    "manga_debut": "Chapter 193",
+    "anime_debut": "SC Episode 28",
+    "form_count": 1,
+    "form_chain": [
+      "anubis__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Anubis"
+  },
+  {
+    "stand_id": "atum",
+    "name_en": "Atum",
+    "name_raw": "Atum",
+    "part": 3,
+    "part_name_en": "Stardust Crusaders",
+    "owner_id": null,
+    "owner_name": "Telence T. D'Arby",
+    "stand_type": "Close-RangeAutomaticPsychological AssaultArtificial Humanoid",
+    "reference": null,
+    "name_ja": "アトゥム神",
+    "name_romaji": "Atumu-shin",
+    "manga_debut": "Chapter 228",
+    "anime_debut": "SC Episode 40",
+    "form_count": 1,
+    "form_chain": [
+      "atum__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Atum"
+  },
+  {
+    "stand_id": "bastet",
+    "name_en": "Bastet",
+    "name_raw": "Bastet",
+    "part": 3,
+    "part_name_en": "Stardust Crusaders",
+    "owner_id": null,
+    "owner_name": "Mariah",
+    "stand_type": "Long-RangeArtificial Non-Humanoid",
+    "reference": null,
+    "name_ja": "バステト女神",
+    "name_romaji": "Basuteto-joshin",
+    "manga_debut": "Chapter 199",
+    "anime_debut": "SC Episode 30",
+    "form_count": 1,
+    "form_chain": [
+      "bastet__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Bastet"
+  },
+  {
+    "stand_id": "cream",
+    "name_en": "Cream",
+    "name_raw": "Cream",
+    "part": 3,
+    "part_name_en": "Stardust Crusaders",
+    "owner_id": null,
+    "owner_name": "Vanilla Ice",
+    "stand_type": "Close-RangeArtificial Humanoid",
+    "reference": null,
+    "name_ja": "クリーム",
+    "name_romaji": "Kurīmu",
+    "manga_debut": "Chapter 238",
+    "anime_debut": "SC Episode 42",
+    "form_count": 1,
+    "form_chain": [
+      "cream__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Cream"
+  },
+  {
+    "stand_id": "death_thirteen",
+    "name_en": "Death Thirteen",
+    "name_raw": "Death Thirteen",
+    "part": 3,
+    "part_name_en": "Stardust Crusaders",
+    "owner_id": null,
+    "owner_name": "Mannish Boy",
+    "stand_type": "Close-RangePsychological AssaultArtificial Humanoid",
+    "reference": null,
+    "name_ja": "デスサーティーン(死神13)",
+    "name_romaji": "Desu Sātīn",
+    "manga_debut": "Chapter 168",
+    "anime_debut": "SC Episode 19",
+    "form_count": 1,
+    "form_chain": [
+      "death_thirteen__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Death_Thirteen"
+  },
+  {
+    "stand_id": "geb",
+    "name_en": "Geb",
+    "name_raw": "Geb",
+    "part": 3,
+    "part_name_en": "Stardust Crusaders",
+    "owner_id": null,
+    "owner_name": "N'Doul",
+    "stand_type": "Long-RangeMaterializedNatural Non-Humanoid",
+    "reference": null,
+    "name_ja": "ゲブ神",
+    "name_romaji": "Gebu-shin",
+    "manga_debut": "Chapter 184",
+    "anime_debut": "SC Episode 24(Glimpse)SC Episode 25(1st full debut)",
+    "form_count": 1,
+    "form_chain": [
+      "geb__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Geb"
+  },
+  {
+    "stand_id": "high_priestess",
+    "name_en": "High Priestess",
+    "name_raw": "High Priestess",
+    "part": 3,
+    "part_name_en": "Stardust Crusaders",
+    "owner_id": null,
+    "owner_name": "Midler",
+    "stand_type": "Long-RangeNatural Non-Humanoid",
+    "reference": null,
+    "name_ja": "ハイプリエステス(女教皇)",
+    "name_romaji": "Hai Puriesutesu",
+    "manga_debut": "Chapter 179",
+    "anime_debut": "SC Episode 23",
+    "form_count": 1,
+    "form_chain": [
+      "high_priestess__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/High_Priestess"
+  },
+  {
+    "stand_id": "horus",
+    "name_en": "Horus",
+    "name_raw": "Horus",
+    "part": 3,
+    "part_name_en": "Stardust Crusaders",
+    "owner_id": null,
+    "owner_name": "Pet Shop",
+    "stand_type": "Close-RangeNatural Non-Humanoid",
+    "reference": null,
+    "name_ja": "ホルス神",
+    "name_romaji": "Horusu-shin",
+    "manga_debut": "Chapter 222",
+    "anime_debut": "SC Episode 38",
+    "form_count": 1,
+    "form_chain": [
+      "horus__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Horus"
+  },
+  {
+    "stand_id": "judgement",
+    "name_en": "Judgement",
+    "name_raw": "Judgement",
+    "part": 3,
+    "part_name_en": "Stardust Crusaders",
+    "owner_id": null,
+    "owner_name": "Cameo",
+    "stand_type": "Close-RangeArtificial Humanoid",
+    "reference": null,
+    "name_ja": "ジャッジメント(審判)",
+    "name_romaji": "Jajjimento",
+    "manga_debut": "Chapter 174",
+    "anime_debut": "SC Episode 21",
+    "form_count": 1,
+    "form_chain": [
+      "judgement__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Judgement"
+  },
+  {
+    "stand_id": "khnum",
+    "name_en": "Khnum",
+    "name_raw": "Khnum",
+    "part": 3,
+    "part_name_en": "Stardust Crusaders",
+    "owner_id": null,
+    "owner_name": "Oingo",
+    "stand_type": "Range IrrelevantPhenomenon",
+    "reference": null,
+    "name_ja": "クヌム神",
+    "name_romaji": "Kunumu-shin",
+    "manga_debut": "Chapter 189",
+    "anime_debut": "SC Episode 27",
+    "form_count": 1,
+    "form_chain": [
+      "khnum__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Khnum"
+  },
+  {
+    "stand_id": "osiris",
+    "name_en": "Osiris",
+    "name_raw": "Osiris",
+    "part": 3,
+    "part_name_en": "Stardust Crusaders",
+    "owner_id": null,
+    "owner_name": "Daniel J. D'Arby",
+    "stand_type": "Close-RangeAutomaticPsychological AssaultArtificial Humanoid",
+    "reference": null,
+    "name_ja": "オシリス神",
+    "name_romaji": "Oshirisu-shin",
+    "manga_debut": "Chapter 211",
+    "anime_debut": "SC Episode 34",
+    "form_count": 1,
+    "form_chain": [
+      "osiris__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Osiris"
+  },
+  {
+    "stand_id": "sethan",
+    "name_en": "Sethan",
+    "name_raw": "Sethan",
+    "part": 3,
+    "part_name_en": "Stardust Crusaders",
+    "owner_id": null,
+    "owner_name": "Alessi",
+    "stand_type": "Close-RangeMaterializedNatural Humanoid",
+    "reference": null,
+    "name_ja": "セト神",
+    "name_romaji": "Seto-shin",
+    "manga_debut": "Chapter 205",
+    "anime_debut": "SC Episode 31",
+    "form_count": 1,
+    "form_chain": [
+      "sethan__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Sethan"
+  },
+  {
+    "stand_id": "tenore_sax",
+    "name_en": "Tenore Sax",
+    "name_raw": "Tenore Sax",
+    "part": 3,
+    "part_name_en": "Stardust Crusaders",
+    "owner_id": null,
+    "owner_name": "Kenny G.",
+    "stand_type": "Range IrrelevantPhenomenonPsychological Assault",
+    "reference": null,
+    "name_ja": "ティナー・サックス",
+    "name_romaji": "Tinā Sakkusu",
+    "manga_debut": "Chapter 227",
+    "anime_debut": "SC Episode 39",
+    "form_count": 1,
+    "form_chain": [
+      "tenore_sax__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Tenore_Sax"
+  },
+  {
+    "stand_id": "tohth",
+    "name_en": "Tohth",
+    "name_raw": "Tohth",
+    "part": 3,
+    "part_name_en": "Stardust Crusaders",
+    "owner_id": null,
+    "owner_name": "Boingo",
+    "stand_type": "AutomaticRange IrrelevantForesightMaterializedPhenomenon (Other)Multi-User (CDDH)",
+    "reference": null,
+    "name_ja": "トト神",
+    "name_romaji": "Toto-shin",
+    "manga_debut": "Chapter 189",
+    "anime_debut": "SC Episode 26",
+    "form_count": 1,
+    "form_chain": [
+      "tohth__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Tohth"
+  },
+  {
+    "stand_id": "dark_blue_moon",
+    "name_en": "Dark Blue Moon",
+    "name_raw": "Dark Blue Moon",
+    "part": 3,
+    "part_name_en": "Stardust Crusaders",
+    "owner_id": null,
+    "owner_name": "Imposter Captain Tennille",
+    "stand_type": "Close-RangeNatural Humanoid",
+    "reference": null,
+    "name_ja": "ダークブルームーン(暗青の月)",
+    "name_romaji": "Dāku Burū Mūn",
+    "manga_debut": "Chapter 127",
+    "anime_debut": "SC Episode 6",
+    "form_count": 1,
+    "form_chain": [
+      "dark_blue_moon__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Dark_Blue_Moon"
+  },
+  {
+    "stand_id": "emperor",
+    "name_en": "Emperor",
+    "name_raw": "Emperor",
+    "part": 3,
+    "part_name_en": "Stardust Crusaders",
+    "owner_id": null,
+    "owner_name": "Hol Horse",
+    "stand_type": "Close-RangeArtificial Non-Humanoid",
+    "reference": null,
+    "name_ja": "エンペラー(皇帝)",
+    "name_romaji": "Enperā",
+    "manga_debut": "Chapter 141",
+    "anime_debut": "SC Episode 10",
+    "form_count": 1,
+    "form_chain": [
+      "emperor__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Emperor"
+  },
+  {
+    "stand_id": "ebony_devil",
+    "name_en": "Ebony Devil",
+    "name_raw": "Ebony Devil",
+    "part": 3,
+    "part_name_en": "Stardust Crusaders",
+    "owner_id": null,
+    "owner_name": "Devo the Cursed",
+    "stand_type": "Long-RangeArtificial Humanoid",
+    "reference": null,
+    "name_ja": "エボニーデビル(悪魔)",
+    "name_romaji": "Ebonī Debiru",
+    "manga_debut": "Chapter 133",
+    "anime_debut": "SC Episode 7",
+    "form_count": 1,
+    "form_chain": [
+      "ebony_devil__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Ebony_Devil"
+  },
+  {
+    "stand_id": "empress",
+    "name_en": "Empress",
+    "name_raw": "Empress",
+    "part": 3,
+    "part_name_en": "Stardust Crusaders",
+    "owner_id": null,
+    "owner_name": "Nena",
+    "stand_type": "Long-RangeMaterializedNatural HumanoidSentient",
+    "reference": null,
+    "name_ja": "エンプレス(女帝)",
+    "name_romaji": "Enpuresu",
+    "manga_debut": "Chapter 147",
+    "anime_debut": "SC Episode 12",
+    "form_count": 1,
+    "form_chain": [
+      "empress__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Empress"
+  },
+  {
+    "stand_id": "hanged_man",
+    "name_en": "Hanged Man",
+    "name_raw": "Hanged Man",
+    "part": 3,
+    "part_name_en": "Stardust Crusaders",
+    "owner_id": null,
+    "owner_name": "J. Geil",
+    "stand_type": "Long-RangeArtificial Humanoid",
+    "reference": null,
+    "name_ja": "ハングドマン(吊られた男)",
+    "name_romaji": "Hangudo Man",
+    "manga_debut": "Chapter 140",
+    "anime_debut": "SC Episode 10",
+    "form_count": 1,
+    "form_chain": [
+      "hanged_man__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Hanged_Man"
+  },
+  {
+    "stand_id": "hermit_purple",
+    "name_en": "Hermit Purple",
+    "name_raw": "Hermit Purple",
+    "part": 3,
+    "part_name_en": "Stardust Crusaders",
+    "owner_id": null,
+    "owner_name": "Joseph Joestar",
+    "stand_type": "Close-RangeReconnaissanceNatural Non-Humanoid",
+    "reference": null,
+    "name_ja": "ハーミットパープル(隠者の紫)",
+    "name_romaji": "Hāmitto Pāpuru",
+    "manga_debut": "Chapter 117",
+    "anime_debut": "SC Episode 1",
+    "form_count": 1,
+    "form_chain": [
+      "hermit_purple__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Hermit_Purple"
+  },
+  {
+    "stand_id": "hierophant_green",
+    "name_en": "Hierophant Green",
+    "name_raw": "Hierophant Green",
+    "part": 3,
+    "part_name_en": "Stardust Crusaders",
+    "owner_id": null,
+    "owner_name": "Noriaki Kakyoin",
+    "stand_type": "Long-RangeReconnaissanceArtificial Humanoid",
+    "reference": null,
+    "name_ja": "ハイエロファントグリーン(法皇の緑)",
+    "name_romaji": "Haierofanto Gurīn",
+    "manga_debut": "Chapter 118",
+    "anime_debut": "SC Episode 2",
+    "form_count": 1,
+    "form_chain": [
+      "hierophant_green__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Hierophant_Green"
+  },
+  {
+    "stand_id": "justice",
+    "name_en": "Justice",
+    "name_raw": "Justice",
+    "part": 3,
+    "part_name_en": "Stardust Crusaders",
+    "owner_id": null,
+    "owner_name": "Enya the Hag",
+    "stand_type": "Long-RangeNatural Non-Humanoid",
+    "reference": null,
+    "name_ja": "ジャスティス(正義)",
+    "name_romaji": "Jasutisu",
+    "manga_debut": "Chapter 155",
+    "anime_debut": "SC Episode 14",
+    "form_count": 1,
+    "form_chain": [
+      "justice__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Justice"
+  },
+  {
+    "stand_id": "lovers",
+    "name_en": "Lovers",
+    "name_raw": "Lovers",
+    "part": 3,
+    "part_name_en": "Stardust Crusaders",
+    "owner_id": null,
+    "owner_name": "Steely Dan",
+    "stand_type": "Long-RangeArtificial Humanoid",
+    "reference": null,
+    "name_ja": "ラバーズ(恋人)",
+    "name_romaji": "Rabāzu",
+    "manga_debut": "Chapter 161",
+    "anime_debut": "SC Episode 16",
+    "form_count": 1,
+    "form_chain": [
+      "lovers__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Lovers"
+  },
+  {
+    "stand_id": "magician_s_red",
+    "name_en": "Magician's Red",
+    "name_raw": "Magician's Red",
+    "part": 3,
+    "part_name_en": "Stardust Crusaders",
+    "owner_id": null,
+    "owner_name": "Muhammad Avdol",
+    "stand_type": "Close-RangeReconnaissanceNatural Humanoid",
+    "reference": null,
+    "name_ja": "マジシャンズレッド(魔術師の赤)",
+    "name_romaji": "Majishanzu Reddo",
+    "manga_debut": "Chapter 115",
+    "anime_debut": "SC Episode 1",
+    "form_count": 1,
+    "form_chain": [
+      "magician_s_red__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Magician's_Red"
+  },
+  {
+    "stand_id": "silver_chariot",
+    "name_en": "Silver Chariot",
+    "name_raw": "Silver Chariot",
+    "part": 3,
+    "part_name_en": "Stardust Crusaders",
+    "owner_id": null,
+    "owner_name": "Jean Pierre Polnareff",
+    "stand_type": "Close-RangeArtificial Humanoid",
+    "reference": null,
+    "name_ja": "シルバーチャリオッツ(銀の戦車)",
+    "name_romaji": "Shirubā Chariottsu",
+    "manga_debut": "Chapter 124",
+    "anime_debut": "SC Episode 4",
+    "form_count": 1,
+    "form_chain": [
+      "silver_chariot__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Silver_Chariot"
+  },
+  {
+    "stand_id": "star_platinum",
+    "name_en": "Star Platinum",
+    "name_raw": "Star Platinum",
+    "part": 3,
+    "part_name_en": "Stardust Crusaders",
+    "owner_id": null,
+    "owner_name": "Jotaro Kujo",
+    "stand_type": "Close-RangeRange Irrelevant (Star Platinum: The World)ReconnaissanceNatural Humanoid",
+    "reference": null,
+    "name_ja": "スタープラチナ(星の白金)",
+    "name_romaji": "Sutā Purachina",
+    "manga_debut": "Chapter 114",
+    "anime_debut": "SC Episode 1",
+    "form_count": 3,
+    "form_chain": [
+      "star_platinum__f0",
+      "star_platinum__f1",
+      "star_platinum__f2"
+    ],
+    "main_table_registrations": 2,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Star_Platinum%3A_The_World"
+  },
+  {
+    "stand_id": "strength",
+    "name_en": "Strength",
+    "name_raw": "Strength",
+    "part": 3,
+    "part_name_en": "Stardust Crusaders",
+    "owner_id": null,
+    "owner_name": "Forever",
+    "stand_type": "Close-RangeMaterializedArtificial Non-Humanoid",
+    "reference": null,
+    "name_ja": "ストレングス(力)",
+    "name_romaji": "Sutorengusu",
+    "manga_debut": "Chapter 130",
+    "anime_debut": "SC Episode 6",
+    "form_count": 1,
+    "form_chain": [
+      "strength__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Strength"
+  },
+  {
+    "stand_id": "sun",
+    "name_en": "Sun",
+    "name_raw": "Sun",
+    "part": 3,
+    "part_name_en": "Stardust Crusaders",
+    "owner_id": null,
+    "owner_name": "Arabia Fats",
+    "stand_type": "Long-RangeNatural Non-Humanoid",
+    "reference": null,
+    "name_ja": "サン(太陽)",
+    "name_romaji": "San",
+    "manga_debut": "Chapter 166",
+    "anime_debut": "SC Episode 18",
+    "form_count": 1,
+    "form_chain": [
+      "sun__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Sun"
+  },
+  {
+    "stand_id": "the_fool",
+    "name_en": "The Fool",
+    "name_raw": "The Fool",
+    "part": 3,
+    "part_name_en": "Stardust Crusaders",
+    "owner_id": null,
+    "owner_name": "Iggy",
+    "stand_type": "Close-RangeMaterializedArtificial Non-HumanoidNatural Non-Humanoid (Sand)",
+    "reference": null,
+    "name_ja": "ザ・フール(愚者)",
+    "name_romaji": "Za Fūru",
+    "manga_debut": "Chapter 183",
+    "anime_debut": "SC Episode 25",
+    "form_count": 1,
+    "form_chain": [
+      "the_fool__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/The_Fool"
+  },
+  {
+    "stand_id": "the_world",
+    "name_en": "The World",
+    "name_raw": "The World",
+    "part": 3,
+    "part_name_en": "Stardust Crusaders",
+    "owner_id": null,
+    "owner_name": "DIO",
+    "stand_type": "Close-RangeRange IrrelevantNatural Humanoid",
+    "reference": null,
+    "name_ja": "ザ・ワールド(世界)",
+    "name_romaji": "Za Wārudo",
+    "manga_debut": "Chapter 210Chapter 248 (1st full debut)",
+    "anime_debut": "SC Episode 7 (Glimpse)SC Episode 45 (1st full debut)",
+    "form_count": 1,
+    "form_chain": [
+      "the_world__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/The_World"
+  },
+  {
+    "stand_id": "tower_of_gray",
+    "name_en": "Tower of Gray",
+    "name_raw": "Tower of Gray",
+    "part": 3,
+    "part_name_en": "Stardust Crusaders",
+    "owner_id": null,
+    "owner_name": "Gray Fly",
+    "stand_type": "Long-RangeNatural Non-Humanoid",
+    "reference": null,
+    "name_ja": "タワー・オブ・グレー(灰の塔)",
+    "name_romaji": "Tawā obu Gurē",
+    "manga_debut": "Chapter 122",
+    "anime_debut": "SC Episode 3",
+    "form_count": 1,
+    "form_chain": [
+      "tower_of_gray__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Tower_of_Gray"
+  },
+  {
+    "stand_id": "wheel_of_fortune",
+    "name_en": "Wheel of Fortune",
+    "name_raw": "Wheel of Fortune",
+    "part": 3,
+    "part_name_en": "Stardust Crusaders",
+    "owner_id": null,
+    "owner_name": "ZZ",
+    "stand_type": "Close-RangeMaterializedArtificial Non-Humanoid",
+    "reference": null,
+    "name_ja": "ホウィール・オブ・フォーチュン(運命の車輪)",
+    "name_romaji": "Howīru obu Fōchun",
+    "manga_debut": "Chapter 150",
+    "anime_debut": "SC Episode 12(Disguised)SC Episode 13(1st full debut)",
+    "form_count": 1,
+    "form_chain": [
+      "wheel_of_fortune__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Wheel_of_Fortune"
+  },
+  {
+    "stand_id": "yellow_temperance",
+    "name_en": "Yellow Temperance",
+    "name_raw": "Yellow Temperance",
+    "part": 3,
+    "part_name_en": "Stardust Crusaders",
+    "owner_id": null,
+    "owner_name": "Rubber Soul",
+    "stand_type": "Close-RangeMaterializedNatural Non-Humanoid",
+    "reference": null,
+    "name_ja": "イエローテンパランス(黄の節制)",
+    "name_romaji": "Ierō Tenparansu",
+    "manga_debut": "Chapter 136 (Disguised)Chapter 137(1st full debut)",
+    "anime_debut": "SC Episode 8 (Disguised)SC Episode 9(1st full debut)",
+    "form_count": 1,
+    "form_chain": [
+      "yellow_temperance__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Yellow_Temperance"
+  },
+  {
+    "stand_id": "achtung_baby",
+    "name_en": "Achtung Baby",
+    "name_raw": "Achtung Baby",
+    "part": 4,
+    "part_name_en": "Diamond is Unbreakable",
+    "owner_id": null,
+    "owner_name": "Shizuka Joestar",
+    "stand_type": "Range IrrelevantIntegratedPhenomenon (Other)",
+    "reference": null,
+    "name_ja": "アクトン・ベイビー",
+    "name_romaji": "Akuton Beibī",
+    "manga_debut": "Chapter 315",
+    "anime_debut": "DU Episode 13",
+    "form_count": 1,
+    "form_chain": [
+      "achtung_baby__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Achtung_Baby"
+  },
+  {
+    "stand_id": "aqua_necklace",
+    "name_en": "Aqua Necklace",
+    "name_raw": "Aqua Necklace",
+    "part": 4,
+    "part_name_en": "Diamond is Unbreakable",
+    "owner_id": null,
+    "owner_name": "Anjuro \"Angelo\" Katagiri",
+    "stand_type": "Long-RangeMaterializedNatural HumanoidNatural Non-Humanoid (Water)",
+    "reference": null,
+    "name_ja": "アクア・ネックレス(水の首飾り)",
+    "name_romaji": "Akua Nekkuresu",
+    "manga_debut": "Chapter 269",
+    "anime_debut": "DU Episode 1",
+    "form_count": 1,
+    "form_chain": [
+      "aqua_necklace__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Aqua_Necklace"
+  },
+  {
+    "stand_id": "atom_heart_father",
+    "name_en": "Atom Heart Father",
+    "name_raw": "Atom Heart Father",
+    "part": 4,
+    "part_name_en": "Diamond is Unbreakable",
+    "owner_id": null,
+    "owner_name": "Yoshihiro Kira",
+    "stand_type": "Range IrrelevantMaterializedPsychological AssaultPhenomenon (Other)",
+    "reference": null,
+    "name_ja": "アトム・ハート・ファーザー",
+    "name_romaji": "Atomu Hāto Fāzā",
+    "manga_debut": "Chapter 365",
+    "anime_debut": "DU Episode 25",
+    "form_count": 1,
+    "form_chain": [
+      "atom_heart_father__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Atom_Heart_Father"
+  },
+  {
+    "stand_id": "bad_company",
+    "name_en": "Bad Company",
+    "name_raw": "Bad Company",
+    "part": 4,
+    "part_name_en": "Diamond is Unbreakable",
+    "owner_id": null,
+    "owner_name": "Keicho Nijimura",
+    "stand_type": "Close-RangeReconnaissanceArtificial HumanoidMulti-Unit",
+    "reference": null,
+    "name_ja": "極悪中隊(バッド・カンパニー)",
+    "name_romaji": "Baddo Kanpanī",
+    "manga_debut": "Chapter 278",
+    "anime_debut": "DU Episode 4",
+    "form_count": 1,
+    "form_chain": [
+      "bad_company__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Bad_Company"
+  },
+  {
+    "stand_id": "boy_ii_man",
+    "name_en": "Boy II Man",
+    "name_raw": "Boy II Man",
+    "part": 4,
+    "part_name_en": "Diamond is Unbreakable",
+    "owner_id": null,
+    "owner_name": "Ken Oyanagi",
+    "stand_type": "Close-RangePsychological AssaultArtificial Humanoid",
+    "reference": null,
+    "name_ja": "ボーイ・II(ツー)・マン",
+    "name_romaji": "Bōi Tsū Man",
+    "manga_debut": "Chapter 373",
+    "anime_debut": "DU Episode 26",
+    "form_count": 1,
+    "form_chain": [
+      "boy_ii_man__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Boy_II_Man"
+  },
+  {
+    "stand_id": "cheap_trick",
+    "name_en": "Cheap Trick",
+    "name_raw": "Cheap Trick",
+    "part": 4,
+    "part_name_en": "Diamond is Unbreakable",
+    "owner_id": null,
+    "owner_name": "Masazo Kinoto (Original)Rohan Kishibe (Temporary)",
+    "stand_type": "AutomaticPsychological AssaultArtificial HumanoidMulti-UserSentient",
+    "reference": null,
+    "name_ja": "チープ・トリックN/A",
+    "name_romaji": "Chīpu TorikkuN/A",
+    "manga_debut": "Chapter 413",
+    "anime_debut": "DU Episode 33",
+    "form_count": 1,
+    "form_chain": [
+      "cheap_trick__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Cheap_Trick"
+  },
+  {
+    "stand_id": "cinderella",
+    "name_en": "Cinderella",
+    "name_raw": "Cinderella",
+    "part": 4,
+    "part_name_en": "Diamond is Unbreakable",
+    "owner_id": null,
+    "owner_name": "Aya Tsuji",
+    "stand_type": "Close-RangeArtificial Humanoid",
+    "reference": null,
+    "name_ja": "シンデレラ",
+    "name_romaji": "Shinderera",
+    "manga_debut": "Chapter 348",
+    "anime_debut": "DU Episode 20",
+    "form_count": 1,
+    "form_chain": [
+      "cinderella__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Cinderella"
+  },
+  {
+    "stand_id": "crazy_diamond",
+    "name_en": "Crazy Diamond",
+    "name_raw": "Crazy Diamond",
+    "part": 4,
+    "part_name_en": "Diamond is Unbreakable",
+    "owner_id": null,
+    "owner_name": "Josuke Higashikata",
+    "stand_type": "Close-RangeNatural Humanoid",
+    "reference": null,
+    "name_ja": "クレイジー・ダイヤモンド",
+    "name_romaji": "Kureijī Daiyamondo",
+    "manga_debut": "Chapter 266",
+    "anime_debut": "DU Episode 1",
+    "form_count": 1,
+    "form_chain": [
+      "crazy_diamond__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Crazy_Diamond"
+  },
+  {
+    "stand_id": "enigma",
+    "name_en": "Enigma",
+    "name_raw": "Enigma",
+    "part": 4,
+    "part_name_en": "Diamond is Unbreakable",
+    "owner_id": null,
+    "owner_name": "Terunosuke Miyamoto",
+    "stand_type": "Close-RangePsychological AssaultArtificial Humanoid",
+    "reference": null,
+    "name_ja": "エニグマ",
+    "name_romaji": "Eniguma",
+    "manga_debut": "Chapter 404",
+    "anime_debut": "DU Episode 32",
+    "form_count": 1,
+    "form_chain": [
+      "enigma__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Enigma"
+  },
+  {
+    "stand_id": "earth_wind_and_fire",
+    "name_en": "Earth Wind and Fire",
+    "name_raw": "Earth Wind and Fire",
+    "part": 4,
+    "part_name_en": "Diamond is Unbreakable",
+    "owner_id": null,
+    "owner_name": "Mikitaka Hazekura",
+    "stand_type": "Range IrrelevantIntegratedPhenomenon (Other)",
+    "reference": null,
+    "name_ja": "アース・ウィンド・アンド・ファイヤー",
+    "name_romaji": "Āsu Windo ando Faiyā",
+    "manga_debut": "Chapter 378",
+    "anime_debut": "DU Episode 27",
+    "form_count": 1,
+    "form_chain": [
+      "earth_wind_and_fire__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Earth_Wind_and_Fire"
+  },
+  {
+    "stand_id": "harvest",
+    "name_en": "Harvest",
+    "name_raw": "Harvest",
+    "part": 4,
+    "part_name_en": "Diamond is Unbreakable",
+    "owner_id": null,
+    "owner_name": "Shigekiyo \"Shigechi\" Yangu",
+    "stand_type": "Long-RangeReconnaissanceArtificial Non-HumanoidMulti-Unit",
+    "reference": null,
+    "name_ja": "ハーヴェスト",
+    "name_romaji": "Hāvesuto",
+    "manga_debut": "Chapter 335",
+    "anime_debut": "DU Episode 18",
+    "form_count": 1,
+    "form_chain": [
+      "harvest__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Harvest"
+  },
+  {
+    "stand_id": "heaven_s_door",
+    "name_en": "Heaven's Door",
+    "name_raw": "Heaven's Door",
+    "part": 4,
+    "part_name_en": "Diamond is Unbreakable",
+    "owner_id": null,
+    "owner_name": "Rohan KishibeKen Oyanagi (2/3) (Temporarily)",
+    "stand_type": "Close-RangePsychological AssaultReconnaissanceNatural Humanoid",
+    "reference": null,
+    "name_ja": "ヘブンズ・ドアー(天国への扉)",
+    "name_romaji": "Hebunzu Doā",
+    "manga_debut": "Chapter 319",
+    "anime_debut": "DU Episode 14",
+    "form_count": 1,
+    "form_chain": [
+      "heaven_s_door__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Heaven's_Door"
+  },
+  {
+    "stand_id": "highway_star",
+    "name_en": "Highway Star",
+    "name_raw": "Highway Star",
+    "part": 4,
+    "part_name_en": "Diamond is Unbreakable",
+    "owner_id": null,
+    "owner_name": "Yuya Fungami",
+    "stand_type": "Long-RangeAutomaticReconnaissanceNatural Humanoid",
+    "reference": null,
+    "name_ja": "ハイウェイ・スター",
+    "name_romaji": "Haiwei Sutā",
+    "manga_debut": "Chapter 384",
+    "anime_debut": "DU Episode 28",
+    "form_count": 1,
+    "form_chain": [
+      "highway_star__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Highway_Star"
+  },
+  {
+    "stand_id": "killer_queen",
+    "name_en": "Killer Queen",
+    "name_raw": "Killer Queen",
+    "part": 4,
+    "part_name_en": "Diamond is Unbreakable",
+    "owner_id": null,
+    "owner_name": "Yoshikage Kira",
+    "stand_type": "Close-RangeNatural Humanoid",
+    "reference": null,
+    "name_ja": "キラークイーン",
+    "name_romaji": "Kirā Kuīn",
+    "manga_debut": "Chapter 345",
+    "anime_debut": "DU Episode 21",
+    "form_count": 1,
+    "form_chain": [
+      "killer_queen__f0"
+    ],
+    "main_table_registrations": 2,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Killer_Queen"
+  },
+  {
+    "stand_id": "sheer_heart_attack",
+    "name_en": "Sheer Heart Attack",
+    "name_raw": "Sheer Heart Attack",
+    "part": 4,
+    "part_name_en": "Diamond is Unbreakable",
+    "owner_id": null,
+    "owner_name": "Yoshikage Kira",
+    "stand_type": "AutomaticArtificial Non-Humanoid",
+    "reference": null,
+    "name_ja": "シアーハートアタック",
+    "name_romaji": "Shiā Hāto Atakku",
+    "manga_debut": "Chapter 354",
+    "anime_debut": "DU Episode 22",
+    "form_count": 1,
+    "form_chain": [
+      "sheer_heart_attack__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Sheer_Heart_Attack"
+  },
+  {
+    "stand_id": "bites_the_dust",
+    "name_en": "Bites the Dust",
+    "name_raw": "Bites the Dust",
+    "part": 4,
+    "part_name_en": "Diamond is Unbreakable",
+    "owner_id": null,
+    "owner_name": "Yoshikage KiraHayato Kawajiri (Trigger)Female Paramedic (Trigger)",
+    "stand_type": "AutomaticRange Irrelevant (Ability)Psychological AssaultNatural HumanoidEvolved",
+    "reference": null,
+    "name_ja": "BITE THE DUST(バイツァ・ダスト) (負けて死ね)",
+    "name_romaji": "Baitsa Dasuto",
+    "manga_debut": "Chapter 418",
+    "anime_debut": "DU Episode 35",
+    "form_count": 1,
+    "form_chain": [
+      "bites_the_dust__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Bites_the_Dust"
+  },
+  {
+    "stand_id": "love_deluxe",
+    "name_en": "Love Deluxe",
+    "name_raw": "Love Deluxe",
+    "part": 4,
+    "part_name_en": "Diamond is Unbreakable",
+    "owner_id": null,
+    "owner_name": "Yukako Yamagishi",
+    "stand_type": "Range IrrelevantIntegratedMaterializedPhenomenon (Other)",
+    "reference": null,
+    "name_ja": "ラブ・デラックス",
+    "name_romaji": "Rabu Derakkusu",
+    "manga_debut": "Chapter 294",
+    "anime_debut": "DU Episode 8",
+    "form_count": 1,
+    "form_chain": [
+      "love_deluxe__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Love_Deluxe"
+  },
+  {
+    "stand_id": "pearl_jam",
+    "name_en": "Pearl Jam",
+    "name_raw": "Pearl Jam",
+    "part": 4,
+    "part_name_en": "Diamond is Unbreakable",
+    "owner_id": null,
+    "owner_name": "Tonio Trussardi",
+    "stand_type": "Range IrrelevantNatural Non-HumanoidMulti-Unit",
+    "reference": null,
+    "name_ja": "パール・ジャム",
+    "name_romaji": "Pāru Jamu",
+    "manga_debut": "Chapter 305",
+    "anime_debut": "DU Episode 10",
+    "form_count": 1,
+    "form_chain": [
+      "pearl_jam__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Pearl_Jam"
+  },
+  {
+    "stand_id": "ratt",
+    "name_en": "Ratt",
+    "name_raw": "Ratt",
+    "part": 4,
+    "part_name_en": "Diamond is Unbreakable",
+    "owner_id": null,
+    "owner_name": "Bug-EatenNot Bug-Eaten",
+    "stand_type": "Close-RangeArtificial Non-HumanoidMulti-User",
+    "reference": null,
+    "name_ja": "ラット",
+    "name_romaji": "Ratto",
+    "manga_debut": "Chapter 326",
+    "anime_debut": "DU Episode 16",
+    "form_count": 1,
+    "form_chain": [
+      "ratt__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Ratt"
+  },
+  {
+    "stand_id": "red_hot_chili_pepper",
+    "name_en": "Red Hot Chili Pepper",
+    "name_raw": "Red Hot Chili Pepper",
+    "part": 4,
+    "part_name_en": "Diamond is Unbreakable",
+    "owner_id": null,
+    "owner_name": "Akira Otoishi",
+    "stand_type": "Long-RangeNatural Humanoid",
+    "reference": null,
+    "name_ja": "レッド・ホット・チリ・ペッパー",
+    "name_romaji": "Reddo Hotto Chiri Peppā",
+    "manga_debut": "Chapter 283",
+    "anime_debut": "DU Episode 5",
+    "form_count": 1,
+    "form_chain": [
+      "red_hot_chili_pepper__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Red_Hot_Chili_Pepper"
+  },
+  {
+    "stand_id": "super_fly",
+    "name_en": "Super Fly",
+    "name_raw": "Super Fly",
+    "part": 4,
+    "part_name_en": "Diamond is Unbreakable",
+    "owner_id": null,
+    "owner_name": "Toyohiro Kanedaichi",
+    "stand_type": "AutomaticMaterializedPhenomenon (Other)",
+    "reference": null,
+    "name_ja": "スーパーフライ",
+    "name_romaji": "Sūpā Furai",
+    "manga_debut": "Chapter 398",
+    "anime_debut": "DU Episode 31",
+    "form_count": 1,
+    "form_chain": [
+      "super_fly__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Super_Fly"
+  },
+  {
+    "stand_id": "surface",
+    "name_en": "Surface",
+    "name_raw": "Surface",
+    "part": 4,
+    "part_name_en": "Diamond is Unbreakable",
+    "owner_id": null,
+    "owner_name": "Toshikazu Hazamada",
+    "stand_type": "AutomaticMaterializedSentient (When active)Phenomenon (Other)",
+    "reference": null,
+    "name_ja": "サーフィス(うわっ面)",
+    "name_romaji": "Sāfisu",
+    "manga_debut": "Chapter 289",
+    "anime_debut": "DU Episode 7",
+    "form_count": 1,
+    "form_chain": [
+      "surface__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Surface"
+  },
+  {
+    "stand_id": "the_lock",
+    "name_en": "The Lock",
+    "name_raw": "The Lock",
+    "part": 4,
+    "part_name_en": "Diamond is Unbreakable",
+    "owner_id": null,
+    "owner_name": "Tamami Kobayashi",
+    "stand_type": "AutomaticPsychological AssaultArtificial Non-Humanoid",
+    "reference": null,
+    "name_ja": "錠前(ザ・ロック)",
+    "name_romaji": "JōmaeZa Rokku",
+    "manga_debut": "Chapter 284",
+    "anime_debut": "DU Episode 6",
+    "form_count": 1,
+    "form_chain": [
+      "the_lock__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/The_Lock"
+  },
+  {
+    "stand_id": "the_hand",
+    "name_en": "The Hand",
+    "name_raw": "The Hand",
+    "part": 4,
+    "part_name_en": "Diamond is Unbreakable",
+    "owner_id": null,
+    "owner_name": "Okuyasu Nijimura",
+    "stand_type": "Close-RangeArtificial Humanoid",
+    "reference": null,
+    "name_ja": "ザ・ハンド(手)",
+    "name_romaji": "Za Hando",
+    "manga_debut": "Chapter 274",
+    "anime_debut": "DU Episode 3",
+    "form_count": 1,
+    "form_chain": [
+      "the_hand__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/The_Hand"
+  },
+  {
+    "stand_id": "echoes_act1",
+    "name_en": "Echoes (ACT1)",
+    "name_raw": "Echoes (ACT1)",
+    "part": 4,
+    "part_name_en": "Diamond is Unbreakable",
+    "owner_id": null,
+    "owner_name": null,
+    "stand_type": null,
+    "reference": null,
+    "name_ja": null,
+    "name_romaji": null,
+    "manga_debut": null,
+    "anime_debut": null,
+    "form_count": 0,
+    "form_chain": [],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": null
+  },
+  {
+    "stand_id": "echoes_act2",
+    "name_en": "Echoes (ACT2)",
+    "name_raw": "Echoes (ACT2)",
+    "part": 4,
+    "part_name_en": "Diamond is Unbreakable",
+    "owner_id": null,
+    "owner_name": null,
+    "stand_type": null,
+    "reference": null,
+    "name_ja": null,
+    "name_romaji": null,
+    "manga_debut": null,
+    "anime_debut": null,
+    "form_count": 0,
+    "form_chain": [],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": null
+  },
+  {
+    "stand_id": "echoes_act3",
+    "name_en": "Echoes (ACT3)",
+    "name_raw": "Echoes (ACT3)",
+    "part": 4,
+    "part_name_en": "Diamond is Unbreakable",
+    "owner_id": null,
+    "owner_name": null,
+    "stand_type": null,
+    "reference": null,
+    "name_ja": null,
+    "name_romaji": null,
+    "manga_debut": null,
+    "anime_debut": null,
+    "form_count": 0,
+    "form_chain": [],
+    "main_table_registrations": 2,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": null
+  },
+  {
+    "stand_id": "stray_cat",
+    "name_en": "Stray Cat",
+    "name_raw": "Stray Cat",
+    "part": 4,
+    "part_name_en": "Diamond is Unbreakable",
+    "owner_id": null,
+    "owner_name": "Former Tama",
+    "stand_type": "Range IrrelevantIntegratedMaterializedPhenomenonSentientNatural Non-Humanoid",
+    "reference": null,
+    "name_ja": "ストレイ・キャット(猫草)",
+    "name_romaji": "Sutorei Kyatto",
+    "manga_debut": "Chapter 392",
+    "anime_debut": "DU Episode 30",
+    "form_count": 1,
+    "form_chain": [
+      "stray_cat__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Stray_Cat"
+  },
+  {
+    "stand_id": "black_sabbath",
+    "name_en": "Black Sabbath",
+    "name_raw": "Black Sabbath",
+    "part": 5,
+    "part_name_en": "Vento Aureo",
+    "owner_id": null,
+    "owner_name": "Polpo",
+    "stand_type": "AutomaticArtificial Humanoid",
+    "reference": null,
+    "name_ja": "ブラック・サバス",
+    "name_romaji": "Burakku Sabasu",
+    "manga_debut": "Chapter 451",
+    "anime_debut": "GW Episode 3",
+    "form_count": 1,
+    "form_chain": [
+      "black_sabbath__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Black_Sabbath"
+  },
+  {
+    "stand_id": "baby_face",
+    "name_en": "Baby Face",
+    "name_raw": "Baby Face",
+    "part": 5,
+    "part_name_en": "Vento Aureo",
+    "owner_id": null,
+    "owner_name": "Melone",
+    "stand_type": "AutomaticMaterializedNatural Humanoid (Junior)Artificial Non-HumanoidSentient",
+    "reference": null,
+    "name_ja": "ベイビィ・フェイス",
+    "name_romaji": "Beibī Feisu",
+    "manga_debut": "Chapter 500 (Computer)Chapter 501 (Junior)",
+    "anime_debut": "GW Episode 17",
+    "form_count": 1,
+    "form_chain": [
+      "baby_face__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Baby_Face"
+  },
+  {
+    "stand_id": "gold_experience",
+    "name_en": "Gold Experience",
+    "name_raw": "Gold Experience",
+    "part": 5,
+    "part_name_en": "Vento Aureo",
+    "owner_id": null,
+    "owner_name": "Giorno Giovanna",
+    "stand_type": "Close-RangeReconnaissanceNatural Humanoid",
+    "reference": null,
+    "name_ja": "ゴールド・エクスペリエンス(黄金体験)",
+    "name_romaji": "Gōrudo Ekusuperiensu",
+    "manga_debut": "Chapter 440Chapter 442 (1st full debut)",
+    "anime_debut": "GW Episode 1",
+    "form_count": 2,
+    "form_chain": [
+      "gold_experience__f0",
+      "gold_experience__f1"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Gold_Experience"
+  },
+  {
+    "stand_id": "sticky_fingers",
+    "name_en": "Sticky Fingers",
+    "name_raw": "Sticky Fingers",
+    "part": 5,
+    "part_name_en": "Vento Aureo",
+    "owner_id": null,
+    "owner_name": "Bruno Bucciarati",
+    "stand_type": "Close-RangeNatural Humanoid",
+    "reference": null,
+    "name_ja": "スティッキィ・フィンガーズ",
+    "name_romaji": "Sutikkyi Fingāzu",
+    "manga_debut": "Chapter 444",
+    "anime_debut": "GW Episode 1 (Glimpse) GW Episode 2 (1st full debut)",
+    "form_count": 2,
+    "form_chain": [
+      "sticky_fingers__f0",
+      "sticky_fingers__f1"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Sticky_Fingers"
+  },
+  {
+    "stand_id": "metallica",
+    "name_en": "Metallica",
+    "name_raw": "Metallica",
+    "part": 5,
+    "part_name_en": "Vento Aureo",
+    "owner_id": null,
+    "owner_name": "Risotto Nero",
+    "stand_type": "Close-RangeNatural Non-HumanoidMulti-Unit",
+    "reference": null,
+    "name_ja": "メタリカ",
+    "name_romaji": "Metarika",
+    "manga_debut": "Chapter 543",
+    "anime_debut": "GW Episode 18 (Ability only)GW Episode 27 (1st full debut)",
+    "form_count": 1,
+    "form_chain": [
+      "metallica__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Metallica"
+  },
+  {
+    "stand_id": "purple_haze",
+    "name_en": "Purple Haze",
+    "name_raw": "Purple Haze",
+    "part": 5,
+    "part_name_en": "Vento Aureo",
+    "owner_id": null,
+    "owner_name": "Pannacotta Fugo",
+    "stand_type": "Close-RangeNatural HumanoidSentient",
+    "reference": null,
+    "name_ja": "パープル・ヘイズ",
+    "name_romaji": "Pāpuru Heizu",
+    "manga_debut": "Chapter 479 (1st mentioned)Chapter 480",
+    "anime_debut": "GW Episode 12",
+    "form_count": 1,
+    "form_chain": [
+      "purple_haze__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Purple_Haze"
+  },
+  {
+    "stand_id": "moody_blues",
+    "name_en": "Moody Blues",
+    "name_raw": "Moody Blues",
+    "part": 5,
+    "part_name_en": "Vento Aureo",
+    "owner_id": null,
+    "owner_name": "Leone Abbacchio",
+    "stand_type": "Close-RangeReconnaissanceArtificial Humanoid",
+    "reference": null,
+    "name_ja": "ムーディー・ブルース",
+    "name_romaji": "Mūdī Burūsu",
+    "manga_debut": "Chapter 458Chapter 459 (1st full debut)",
+    "anime_debut": "GW Episode 5",
+    "form_count": 1,
+    "form_chain": [
+      "moody_blues__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Moody_Blues"
+  },
+  {
+    "stand_id": "sex_pistols",
+    "name_en": "Sex Pistols",
+    "name_raw": "Sex Pistols",
+    "part": 5,
+    "part_name_en": "Vento Aureo",
+    "owner_id": null,
+    "owner_name": "Guido Mista",
+    "stand_type": "Long-RangeNatural Non-HumanoidMulti-UnitSentient",
+    "reference": null,
+    "name_ja": "セックス・ピストルズ",
+    "name_romaji": "Sekkusu Pisutoruzu",
+    "manga_debut": "Chapter 462 (All but No.5)Chapter 463 (No.5)",
+    "anime_debut": "GW Episode 7",
+    "form_count": 1,
+    "form_chain": [
+      "sex_pistols__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Sex_Pistols"
+  },
+  {
+    "stand_id": "the_grateful_dead",
+    "name_en": "The Grateful Dead",
+    "name_raw": "The Grateful Dead",
+    "part": 5,
+    "part_name_en": "Vento Aureo",
+    "owner_id": null,
+    "owner_name": "Prosciutto",
+    "stand_type": "Close-RangeNatural Non-Humanoid",
+    "reference": null,
+    "name_ja": "ザ・グレイトフル・デッド",
+    "name_romaji": "Za Gureitofuru Deddo",
+    "manga_debut": "Chapter 488",
+    "anime_debut": "GW Episode 14",
+    "form_count": 1,
+    "form_chain": [
+      "the_grateful_dead__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/The_Grateful_Dead"
+  },
+  {
+    "stand_id": "aerosmith",
+    "name_en": "Aerosmith",
+    "name_raw": "Aerosmith",
+    "part": 5,
+    "part_name_en": "Vento Aureo",
+    "owner_id": null,
+    "owner_name": "Narancia Ghirga",
+    "stand_type": "Long-RangeArtificial Non-HumanoidReconnaissance",
+    "reference": null,
+    "name_ja": "エアロスミス",
+    "name_romaji": "Earosumisu",
+    "manga_debut": "Chapter 470",
+    "anime_debut": "GW Episode 9",
+    "form_count": 1,
+    "form_chain": [
+      "aerosmith__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Aerosmith"
+  },
+  {
+    "stand_id": "beach_boy",
+    "name_en": "Beach Boy",
+    "name_raw": "Beach Boy",
+    "part": 5,
+    "part_name_en": "Vento Aureo",
+    "owner_id": null,
+    "owner_name": "Pesci",
+    "stand_type": "Long-RangeReconnaissanceArtificial Non-Humanoid",
+    "reference": null,
+    "name_ja": "ビーチ・ボーイ",
+    "name_romaji": "Bīchi Bōi",
+    "manga_debut": "Chapter 487",
+    "anime_debut": "GW Episode 14",
+    "form_count": 1,
+    "form_chain": [
+      "beach_boy__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Beach_Boy"
+  },
+  {
+    "stand_id": "man_in_the_mirror",
+    "name_en": "Man in the Mirror",
+    "name_raw": "Man in the Mirror",
+    "part": 5,
+    "part_name_en": "Vento Aureo",
+    "owner_id": null,
+    "owner_name": "Illuso",
+    "stand_type": "Close-RangeRange Irrelevant (Ability)Artificial Humanoid",
+    "reference": null,
+    "name_ja": "マン・イン・ザ・ミラー",
+    "name_romaji": "Man in za Mirā",
+    "manga_debut": "Chapter 479",
+    "anime_debut": "GW Episode 12",
+    "form_count": 1,
+    "form_chain": [
+      "man_in_the_mirror__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Man_in_the_Mirror"
+  },
+  {
+    "stand_id": "chariot_requiem",
+    "name_en": "Chariot Requiem",
+    "name_raw": "Chariot Requiem",
+    "part": 5,
+    "part_name_en": "Vento Aureo",
+    "owner_id": null,
+    "owner_name": "Jean Pierre Polnareff (formerly)",
+    "stand_type": "AutomaticMaterializedNatural HumanoidEvolved",
+    "reference": null,
+    "name_ja": "チャリオッツ・レクイエム",
+    "name_romaji": "Chariottsu Rekuiemu",
+    "manga_debut": "Chapter 571",
+    "anime_debut": "GW Episode 33",
+    "form_count": 1,
+    "form_chain": [
+      "chariot_requiem__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Chariot_Requiem"
+  },
+  {
+    "stand_id": "clash",
+    "name_en": "Clash",
+    "name_raw": "Clash",
+    "part": 5,
+    "part_name_en": "Vento Aureo",
+    "owner_id": null,
+    "owner_name": "Squalo",
+    "stand_type": "Long-RangeNatural Non-Humanoid",
+    "reference": null,
+    "name_ja": "クラッシュ",
+    "name_romaji": "Kurasshu",
+    "manga_debut": "Chapter 524",
+    "anime_debut": "GW Episode 22",
+    "form_count": 1,
+    "form_chain": [
+      "clash__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Clash"
+  },
+  {
+    "stand_id": "gold_experience_requiem",
+    "name_en": "Gold Experience Requiem",
+    "name_raw": "Gold Experience Requiem",
+    "part": 5,
+    "part_name_en": "Vento Aureo",
+    "owner_id": null,
+    "owner_name": "Giorno Giovanna",
+    "stand_type": "Close-RangeRange IrrelevantNatural HumanoidSentientEvolved",
+    "reference": null,
+    "name_ja": "ゴールド・エクスペリエンス・レクイエム",
+    "name_romaji": "Gōrudo Ekusuperiensu Rekuiemu",
+    "manga_debut": "Chapter 586",
+    "anime_debut": "GW Episode 37",
+    "form_count": 1,
+    "form_chain": [
+      "gold_experience_requiem__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Gold_Experience_Requiem"
+  },
+  {
+    "stand_id": "green_day",
+    "name_en": "Green Day",
+    "name_raw": "Green Day",
+    "part": 5,
+    "part_name_en": "Vento Aureo",
+    "owner_id": null,
+    "owner_name": "Cioccolata",
+    "stand_type": "Close-RangeIntegratedArtificial Humanoid",
+    "reference": null,
+    "name_ja": "グリーン・ディ",
+    "name_romaji": "Gurīn Di",
+    "manga_debut": "Chapter 553",
+    "anime_debut": "GW Episode 29",
+    "form_count": 1,
+    "form_chain": [
+      "green_day__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Green_Day"
+  },
+  {
+    "stand_id": "king_crimson",
+    "name_en": "King Crimson",
+    "name_raw": "King Crimson",
+    "part": 5,
+    "part_name_en": "Vento Aureo",
+    "owner_id": null,
+    "owner_name": "DiavoloVinegar Doppio",
+    "stand_type": "Close-RangeRange IrrelevantForesightNatural HumanoidMulti-User",
+    "reference": null,
+    "name_ja": "キング・クリムゾンエピタフ(墓碑銘)",
+    "name_romaji": "Kingu KurimuzonEpitafu",
+    "manga_debut": "Chapter 516",
+    "anime_debut": "GW Episode 19 (Ability only)GW Episode 20 (1st full debut)",
+    "form_count": 1,
+    "form_chain": [
+      "king_crimson__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/King_Crimson"
+  },
+  {
+    "stand_id": "kraft_work",
+    "name_en": "Kraft Work",
+    "name_raw": "Kraft Work",
+    "part": 5,
+    "part_name_en": "Vento Aureo",
+    "owner_id": null,
+    "owner_name": "Sale",
+    "stand_type": "Close-RangeArtificial Humanoid",
+    "reference": null,
+    "name_ja": "クラフト・ワーク",
+    "name_romaji": "Kurafuto Wāku",
+    "manga_debut": "Chapter 464",
+    "anime_debut": "GW Episode 8",
+    "form_count": 1,
+    "form_chain": [
+      "kraft_work__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Kraft_Work"
+  },
+  {
+    "stand_id": "little_feet",
+    "name_en": "Little Feet",
+    "name_raw": "Little Feet",
+    "part": 5,
+    "part_name_en": "Vento Aureo",
+    "owner_id": null,
+    "owner_name": "Formaggio",
+    "stand_type": "Close-RangeArtificial Humanoid",
+    "reference": null,
+    "name_ja": "リトル・フィート",
+    "name_romaji": "Ritoru Fīto",
+    "manga_debut": "Chapter 469 (Ability only)Chapter 470 (1st full debut)",
+    "anime_debut": "GW Episode 9",
+    "form_count": 1,
+    "form_chain": [
+      "little_feet__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Little_Feet"
+  },
+  {
+    "stand_id": "mr_president",
+    "name_en": "Mr.President",
+    "name_raw": "Mr.President",
+    "part": 5,
+    "part_name_en": "Vento Aureo",
+    "owner_id": null,
+    "owner_name": "Coco JumboCopy of Coco Jumbo",
+    "stand_type": "Range IrrelevantIntegratedNatural Non-Humanoid",
+    "reference": null,
+    "name_ja": "ミスター・プレジデント",
+    "name_romaji": "Misutā Purejidento",
+    "manga_debut": "Chapter 486Chapter 487 (1st full debut)",
+    "anime_debut": "GW Episode 14",
+    "form_count": 1,
+    "form_chain": [
+      "mr_president__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Mr.President"
+  },
+  {
+    "stand_id": "notorious_b_i_g",
+    "name_en": "Notorious B.I.G",
+    "name_raw": "Notorious B.I.G",
+    "part": 5,
+    "part_name_en": "Vento Aureo",
+    "owner_id": null,
+    "owner_name": "Carne",
+    "stand_type": "AutomaticNatural Non-Humanoid (Post-Mortem)Natural Humanoid (Original)",
+    "reference": null,
+    "name_ja": "ノトーリアス・B・I・G(ビッグ)",
+    "name_romaji": "Notōriasu Biggu",
+    "manga_debut": "Chapter 532",
+    "anime_debut": "GW Episode 24",
+    "form_count": 1,
+    "form_chain": [
+      "notorious_b_i_g__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Notorious_B.I.G"
+  },
+  {
+    "stand_id": "oasis",
+    "name_en": "Oasis",
+    "name_raw": "Oasis",
+    "part": 5,
+    "part_name_en": "Vento Aureo",
+    "owner_id": null,
+    "owner_name": "Secco",
+    "stand_type": "Close-RangeArtificial Humanoid",
+    "reference": null,
+    "name_ja": "オアシス",
+    "name_romaji": "Oashisu",
+    "manga_debut": "Chapter 552",
+    "anime_debut": "GW Episode 29",
+    "form_count": 1,
+    "form_chain": [
+      "oasis__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Oasis"
+  },
+  {
+    "stand_id": "rolling_stones",
+    "name_en": "Rolling Stones",
+    "name_raw": "Rolling Stones",
+    "part": 5,
+    "part_name_en": "Vento Aureo",
+    "owner_id": null,
+    "owner_name": "Scolippi",
+    "stand_type": "AutomaticForesightNatural Non-Humanoid",
+    "reference": null,
+    "name_ja": "ローリング・ストーン(ズ)",
+    "name_romaji": "Rōringu Sutōn(zu)",
+    "manga_debut": "Chapter 590",
+    "anime_debut": "GW Episode 38",
+    "form_count": 1,
+    "form_chain": [
+      "rolling_stones__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Rolling_Stones"
+  },
+  {
+    "stand_id": "soft_machine",
+    "name_en": "Soft Machine",
+    "name_raw": "Soft Machine",
+    "part": 5,
+    "part_name_en": "Vento Aureo",
+    "owner_id": null,
+    "owner_name": "Mario Zucchero",
+    "stand_type": "Close-RangeArtificial Humanoid",
+    "reference": null,
+    "name_ja": "ソフト・マシーン",
+    "name_romaji": "Sofuto Mashīn",
+    "manga_debut": "Chapter 457",
+    "anime_debut": "GW Episode 5",
+    "form_count": 1,
+    "form_chain": [
+      "soft_machine__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Soft_Machine"
+  },
+  {
+    "stand_id": "spice_girl",
+    "name_en": "Spice Girl",
+    "name_raw": "Spice Girl",
+    "part": 5,
+    "part_name_en": "Vento Aureo",
+    "owner_id": null,
+    "owner_name": "Trish Una",
+    "stand_type": "Close-RangeNatural HumanoidSentient",
+    "reference": null,
+    "name_ja": "スパイス・ガール",
+    "name_romaji": "Supaisu Gāru",
+    "manga_debut": "Chapter 499 (Glimpse)Chapter 537 (1st full debut)",
+    "anime_debut": "GW Episode 16 (Glimpse)GW Episode 25 (1st full debut)",
+    "form_count": 1,
+    "form_chain": [
+      "spice_girl__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Spice_Girl"
+  },
+  {
+    "stand_id": "talking_head",
+    "name_en": "Talking Head",
+    "name_raw": "Talking Head",
+    "part": 5,
+    "part_name_en": "Vento Aureo",
+    "owner_id": null,
+    "owner_name": "Tizzano",
+    "stand_type": "Long-RangeNatural Non-Humanoid",
+    "reference": null,
+    "name_ja": "トーキング・ヘッド",
+    "name_romaji": "Tōkingu Heddo",
+    "manga_debut": "Chapter 525",
+    "anime_debut": "GW Episode 22",
+    "form_count": 1,
+    "form_chain": [
+      "talking_head__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Talking_Head"
+  },
+  {
+    "stand_id": "white_album",
+    "name_en": "White Album",
+    "name_raw": "White Album",
+    "part": 5,
+    "part_name_en": "Vento Aureo",
+    "owner_id": null,
+    "owner_name": "Ghiaccio",
+    "stand_type": "Close-RangeArtificial Humanoid",
+    "reference": null,
+    "name_ja": "ホワイト・アルバム",
+    "name_romaji": "Howaito Arubamu",
+    "manga_debut": "Chapter 508Chapter 509 (1st full debut)",
+    "anime_debut": "GW Episode 18",
+    "form_count": 1,
+    "form_chain": [
+      "white_album__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/White_Album"
+  },
+  {
+    "stand_id": "whitesnake",
+    "name_en": "Whitesnake",
+    "name_raw": "Whitesnake",
+    "part": 6,
+    "part_name_en": "Stone Ocean",
+    "owner_id": null,
+    "owner_name": "Enrico Pucci",
+    "stand_type": "Long-RangePsychological AssaultNatural HumanoidSentient",
+    "reference": null,
+    "name_ja": "ホワイトスネイク",
+    "name_romaji": "Howaitosuneiku",
+    "manga_debut": "SO Chapter 16 (Ability only)SO Chapter 17 (1st full debut)",
+    "anime_debut": "SO Episode 4 (Ability only)SO Episode 5 (1st full debut)",
+    "form_count": 1,
+    "form_chain": [
+      "whitesnake__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Whitesnake"
+  },
+  {
+    "stand_id": "c_moon",
+    "name_en": "C-MOON",
+    "name_raw": "C-MOON",
+    "part": 6,
+    "part_name_en": "Stone Ocean",
+    "owner_id": null,
+    "owner_name": "Enrico Pucci",
+    "stand_type": "Long-RangeNatural HumanoidSentientEvolved",
+    "reference": null,
+    "name_ja": "C(シー)-(・)MOON(ムーン)",
+    "name_romaji": "Shī Mūn",
+    "manga_debut": "SO Chapter 102 (Ability only)SO Chapter 140",
+    "anime_debut": "SO Episode 24 (Ability only)SO Episode 33",
+    "form_count": 1,
+    "form_chain": [
+      "c_moon__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/C-MOON"
+  },
+  {
+    "stand_id": "jail_house_lock",
+    "name_en": "Jail House Lock",
+    "name_raw": "Jail House Lock",
+    "part": 6,
+    "part_name_en": "Stone Ocean",
+    "owner_id": null,
+    "owner_name": "Miuccia Miuller",
+    "stand_type": "Close-RangePsychological AssaultArtificial Humanoid",
+    "reference": null,
+    "name_ja": "ジェイル・ハウス・ロック(JAIL HOUSE LOCK)",
+    "name_romaji": "Jeiru Hausu Rokku",
+    "manga_debut": "SO Chapter 96",
+    "anime_debut": "SO Episode 23",
+    "form_count": 1,
+    "form_chain": [
+      "jail_house_lock__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Jail_House_Lock"
+  },
+  {
+    "stand_id": "stone_free",
+    "name_en": "Stone Free",
+    "name_raw": "Stone Free",
+    "part": 6,
+    "part_name_en": "Stone Ocean",
+    "owner_id": null,
+    "owner_name": "Jolyne Cujoh",
+    "stand_type": "Close-RangeReconnaissanceNatural HumanoidIntegrated",
+    "reference": null,
+    "name_ja": "ストーン・フリー",
+    "name_romaji": "Sutōn Furī",
+    "manga_debut": "SO Chapter 1SO Chapter 8 (1st full debut)",
+    "anime_debut": "SO Episode 1",
+    "form_count": 1,
+    "form_chain": [
+      "stone_free__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Stone_Free"
+  },
+  {
+    "stand_id": "goo_goo_dolls",
+    "name_en": "Goo Goo Dolls",
+    "name_raw": "Goo Goo Dolls",
+    "part": 6,
+    "part_name_en": "Stone Ocean",
+    "owner_id": null,
+    "owner_name": "Gwess",
+    "stand_type": "Long-RangeArtificial Humanoid",
+    "reference": null,
+    "name_ja": "グーグー・ドールズ",
+    "name_romaji": "Gūgū Dōruzu",
+    "manga_debut": "SO Chapter 4SO Chapter 7 (1st full debut)",
+    "anime_debut": "SO Episode 2",
+    "form_count": 1,
+    "form_chain": [
+      "goo_goo_dolls__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Goo_Goo_Dolls"
+  },
+  {
+    "stand_id": "under_world",
+    "name_en": "Under World",
+    "name_raw": "Under World",
+    "part": 6,
+    "part_name_en": "Stone Ocean",
+    "owner_id": null,
+    "owner_name": "Donatello Versus",
+    "stand_type": "Long-RangePsychological AssaultArtificial HumanoidSentient",
+    "reference": null,
+    "name_ja": "アンダー・ワールド",
+    "name_romaji": "Andā Wārudo",
+    "manga_debut": "SO Chapter 118SO Chapter 119 (1st full debut)",
+    "anime_debut": "SO Episode 28",
+    "form_count": 1,
+    "form_chain": [
+      "under_world__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Under_World"
+  },
+  {
+    "stand_id": "sky_high",
+    "name_en": "Sky High",
+    "name_raw": "Sky High",
+    "part": 6,
+    "part_name_en": "Stone Ocean",
+    "owner_id": null,
+    "owner_name": "Rikiel",
+    "stand_type": "Close-RangeNatural Non-Humanoid",
+    "reference": null,
+    "name_ja": "スカイ・ハイ",
+    "name_romaji": "Sukai Hai",
+    "manga_debut": "SO Chapter 112",
+    "anime_debut": "SO Episode 27",
+    "form_count": 1,
+    "form_chain": [
+      "sky_high__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Sky_High"
+  },
+  {
+    "stand_id": "star_platinum_the_world",
+    "name_en": "Star Platinum: The World",
+    "name_raw": "Star Platinum: The World",
+    "part": 6,
+    "part_name_en": "Stone Ocean",
+    "owner_id": null,
+    "owner_name": null,
+    "stand_type": null,
+    "reference": null,
+    "name_ja": null,
+    "name_romaji": null,
+    "manga_debut": null,
+    "anime_debut": null,
+    "form_count": 0,
+    "form_chain": [],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": null
+  },
+  {
+    "stand_id": "bohemian_rhapsody",
+    "name_en": "Bohemian Rhapsody",
+    "name_raw": "Bohemian Rhapsody",
+    "part": 6,
+    "part_name_en": "Stone Ocean",
+    "owner_id": null,
+    "owner_name": "Ungalo",
+    "stand_type": "Range IrrelevantPsychological AssaultAutomaticPhenomenon",
+    "reference": null,
+    "name_ja": "ボヘミアン・ラプソディー(自由人の狂想曲)",
+    "name_romaji": "Bohemian Rapusodī",
+    "manga_debut": "SO Chapter 103",
+    "anime_debut": "SO Episode 25",
+    "form_count": 1,
+    "form_chain": [
+      "bohemian_rhapsody__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Bohemian_Rhapsody"
+  },
+  {
+    "stand_id": "burning_down_the_house",
+    "name_en": "Burning Down the House",
+    "name_raw": "Burning Down the House",
+    "part": 6,
+    "part_name_en": "Stone Ocean",
+    "owner_id": null,
+    "owner_name": "Emporio Alnino",
+    "stand_type": "Range IrrelevantMaterializedPhenomenon",
+    "reference": null,
+    "name_ja": "バーニング・ダウン・ザ・ハウス",
+    "name_romaji": "Bāningu Daun za Hausu",
+    "manga_debut": "SO Chapter 24",
+    "anime_debut": "SO Episode 10",
+    "form_count": 1,
+    "form_chain": [
+      "burning_down_the_house__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Burning_Down_the_House"
+  },
+  {
+    "stand_id": "diver_down",
+    "name_en": "Diver Down",
+    "name_raw": "Diver Down",
+    "part": 6,
+    "part_name_en": "Stone Ocean",
+    "owner_id": null,
+    "owner_name": "Narciso Anasui",
+    "stand_type": "Close-RangeArtificial Humanoid",
+    "reference": null,
+    "name_ja": "ダイバー・ダウン",
+    "name_romaji": "Daibā Daun",
+    "manga_debut": "SO Chapter 59",
+    "anime_debut": "SO Episode 15",
+    "form_count": 1,
+    "form_chain": [
+      "diver_down__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Diver_Down"
+  },
+  {
+    "stand_id": "dragon_s_dream",
+    "name_en": "Dragon's Dream",
+    "name_raw": "Dragon's Dream",
+    "part": 6,
+    "part_name_en": "Stone Ocean",
+    "owner_id": null,
+    "owner_name": "Kenzou",
+    "stand_type": "AutomaticArtificial Non-HumanoidSentient",
+    "reference": null,
+    "name_ja": "ドラゴンズ・ドリーム(龍の夢)",
+    "name_romaji": "Doragonzu Dorīmu",
+    "manga_debut": "SO Chapter 67",
+    "anime_debut": "SO Episode 17",
+    "form_count": 1,
+    "form_chain": [
+      "dragon_s_dream__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Dragon's_Dream"
+  },
+  {
+    "stand_id": "foo_fighters",
+    "name_en": "Foo Fighters",
+    "name_raw": "Foo Fighters",
+    "part": 6,
+    "part_name_en": "Stone Ocean",
+    "owner_id": null,
+    "owner_name": null,
+    "stand_type": null,
+    "reference": null,
+    "name_ja": "フー・ファイターズ",
+    "name_romaji": "Fū Faitāzu",
+    "manga_debut": "SO Chapter 26SO Chapter 32 (1st full debut)",
+    "anime_debut": "SO Episode 7SO Episode 8 (1st full debut)",
+    "form_count": 0,
+    "form_chain": [],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Foo_Fighters"
+  },
+  {
+    "stand_id": "green_green_grass_of_home",
+    "name_en": "Green, Green Grass of Home",
+    "name_raw": "Green, Green Grass of Home",
+    "part": 6,
+    "part_name_en": "Stone Ocean",
+    "owner_id": null,
+    "owner_name": "The Green Baby",
+    "stand_type": "Close-RangeArtificial Humanoid",
+    "reference": null,
+    "name_ja": "グリーン・グリーン・グラス・オブ・ホーム",
+    "name_romaji": "Gurīn Gurīn Gurasu obu Hōmu",
+    "manga_debut": "SO Chapter 86SO Chapter 87 (1st full debut)",
+    "anime_debut": "SO Episode 21",
+    "form_count": 1,
+    "form_chain": [
+      "green_green_grass_of_home__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Green,_Green_Grass_of_Home"
+  },
+  {
+    "stand_id": "highway_to_hell",
+    "name_en": "Highway to Hell",
+    "name_raw": "Highway to Hell",
+    "part": 6,
+    "part_name_en": "Stone Ocean",
+    "owner_id": null,
+    "owner_name": "Whitesnake's Unknown Victim (Original user) Thunder McQueen (DISC)",
+    "stand_type": "Long-RangeArtificial Non-Humanoid",
+    "reference": null,
+    "name_ja": "ハイウェイ・トゥ・ヘル",
+    "name_romaji": "Haiwei tu Heru",
+    "manga_debut": "SO Chapter 22",
+    "anime_debut": "SO Episode 6",
+    "form_count": 1,
+    "form_chain": [
+      "highway_to_hell__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Highway_to_Hell"
+  },
+  {
+    "stand_id": "kiss",
+    "name_en": "Kiss",
+    "name_raw": "Kiss",
+    "part": 6,
+    "part_name_en": "Stone Ocean",
+    "owner_id": null,
+    "owner_name": "Ermes Costello",
+    "stand_type": "Close-RangeNatural Humanoid",
+    "reference": null,
+    "name_ja": "キッス",
+    "name_romaji": "Kissu",
+    "manga_debut": "SO Chapter 21 (Ability only)SO Chapter 25 (1st full debut)",
+    "anime_debut": "SO Episode 6",
+    "form_count": 1,
+    "form_chain": [
+      "kiss__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Kiss"
+  },
+  {
+    "stand_id": "jumpin_jack_flash",
+    "name_en": "Jumpin' Jack Flash",
+    "name_raw": "Jumpin' Jack Flash",
+    "part": 6,
+    "part_name_en": "Stone Ocean",
+    "owner_id": null,
+    "owner_name": "Lang Rangler",
+    "stand_type": "Close-RangeArtificial Humanoid",
+    "reference": null,
+    "name_ja": "ジャンピン・ジャック・フラッシュ",
+    "name_romaji": "Janpin Jakku Furasshu",
+    "manga_debut": "SO Chapter 40SO Chapter 41 (1st full debut)",
+    "anime_debut": "SO Episode 10",
+    "form_count": 0,
+    "form_chain": [],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Jumpin'_Jack_Flash"
+  },
+  {
+    "stand_id": "limp_bizkit",
+    "name_en": "Limp Bizkit",
+    "name_raw": "Limp Bizkit",
+    "part": 6,
+    "part_name_en": "Stone Ocean",
+    "owner_id": null,
+    "owner_name": "Whitesnake's Unknown Victim (Original user) Sports Maxx (DISC)",
+    "stand_type": "Range IrrelevantPhenomenon",
+    "reference": null,
+    "name_ja": "リンプ・ビズキット",
+    "name_romaji": "Rinpu Bizukitto",
+    "manga_debut": "SO Chapter 52",
+    "anime_debut": "SO Episode 13",
+    "form_count": 1,
+    "form_chain": [
+      "limp_bizkit__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Limp_Bizkit"
+  },
+  {
+    "stand_id": "made_in_heaven",
+    "name_en": "Made in Heaven",
+    "name_raw": "Made in Heaven",
+    "part": 6,
+    "part_name_en": "Stone Ocean",
+    "owner_id": null,
+    "owner_name": "Enrico Pucci",
+    "stand_type": "Close-RangeRange IrrelevantNatural Non-HumanoidEvolved",
+    "reference": null,
+    "name_ja": "メイド・イン・ヘブン",
+    "name_romaji": "Meido in Hebun",
+    "manga_debut": "SO Chapter 148",
+    "anime_debut": "SO Episode 36",
+    "form_count": 1,
+    "form_chain": [
+      "made_in_heaven__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Made_in_Heaven"
+  },
+  {
+    "stand_id": "manhattan_transfer",
+    "name_en": "Manhattan Transfer",
+    "name_raw": "Manhattan Transfer",
+    "part": 6,
+    "part_name_en": "Stone Ocean",
+    "owner_id": null,
+    "owner_name": "Johngalli A.",
+    "stand_type": "Long-RangeReconnaissanceArtificial Non-Humanoid",
+    "reference": null,
+    "name_ja": "マンハッタン・トランスファー",
+    "name_romaji": "Manhattan Toransufā",
+    "manga_debut": "SO Chapter 13",
+    "anime_debut": "SO Episode 3",
+    "form_count": 1,
+    "form_chain": [
+      "manhattan_transfer__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Manhattan_Transfer"
+  },
+  {
+    "stand_id": "marilyn_manson",
+    "name_en": "Marilyn Manson",
+    "name_raw": "Marilyn Manson",
+    "part": 6,
+    "part_name_en": "Stone Ocean",
+    "owner_id": null,
+    "owner_name": "Whitesnake's Unknown Victim (Original user) Miraschon (DISC)",
+    "stand_type": "Long-RangePsychological AssaultArtificial HumanoidAutomatic",
+    "reference": null,
+    "name_ja": "取り立て人 マリリン・マンソン",
+    "name_romaji": "Toritatenin Maririn Manson",
+    "manga_debut": "SO Chapter 36",
+    "anime_debut": "SO Episode 9",
+    "form_count": 1,
+    "form_chain": [
+      "marilyn_manson__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Marilyn_Manson"
+  },
+  {
+    "stand_id": "planet_waves",
+    "name_en": "Planet Waves",
+    "name_raw": "Planet Waves",
+    "part": 6,
+    "part_name_en": "Stone Ocean",
+    "owner_id": null,
+    "owner_name": "Whitesnake's Unknown Victim (Original user) Viviano Westwood (DISC)",
+    "stand_type": "Close-RangeNatural Humanoid",
+    "reference": null,
+    "name_ja": "プラネット・ウェイブス",
+    "name_romaji": "Puranetto Weibusu",
+    "manga_debut": "SO Chapter 62SO Chapter 63 (1st full debut)",
+    "anime_debut": "SO Episode 16",
+    "form_count": 1,
+    "form_chain": [
+      "planet_waves__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Planet_Waves"
+  },
+  {
+    "stand_id": "survivor",
+    "name_en": "Survivor",
+    "name_raw": "Survivor",
+    "part": 6,
+    "part_name_en": "Stone Ocean",
+    "owner_id": null,
+    "owner_name": "Unnamed Mountain Lodge Owner (originally)Guccio (DISC)",
+    "stand_type": "AutomaticPsychological AssaultNatural Non-HumanoidMulti-Unit",
+    "reference": null,
+    "name_ja": "サバイバー",
+    "name_romaji": "Sabaibā",
+    "manga_debut": "SO Chapter 60SO Chapter 61 (1st full debut)",
+    "anime_debut": "SO Episode 15",
+    "form_count": 1,
+    "form_chain": [
+      "survivor__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Survivor"
+  },
+  {
+    "stand_id": "weather_report",
+    "name_en": "Weather Report",
+    "name_raw": "Weather Report",
+    "part": 6,
+    "part_name_en": "Stone Ocean",
+    "owner_id": null,
+    "owner_name": null,
+    "stand_type": null,
+    "reference": null,
+    "name_ja": "ウェザー・リポートウェス・ブルーマリン",
+    "name_romaji": "Wezā RipōtoWesu Burūmarin",
+    "manga_debut": "SO Chapter 24",
+    "anime_debut": "SO Episode 10",
+    "form_count": 0,
+    "form_chain": [],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Weather_Report"
+  },
+  {
+    "stand_id": "yo_yo_ma",
+    "name_en": "Yo-Yo Ma",
+    "name_raw": "Yo-Yo Ma",
+    "part": 6,
+    "part_name_en": "Stone Ocean",
+    "owner_id": null,
+    "owner_name": "D an G",
+    "stand_type": "AutomaticNatural HumanoidSentient",
+    "reference": null,
+    "name_ja": "ヨーヨーマッ",
+    "name_romaji": "Yō Yō Ma",
+    "manga_debut": "SO Chapter 79",
+    "anime_debut": "SO Episode 19",
+    "form_count": 1,
+    "form_chain": [
+      "yo_yo_ma__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Yo-Yo_Ma"
+  },
+  {
+    "stand_id": "20th_century_boy",
+    "name_en": "20th Century BOY",
+    "name_raw": "20th Century BOY",
+    "part": 7,
+    "part_name_en": "Steel Ball Run",
+    "owner_id": null,
+    "owner_name": "Magent Magent",
+    "stand_type": "Close-RangeArtificial Non-Humanoid",
+    "reference": null,
+    "name_ja": "20th Century BOY(トウェンティースセンチュリーボーイ)",
+    "name_romaji": "Towentīsu Senchurī Bōi",
+    "manga_debut": "SBR Chapter 52",
+    "anime_debut": null,
+    "form_count": 1,
+    "form_chain": [
+      "20th_century_boy__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/20th_Century_BOY"
+  },
+  {
+    "stand_id": "ball_breaker",
+    "name_en": "Ball Breaker",
+    "name_raw": "Ball Breaker",
+    "part": 7,
+    "part_name_en": "Steel Ball Run",
+    "owner_id": null,
+    "owner_name": "Gyro Zeppeli(Steel Ball technique)",
+    "stand_type": "Long-RangeArtificial Humanoid",
+    "reference": null,
+    "name_ja": "ボール・ブレイカー",
+    "name_romaji": "Bōru Bureikā",
+    "manga_debut": "SBR Chapter 83",
+    "anime_debut": null,
+    "form_count": 1,
+    "form_chain": [
+      "ball_breaker__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Ball_Breaker"
+  },
+  {
+    "stand_id": "boku_no_rhythm_wo_kiitekure",
+    "name_en": "Boku no Rhythm wo Kiitekure",
+    "name_raw": "Boku no Rhythm wo Kiitekure",
+    "part": 7,
+    "part_name_en": "Steel Ball Run",
+    "owner_id": null,
+    "owner_name": "Oyecomova",
+    "stand_type": "Close-RangeNatural Non-Humanoid",
+    "reference": null,
+    "name_ja": "ボクのリズムを聴いてくれ",
+    "name_romaji": "Boku no Rizumu o Kiitekure",
+    "manga_debut": "SBR Chapter 21SBR Chapter 23 (1st full debut)",
+    "anime_debut": null,
+    "form_count": 1,
+    "form_chain": [
+      "boku_no_rhythm_wo_kiitekure__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Boku_no_Rhythm_wo_Kiitekure"
+  },
+  {
+    "stand_id": "catch_the_rainbow",
+    "name_en": "Catch the Rainbow",
+    "name_raw": "Catch the Rainbow",
+    "part": 7,
+    "part_name_en": "Steel Ball Run",
+    "owner_id": null,
+    "owner_name": "Blackmore",
+    "stand_type": "Close-Range (mask)Artificial Non-Humanoid",
+    "reference": null,
+    "name_ja": "キャッチ・ザ・レインボー",
+    "name_romaji": "Kyatchi za Reinbō",
+    "manga_debut": "SBR Chapter 36",
+    "anime_debut": null,
+    "form_count": 1,
+    "form_chain": [
+      "catch_the_rainbow__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Catch_the_Rainbow"
+  },
+  {
+    "stand_id": "chocolate_disco",
+    "name_en": "Chocolate Disco",
+    "name_raw": "Chocolate Disco",
+    "part": 7,
+    "part_name_en": "Steel Ball Run",
+    "owner_id": null,
+    "owner_name": "D-I-S-C-O",
+    "stand_type": "Close-RangeArtificial Non-Humanoid",
+    "reference": null,
+    "name_ja": "チョコレート・ディスコ",
+    "name_romaji": "Chokorēto Disuko",
+    "manga_debut": "SBR Chapter 65",
+    "anime_debut": null,
+    "form_count": 1,
+    "form_chain": [
+      "chocolate_disco__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Chocolate_Disco"
+  },
+  {
+    "stand_id": "civil_war",
+    "name_en": "Civil War",
+    "name_raw": "Civil War",
+    "part": 7,
+    "part_name_en": "Steel Ball Run",
+    "owner_id": null,
+    "owner_name": "Axl RO",
+    "stand_type": "Long-RangePsychological AssaultArtificial Humanoid",
+    "reference": null,
+    "name_ja": "シビル・ウォー",
+    "name_romaji": "Shibiru Wō",
+    "manga_debut": "SBR Chapter 56",
+    "anime_debut": null,
+    "form_count": 1,
+    "form_chain": [
+      "civil_war__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Civil_War"
+  },
+  {
+    "stand_id": "cream_starter",
+    "name_en": "Cream Starter",
+    "name_raw": "Cream Starter",
+    "part": 7,
+    "part_name_en": "Steel Ball Run",
+    "owner_id": null,
+    "owner_name": "Hot Pants",
+    "stand_type": "Range IrrelevantMaterializedArtificial Non-Humanoid",
+    "reference": null,
+    "name_ja": "クリーム・スターター",
+    "name_romaji": "Kurīmu Sutātā",
+    "manga_debut": "SBR Chapter 33",
+    "anime_debut": null,
+    "form_count": 1,
+    "form_chain": [
+      "cream_starter__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Cream_Starter"
+  },
+  {
+    "stand_id": "dirty_deeds_done_dirt_cheap",
+    "name_en": "Dirty Deeds Done Dirt Cheap",
+    "name_raw": "Dirty Deeds Done Dirt Cheap",
+    "part": 7,
+    "part_name_en": "Steel Ball Run",
+    "owner_id": null,
+    "owner_name": "Funny ValentineThe Funniest Valentine (Novel only)",
+    "stand_type": "Close-RangeRange IrrelevantNatural Humanoid",
+    "reference": null,
+    "name_ja": "Dirty deeds done dirt cheap いともたやすく行われるえげつない行為D4C(ディー・フォー・シー)",
+    "name_romaji": "Dātī Dīzu Dan Dāto ChīpuItomo Tayasuku Okonawareru Egetsunai KōiDī Fō Shī",
+    "manga_debut": "SBR Chapter 61 (Ability only)SBR Chapter 62",
+    "anime_debut": null,
+    "form_count": 1,
+    "form_chain": [
+      "dirty_deeds_done_dirt_cheap__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Dirty_Deeds_Done_Dirt_Cheap"
+  },
+  {
+    "stand_id": "d4c_love_train",
+    "name_en": "D4C Love Train",
+    "name_raw": "D4C Love Train",
+    "part": 7,
+    "part_name_en": "Steel Ball Run",
+    "owner_id": null,
+    "owner_name": "Funny ValentineLucy Steel",
+    "stand_type": "Range IrrelevantPhenomenonEvolved",
+    "reference": null,
+    "name_ja": "D4C(ディー・フォー・シー)-ラブトレイン-",
+    "name_romaji": "Dī Fō Shī -Rabu Torein-",
+    "manga_debut": "SBR Chapter 77 (Ability only)SBR Chapter 78",
+    "anime_debut": null,
+    "form_count": 1,
+    "form_chain": [
+      "d4c_love_train__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/D4C_Love_Train"
+  },
+  {
+    "stand_id": "hey_ya",
+    "name_en": "Hey Ya!",
+    "name_raw": "Hey Ya!",
+    "part": 7,
+    "part_name_en": "Steel Ball Run",
+    "owner_id": null,
+    "owner_name": "Pocoloco",
+    "stand_type": "Close-RangeArtificial HumanoidSentient",
+    "reference": null,
+    "name_ja": "ヘイ・ヤー",
+    "name_romaji": "Hei Yā",
+    "manga_debut": "SBR Chapter 9",
+    "anime_debut": "SBR Episode 1 (Voice only)",
+    "form_count": 1,
+    "form_chain": [
+      "hey_ya__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Hey_Ya!"
+  },
+  {
+    "stand_id": "in_a_silent_way",
+    "name_en": "In a Silent Way",
+    "name_raw": "In a Silent Way",
+    "part": 7,
+    "part_name_en": "Steel Ball Run",
+    "owner_id": null,
+    "owner_name": "Sandman",
+    "stand_type": "Close-RangeArtificial Humanoid",
+    "reference": null,
+    "name_ja": "イン・ア・サイレント・ウェイ",
+    "name_romaji": "In A Sairento Wei",
+    "manga_debut": "SBR Chapter 1 (Arm only)SBR Chapter 44 (1st full debut)",
+    "anime_debut": null,
+    "form_count": 1,
+    "form_chain": [
+      "in_a_silent_way__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/In_a_Silent_Way"
+  },
+  {
+    "stand_id": "mandom",
+    "name_en": "Mandom",
+    "name_raw": "Mandom",
+    "part": 7,
+    "part_name_en": "Steel Ball Run",
+    "owner_id": null,
+    "owner_name": "Ringo Roadagain",
+    "stand_type": "Close-RangeRange IrrelevantArtificial Non-Humanoid",
+    "reference": null,
+    "name_ja": "マンダム",
+    "name_romaji": "Mandamu",
+    "manga_debut": "SBR Chapter 33SBR Chapter 34 (1st full debut)",
+    "anime_debut": null,
+    "form_count": 1,
+    "form_chain": [
+      "mandom__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Mandom"
+  },
+  {
+    "stand_id": "oh_lonesome_me",
+    "name_en": "Oh! Lonesome Me",
+    "name_raw": "Oh! Lonesome Me",
+    "part": 7,
+    "part_name_en": "Steel Ball Run",
+    "owner_id": null,
+    "owner_name": "Mountain Tim",
+    "stand_type": "Range IrrelevantIntegratedMaterializedArtificial Non-Humanoid",
+    "reference": null,
+    "name_ja": "オー! ロンサム・ミー",
+    "name_romaji": "Ō! Ronsamu Mī",
+    "manga_debut": "SBR Chapter 17",
+    "anime_debut": "SBR Episode 2 (Ability only)SBR Episode 3 (1st full debut)",
+    "form_count": 1,
+    "form_chain": [
+      "oh_lonesome_me__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Oh!_Lonesome_Me"
+  },
+  {
+    "stand_id": "scary_monsters",
+    "name_en": "Scary Monsters",
+    "name_raw": "Scary Monsters",
+    "part": 7,
+    "part_name_en": "Steel Ball Run",
+    "owner_id": null,
+    "owner_name": "Dr. Ferdinand (original user)Diego Brando",
+    "stand_type": "Range IrrelevantIntegratedPhenomenonMulti-User",
+    "reference": null,
+    "name_ja": "スケアリー モンスターズ",
+    "name_romaji": "Sukearī Monsutāzu",
+    "manga_debut": "SBR Chapter 28",
+    "anime_debut": null,
+    "form_count": 1,
+    "form_chain": [
+      "scary_monsters__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Scary_Monsters"
+  },
+  {
+    "stand_id": "sugar_mountain",
+    "name_en": "Sugar Mountain",
+    "name_raw": "Sugar Mountain",
+    "part": 7,
+    "part_name_en": "Steel Ball Run",
+    "owner_id": null,
+    "owner_name": null,
+    "stand_type": null,
+    "reference": null,
+    "name_ja": "シュガー・マウンテン",
+    "name_romaji": "Shugā Maunten",
+    "manga_debut": "SBR Chapter 45",
+    "anime_debut": null,
+    "form_count": 0,
+    "form_chain": [],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Sugar_Mountain"
+  },
+  {
+    "stand_id": "tatoo_you",
+    "name_en": "TATOO YOU!",
+    "name_raw": "TATOO YOU!",
+    "part": 7,
+    "part_name_en": "Steel Ball Run",
+    "owner_id": null,
+    "owner_name": "Eleven Men",
+    "stand_type": "Close-Range (Mask)Integrated (Tattoos)Natural Non-HumanoidMulti-User",
+    "reference": null,
+    "name_ja": "TATOO(タトゥー) YOU(ユー)!",
+    "name_romaji": "Tatū Yū!",
+    "manga_debut": "SBR Chapter 45SBR Chapter 46 (1st full debut)",
+    "anime_debut": null,
+    "form_count": 1,
+    "form_chain": [
+      "tatoo_you__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/TATOO_YOU!"
+  },
+  {
+    "stand_id": "ticket_to_ride",
+    "name_en": "Ticket to Ride",
+    "name_raw": "Ticket to Ride",
+    "part": 7,
+    "part_name_en": "Steel Ball Run",
+    "owner_id": null,
+    "owner_name": "Lucy Steel",
+    "stand_type": "Range IrrelevantIntegratedPhenomenon",
+    "reference": null,
+    "name_ja": "涙の乗車券(チケット・ゥ・ライド)",
+    "name_romaji": "Chikettu Raido",
+    "manga_debut": "SBR Chapter 71",
+    "anime_debut": null,
+    "form_count": 1,
+    "form_chain": [
+      "ticket_to_ride__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Ticket_to_Ride"
+  },
+  {
+    "stand_id": "tomb_of_the_boom_1_2_3",
+    "name_en": "Tomb of the Boom 1 2 3",
+    "name_raw": "Tomb of the Boom 1 2 3",
+    "part": 7,
+    "part_name_en": "Steel Ball Run",
+    "owner_id": null,
+    "owner_name": "Benjamin Boomboom (1)Andre Boomboom (2)L.A. Boomboom (3)",
+    "stand_type": "Close-RangeNatural Non-HumanoidMulti-User",
+    "reference": null,
+    "name_ja": "トゥーム・オブ・ザ・ブーム ワン・ツー・スリー",
+    "name_romaji": "Tūmu Obu Za Būmu Wan Tsū Surī",
+    "manga_debut": "SBR Chapter 16 (1)SBR Chapter 15 (2)SBR Chapter 19 (3)",
+    "anime_debut": null,
+    "form_count": 1,
+    "form_chain": [
+      "tomb_of_the_boom_1_2_3__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Tomb_of_the_Boom_1_2_3"
+  },
+  {
+    "stand_id": "tubular_bells",
+    "name_en": "Tubular Bells",
+    "name_raw": "Tubular Bells",
+    "part": 7,
+    "part_name_en": "Steel Ball Run",
+    "owner_id": null,
+    "owner_name": "Mike O.",
+    "stand_type": "AutomaticMaterializedPhenomenon",
+    "reference": null,
+    "name_ja": "チューブラー・ベルズ",
+    "name_romaji": "Chūburā Beruzu",
+    "manga_debut": "SBR Chapter 48",
+    "anime_debut": null,
+    "form_count": 1,
+    "form_chain": [
+      "tubular_bells__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Tubular_Bells"
+  },
+  {
+    "stand_id": "tusk_act1",
+    "name_en": "Tusk ACT1",
+    "name_raw": "Tusk ACT1",
+    "part": 7,
+    "part_name_en": "Steel Ball Run",
+    "owner_id": null,
+    "owner_name": null,
+    "stand_type": null,
+    "reference": null,
+    "name_ja": null,
+    "name_romaji": null,
+    "manga_debut": null,
+    "anime_debut": null,
+    "form_count": 0,
+    "form_chain": [],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": null
+  },
+  {
+    "stand_id": "tusk_act2",
+    "name_en": "Tusk ACT2",
+    "name_raw": "Tusk ACT2",
+    "part": 7,
+    "part_name_en": "Steel Ball Run",
+    "owner_id": null,
+    "owner_name": null,
+    "stand_type": null,
+    "reference": null,
+    "name_ja": null,
+    "name_romaji": null,
+    "manga_debut": null,
+    "anime_debut": null,
+    "form_count": 0,
+    "form_chain": [],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": null
+  },
+  {
+    "stand_id": "tusk_act3",
+    "name_en": "Tusk ACT3",
+    "name_raw": "Tusk ACT3",
+    "part": 7,
+    "part_name_en": "Steel Ball Run",
+    "owner_id": null,
+    "owner_name": null,
+    "stand_type": null,
+    "reference": null,
+    "name_ja": null,
+    "name_romaji": null,
+    "manga_debut": null,
+    "anime_debut": null,
+    "form_count": 0,
+    "form_chain": [],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": null
+  },
+  {
+    "stand_id": "tusk_act4",
+    "name_en": "Tusk ACT4",
+    "name_raw": "Tusk ACT4",
+    "part": 7,
+    "part_name_en": "Steel Ball Run",
+    "owner_id": null,
+    "owner_name": null,
+    "stand_type": null,
+    "reference": null,
+    "name_ja": null,
+    "name_romaji": null,
+    "manga_debut": null,
+    "anime_debut": null,
+    "form_count": 0,
+    "form_chain": [],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": null
+  },
+  {
+    "stand_id": "wired",
+    "name_en": "Wired",
+    "name_raw": "Wired",
+    "part": 7,
+    "part_name_en": "Steel Ball Run",
+    "owner_id": null,
+    "owner_name": "Pork Pie Hat Kid",
+    "stand_type": "Close-RangeReconnaissanceArtificial Non-Humanoid",
+    "reference": null,
+    "name_ja": "ワイアード",
+    "name_romaji": "Waiādo",
+    "manga_debut": "SBR Chapter 26",
+    "anime_debut": null,
+    "form_count": 1,
+    "form_chain": [
+      "wired__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Wired"
+  },
+  {
+    "stand_id": "born_this_way",
+    "name_en": "Born This Way",
+    "name_raw": "Born This Way",
+    "part": 8,
+    "part_name_en": "JoJolion",
+    "owner_id": null,
+    "owner_name": "Kei Nijimura",
+    "stand_type": "AutomaticLong-RangeArtificial Humanoid",
+    "reference": null,
+    "name_ja": "ボーン・ディス・ウェイ",
+    "name_romaji": "Bōn Disu Wei",
+    "manga_debut": "JJL Chapter 12",
+    "anime_debut": null,
+    "form_count": 1,
+    "form_chain": [
+      "born_this_way__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Born_This_Way"
+  },
+  {
+    "stand_id": "california_king_bed",
+    "name_en": "California King Bed",
+    "name_raw": "California King Bed",
+    "part": 8,
+    "part_name_en": "JoJolion",
+    "owner_id": null,
+    "owner_name": "Daiya Higashikata",
+    "stand_type": "Close-RangePsychological AssaultArtificial Non-Humanoid",
+    "reference": null,
+    "name_ja": "カリフォルニア・キング・ベッドちゃん",
+    "name_romaji": "Kariforunia Kingu Beddo-chan",
+    "manga_debut": "JJL Chapter 7",
+    "anime_debut": null,
+    "form_count": 1,
+    "form_chain": [
+      "california_king_bed__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/California_King_Bed"
+  },
+  {
+    "stand_id": "fun_fun_fun",
+    "name_en": "Fun Fun Fun",
+    "name_raw": "Fun Fun Fun",
+    "part": 8,
+    "part_name_en": "JoJolion",
+    "owner_id": null,
+    "owner_name": "Ojiro Sasame",
+    "stand_type": "Close-RangeNatural Non-Humanoid",
+    "reference": null,
+    "name_ja": "ファン・ファン・ファン",
+    "name_romaji": "Fan Fan Fan",
+    "manga_debut": "JJL Chapter 3 (Ability only)JJL Chapter 5",
+    "anime_debut": null,
+    "form_count": 1,
+    "form_chain": [
+      "fun_fun_fun__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Fun_Fun_Fun"
+  },
+  {
+    "stand_id": "nut_king_call",
+    "name_en": "Nut King Call",
+    "name_raw": "Nut King Call",
+    "part": 8,
+    "part_name_en": "JoJolion",
+    "owner_id": null,
+    "owner_name": "Joshu Higashikata",
+    "stand_type": "Close-RangeArtificial Humanoid",
+    "reference": null,
+    "name_ja": "ナット・キング・コール",
+    "name_romaji": "Natto Kingu Kōru",
+    "manga_debut": "JJL Chapter 20",
+    "anime_debut": null,
+    "form_count": 1,
+    "form_chain": [
+      "nut_king_call__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Nut_King_Call"
+  },
+  {
+    "stand_id": "paisley_park",
+    "name_en": "Paisley Park",
+    "name_raw": "Paisley Park",
+    "part": 8,
+    "part_name_en": "JoJolion",
+    "owner_id": null,
+    "owner_name": "Yasuho Hirose",
+    "stand_type": "Long-RangeReconnaissanceNatural HumanoidSentient",
+    "reference": null,
+    "name_ja": "ペイズリー・パーク",
+    "name_romaji": "Peizurī Pāku",
+    "manga_debut": "JJL Chapter 12 (Ability only)JJL Chapter 14 (1st full debut)",
+    "anime_debut": null,
+    "form_count": 1,
+    "form_chain": [
+      "paisley_park__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Paisley_Park"
+  },
+  {
+    "stand_id": "paper_moon_king",
+    "name_en": "Paper Moon King",
+    "name_raw": "Paper Moon King",
+    "part": 8,
+    "part_name_en": "JoJolion",
+    "owner_id": null,
+    "owner_name": "Tsurugi Higashikata",
+    "stand_type": "AutomaticMaterializedPsychological AssaultPhenomenon",
+    "reference": null,
+    "name_ja": "ペーパー・ムーン・キング",
+    "name_romaji": "Pēpā Mūn Kingu",
+    "manga_debut": "JJL Chapter 23",
+    "anime_debut": null,
+    "form_count": 1,
+    "form_chain": [
+      "paper_moon_king__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Paper_Moon_King"
+  },
+  {
+    "stand_id": "soft_wet",
+    "name_en": "Soft & Wet",
+    "name_raw": "Soft & Wet",
+    "part": 8,
+    "part_name_en": "JoJolion",
+    "owner_id": null,
+    "owner_name": "Josuke HigashikataJosefumi Kujo (Original User)",
+    "stand_type": "Close-RangeArtificial HumanoidEvolvedMulti-User",
+    "reference": null,
+    "name_ja": "ソフト&ウェット柔らかくてそして濡れている",
+    "name_romaji": "Sofuto ando WettoYawarakakute Soshite Nureteiru",
+    "manga_debut": "JJL Chapter 1 (Ability)JJL Chapter 4 (1st full debut)",
+    "anime_debut": null,
+    "form_count": 1,
+    "form_chain": [
+      "soft_wet__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Soft_%26_Wet"
+  },
+  {
+    "stand_id": "manic_depression",
+    "name_en": "Manic Depression",
+    "name_raw": "Manic Depression",
+    "part": null,
+    "part_name_en": null,
+    "owner_id": null,
+    "owner_name": "Massimo Volpe",
+    "stand_type": "Close-Range",
+    "reference": null,
+    "name_ja": "マニック・デプレッション",
+    "name_romaji": "Manikku Depuresshon",
+    "manga_debut": null,
+    "anime_debut": null,
+    "form_count": 1,
+    "form_chain": [
+      "manic_depression__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Manic_Depression"
+  },
+  {
+    "stand_id": "voodoo_child",
+    "name_en": "Voodoo Child",
+    "name_raw": "Voodoo Child",
+    "part": null,
+    "part_name_en": null,
+    "owner_id": null,
+    "owner_name": "Sheila E.",
+    "stand_type": "Close-Range",
+    "reference": null,
+    "name_ja": "ヴードゥー・チャイルド",
+    "name_romaji": "Vūdū Chairudo",
+    "manga_debut": null,
+    "anime_debut": null,
+    "form_count": 1,
+    "form_chain": [
+      "voodoo_child__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Voodoo_Child"
+  },
+  {
+    "stand_id": "all_along_watchtower",
+    "name_en": "All Along Watchtower",
+    "name_raw": "All Along Watchtower",
+    "part": null,
+    "part_name_en": null,
+    "owner_id": null,
+    "owner_name": "Cannolo Murolo",
+    "stand_type": "MaterializedLong-RangeMulti-UnitSentientReconnaissance",
+    "reference": null,
+    "name_ja": "オール・アロング・ウォッチタワー",
+    "name_romaji": "Ōru Arongu Wotchitawā",
+    "manga_debut": null,
+    "anime_debut": null,
+    "form_count": 1,
+    "form_chain": [
+      "all_along_watchtower__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/All_Along_Watchtower"
+  },
+  {
+    "stand_id": "dolly_dagger",
+    "name_en": "Dolly Dagger",
+    "name_raw": "Dolly Dagger",
+    "part": null,
+    "part_name_en": null,
+    "owner_id": null,
+    "owner_name": "Vittorio Cataldi",
+    "stand_type": "Close-RangeMaterialized",
+    "reference": null,
+    "name_ja": "ドリー・タガー",
+    "name_romaji": "Dorī Dagā",
+    "manga_debut": null,
+    "anime_debut": null,
+    "form_count": 1,
+    "form_chain": [
+      "dolly_dagger__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Dolly_Dagger"
+  },
+  {
+    "stand_id": "nightbird_flying",
+    "name_en": "Nightbird Flying",
+    "name_raw": "Nightbird Flying",
+    "part": null,
+    "part_name_en": null,
+    "owner_id": null,
+    "owner_name": "Angelica Attanasio",
+    "stand_type": "AutomaticLong-Range",
+    "reference": null,
+    "name_ja": "ナイトバード・フライング",
+    "name_romaji": "Naitobādo Furaingu",
+    "manga_debut": null,
+    "anime_debut": null,
+    "form_count": 1,
+    "form_chain": [
+      "nightbird_flying__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Nightbird_Flying"
+  },
+  {
+    "stand_id": "purple_haze_distortion",
+    "name_en": "Purple Haze Distortion",
+    "name_raw": "Purple Haze Distortion",
+    "part": null,
+    "part_name_en": null,
+    "owner_id": null,
+    "owner_name": "Pannacotta Fugo",
+    "stand_type": "Close-RangeNatural HumanoidEvolved",
+    "reference": null,
+    "name_ja": "パープル・ヘイズ・ディストーション",
+    "name_romaji": "Pāpuru Heizu Disutōshon",
+    "manga_debut": null,
+    "anime_debut": null,
+    "form_count": 1,
+    "form_chain": [
+      "purple_haze_distortion__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Purple_Haze_Distortion"
+  },
+  {
+    "stand_id": "rainy_day_dream_away",
+    "name_en": "Rainy Day Dream Away",
+    "name_raw": "Rainy Day Dream Away",
+    "part": null,
+    "part_name_en": null,
+    "owner_id": null,
+    "owner_name": "Vladimir Kocaqi",
+    "stand_type": "Long-RangeMaterialized",
+    "reference": null,
+    "name_ja": "レイニーデイ・ドリームアウェイ",
+    "name_romaji": "Reinī Dei Dorīmu Awei",
+    "manga_debut": null,
+    "anime_debut": null,
+    "form_count": 1,
+    "form_chain": [
+      "rainy_day_dream_away__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Rainy_Day_Dream_Away"
+  },
+  {
+    "stand_id": "remote_romance",
+    "name_en": "Remote Romance",
+    "name_raw": "Remote Romance",
+    "part": null,
+    "part_name_en": null,
+    "owner_id": null,
+    "owner_name": "Dixie Flatline (Original)N/A (Dwells in the server)",
+    "stand_type": "AutomaticMulti-UserRange Irrelevant",
+    "reference": null,
+    "name_ja": "リモートロマンス",
+    "name_romaji": "Rimōto Romansu",
+    "manga_debut": null,
+    "anime_debut": null,
+    "form_count": 1,
+    "form_chain": [
+      "remote_romance__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/Remote_Romance"
+  },
+  {
+    "stand_id": "house_of_holy",
+    "name_en": "House of Holy",
+    "name_raw": "House of Holy",
+    "part": null,
+    "part_name_en": null,
+    "owner_id": null,
+    "owner_name": "Dija Maker",
+    "stand_type": "Range IrrelevantPhenomenonPsychological Assault",
+    "reference": null,
+    "name_ja": "ハウス・オブ・ホーリー",
+    "name_romaji": "Hausu Obu Hōrī",
+    "manga_debut": null,
+    "anime_debut": null,
+    "form_count": 1,
+    "form_chain": [
+      "house_of_holy__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "detail_url": "https://jojowiki.com/House_of_Holy"
+  },
+  {
+    "stand_id": "smallfaces",
+    "name_en": "Smallfaces",
+    "name_raw": "Smallfaces",
+    "part": null,
+    "part_name_en": null,
+    "owner_id": null,
+    "owner_name": "Escape Room Player",
+    "stand_type": "Range IrrelevantArtificial Non-HumanoidMulti-User",
+    "reference": null,
+    "name_ja": "スモールフェイセズ",
+    "name_romaji": "Sumōrufeisezu",
+    "manga_debut": null,
+    "anime_debut": null,
+    "form_count": 1,
+    "form_chain": [
+      "smallfaces__f0"
+    ],
+    "main_table_registrations": 1,
+    "data_sources": [
+      "jojowiki"
+    ],
+    "detail_url": "https://jojowiki.com/Smallfaces"
+  }
+]

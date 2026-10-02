@@ -1,0 +1,25 @@
+{
+  "n_stands": 154,
+  "n_stats_rows": 154,
+  "n_forms": 146,
+  "n_conflicts": 28,
+  "n_normalizations": 98,
+  "category_distribution": {
+    "RANKED": 826,
+    "EMPTY_SLOT": 53,
+    "CONDITIONAL": 20,
+    "UNKNOWN": 16,
+    "INFINITE": 6,
+    "CONDITIONAL_NO_BASE": 3
+  },
+  "conflict_type_distribution": {
+    "MISSING_IN_ONE": 15,
+    "VALUE_MISMATCH": 10,
+    "CATEGORY_DIFF": 2,
+    "DUPLICATE_IN_SOURCE": 1
+  },
+  "comparable_rows": 123,
+  "multi_form_stands": 3,
+  "with_part": 144,
+  "with_owner": 143
+}

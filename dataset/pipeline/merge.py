@@ -353,13 +353,30 @@ def _equivalent(a, b) -> bool:
 
 
 def _classify(a, b) -> str:
-    """冲突类型判定。"""
-    if a.value is None and b.value is not None:
+    """冲突类型判定。
+
+    ★ 修正（M4 实测发现）：不能只看 `value is None`。
+      多个类别都映射到 value=None，但语义完全不同：
+        MISSING_IN_ONE  一方**真的没有这个字段**（未提供）
+        CATEGORY_DIFF   一方是`?`（UNKNOWN，明确表示「未知」）
+      混为一谈会导致「9 条 ? vs 具体值」被错标为缺失，
+      掩盖了「主源说未知、镜像源给了具体值」这个重要分歧。
+
+    区分依据：
+      - 显式的「无此数据」标记 → MISSING_IN_ONE
+      - UNKNOWN（?）参与 → CATEGORY_DIFF（是分歧，不是缺失）
+    """
+    #真缺失：一方完全没值，且**不是** UNKNOWN
+    a_absent = a.value is None and a.category != Category.UNKNOWN
+    b_absent = b.value is None and b.category != Category.UNKNOWN
+    if a_absent or b_absent:
         return "MISSING_IN_ONE"
-    if a.value is not None and b.value is None:
-        return "MISSING_IN_ONE"
+
+    # 类别不同（含 UNKNOWN 参与的情况）
     if a.category != b.category:
         return "CATEGORY_DIFF"
+
+    # 双方都有值但数值不同
     return "VALUE_MISMATCH"
 
 

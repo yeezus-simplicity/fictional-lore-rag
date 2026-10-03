@@ -13,9 +13,9 @@
     "CONDITIONAL_NO_BASE": 3
   },
   "conflict_type_distribution": {
-    "MISSING_IN_ONE": 15,
+    "CATEGORY_DIFF": 13,
     "VALUE_MISMATCH": 10,
-    "CATEGORY_DIFF": 2,
+    "MISSING_IN_ONE": 4,
     "DUPLICATE_IN_SOURCE": 1
   },
   "comparable_rows": 123,

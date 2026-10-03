@@ -1,0 +1,3145 @@
+{
+  "routing": {
+    "m2": {
+      "label": "M2 规则路由",
+      "n": 176,
+      "accuracy": 0.8352,
+      "by_type": {
+        "T1": {
+          "n": 40,
+          "acc": 1.0
+        },
+        "T2": {
+          "n": 30,
+          "acc": 1.0
+        },
+        "T3": {
+          "n": 25,
+          "acc": 1.0
+        },
+        "T4": {
+          "n": 25,
+          "acc": 1.0
+        },
+        "T5": {
+          "n": 21,
+          "acc": 0.0
+        },
+        "T6": {
+          "n": 20,
+          "acc": 0.6
+        },
+        "T7": {
+          "n": 15,
+          "acc": 1.0
+        }
+      }
+    },
+    "m4": {
+      "label": "M4 增强路由",
+      "n": 176,
+      "accuracy": 1.0,
+      "by_type": {
+        "T1": {
+          "n": 40,
+          "acc": 1.0
+        },
+        "T2": {
+          "n": 30,
+          "acc": 1.0
+        },
+        "T3": {
+          "n": 25,
+          "acc": 1.0
+        },
+        "T4": {
+          "n": 25,
+          "acc": 1.0
+        },
+        "T5": {
+          "n": 21,
+          "acc": 1.0
+        },
+        "T6": {
+          "n": 20,
+          "acc": 1.0
+        },
+        "T7": {
+          "n": 15,
+          "acc": 1.0
+        }
+      }
+    },
+    "m2_detail": [
+      {
+        "qid": "T1-001",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T1-002",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T1-003",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T1-004",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T1-005",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T1-006",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T1-007",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T1-008",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T1-009",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T1-010",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T1-011",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T1-012",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T1-013",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T1-014",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T1-015",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T1-016",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T1-017",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T1-018",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T1-019",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T1-020",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T1-021",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T1-022",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T1-023",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T1-024",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T1-025",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T1-026",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T1-027",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T1-028",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T1-029",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T1-030",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T1-031",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T1-032",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T1-033",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T1-034",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T1-035",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T1-036",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T1-037",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T1-038",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T1-039",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T1-040",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T2-001",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T2-002",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T2-003",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T2-004",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T2-005",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T2-006",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T2-007",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T2-008",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T2-009",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T2-010",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T2-011",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T2-012",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T2-013",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T2-014",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T2-015",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T2-016",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T2-017",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T2-018",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T2-019",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T2-020",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T2-021",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T2-022",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T2-023",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T2-024",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T2-025",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T2-026",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T2-027",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T2-028",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T2-029",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T2-030",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T3-001",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T3-002",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T3-003",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T3-004",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T3-005",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T3-006",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T3-007",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T3-008",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T3-009",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T3-010",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T3-011",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T3-012",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T3-013",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T3-014",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T3-015",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T3-016",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T3-017",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T3-018",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T3-019",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T3-020",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T3-021",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T3-022",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T3-023",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T3-024",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T3-025",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T4-001",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic"
+      },
+      {
+        "qid": "T4-002",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic"
+      },
+      {
+        "qid": "T4-003",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic"
+      },
+      {
+        "qid": "T4-004",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic"
+      },
+      {
+        "qid": "T4-005",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic"
+      },
+      {
+        "qid": "T4-006",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic"
+      },
+      {
+        "qid": "T4-007",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic"
+      },
+      {
+        "qid": "T4-008",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic"
+      },
+      {
+        "qid": "T4-009",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic"
+      },
+      {
+        "qid": "T4-010",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic"
+      },
+      {
+        "qid": "T4-011",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic"
+      },
+      {
+        "qid": "T4-012",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic"
+      },
+      {
+        "qid": "T4-013",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic"
+      },
+      {
+        "qid": "T4-014",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic"
+      },
+      {
+        "qid": "T4-015",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic"
+      },
+      {
+        "qid": "T4-016",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic"
+      },
+      {
+        "qid": "T4-017",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic"
+      },
+      {
+        "qid": "T4-018",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic"
+      },
+      {
+        "qid": "T4-019",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic"
+      },
+      {
+        "qid": "T4-020",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic"
+      },
+      {
+        "qid": "T4-021",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic"
+      },
+      {
+        "qid": "T4-022",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic"
+      },
+      {
+        "qid": "T4-023",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic"
+      },
+      {
+        "qid": "T4-024",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic"
+      },
+      {
+        "qid": "T4-025",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic"
+      },
+      {
+        "qid": "T5-001",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "structured"
+      },
+      {
+        "qid": "T5-002",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "structured"
+      },
+      {
+        "qid": "T5-003",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "structured"
+      },
+      {
+        "qid": "T5-004",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "structured"
+      },
+      {
+        "qid": "T5-005",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "structured"
+      },
+      {
+        "qid": "T5-006",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "structured"
+      },
+      {
+        "qid": "T5-007",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "structured"
+      },
+      {
+        "qid": "T5-008",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "structured"
+      },
+      {
+        "qid": "T5-009",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "structured"
+      },
+      {
+        "qid": "T5-010",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "structured"
+      },
+      {
+        "qid": "T5-011",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "structured"
+      },
+      {
+        "qid": "T5-012",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "structured"
+      },
+      {
+        "qid": "T5-013",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "structured"
+      },
+      {
+        "qid": "T5-014",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "structured"
+      },
+      {
+        "qid": "T5-015",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "structured"
+      },
+      {
+        "qid": "T5-016",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "structured"
+      },
+      {
+        "qid": "T5-017",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "structured"
+      },
+      {
+        "qid": "T5-018",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "structured"
+      },
+      {
+        "qid": "T5-019",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "structured"
+      },
+      {
+        "qid": "T5-020",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "structured"
+      },
+      {
+        "qid": "T5-021",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "structured"
+      },
+      {
+        "qid": "T6-001",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "abstain"
+      },
+      {
+        "qid": "T6-002",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "structured"
+      },
+      {
+        "qid": "T6-003",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "abstain"
+      },
+      {
+        "qid": "T6-004",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "abstain"
+      },
+      {
+        "qid": "T6-005",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "structured"
+      },
+      {
+        "qid": "T6-006",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "abstain"
+      },
+      {
+        "qid": "T6-007",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "structured"
+      },
+      {
+        "qid": "T6-008",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "abstain"
+      },
+      {
+        "qid": "T6-009",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "abstain"
+      },
+      {
+        "qid": "T6-010",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "structured"
+      },
+      {
+        "qid": "T6-011",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "abstain"
+      },
+      {
+        "qid": "T6-012",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "structured"
+      },
+      {
+        "qid": "T6-013",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "abstain"
+      },
+      {
+        "qid": "T6-014",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "abstain"
+      },
+      {
+        "qid": "T6-015",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "structured"
+      },
+      {
+        "qid": "T6-016",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "abstain"
+      },
+      {
+        "qid": "T6-017",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "structured"
+      },
+      {
+        "qid": "T6-018",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "abstain"
+      },
+      {
+        "qid": "T6-019",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "abstain"
+      },
+      {
+        "qid": "T6-020",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "structured"
+      },
+      {
+        "qid": "T7-001",
+        "type": "T7",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T7-002",
+        "type": "T7",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T7-003",
+        "type": "T7",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T7-004",
+        "type": "T7",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T7-005",
+        "type": "T7",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T7-006",
+        "type": "T7",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T7-007",
+        "type": "T7",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T7-008",
+        "type": "T7",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T7-009",
+        "type": "T7",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T7-010",
+        "type": "T7",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T7-011",
+        "type": "T7",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T7-012",
+        "type": "T7",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T7-013",
+        "type": "T7",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T7-014",
+        "type": "T7",
+        "expect": "structured",
+        "pred": "structured"
+      },
+      {
+        "qid": "T7-015",
+        "type": "T7",
+        "expect": "structured",
+        "pred": "structured"
+      }
+    ],
+    "m4_detail": [
+      {
+        "qid": "T1-001",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T1-002",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T1-003",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T1-004",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T1-005",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T1-006",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T1-007",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T1-008",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T1-009",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T1-010",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T1-011",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T1-012",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T1-013",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T1-014",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T1-015",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T1-016",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T1-017",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T1-018",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T1-019",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T1-020",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T1-021",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T1-022",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T1-023",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T1-024",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T1-025",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T1-026",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T1-027",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T1-028",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T1-029",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T1-030",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T1-031",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T1-032",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T1-033",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T1-034",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T1-035",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T1-036",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T1-037",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T1-038",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T1-039",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T1-040",
+        "type": "T1",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T2-001",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "极值/聚合类问题 → SQL"
+      },
+      {
+        "qid": "T2-002",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "极值/聚合类问题 → SQL"
+      },
+      {
+        "qid": "T2-003",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "极值/聚合类问题 → SQL"
+      },
+      {
+        "qid": "T2-004",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "极值/聚合类问题 → SQL"
+      },
+      {
+        "qid": "T2-005",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "极值/聚合类问题 → SQL"
+      },
+      {
+        "qid": "T2-006",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "极值/聚合类问题 → SQL"
+      },
+      {
+        "qid": "T2-007",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "极值/聚合类问题 → SQL"
+      },
+      {
+        "qid": "T2-008",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "极值/聚合类问题 → SQL"
+      },
+      {
+        "qid": "T2-009",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "极值/聚合类问题 → SQL"
+      },
+      {
+        "qid": "T2-010",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "极值/聚合类问题 → SQL"
+      },
+      {
+        "qid": "T2-011",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "极值/聚合类问题 → SQL"
+      },
+      {
+        "qid": "T2-012",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "极值/聚合类问题 → SQL"
+      },
+      {
+        "qid": "T2-013",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "极值/聚合类问题 → SQL"
+      },
+      {
+        "qid": "T2-014",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "极值/聚合类问题 → SQL"
+      },
+      {
+        "qid": "T2-015",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "极值/聚合类问题 → SQL"
+      },
+      {
+        "qid": "T2-016",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "极值/聚合类问题 → SQL"
+      },
+      {
+        "qid": "T2-017",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "极值/聚合类问题 → SQL"
+      },
+      {
+        "qid": "T2-018",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "极值/聚合类问题 → SQL"
+      },
+      {
+        "qid": "T2-019",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "极值/聚合类问题 → SQL"
+      },
+      {
+        "qid": "T2-020",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "极值/聚合类问题 → SQL"
+      },
+      {
+        "qid": "T2-021",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "极值/聚合类问题 → SQL"
+      },
+      {
+        "qid": "T2-022",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "极值/聚合类问题 → SQL"
+      },
+      {
+        "qid": "T2-023",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "极值/聚合类问题 → SQL"
+      },
+      {
+        "qid": "T2-024",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "极值/聚合类问题 → SQL"
+      },
+      {
+        "qid": "T2-025",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "极值/聚合类问题 → SQL"
+      },
+      {
+        "qid": "T2-026",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "极值/聚合类问题 → SQL"
+      },
+      {
+        "qid": "T2-027",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "极值/聚合类问题 → SQL"
+      },
+      {
+        "qid": "T2-028",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "极值/聚合类问题 → SQL"
+      },
+      {
+        "qid": "T2-029",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "极值/聚合类问题 → SQL"
+      },
+      {
+        "qid": "T2-030",
+        "type": "T2",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "极值/聚合类问题 → SQL"
+      },
+      {
+        "qid": "T3-001",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T3-002",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T3-003",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T3-004",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T3-005",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T3-006",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T3-007",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T3-008",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T3-009",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T3-010",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T3-011",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T3-012",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T3-013",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T3-014",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T3-015",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T3-016",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T3-017",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "极值/聚合类问题 → SQL"
+      },
+      {
+        "qid": "T3-018",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "极值/聚合类问题 → SQL"
+      },
+      {
+        "qid": "T3-019",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "极值/聚合类问题 → SQL"
+      },
+      {
+        "qid": "T3-020",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "默认按结构化处理（多数题型）"
+      },
+      {
+        "qid": "T3-021",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "默认按结构化处理（多数题型）"
+      },
+      {
+        "qid": "T3-022",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "默认按结构化处理（多数题型）"
+      },
+      {
+        "qid": "T3-023",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "默认按结构化处理（多数题型）"
+      },
+      {
+        "qid": "T3-024",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "默认按结构化处理（多数题型）"
+      },
+      {
+        "qid": "T3-025",
+        "type": "T3",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "默认按结构化处理（多数题型）"
+      },
+      {
+        "qid": "T4-001",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic",
+        "reason": "描述类问题 → 语义检索"
+      },
+      {
+        "qid": "T4-002",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic",
+        "reason": "描述类问题 → 语义检索"
+      },
+      {
+        "qid": "T4-003",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic",
+        "reason": "描述类问题 → 语义检索"
+      },
+      {
+        "qid": "T4-004",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic",
+        "reason": "描述类问题 → 语义检索"
+      },
+      {
+        "qid": "T4-005",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic",
+        "reason": "描述类问题 → 语义检索"
+      },
+      {
+        "qid": "T4-006",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic",
+        "reason": "描述类问题 → 语义检索"
+      },
+      {
+        "qid": "T4-007",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic",
+        "reason": "描述类问题 → 语义检索"
+      },
+      {
+        "qid": "T4-008",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic",
+        "reason": "描述类问题 → 语义检索"
+      },
+      {
+        "qid": "T4-009",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic",
+        "reason": "描述类问题 → 语义检索"
+      },
+      {
+        "qid": "T4-010",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic",
+        "reason": "描述类问题 → 语义检索"
+      },
+      {
+        "qid": "T4-011",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic",
+        "reason": "描述类问题 → 语义检索"
+      },
+      {
+        "qid": "T4-012",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic",
+        "reason": "描述类问题 → 语义检索"
+      },
+      {
+        "qid": "T4-013",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic",
+        "reason": "描述类问题 → 语义检索"
+      },
+      {
+        "qid": "T4-014",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic",
+        "reason": "描述类问题 → 语义检索"
+      },
+      {
+        "qid": "T4-015",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic",
+        "reason": "描述类问题 → 语义检索"
+      },
+      {
+        "qid": "T4-016",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic",
+        "reason": "描述类问题 → 语义检索"
+      },
+      {
+        "qid": "T4-017",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic",
+        "reason": "描述类问题 → 语义检索"
+      },
+      {
+        "qid": "T4-018",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic",
+        "reason": "描述类问题 → 语义检索"
+      },
+      {
+        "qid": "T4-019",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic",
+        "reason": "描述类问题 → 语义检索"
+      },
+      {
+        "qid": "T4-020",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic",
+        "reason": "描述类问题 → 语义检索"
+      },
+      {
+        "qid": "T4-021",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic",
+        "reason": "描述类问题 → 语义检索"
+      },
+      {
+        "qid": "T4-022",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic",
+        "reason": "描述类问题 → 语义检索"
+      },
+      {
+        "qid": "T4-023",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic",
+        "reason": "描述类问题 → 语义检索"
+      },
+      {
+        "qid": "T4-024",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic",
+        "reason": "描述类问题 → 语义检索"
+      },
+      {
+        "qid": "T4-025",
+        "type": "T4",
+        "expect": "semantic",
+        "pred": "semantic",
+        "reason": "描述类问题 → 语义检索"
+      },
+      {
+        "qid": "T5-001",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "hybrid",
+        "reason": "同时包含结构化问法与语义描述需求 → 需两路协同"
+      },
+      {
+        "qid": "T5-002",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "hybrid",
+        "reason": "同时包含结构化问法与语义描述需求 → 需两路协同"
+      },
+      {
+        "qid": "T5-003",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "hybrid",
+        "reason": "同时包含结构化问法与语义描述需求 → 需两路协同"
+      },
+      {
+        "qid": "T5-004",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "hybrid",
+        "reason": "同时包含结构化问法与语义描述需求 → 需两路协同"
+      },
+      {
+        "qid": "T5-005",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "hybrid",
+        "reason": "同时包含结构化问法与语义描述需求 → 需两路协同"
+      },
+      {
+        "qid": "T5-006",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "hybrid",
+        "reason": "同时包含结构化问法与语义描述需求 → 需两路协同"
+      },
+      {
+        "qid": "T5-007",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "hybrid",
+        "reason": "同时包含结构化问法与语义描述需求 → 需两路协同"
+      },
+      {
+        "qid": "T5-008",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "hybrid",
+        "reason": "同时包含结构化问法与语义描述需求 → 需两路协同"
+      },
+      {
+        "qid": "T5-009",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "hybrid",
+        "reason": "同时包含结构化问法与语义描述需求 → 需两路协同"
+      },
+      {
+        "qid": "T5-010",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "hybrid",
+        "reason": "同时包含结构化问法与语义描述需求 → 需两路协同"
+      },
+      {
+        "qid": "T5-011",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "hybrid",
+        "reason": "同时包含结构化问法与语义描述需求 → 需两路协同"
+      },
+      {
+        "qid": "T5-012",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "hybrid",
+        "reason": "同时包含结构化问法与语义描述需求 → 需两路协同"
+      },
+      {
+        "qid": "T5-013",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "hybrid",
+        "reason": "同时包含结构化问法与语义描述需求 → 需两路协同"
+      },
+      {
+        "qid": "T5-014",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "hybrid",
+        "reason": "同时包含结构化问法与语义描述需求 → 需两路协同"
+      },
+      {
+        "qid": "T5-015",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "hybrid",
+        "reason": "同时包含结构化问法与语义描述需求 → 需两路协同"
+      },
+      {
+        "qid": "T5-016",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "hybrid",
+        "reason": "同时包含结构化问法与语义描述需求 → 需两路协同"
+      },
+      {
+        "qid": "T5-017",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "hybrid",
+        "reason": "同时包含结构化问法与语义描述需求 → 需两路协同"
+      },
+      {
+        "qid": "T5-018",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "hybrid",
+        "reason": "同时包含结构化问法与语义描述需求 → 需两路协同"
+      },
+      {
+        "qid": "T5-019",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "hybrid",
+        "reason": "同时包含结构化问法与语义描述需求 → 需两路协同"
+      },
+      {
+        "qid": "T5-020",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "hybrid",
+        "reason": "同时包含结构化问法与语义描述需求 → 需两路协同"
+      },
+      {
+        "qid": "T5-021",
+        "type": "T5",
+        "expect": "hybrid",
+        "pred": "hybrid",
+        "reason": "同时包含结构化问法与语义描述需求 → 需两路协同"
+      },
+      {
+        "qid": "T6-001",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "abstain",
+        "reason": "编造实体「Hierophant Green Omega」 → 数据集中不存在，应拒答"
+      },
+      {
+        "qid": "T6-002",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "abstain",
+        "reason": "编造实体「Kraft Work Omega」 → 数据集中不存在，应拒答"
+      },
+      {
+        "qid": "T6-003",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "abstain",
+        "reason": "编造实体「Weather Report Extreme」 → 数据集中不存在，应拒答"
+      },
+      {
+        "qid": "T6-004",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "abstain",
+        "reason": "编造信号词 → 数据集中不存在，应拒答"
+      },
+      {
+        "qid": "T6-005",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "abstain",
+        "reason": "编造实体「Alien Stone Ocean」 → 数据集中不存在，应拒答"
+      },
+      {
+        "qid": "T6-006",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "abstain",
+        "reason": "编造信号词 → 数据集中不存在，应拒答"
+      },
+      {
+        "qid": "T6-007",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "abstain",
+        "reason": "版本号形态（如 v2），本数据集无此形态 → 数据集中不存在，应拒答"
+      },
+      {
+        "qid": "T6-008",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "abstain",
+        "reason": "编造实体「Silver Chariot Revenant」 → 数据集中不存在，应拒答"
+      },
+      {
+        "qid": "T6-009",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "abstain",
+        "reason": "编造实体「Magician's Red Neon」 → 数据集中不存在，应拒答"
+      },
+      {
+        "qid": "T6-010",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "abstain",
+        "reason": "编造信号词 → 数据集中不存在，应拒答"
+      },
+      {
+        "qid": "T6-011",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "abstain",
+        "reason": "编造信号词 → 数据集中不存在，应拒答"
+      },
+      {
+        "qid": "T6-012",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "abstain",
+        "reason": "编造实体「King Crimson Red」 → 数据集中不存在，应拒答"
+      },
+      {
+        "qid": "T6-013",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "abstain",
+        "reason": "询问不存在的部（第 9 部及以后） → 数据集中不存在，应拒答"
+      },
+      {
+        "qid": "T6-014",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "abstain",
+        "reason": "编造实体「Foo Fighters Ultimate」 → 数据集中不存在，应拒答"
+      },
+      {
+        "qid": "T6-015",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "abstain",
+        "reason": "编造信号词 → 数据集中不存在，应拒答"
+      },
+      {
+        "qid": "T6-016",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "abstain",
+        "reason": "编造信号词 → 数据集中不存在，应拒答"
+      },
+      {
+        "qid": "T6-017",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "abstain",
+        "reason": "编造实体「Star Platinum Ultimate」 → 数据集中不存在，应拒答"
+      },
+      {
+        "qid": "T6-018",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "abstain",
+        "reason": "询问不存在的部（第 9 部及以后） → 数据集中不存在，应拒答"
+      },
+      {
+        "qid": "T6-019",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "abstain",
+        "reason": "编造实体「Quantum Star Platinum」 → 数据集中不存在，应拒答"
+      },
+      {
+        "qid": "T6-020",
+        "type": "T6",
+        "expect": "abstain",
+        "pred": "abstain",
+        "reason": "编造信号词 → 数据集中不存在，应拒答"
+      },
+      {
+        "qid": "T7-001",
+        "type": "T7",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T7-002",
+        "type": "T7",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T7-003",
+        "type": "T7",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T7-004",
+        "type": "T7",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T7-005",
+        "type": "T7",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T7-006",
+        "type": "T7",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T7-007",
+        "type": "T7",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T7-008",
+        "type": "T7",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T7-009",
+        "type": "T7",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T7-010",
+        "type": "T7",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T7-011",
+        "type": "T7",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T7-012",
+        "type": "T7",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T7-013",
+        "type": "T7",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T7-014",
+        "type": "T7",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      },
+      {
+        "qid": "T7-015",
+        "type": "T7",
+        "expect": "structured",
+        "pred": "structured",
+        "reason": "数值/归属类直接查询 → SQL"
+      }
+    ]
+  },
+  "resolution": {
+    "M1 策略（prefer_primary）": {
+      "n": 22,
+      "avg_confidence": 0.6909,
+      "min_confidence": 0.6,
+      "strategy_dist": {
+        "keep_unknown": 15,
+        "prefer_primary": 6,
+        "split_by_form": 1
+      },
+      "n_fragile": 18,
+      "fragile_ratio": 0.8182,
+      "resolutions": [
+        {
+          "stand_id": "baby_face",
+          "stand_name": "Baby Face",
+          "stat_dim": "DEV",
+          "value_a": "※Depending on Education",
+          "value_b": "A",
+          "source_a": "jojowiki",
+          "source_b": "csv_topology",
+          "conflict_type": "MISSING_IN_ONE",
+          "strategy": "keep_unknown",
+          "final_value": null,
+          "final_raw": "※Depending on Education",
+          "final_category": "CONDITIONAL_NO_BASE",
+          "confidence": 0.85,
+          "rationale": "双方均未提供有效值 → 保留 UNKNOWN",
+          "sensitivity": "稳健：一方明确缺失，无歧义"
+        },
+        {
+          "stand_id": "baby_face",
+          "stand_name": "Baby Face",
+          "stat_dim": "PRC",
+          "value_a": "※Depending on Education",
+          "value_b": "E",
+          "source_a": "jojowiki",
+          "source_b": "csv_topology",
+          "conflict_type": "MISSING_IN_ONE",
+          "strategy": "keep_unknown",
+          "final_value": null,
+          "final_raw": "※Depending on Education",
+          "final_category": "CONDITIONAL_NO_BASE",
+          "confidence": 0.85,
+          "rationale": "双方均未提供有效值 → 保留 UNKNOWN",
+          "sensitivity": "稳健：一方明确缺失，无歧义"
+        },
+        {
+          "stand_id": "black_sabbath",
+          "stand_name": "Black Sabbath",
+          "stat_dim": "PWR",
+          "value_a": "E※Restraining Power: A",
+          "value_b": "A",
+          "source_a": "jojowiki",
+          "source_b": "csv_topology",
+          "conflict_type": "CATEGORY_DIFF",
+          "strategy": "prefer_primary",
+          "final_value": 1,
+          "final_raw": "E※Restraining Power: A",
+          "final_category": "CONDITIONAL",
+          "confidence": 0.75,
+          "rationale": "类别不同（E※Restraining Power: A vs A）→ 采主源",
+          "sensitivity": "**脆弱**：类别差异的解释依赖具体语义"
+        },
+        {
+          "stand_id": "boy_ii_man",
+          "stand_name": "Boy II Man",
+          "stat_dim": "RNG",
+          "value_a": "C",
+          "value_b": "B",
+          "source_a": "jojowiki",
+          "source_b": "csv_bogdan",
+          "conflict_type": "VALUE_MISMATCH",
+          "strategy": "prefer_primary",
+          "final_value": 3,
+          "final_raw": "C",
+          "final_category": "RANKED",
+          "confidence": 0.75,
+          "rationale": "镜像源一致但主源不同 → 仍采主源（本策略选择）",
+          "sensitivity": "**脆弱**：镜像源一致，若改用共识策略结论翻转"
+        },
+        {
+          "stand_id": "c_moon",
+          "stand_name": "C-MOON",
+          "stat_dim": "DEV",
+          "value_a": "?",
+          "value_b": "D",
+          "source_a": "jojowiki",
+          "source_b": "csv_topology",
+          "conflict_type": "CATEGORY_DIFF",
+          "strategy": "keep_unknown",
+          "final_value": null,
+          "final_raw": "?",
+          "final_category": "UNKNOWN",
+          "confidence": 0.6,
+          "rationale": "主源标注为「未知(?)」，镜像源给了具体值。保守策略：保留 UNKNOWN，不臆测",
+          "sensitivity": "**脆弱**：若采用「镜像源优先」则结论翻转"
+        },
+        {
+          "stand_id": "c_moon",
+          "stand_name": "C-MOON",
+          "stat_dim": "PRC",
+          "value_a": "?",
+          "value_b": "A",
+          "source_a": "jojowiki",
+          "source_b": "csv_topology",
+          "conflict_type": "CATEGORY_DIFF",
+          "strategy": "keep_unknown",
+          "final_value": null,
+          "final_raw": "?",
+          "final_category": "UNKNOWN",
+          "confidence": 0.6,
+          "rationale": "主源标注为「未知(?)」，镜像源给了具体值。保守策略：保留 UNKNOWN，不臆测",
+          "sensitivity": "**脆弱**：若采用「镜像源优先」则结论翻转"
+        },
+        {
+          "stand_id": "green_green_grass_of_home",
+          "stand_name": "Green, Green Grass of Home",
+          "stat_dim": "DEV",
+          "value_a": "?",
+          "value_b": "E",
+          "source_a": "jojowiki",
+          "source_b": "csv_topology",
+          "conflict_type": "CATEGORY_DIFF",
+          "strategy": "keep_unknown",
+          "final_value": null,
+          "final_raw": "?",
+          "final_category": "UNKNOWN",
+          "confidence": 0.6,
+          "rationale": "主源标注为「未知(?)」，镜像源给了具体值。保守策略：保留 UNKNOWN，不臆测",
+          "sensitivity": "**脆弱**：若采用「镜像源优先」则结论翻转"
+        },
+        {
+          "stand_id": "green_green_grass_of_home",
+          "stand_name": "Green, Green Grass of Home",
+          "stat_dim": "PRC",
+          "value_a": "?",
+          "value_b": "A",
+          "source_a": "jojowiki",
+          "source_b": "csv_topology",
+          "conflict_type": "CATEGORY_DIFF",
+          "strategy": "keep_unknown",
+          "final_value": null,
+          "final_raw": "?",
+          "final_category": "UNKNOWN",
+          "confidence": 0.6,
+          "rationale": "主源标注为「未知(?)」，镜像源给了具体值。保守策略：保留 UNKNOWN，不臆测",
+          "sensitivity": "**脆弱**：若采用「镜像源优先」则结论翻转"
+        },
+        {
+          "stand_id": "green_green_grass_of_home",
+          "stand_name": "Green, Green Grass of Home",
+          "stat_dim": "PWR",
+          "value_a": "?",
+          "value_b": "None",
+          "source_a": "jojowiki",
+          "source_b": "csv_topology",
+          "conflict_type": "CATEGORY_DIFF",
+          "strategy": "keep_unknown",
+          "final_value": null,
+          "final_raw": "?",
+          "final_category": "UNKNOWN",
+          "confidence": 0.6,
+          "rationale": "主源标注为「未知(?)」，镜像源给了具体值。保守策略：保留 UNKNOWN，不臆测",
+          "sensitivity": "**脆弱**：若采用「镜像源优先」则结论翻转"
+        },
+        {
+          "stand_id": "green_green_grass_of_home",
+          "stand_name": "Green, Green Grass of Home",
+          "stat_dim": "RNG",
+          "value_a": "?",
+          "value_b": "A",
+          "source_a": "jojowiki",
+          "source_b": "csv_topology",
+          "conflict_type": "CATEGORY_DIFF",
+          "strategy": "keep_unknown",
+          "final_value": null,
+          "final_raw": "?",
+          "final_category": "UNKNOWN",
+          "confidence": 0.6,
+          "rationale": "主源标注为「未知(?)」，镜像源给了具体值。保守策略：保留 UNKNOWN，不臆测",
+          "sensitivity": "**脆弱**：若采用「镜像源优先」则结论翻转"
+        },
+        {
+          "stand_id": "green_green_grass_of_home",
+          "stand_name": "Green, Green Grass of Home",
+          "stat_dim": "SPD",
+          "value_a": "?",
+          "value_b": "C",
+          "source_a": "jojowiki",
+          "source_b": "csv_topology",
+          "conflict_type": "CATEGORY_DIFF",
+          "strategy": "keep_unknown",
+          "final_value": null,
+          "final_raw": "?",
+          "final_category": "UNKNOWN",
+          "confidence": 0.6,
+          "rationale": "主源标注为「未知(?)」，镜像源给了具体值。保守策略：保留 UNKNOWN，不臆测",
+          "sensitivity": "**脆弱**：若采用「镜像源优先」则结论翻转"
+        },
+        {
+          "stand_id": "king_crimson",
+          "stand_name": "King Crimson",
+          "stat_dim": "PRC",
+          "value_a": "?",
+          "value_b": "B",
+          "source_a": "jojowiki",
+          "source_b": "csv_topology",
+          "conflict_type": "CATEGORY_DIFF",
+          "strategy": "keep_unknown",
+          "final_value": null,
+          "final_raw": "?",
+          "final_category": "UNKNOWN",
+          "confidence": 0.6,
+          "rationale": "主源标注为「未知(?)」，镜像源给了具体值。保守策略：保留 UNKNOWN，不臆测",
+          "sensitivity": "**脆弱**：若采用「镜像源优先」则结论翻转"
+        },
+        {
+          "stand_id": "purple_haze_distortion",
+          "stand_name": "Purple Haze Distortion",
+          "stat_dim": "DEV",
+          "value_a": "?",
+          "value_b": "A",
+          "source_a": "jojowiki",
+          "source_b": "csv_topology",
+          "conflict_type": "CATEGORY_DIFF",
+          "strategy": "keep_unknown",
+          "final_value": null,
+          "final_raw": "?",
+          "final_category": "UNKNOWN",
+          "confidence": 0.6,
+          "rationale": "主源标注为「未知(?)」，镜像源给了具体值。保守策略：保留 UNKNOWN，不臆测",
+          "sensitivity": "**脆弱**：若采用「镜像源优先」则结论翻转"
+        },
+        {
+          "stand_id": "star_platinum",
+          "stand_name": "Star Platinum",
+          "stat_dim": "DEV",
+          "value_a": "A",
+          "value_b": "※Complete",
+          "source_a": "jojowiki",
+          "source_b": "jojowiki",
+          "conflict_type": "DUPLICATE_IN_SOURCE",
+          "strategy": "split_by_form",
+          "final_value": 5,
+          "final_raw": "A",
+          "final_category": "RANKED",
+          "confidence": 0.95,
+          "rationale": "主源在同一替身下有多次登记，本质是不同形态而非数值冲突",
+          "sensitivity": "稳健：拆形态后不涉及取舍"
+        },
+        {
+          "stand_id": "tusk_act1",
+          "stand_name": "Tusk ACT1",
+          "stat_dim": "RNG",
+          "value_a": "E",
+          "value_b": "D",
+          "source_a": "jojowiki",
+          "source_b": "csv_bogdan",
+          "conflict_type": "VALUE_MISMATCH",
+          "strategy": "prefer_primary",
+          "final_value": 1,
+          "final_raw": "E",
+          "final_category": "RANKED",
+          "confidence": 0.75,
+          "rationale": "镜像源一致但主源不同 → 仍采主源（本策略选择）",
+          "sensitivity": "**脆弱**：镜像源一致，若改用共识策略结论翻转"
+        },
+        {
+          "stand_id": "tusk_act2",
+          "stand_name": "Tusk ACT2",
+          "stat_dim": "RNG",
+          "value_a": "D",
+          "value_b": "B",
+          "source_a": "jojowiki",
+          "source_b": "csv_bogdan",
+          "conflict_type": "VALUE_MISMATCH",
+          "strategy": "prefer_primary",
+          "final_value": 2,
+          "final_raw": "D",
+          "final_category": "RANKED",
+          "confidence": 0.75,
+          "rationale": "镜像源一致但主源不同 → 仍采主源（本策略选择）",
+          "sensitivity": "**脆弱**：镜像源一致，若改用共识策略结论翻转"
+        },
+        {
+          "stand_id": "tusk_act3",
+          "stand_name": "Tusk ACT3",
+          "stat_dim": "RNG",
+          "value_a": "D",
+          "value_b": "B",
+          "source_a": "jojowiki",
+          "source_b": "csv_bogdan",
+          "conflict_type": "VALUE_MISMATCH",
+          "strategy": "prefer_primary",
+          "final_value": 2,
+          "final_raw": "D",
+          "final_category": "RANKED",
+          "confidence": 0.75,
+          "rationale": "镜像源一致但主源不同 → 仍采主源（本策略选择）",
+          "sensitivity": "**脆弱**：镜像源一致，若改用共识策略结论翻转"
+        },
+        {
+          "stand_id": "tusk_act4",
+          "stand_name": "Tusk ACT4",
+          "stat_dim": "RNG",
+          "value_a": "C",
+          "value_b": "A",
+          "source_a": "jojowiki",
+          "source_b": "csv_bogdan",
+          "conflict_type": "VALUE_MISMATCH",
+          "strategy": "prefer_primary",
+          "final_value": 3,
+          "final_raw": "C",
+          "final_category": "RANKED",
+          "confidence": 0.75,
+          "rationale": "镜像源一致但主源不同 → 仍采主源（本策略选择）",
+          "sensitivity": "**脆弱**：镜像源一致，若改用共识策略结论翻转"
+        },
+        {
+          "stand_id": "whitesnake",
+          "stand_name": "Whitesnake",
+          "stat_dim": "DEV",
+          "value_a": "?",
+          "value_b": "E",
+          "source_a": "jojowiki",
+          "source_b": "csv_topology",
+          "conflict_type": "CATEGORY_DIFF",
+          "strategy": "keep_unknown",
+          "final_value": null,
+          "final_raw": "?",
+          "final_category": "UNKNOWN",
+          "confidence": 0.6,
+          "rationale": "主源标注为「未知(?)」，镜像源给了具体值。保守策略：保留 UNKNOWN，不臆测",
+          "sensitivity": "**脆弱**：若采用「镜像源优先」则结论翻转"
+        },
+        {
+          "stand_id": "whitesnake",
+          "stand_name": "Whitesnake",
+          "stat_dim": "PRC",
+          "value_a": "?",
+          "value_b": "C",
+          "source_a": "jojowiki",
+          "source_b": "csv_topology",
+          "conflict_type": "CATEGORY_DIFF",
+          "strategy": "keep_unknown",
+          "final_value": null,
+          "final_raw": "?",
+          "final_category": "UNKNOWN",
+          "confidence": 0.6,
+          "rationale": "主源标注为「未知(?)」，镜像源给了具体值。保守策略：保留 UNKNOWN，不臆测",
+          "sensitivity": "**脆弱**：若采用「镜像源优先」则结论翻转"
+        },
+        {
+          "stand_id": "whitesnake",
+          "stand_name": "Whitesnake",
+          "stat_dim": "PWR",
+          "value_a": "?※Power: Likely A (JoJoveller p.245)",
+          "value_b": "unknown",
+          "source_a": "jojowiki",
+          "source_b": "csv_bogdan",
+          "conflict_type": "MISSING_IN_ONE",
+          "strategy": "keep_unknown",
+          "final_value": null,
+          "final_raw": "?※Power: Likely A (JoJoveller p.245)",
+          "final_category": "CONDITIONAL_NO_BASE",
+          "confidence": 0.85,
+          "rationale": "双方均未提供有效值 → 保留 UNKNOWN",
+          "sensitivity": "稳健：一方明确缺失，无歧义"
+        },
+        {
+          "stand_id": "whitesnake",
+          "stand_name": "Whitesnake",
+          "stat_dim": "RNG",
+          "value_a": "?",
+          "value_b": "B",
+          "source_a": "jojowiki",
+          "source_b": "csv_topology",
+          "conflict_type": "CATEGORY_DIFF",
+          "strategy": "keep_unknown",
+          "final_value": null,
+          "final_raw": "?",
+          "final_category": "UNKNOWN",
+          "confidence": 0.6,
+          "rationale": "主源标注为「未知(?)」，镜像源给了具体值。保守策略：保留 UNKNOWN，不臆测",
+          "sensitivity": "**脆弱**：若采用「镜像源优先」则结论翻转"
+        }
+      ]
+    },
+    "M4 策略（含共识）": {
+      "n": 22,
+      "avg_confidence": 0.7364,
+      "min_confidence": 0.6,
+      "strategy_dist": {
+        "keep_unknown": 15,
+        "prefer_consensus": 5,
+        "prefer_primary": 1,
+        "split_by_form": 1
+      },
+      "n_fragile": 13,
+      "fragile_ratio": 0.5909,
+      "resolutions": [
+        {
+          "stand_id": "baby_face",
+          "stand_name": "Baby Face",
+          "stat_dim": "DEV",
+          "value_a": "※Depending on Education",
+          "value_b": "A",
+          "source_a": "jojowiki",
+          "source_b": "csv_topology",
+          "conflict_type": "MISSING_IN_ONE",
+          "strategy": "keep_unknown",
+          "final_value": null,
+          "final_raw": "※Depending on Education",
+          "final_category": "CONDITIONAL_NO_BASE",
+          "confidence": 0.85,
+          "rationale": "双方均未提供有效值 → 保留 UNKNOWN",
+          "sensitivity": "稳健：一方明确缺失，无歧义"
+        },
+        {
+          "stand_id": "baby_face",
+          "stand_name": "Baby Face",
+          "stat_dim": "PRC",
+          "value_a": "※Depending on Education",
+          "value_b": "E",
+          "source_a": "jojowiki",
+          "source_b": "csv_topology",
+          "conflict_type": "MISSING_IN_ONE",
+          "strategy": "keep_unknown",
+          "final_value": null,
+          "final_raw": "※Depending on Education",
+          "final_category": "CONDITIONAL_NO_BASE",
+          "confidence": 0.85,
+          "rationale": "双方均未提供有效值 → 保留 UNKNOWN",
+          "sensitivity": "稳健：一方明确缺失，无歧义"
+        },
+        {
+          "stand_id": "black_sabbath",
+          "stand_name": "Black Sabbath",
+          "stat_dim": "PWR",
+          "value_a": "E※Restraining Power: A",
+          "value_b": "A",
+          "source_a": "jojowiki",
+          "source_b": "csv_topology",
+          "conflict_type": "CATEGORY_DIFF",
+          "strategy": "prefer_primary",
+          "final_value": 1,
+          "final_raw": "E※Restraining Power: A",
+          "final_category": "CONDITIONAL",
+          "confidence": 0.75,
+          "rationale": "类别不同（E※Restraining Power: A vs A）→ 采主源",
+          "sensitivity": "**脆弱**：类别差异的解释依赖具体语义"
+        },
+        {
+          "stand_id": "boy_ii_man",
+          "stand_name": "Boy II Man",
+          "stat_dim": "RNG",
+          "value_a": "C",
+          "value_b": "B",
+          "source_a": "jojowiki",
+          "source_b": "csv_bogdan",
+          "conflict_type": "VALUE_MISMATCH",
+          "strategy": "prefer_consensus",
+          "final_value": 4,
+          "final_raw": "B",
+          "final_category": "RANKED",
+          "confidence": 0.95,
+          "rationale": "两个镜像源独立给出相同值（B），交叉验证通过，置信度高于单源",
+          "sensitivity": "稳健：三源中两源一致，取多数"
+        },
+        {
+          "stand_id": "c_moon",
+          "stand_name": "C-MOON",
+          "stat_dim": "DEV",
+          "value_a": "?",
+          "value_b": "D",
+          "source_a": "jojowiki",
+          "source_b": "csv_topology",
+          "conflict_type": "CATEGORY_DIFF",
+          "strategy": "keep_unknown",
+          "final_value": null,
+          "final_raw": "?",
+          "final_category": "UNKNOWN",
+          "confidence": 0.6,
+          "rationale": "主源标注为「未知(?)」，镜像源给了具体值。保守策略：保留 UNKNOWN，不臆测",
+          "sensitivity": "**脆弱**：若采用「镜像源优先」则结论翻转"
+        },
+        {
+          "stand_id": "c_moon",
+          "stand_name": "C-MOON",
+          "stat_dim": "PRC",
+          "value_a": "?",
+          "value_b": "A",
+          "source_a": "jojowiki",
+          "source_b": "csv_topology",
+          "conflict_type": "CATEGORY_DIFF",
+          "strategy": "keep_unknown",
+          "final_value": null,
+          "final_raw": "?",
+          "final_category": "UNKNOWN",
+          "confidence": 0.6,
+          "rationale": "主源标注为「未知(?)」，镜像源给了具体值。保守策略：保留 UNKNOWN，不臆测",
+          "sensitivity": "**脆弱**：若采用「镜像源优先」则结论翻转"
+        },
+        {
+          "stand_id": "green_green_grass_of_home",
+          "stand_name": "Green, Green Grass of Home",
+          "stat_dim": "DEV",
+          "value_a": "?",
+          "value_b": "E",
+          "source_a": "jojowiki",
+          "source_b": "csv_topology",
+          "conflict_type": "CATEGORY_DIFF",
+          "strategy": "keep_unknown",
+          "final_value": null,
+          "final_raw": "?",
+          "final_category": "UNKNOWN",
+          "confidence": 0.6,
+          "rationale": "主源标注为「未知(?)」，镜像源给了具体值。保守策略：保留 UNKNOWN，不臆测",
+          "sensitivity": "**脆弱**：若采用「镜像源优先」则结论翻转"
+        },
+        {
+          "stand_id": "green_green_grass_of_home",
+          "stand_name": "Green, Green Grass of Home",
+          "stat_dim": "PRC",
+          "value_a": "?",
+          "value_b": "A",
+          "source_a": "jojowiki",
+          "source_b": "csv_topology",
+          "conflict_type": "CATEGORY_DIFF",
+          "strategy": "keep_unknown",
+          "final_value": null,
+          "final_raw": "?",
+          "final_category": "UNKNOWN",
+          "confidence": 0.6,
+          "rationale": "主源标注为「未知(?)」，镜像源给了具体值。保守策略：保留 UNKNOWN，不臆测",
+          "sensitivity": "**脆弱**：若采用「镜像源优先」则结论翻转"
+        },
+        {
+          "stand_id": "green_green_grass_of_home",
+          "stand_name": "Green, Green Grass of Home",
+          "stat_dim": "PWR",
+          "value_a": "?",
+          "value_b": "None",
+          "source_a": "jojowiki",
+          "source_b": "csv_topology",
+          "conflict_type": "CATEGORY_DIFF",
+          "strategy": "keep_unknown",
+          "final_value": null,
+          "final_raw": "?",
+          "final_category": "UNKNOWN",
+          "confidence": 0.6,
+          "rationale": "主源标注为「未知(?)」，镜像源给了具体值。保守策略：保留 UNKNOWN，不臆测",
+          "sensitivity": "**脆弱**：若采用「镜像源优先」则结论翻转"
+        },
+        {
+          "stand_id": "green_green_grass_of_home",
+          "stand_name": "Green, Green Grass of Home",
+          "stat_dim": "RNG",
+          "value_a": "?",
+          "value_b": "A",
+          "source_a": "jojowiki",
+          "source_b": "csv_topology",
+          "conflict_type": "CATEGORY_DIFF",
+          "strategy": "keep_unknown",
+          "final_value": null,
+          "final_raw": "?",
+          "final_category": "UNKNOWN",
+          "confidence": 0.6,
+          "rationale": "主源标注为「未知(?)」，镜像源给了具体值。保守策略：保留 UNKNOWN，不臆测",
+          "sensitivity": "**脆弱**：若采用「镜像源优先」则结论翻转"
+        },
+        {
+          "stand_id": "green_green_grass_of_home",
+          "stand_name": "Green, Green Grass of Home",
+          "stat_dim": "SPD",
+          "value_a": "?",
+          "value_b": "C",
+          "source_a": "jojowiki",
+          "source_b": "csv_topology",
+          "conflict_type": "CATEGORY_DIFF",
+          "strategy": "keep_unknown",
+          "final_value": null,
+          "final_raw": "?",
+          "final_category": "UNKNOWN",
+          "confidence": 0.6,
+          "rationale": "主源标注为「未知(?)」，镜像源给了具体值。保守策略：保留 UNKNOWN，不臆测",
+          "sensitivity": "**脆弱**：若采用「镜像源优先」则结论翻转"
+        },
+        {
+          "stand_id": "king_crimson",
+          "stand_name": "King Crimson",
+          "stat_dim": "PRC",
+          "value_a": "?",
+          "value_b": "B",
+          "source_a": "jojowiki",
+          "source_b": "csv_topology",
+          "conflict_type": "CATEGORY_DIFF",
+          "strategy": "keep_unknown",
+          "final_value": null,
+          "final_raw": "?",
+          "final_category": "UNKNOWN",
+          "confidence": 0.6,
+          "rationale": "主源标注为「未知(?)」，镜像源给了具体值。保守策略：保留 UNKNOWN，不臆测",
+          "sensitivity": "**脆弱**：若采用「镜像源优先」则结论翻转"
+        },
+        {
+          "stand_id": "purple_haze_distortion",
+          "stand_name": "Purple Haze Distortion",
+          "stat_dim": "DEV",
+          "value_a": "?",
+          "value_b": "A",
+          "source_a": "jojowiki",
+          "source_b": "csv_topology",
+          "conflict_type": "CATEGORY_DIFF",
+          "strategy": "keep_unknown",
+          "final_value": null,
+          "final_raw": "?",
+          "final_category": "UNKNOWN",
+          "confidence": 0.6,
+          "rationale": "主源标注为「未知(?)」，镜像源给了具体值。保守策略：保留 UNKNOWN，不臆测",
+          "sensitivity": "**脆弱**：若采用「镜像源优先」则结论翻转"
+        },
+        {
+          "stand_id": "star_platinum",
+          "stand_name": "Star Platinum",
+          "stat_dim": "DEV",
+          "value_a": "A",
+          "value_b": "※Complete",
+          "source_a": "jojowiki",
+          "source_b": "jojowiki",
+          "conflict_type": "DUPLICATE_IN_SOURCE",
+          "strategy": "split_by_form",
+          "final_value": 5,
+          "final_raw": "A",
+          "final_category": "RANKED",
+          "confidence": 0.95,
+          "rationale": "主源在同一替身下有多次登记，本质是不同形态而非数值冲突",
+          "sensitivity": "稳健：拆形态后不涉及取舍"
+        },
+        {
+          "stand_id": "tusk_act1",
+          "stand_name": "Tusk ACT1",
+          "stat_dim": "RNG",
+          "value_a": "E",
+          "value_b": "D",
+          "source_a": "jojowiki",
+          "source_b": "csv_bogdan",
+          "conflict_type": "VALUE_MISMATCH",
+          "strategy": "prefer_consensus",
+          "final_value": 2,
+          "final_raw": "D",
+          "final_category": "RANKED",
+          "confidence": 0.95,
+          "rationale": "两个镜像源独立给出相同值（D），交叉验证通过，置信度高于单源",
+          "sensitivity": "稳健：三源中两源一致，取多数"
+        },
+        {
+          "stand_id": "tusk_act2",
+          "stand_name": "Tusk ACT2",
+          "stat_dim": "RNG",
+          "value_a": "D",
+          "value_b": "B",
+          "source_a": "jojowiki",
+          "source_b": "csv_bogdan",
+          "conflict_type": "VALUE_MISMATCH",
+          "strategy": "prefer_consensus",
+          "final_value": 4,
+          "final_raw": "B",
+          "final_category": "RANKED",
+          "confidence": 0.95,
+          "rationale": "两个镜像源独立给出相同值（B），交叉验证通过，置信度高于单源",
+          "sensitivity": "稳健：三源中两源一致，取多数"
+        },
+        {
+          "stand_id": "tusk_act3",
+          "stand_name": "Tusk ACT3",
+          "stat_dim": "RNG",
+          "value_a": "D",
+          "value_b": "B",
+          "source_a": "jojowiki",
+          "source_b": "csv_bogdan",
+          "conflict_type": "VALUE_MISMATCH",
+          "strategy": "prefer_consensus",
+          "final_value": 4,
+          "final_raw": "B",
+          "final_category": "RANKED",
+          "confidence": 0.95,
+          "rationale": "两个镜像源独立给出相同值（B），交叉验证通过，置信度高于单源",
+          "sensitivity": "稳健：三源中两源一致，取多数"
+        },
+        {
+          "stand_id": "tusk_act4",
+          "stand_name": "Tusk ACT4",
+          "stat_dim": "RNG",
+          "value_a": "C",
+          "value_b": "A",
+          "source_a": "jojowiki",
+          "source_b": "csv_bogdan",
+          "conflict_type": "VALUE_MISMATCH",
+          "strategy": "prefer_consensus",
+          "final_value": 5,
+          "final_raw": "A",
+          "final_category": "RANKED",
+          "confidence": 0.95,
+          "rationale": "两个镜像源独立给出相同值（A），交叉验证通过，置信度高于单源",
+          "sensitivity": "稳健：三源中两源一致，取多数"
+        },
+        {
+          "stand_id": "whitesnake",
+          "stand_name": "Whitesnake",
+          "stat_dim": "DEV",
+          "value_a": "?",
+          "value_b": "E",
+          "source_a": "jojowiki",
+          "source_b": "csv_topology",
+          "conflict_type": "CATEGORY_DIFF",
+          "strategy": "keep_unknown",
+          "final_value": null,
+          "final_raw": "?",
+          "final_category": "UNKNOWN",
+          "confidence": 0.6,
+          "rationale": "主源标注为「未知(?)」，镜像源给了具体值。保守策略：保留 UNKNOWN，不臆测",
+          "sensitivity": "**脆弱**：若采用「镜像源优先」则结论翻转"
+        },
+        {
+          "stand_id": "whitesnake",
+          "stand_name": "Whitesnake",
+          "stat_dim": "PRC",
+          "value_a": "?",
+          "value_b": "C",
+          "source_a": "jojowiki",
+          "source_b": "csv_topology",
+          "conflict_type": "CATEGORY_DIFF",
+          "strategy": "keep_unknown",
+          "final_value": null,
+          "final_raw": "?",
+          "final_category": "UNKNOWN",
+          "confidence": 0.6,
+          "rationale": "主源标注为「未知(?)」，镜像源给了具体值。保守策略：保留 UNKNOWN，不臆测",
+          "sensitivity": "**脆弱**：若采用「镜像源优先」则结论翻转"
+        },
+        {
+          "stand_id": "whitesnake",
+          "stand_name": "Whitesnake",
+          "stat_dim": "PWR",
+          "value_a": "?※Power: Likely A (JoJoveller p.245)",
+          "value_b": "unknown",
+          "source_a": "jojowiki",
+          "source_b": "csv_bogdan",
+          "conflict_type": "MISSING_IN_ONE",
+          "strategy": "keep_unknown",
+          "final_value": null,
+          "final_raw": "?※Power: Likely A (JoJoveller p.245)",
+          "final_category": "CONDITIONAL_NO_BASE",
+          "confidence": 0.85,
+          "rationale": "双方均未提供有效值 → 保留 UNKNOWN",
+          "sensitivity": "稳健：一方明确缺失，无歧义"
+        },
+        {
+          "stand_id": "whitesnake",
+          "stand_name": "Whitesnake",
+          "stat_dim": "RNG",
+          "value_a": "?",
+          "value_b": "B",
+          "source_a": "jojowiki",
+          "source_b": "csv_topology",
+          "conflict_type": "CATEGORY_DIFF",
+          "strategy": "keep_unknown",
+          "final_value": null,
+          "final_raw": "?",
+          "final_category": "UNKNOWN",
+          "confidence": 0.6,
+          "rationale": "主源标注为「未知(?)」，镜像源给了具体值。保守策略：保留 UNKNOWN，不臆测",
+          "sensitivity": "**脆弱**：若采用「镜像源优先」则结论翻转"
+        }
+      ]
+    }
+  }
+}

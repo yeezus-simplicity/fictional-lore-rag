@@ -25,7 +25,7 @@ import argparse
 import json
 import sys
 import time
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Callable, Optional
 
@@ -57,7 +57,9 @@ class Retriever:
     rrf_k: int = 60
     top_k: int = 20
     rerank: bool = False
-    rerank_top: int = 50
+    rerank_candidates: int = 50
+    reranker: Optional[object] = None
+    chunk_map: Optional[dict] = field(default=None, repr=False)
 
     def search(self, query: str, top_k: int = 20,
                boost_stand: Optional[str] = None
@@ -71,20 +73,37 @@ class Retriever:
         if self.vec is not None and self.embedder is not None:
             qv = self.embedder.encode([query])[0]
             vhits = self.vec.search(qv, top_k=max(k * 2, 20))
-            if boost_stand:
+            if boost_stand and self.chunk2stand:
                 # 替身名精确匹配加权
-                chunk2stand = getattr(self, "chunk2stand", {})
+                boosted = []
                 for cid, sc in vhits:
-                    if chunk2stand.get(cid) == boost_stand:
+                    if self.chunk2stand.get(cid) == boost_stand:
                         sc += 0.35
-                vhits.sort(key=lambda x: -x[1])
+                    boosted.append((cid, sc))
+                boosted.sort(key=lambda x: -x[1])
+                vhits = boosted
             rankings.append(vhits)
 
         if not rankings:
             return []
         if len(rankings) == 1 or self.fusion == "none":
-            return rankings[0][:k]
-        return rrf_fuse(rankings, k=self.rrf_k, top_k=k)[:k]
+            fused = rankings[0][:k]
+        else:
+            fused = rrf_fuse(rankings, k=self.rrf_k, top_k=k)[:k]
+
+        # ---------- 重排阶段 ----------
+        if self.rerank and self.reranker is not None and self.reranker.model:
+            # 候选集取Top-N（N > k 才能体现重排价值）
+            cand_n = max(self.rerank_candidates, k)
+            if len(fused) > k or self.rerank_candidates > k:
+                pool = fused[:cand_n]
+                docs = [self.chunk_map.get(cid, {}).get("content", "")
+                        for cid, _ in pool]
+                pairs = [(cid, d) for (cid, _), d in zip(pool, docs)]
+                fused = self.reranker.rerank(query, pairs, top_k=k)
+        return fused
+
+    chunk2stand: dict = field(default_factory=dict, repr=False)
 
 
 # ==================================================================
@@ -95,7 +114,13 @@ def evaluate_retriever(items, corpus, retriever: Retriever) -> dict:
     """在评测集上跑一个检索器，返回检索层指标 + 延迟。"""
     cases: list[RetrievalCase] = []
     chunk2stand = {c["chunk_id"]: c["stand_id"] for c in corpus.chunks}
+    chunk_map = {c["chunk_id"]: c for c in corpus.chunks}
     retriever.chunk2stand = chunk2stand
+    retriever.chunk_map = chunk_map
+
+    # 预热：首次调用含 CUDA 初始化，避免污染延迟统计
+    if retriever.embedder is not None or retriever.reranker is not None:
+        retriever.search("warmup query", top_k=20)
 
     t0 = time.time()
     for it in items:
@@ -127,6 +152,7 @@ def evaluate_retriever(items, corpus, retriever: Retriever) -> dict:
         "fusion": retriever.fusion if len([r for r in (retriever.bm25, retriever.vec) if r]) > 1 else "single",
         "rrf_k": retriever.rrf_k,
         "rerank": retriever.rerank,
+        "rerank_candidates": retriever.rerank_candidates if retriever.rerank else None,
     }
     return out
 
@@ -160,6 +186,174 @@ def build_embedder():
         return None
     print(f"  embedder: {emb.backend} | {emb.device} | dim={emb.dim}")
     return emb
+
+
+def exp_d1(items, corpus) -> list[dict]:
+    """D1 切块策略：语义切块 vs 固定长度切块。
+
+    ★ 难点：评测集的 gold chunk_id 按语义切块生成，换切块后 gold 失效。
+      解法：用 chunking.ViewCorpus 的溯源映射，把 gold 语义块 id
+      翻译成「包含它的 view_id 集合」，命中任一即算召回。
+    """
+    print("\n" + "-" * 60)
+    print("D1 切块策略对照（语义 vs 固定长度）")
+    print("-" * 60)
+    from chunking import build_views, ViewCorpus
+    from lexical import BM25Index as _BM25
+
+    results = []
+    for strategy in ("semantic", "fixed"):
+        views = build_views(strategy, corpus.chunks)
+        vc = ViewCorpus(views)
+        # doc_ids 用 view_id 而非整数，让 BM25Index 直接返回可溯源的 id
+        bm = _BM25(docs=vc.docs, doc_ids=[v.view_id for v in views])
+        r = _eval_with_view(items, vc, bm)
+        r["config"]["name"] = f"D1-{strategy} ({len(views)} 块)"
+        r["config"]["n_views"] = len(views)
+        results.append(r)
+    return results
+
+
+def _eval_with_view(items, vc, bm25_index) -> dict:
+    """在切块视图上评测。
+
+    ★★ 关键：跨切块策略的公平比较（M3 实测踩坑后修正）
+
+    原始做法有个陷阱：
+      gold 是「语义块 id」。fixed 切块会把 1 个语义块拆进约 2 个 view，
+      若按「命中任一 view 即算召回」判分，等于**给 fixed 放宽了标准**
+      （gold 从 1 个候选变成 1.96 个候选）→ 得出「fixed 更好 3 倍」的错误结论。
+
+    正确做法：用**溯源覆盖率 src_coverage@k** 作为唯一可比指标：
+
+        对每个 gold 语义块 g：
+          coverage(g) = |检索命中的 view 中属于 g 的字符数| / |g 的字符数|
+
+      语义切块下 g 只对应 1 个 view（覆盖 0 或 1）；
+      固定切块下 g 对应多个 view（可部分覆盖）。
+      两者量纲一致，可直接比较。
+    """
+    # 精确构造：语义块 -> {view_id: 该view内属于此块的字符数}
+    owner_span: dict[int, dict[str, int]] = {}
+    for v in vc.views:
+        per_src: dict[int, int] = {}
+        for sid in v.src_chunk_ids:
+            per_src[sid] = per_src.get(sid, 0) + len(v.content) // max(len(v.src_chunk_ids), 1)
+        for sid, span in per_src.items():
+            owner_span.setdefault(sid, {})[v.view_id] = span
+    src_total = {sid: sum(spans.values()) or 1 for sid, spans in owner_span.items()}
+
+    cases = []
+    coverages: list[float] = []
+    full_rates: list[float] = []
+    for it in items:
+        gold_chunks = list(it.get("evidence", {}).get("chunks") or [])
+        if not gold_chunks:
+            continue
+        gold_stands = list((it.get("evidence", {}).get("struct") or {}).keys())
+
+        ranked = bm25_index.search(it["question"], top_k=20)
+        retrieved = [vid for vid, _ in ranked]
+        retrieved_set = set(retrieved)
+
+        covs = []
+        for sid in gold_chunks:
+            spans = owner_span.get(sid, {})
+            if not spans:
+                covs.append(0.0)
+                continue
+            hit = sum(sp for vid, sp in spans.items() if vid in retrieved_set)
+            covs.append(min(hit / src_total[sid], 1.0))
+        avg_cov = sum(covs) / len(covs) if covs else 0.0
+        coverages.append(avg_cov)
+        full_rates.append(1.0 if avg_cov >= 0.999 else 0.0)
+
+        # gold 视角：覆盖率达标才算召回（与 recall@K 语义对齐）
+        gold_hit = [f"g{sid}" for sid, c in zip(gold_chunks, covs) if c >= 0.999]
+        all_gold = [f"g{sid}" for sid in gold_chunks]
+
+        view2stand = {v.view_id: v.stand_id for v in vc.views}
+        retrieved_stands: list[str] = []
+        for vid in retrieved:
+            st = view2stand.get(vid)
+            if st and st not in retrieved_stands:
+                retrieved_stands.append(st)
+
+        cases.append(RetrievalCase(
+            qid=it["qid"], gold_ids=all_gold, retrieved=gold_hit,
+            gold_stands=gold_stands, retrieved_stands=retrieved_stands,
+        ))
+
+    out = eval_retrieval(cases)
+    out["src_coverage@5"] = (round(sum(coverages) / len(coverages), 4)
+                             if coverages else float("nan"))
+    out["full_coverage_rate"] = (round(sum(full_rates) / len(full_rates), 4)
+                                 if full_rates else 0.0)
+    out["elapsed_sec"] = 0.0
+    out["qps"] = 0.0
+    out["avg_latency_ms"] = 0.0
+    return {"n_cases": out.get("n_cases", 0), "config": {}, **out}
+
+
+def exp_d3(items, corpus) -> list[dict]:
+    """D3 重排：候选深度扫描。★ 预期质量提升最大的实验"""
+    print("\n" + "-" * 60)
+    print("D3 交叉编码器重排（候选深度扫描）")
+    print("-" * 60)
+
+    # 基线：M3-c 的最优组合（无重排）
+    bm25 = BM25Index(docs=corpus.chunks,
+                      doc_ids=[c["chunk_id"] for c in corpus.chunks],
+                      k1=1.2, b=0.5)
+    emb = build_embedder()
+    if emb is None:
+        return []
+    vec = build_dense(corpus)
+    if vec is None:
+        return []
+
+    results = []
+    results.append(evaluate_retriever(
+        items, corpus,
+        Retriever(name="D3-0 无重排（基线）", bm25=bm25, vec=vec,
+                   embedder=emb, fusion="rrf", rrf_k=30)))
+
+    rr = build_reranker()
+    if rr is None:
+        print("  !! reranker 不可用，D3 只产出基线")
+        return results
+
+    # 候选深度扫描
+    for cand in (20, 50, 100):
+        results.append(evaluate_retriever(
+            items, corpus,
+            Retriever(name=f"D3-{cand} 重排 Top-{cand}", bm25=bm25, vec=vec,
+                       embedder=emb, fusion="rrf", rrf_k=30,
+                       rerank=True, rerank_candidates=cand, reranker=rr)))
+
+    # 消融：仅 BM25 + 重排（去掉向量路）
+    results.append(evaluate_retriever(
+        items, corpus,
+        Retriever(name="D3-50 仅BM25+重排（消融向量路）", bm25=bm25,
+                   rerank=True, rerank_candidates=50, reranker=rr)))
+
+    # 消融：仅向量 + 重排（去掉 BM25 路）
+    results.append(evaluate_retriever(
+        items, corpus,
+        Retriever(name="D3-50 仅向量+重排（消融 BM25 路）", vec=vec,
+                   embedder=emb, rerank=True, rerank_candidates=50,
+                   reranker=rr)))
+    return results
+
+
+def build_reranker():
+    from rerank import CrossEncoderReranker
+    rr = CrossEncoderReranker()
+    if rr.model is None:
+        print(f"  reranker 不可用：{rr._error}")
+        return None
+    print(f"  reranker: {rr.model_path} | {rr.device} | max_len={rr.max_len}")
+    return rr
 
 
 def exp_d2(items, corpus) -> list[dict]:
@@ -252,7 +446,9 @@ def main() -> int:
 
     experiments: dict[str, list] = {}
     plans = [
+        ("D1", exp_d1),
         ("D2", exp_d2),
+        ("D3", exp_d3),
         ("D4", exp_d4),
         ("BM25PARAM", exp_bm25_params),
     ]

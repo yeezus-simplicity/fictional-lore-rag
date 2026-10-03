@@ -31,15 +31,24 @@ ENDPOINTS = [
 UA = "Mozilla/5.0 (research; educational; rag-kb project)"
 
 # 常见模型文件清单（按需下载，避免拉取不必要的大文件）
-# ★ 实测：BAAI/bge-m3 仓库**没有** model.safetensors，只有 pytorch_model.bin。
-#   不要假设 safetensors 是通用格式——必须先查仓库实际文件列表。
+# ★ 实测教训：权重文件名**不通用**，必须先查仓库实际文件列表：
+#     curl -sSL "https://hf-mirror.com/api/models/<repo>" | python -c "..."
+#   - BAAI/bge-m3            →只有 pytorch_model.bin（无 safetensors）
+#   - BAAI/bge-reranker-v2-m3 → 有 model.safetensors
+#   因此下面同时列出两者，谁成功用谁。
 FILE_SETS = {
+    # 通用句向量模型（bge-m3）
     "sentence-transformers": [
         "config.json", "tokenizer.json", "tokenizer_config.json",
         "special_tokens_map.json", "modules.json",
         "sentence_bert_config.json", "1_Pooling/config.json",
-        #权重二选一：safetensors 优先，否则回退 pytorch_model.bin
         "model.safetensors", "pytorch_model.bin",
+    ],
+    # CrossEncoder 重排模型（bge-reranker-v2-m3）：XLM-R 架构，无需 ST 包装
+    "crossencoder": [
+        "config.json", "tokenizer.json", "tokenizer_config.json",
+        "special_tokens_map.json", "model.safetensors",
+        "sentencepiece.bpe.model",
     ],
     "weights_only": [
         "config.json", "tokenizer.json", "tokenizer_config.json",
@@ -63,10 +72,18 @@ def pick_endpoint() -> str:
 def download_file(repo: str, filename: str, dest: Path,
                    endpoint: str, retries: int = 3,
                    timeout: int = 180) -> bool:
-    """下载单文件，手动跟随 302。
+    """下载单文件。
 
-    ★ 大文件（权重）需要长 timeout：2.3GB 在慢速网络下可能十几分钟。
+    ★ 大文件（>50MB）优先走 curl：
+      - 支持断点续传（-C -），慢速网络下失败可续
+      - 实测 urllib 在 2.27GB 上可能 20 分钟无进展，curl 更稳
     """
+    if dest.exists() and dest.stat().st_size > 0:
+        # 断点续传：curl -C - 会接着已有的部分下
+        if dest.stat().st_size > 50 * 1024 * 1024:
+            return _download_curl(repo, filename, dest, endpoint)
+        return True
+
     url = f"{endpoint}/{repo}/resolve/main/{filename}"
     dest.parent.mkdir(parents=True, exist_ok=True)
     for attempt in range(1, retries + 1):
@@ -90,6 +107,31 @@ def download_file(repo: str, filename: str, dest: Path,
                 return False
         time.sleep(1.5 * attempt)
     return False
+
+
+def _download_curl(repo: str, filename: str, dest: Path,
+                   endpoint: str, max_seconds: int = 3000) -> bool:
+    """用 curl 下载大文件（支持断点续传）。"""
+    import subprocess
+    url = f"{endpoint}/{repo}/resolve/main/{filename}"
+    try:
+        r = subprocess.run(
+            ["curl", "-sSL", "-C", "-", "-o", str(dest),
+             "--max-time", str(max_seconds), url],
+            capture_output=True, text=True, timeout=max_seconds + 60,
+        )
+        if dest.exists() and dest.stat().st_size > 0:
+            return True
+        print(f"    [curl FAIL] {filename}: rc={r.returncode} {r.stderr[:100]}")
+        return False
+    except subprocess.TimeoutExpired:
+        # 超时但已下部分 → 保留，下次会续传
+        if dest.exists() and dest.stat().st_size > 0:
+            print(f"    [curl PARTIAL] {filename} "
+                  f"{dest.stat().st_size/1024/1024:.0f}MB（可续传）")
+        return False
+    except FileNotFoundError:
+        return False               # 没有 curl，退回 urllib
 
 
 def fetch_model(repo: str, outdir: Path, file_set: str = "sentence-transformers",

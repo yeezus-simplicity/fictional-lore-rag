@@ -1,0 +1,74 @@
+# rag-kb 数据库编排
+#
+# 启动：
+#   docker compose up -d postgres        # 只起数据库
+#   docker compose up -d                 # 起全部（含向量库服务）
+#   docker compose ps                    # 看状态
+#   docker compose logs -f postgres      # 看日志
+#   docker compose down                  # 停止（保留数据）
+#   docker compose down -v# 停止并删除数据（谨慎）
+#
+# ★ 前置条件：Docker Desktop 必须已启动
+#   Windows 侧需先启动 Docker Desktop（本项目不自动启动，原因见 docs/环境说明.md）
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: ragkb-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ragkb
+      POSTGRES_USER: ragkb
+      POSTGRES_PASSWORD: ragkb
+      # 中文排序与大小写不敏感检索
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=C"
+      TZ: Asia/Shanghai
+    ports:
+      # 宿主机端口可改（若 5432 被占用改成 5433，同时改 .env 的 PGPORT）
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      # 首次启动自动执行（按文件名顺序）
+      - ./init:/docker-entrypoint-initdb.d:ro
+    command:
+      - postgres
+      - -c
+      - shared_preload_libraries=pg_stat_statements
+      - -c
+      - max_connections=50
+      - -c
+      - work_mem=8MB
+      - -c
+      - shared_buffers=256MB
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ragkb -d ragkb"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 20s
+
+  # 初始化脚本会被 psql 自动执行。
+  # 说明：load_db.py 才是真正的主路径，这里只做扩展与基础设置。
+  # 原因：schema 由 Python 侧执行更容易做幂等控制与错误报告。
+  init:
+    image: pgvector/pgvector:pg16
+    container_name: ragkb-init
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      PGPASSWORD: ragkb
+    volumes:
+      - ./init:/init:ro
+    entrypoint: >
+      bash -c "
+        echo '=== 安装扩展 ===';
+        psql -h postgres -U ragkb -d ragkb -c 'CREATE EXTENSION IF NOT EXISTS vector;' || echo 'pgvector 安装失败（可选）';
+        psql -h postgres -U ragkb -d ragkb -c 'CREATE EXTENSION IF NOT EXISTS pg_trgm;' || echo 'pg_trgm 安装失败';
+        echo '=== 完成，请运行 python database/load_db.py --init --load ===';
+      "
+    restart: "no"
+
+volumes:
+  pgdata:
+    name: ragkb-pgdata

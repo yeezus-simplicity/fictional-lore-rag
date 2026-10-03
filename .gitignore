@@ -46,3 +46,8 @@ Thumbs.db
 
 # ---- 模型权重（体积大，用 retrieval/fetch_model.py 重下）----
 models/
+
+# ---- 数据库 ----
+docker/.env
+*.sqlite
+*.db

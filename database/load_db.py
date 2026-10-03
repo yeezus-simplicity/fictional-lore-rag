@@ -36,6 +36,7 @@ import os
 import re
 import sys
 import time
+from collections import defaultdict
 from pathlib import Path
 from typing import Any, Optional
 
@@ -60,6 +61,7 @@ PG = {
 def connect(dbname: Optional[str] = None):
     """建立连接。失败时给出可操作的排查提示。"""
     import psycopg2
+    _register_array_adapters()
     params = {**PG, "dbname": dbname or PG["dbname"]}
     try:
         conn = psycopg2.connect(**params)
@@ -69,15 +71,77 @@ def connect(dbname: Optional[str] = None):
         msg = str(e).strip()
         print(f"\n连接失败：{msg}\n", file=sys.stderr)
         print("排查清单：", file=sys.stderr)
-        print("  1. Docker 是否已启动？（本项目用 docker compose 起库）",
-              file=sys.stderr)
-        print("     cd docker && docker compose up -d postgres",
+        print("  1. Docker 是否已启动？"
+              "     cd docker && docker compose up -d postgres",
               file=sys.stderr)
         print("  2. 容器是否健康？docker compose ps", file=sys.stderr)
         print("  3. 端口是否被占用？netstat -ano | findstr 5432",
               file=sys.stderr)
         print(f"  4. 当前参数：{params}", file=sys.stderr)
         raise SystemExit(1) from e
+
+
+_ADAPTERS_READY = False
+
+
+def _register_array_adapters() -> None:
+    """注册 list → Postgres 数组的适配器。
+
+    ★ 实测踩坑：直接传 Python list 给TEXT[] 列会报
+      `malformed array literal: "anubis"` ——必须包成 '{a,b}' 格式。
+      psycopg2 默认不会自动做这个转换，需注册 adapter。
+    """
+    global _ADAPTERS_READY
+    if _ADAPTERS_READY:
+        return
+    import psycopg2
+    from psycopg2.extensions import AsIs
+
+    def _list_to_array(value, conn=None):
+        """把 list[str] 渲染成 Postgres 数组字面量。
+
+        ★ 三个坑（都是实测踩的）：
+          1. psycopg2 调用 adapter 时传 (value, conn)，
+             但直接 adapt() 测试时只传 value → conn 给默认值
+          2. 返回普通 str 会被 psycopg2 当作「已完成引号化的结果」，
+             再次调用 .getquoted() 而报错 → 必须用 AsIs 包装
+          3. **AsIs 会原样输出**，所以只能用于「数组出现在值的位置」，
+             不能用于 `SELECT %s` 这类需要整体引号化的占位符
+             （否则会生成 `SELECT {...}::text[]` 这种语法错误）
+        """
+        if value is None:
+            return None
+        items = []
+        for v in value:
+            s = str(v).replace("\\", "\\\\").replace('"', '\\"')
+            items.append(f'"{s}"')
+        return AsIs("{" + ",".join(items) + "}")
+
+    psycopg2.extensions.register_adapter(list, _list_to_array)
+    psycopg2.extensions.register_adapter(tuple, _list_to_array)
+    _ADAPTERS_READY = True
+
+
+def _q(v) -> str:
+    """把值渲染为 SQL 字符串字面量（NULL → NULL）。"""
+    if v is None:
+        return "NULL"
+    return "'" + str(v).replace("'", "''") + "'"
+
+
+def array_literal(values: list[str]) -> str:
+    """生成可直接嵌入 SQL 的数组字面量（不走占位符）。
+
+    用于 `WHERE stand_id = ANY(%s)` 这类场景 ——
+    占位符会把整个数组当字符串加引号，导致语法错误。
+    """
+    if values is None:
+        return "NULL"
+    items = []
+    for v in values:
+        s = str(v).replace("'", "''")
+        items.append(f"'{s}'")
+    return "ARRAY[" + ",".join(items) + "]" if items else "ARRAY[]::text[]"
 
 
 # ==================================================================
@@ -276,29 +340,66 @@ def load_data() -> bool:
                 }
             owner_map[cid]["stand_ids"].append(s["stand_id"])
 
-    char_rows = [(
-        c["character_id"], c["name_en"], c["name_ja"], c["part"],
-        ", ".join(c["stand_ids"]),
-    ) for c in owner_map.values()]
-
-    if char_rows:
-        cur.executemany("""
+    #★ TEXT[] 列不能用占位符传list（psycopg2 会当字符串加引号 → 语法错误），
+    #   必须把数组字面量直接拼进 SQL
+    char_values = []
+    for c in owner_map.values():
+        arr = array_literal(c["stand_ids"])
+        char_values.append(
+            f"({_q(c['character_id'])}, {_q(c['name_en'])}, {_q(c['name_ja'])}, "
+            f"{c['part'] if c['part'] is not None else 'NULL'}, {arr})"
+        )
+    if char_values:
+        cur.execute(f"""
             INSERT INTO characters
                 (character_id, name_en, name_ja, part, stand_ids)
-            VALUES (%s, %s, %s, %s, %s)
+            VALUES {", ".join(char_values)}
             ON CONFLICT (character_id) DO UPDATE SET
                 name_en  = EXCLUDED.name_en,
                 name_ja  = EXCLUDED.name_ja,
                 part     = EXCLUDED.part,
                 stand_ids= EXCLUDED.stand_ids
-        """, char_rows)
+        """)
     n_with_part = sum(1 for c in owner_map.values() if c["part"] is not None)
-    print(f"  {len(char_rows)} 个角色（{n_with_part} 有部信息）")
+    print(f"  {len(owner_map)} 个角色（{n_with_part} 有部信息）")
     if multi_owner_stands:
         print(f"  注：{multi_owner_stands} 个替身有多个持有者，已拆分为多条角色")
 
     # ---------- stands ----------
     print("\n[2/7] stands")
+
+    # ★★ M1遗留问题：形态组未完全消解
+    #   stands.json 里 echoes_act1/act2/act3 是同一替身 Echoes 的三个形态，
+    #   但被当成独立替身登记（form_count=0、form_chain 为空）；
+    #   而 text_chunks 的 stand_id 来自渲染层的 h1（='Echoes'），挂在外键上。
+    #   → 必须补一条聚合父记录，否则外键约束失败。
+    #   （这正是 M1 报告里「主表同名多行 = 形态未消解」的延续）
+    agg_groups: dict[str, list[str]] = defaultdict(list)
+    for s in stands:
+        sid = s["stand_id"]
+        m = re.match(r"^(echoes|tusk)_(act\d+)$", sid)
+        if m:
+            agg_groups[m.group(1)].append(sid)
+
+    agg_records: list[dict] = []
+    for agg_id, member_ids in agg_groups.items():
+        members = [x for x in stands if x["stand_id"] in member_ids]
+        agg_records.append({
+            "stand_id": agg_id,
+            "name_en": agg_id.capitalize(),
+            "part": members[0].get("part"),
+            "part_name_en": members[0].get("part_name_en"),
+            "stand_type": "Aggregate (form group)",
+            "form_count": len(member_ids),
+            "member_ids": member_ids,
+            "detail_url": members[0].get("detail_url"),
+        })
+    if agg_records:
+        print(f"  补建{len(agg_records)} 个聚合父替身"
+              f"（形态组未消解的遗留）：")
+        for a in agg_records:
+            print(f"    {a['stand_id']:10s} ← {a['member_ids']}")
+
     # 关联 owner_id：owner_name 可能含多角色，取第一个作为主持有者
     # （★ 完整的多持有者关系存在 characters.stand_ids 里）
     name2cid: dict[str, str] = {}
@@ -318,6 +419,16 @@ def load_data() -> bool:
             s.get("form_count", 1), s.get("main_table_registrations", 1),
             s.get("detail_url"), s.get("owner_name"),
         ))
+    # 聚合父记录（owner_id 留空，形态成员各有持有者）
+    for a in agg_records:
+        stand_rows.append((
+            a["stand_id"], a["name_en"], None,
+            None, a["part"], a["part_name_en"],
+            a["stand_type"], None, None, None,
+            a["form_count"], len(a["member_ids"]),
+            a["detail_url"], None,
+        ))
+
     cur.executemany("""
         INSERT INTO stands
             (stand_id, name_en, name_ja, owner_id, part, part_name_en,
@@ -382,29 +493,90 @@ def load_data() -> bool:
     print(f"  {len(stat_rows)} 行六维数值")
     conn.commit()
 
+    #聚合父替身没有六维数据（其成员形态各有数值），
+    #   但仍需插入占位行，否则 v_stand_overview 的 LEFT JOIN 会漏掉它们
+    agg_stat_rows = [
+        (a["stand_id"],) + (None,) * 6 + (None,) * 6 + (None,) * 6         + (None,) * 6 + (None, 6)
+        for a in agg_records
+    ]
+    if agg_stat_rows:
+        cur.executemany("""
+            INSERT INTO stand_stats
+                (stand_id,
+                 pwr, spd, rng, sta, prc, dev,
+                 pwr_raw, spd_raw, rng_raw, sta_raw, prc_raw, dev_raw,
+                 pwr_cat, spd_cat, rng_cat, sta_cat, prc_cat, dev_cat,
+                 pwr_note, spd_note, rng_note, sta_note, prc_note, dev_note,
+                 composite, missing_count)
+            VALUES (%s,%s,%s,%s,%s,%s,%s,
+                    %s,%s,%s,%s,%s,%s,
+                    %s,%s,%s,%s,%s,%s,
+                    %s,%s,%s,%s,%s,%s,
+                    %s,%s)
+            ON CONFLICT (stand_id) DO UPDATE SET
+                missing_count = EXCLUDED.missing_count
+        """, agg_stat_rows)
+        print(f"  +{len(agg_stat_rows)} 个聚合父占位（六维为空，missing_count=6）")
+
     # ---------- stand_forms ----------
     print("\n[4/7] stand_forms")
+    # ★ 形态表存的是**原始字面量**（'A'/'B'/'?'/'∞'），
+    #   而 stand_stats 已编码为 0–5 数值。这里复用 encode.py 的判定表统一转换，
+    #   避免两套编码逻辑（★ 绝不能各写一份，否则必然漂移）。
+    sys.path.insert(0, str(ROOT / "dataset" / "pipeline"))
+    from encode import encode_stat, STAT_DIMS
+
     form_rows = []
+    enc_stats = []
     for f in forms:
         vals = f.get("values", {})
+        # 逐维编码：字母 → 0–5；'?'/None → NULL
+        enc = {}
+        for d in STAT_DIMS:
+            raw = vals.get(d)
+            if raw is None or (isinstance(raw, str) and not raw.strip()):
+                enc[d] = None
+                continue
+            enc[d] = encode_stat(str(raw)).value
+        cats = [
+            encode_stat(str(vals[d])).category.value if vals.get(d) else None
+            for d in STAT_DIMS
+        ]
         form_rows.append((
             f["form_id"], f["stand_id"], f.get("form_name"),
-            f.get("form_type"),
-            *[vals.get(d) for d in ("PWR", "SPD", "RNG", "STA", "PRC", "DEV")],
+            f.get("form_type") or "base",
+            *[enc[d] for d in STAT_DIMS],
+            *[vals.get(d) for d in STAT_DIMS],   # raw
+            *cats,                               # cat
             f.get("raw_order"),
         ))
+
     cur.executemany("""
         INSERT INTO stand_forms
             (form_id, stand_id, form_name, form_type,
-             pwr, spd, rng, sta, prc, dev, raw_order)
-        VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+             pwr, spd, rng, sta, prc, dev,
+             pwr_raw, spd_raw, rng_raw, sta_raw, prc_raw, dev_raw,
+             pwr_cat, spd_cat, rng_cat, sta_cat, prc_cat, dev_cat,
+             raw_order)
+        VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,
+                %s,%s,%s,%s,%s,%s,
+                %s,%s,%s,%s,%s,%s,
+                %s)
         ON CONFLICT (form_id) DO UPDATE SET
             form_name=EXCLUDED.form_name, form_type=EXCLUDED.form_type,
             pwr=EXCLUDED.pwr, spd=EXCLUDED.spd, rng=EXCLUDED.rng,
             sta=EXCLUDED.sta, prc=EXCLUDED.prc, dev=EXCLUDED.dev,
+            pwr_raw=EXCLUDED.pwr_raw, spd_raw=EXCLUDED.spd_raw,
+            rng_raw=EXCLUDED.rng_raw, sta_raw=EXCLUDED.sta_raw,
+            prc_raw=EXCLUDED.prc_raw, dev_raw=EXCLUDED.dev_raw,
+            pwr_cat=EXCLUDED.pwr_cat, spd_cat=EXCLUDED.spd_cat,
+            rng_cat=EXCLUDED.rng_cat, sta_cat=EXCLUDED.sta_cat,
+            prc_cat=EXCLUDED.prc_cat, dev_cat=EXCLUDED.dev_cat,
             raw_order=EXCLUDED.raw_order
     """, form_rows)
-    print(f"  {len(form_rows)} 个形态")
+    n_encoded = sum(1 for r in form_rows if r[4] is not None)
+    print(f"  {len(form_rows)} 个形态（{n_encoded} 个含可编码数值）")
+    print(f"    等级已按encode.py 判定表转为 0–5")
     conn.commit()
 
     # ---------- stand_stat_conditional ----------
@@ -599,8 +771,11 @@ def verify() -> bool:
     cur = conn.cursor()
 
     print("\n  表行数：")
+    # ★ stands/stand_stats 预期 156 而非 154：
+    #   M1 遗留的形态组未消解（echoes_act1-3 / tusk_act1-4 被当独立替身），
+    #   入库时补建 2 个聚合父记录以承接外键
     expect = {
-        "characters": None, "stands": 154, "stand_stats": 154,
+        "characters": None, "stands": 156, "stand_stats": 156,
         "stand_forms": 146, "stat_conflicts": 28, "text_chunks": 2407,
     }
     all_ok = True

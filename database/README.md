@@ -1,138 +1,133 @@
 # 建库入库指南
 
-## 当前状态
+## 当前状态：**已全部完成** ✅
 
-| 准备项 | 状态 |
-|---|---|
-| psycopg2 | ✅ 2.9.13 已装 |
-| 数据文件 | ✅ stands 154 / stats 154 / forms 146 / conflicts 28 / chunks 2407 |
-| Schema迁移 | ✅ `dataset/schema/migrations/001_init.sql`（幂等） |
-| 入库脚本 | ✅ `database/load_db.py` |
-| Docker 编排 | ✅ `docker/docker-compose.yml` |
-| **Docker 守护进程** | ❌ **未启动** ← 唯一阻塞项 |
+| 项 | 状态 | 实测值 |
+|---|---|---|
+| Docker Desktop | ✅ 运行中 | 4.93.0 / Engine 29.8.1 |
+| PostgreSQL | ✅ healthy | 16.15（pgvector/pgvector:pg16） |
+| 扩展 | ✅ | pg_trgm / vector |
+| 表 | ✅ 7 张 | characters / stands / stand_stats / stand_forms / stand_stat_conditional / stat_conflicts / text_chunks |
+| 视图 | ✅ 5 个 | v_stand_overview / v_part_stats / v_conflicts_pending / v_stand_vector / v_data_quality |
+| 入库 | ✅ 完成 | 144 角色 / 156 替身 / 146 形态 / 28 冲突 / 2407 文本块 |
+| 约束 | ✅ 全通过 | 非法 `pwr_cat` = 0；composite 违规 = 0 |
+| 幂等性 | ✅ 已验证 | 重跑两次行数不变 |
+| 耗时 | 3.8 s | 2407 行分批入库 |
 
----
+**验证查询实测结果**：
 
-## 第 1 步：启动 Docker Desktop（需你手动操作）
+```sql
+-- 破坏力最高 → 与 M1 数据完全一致
+SELECT name_en FROM v_stand_overview WHERE composite IS NOT NULL
+ORDER BY pwr DESC, name_en LIMIT 3;
+   → Star Platinum / The World / Crazy Diamond
 
-Docker 客户端已装（29.4.3），但**守护进程未运行**。我尝试启动时被系统安全策略拦住了，需要你手动操作。
+-- 第 3 部替身数 → 33
+SELECT count(*) FROM stands WHERE part = 3;
 
-**方式一：开始菜单**
-按 `Win` → 输入 `Docker Desktop` → 回车 → 等待托盘图标显示绿色
+-- 全文检索（M4 混合检索的词法通道）
+SELECT chunk_id, stand_name, section FROM text_chunks
+WHERE to_tsvector('english',content) @@ to_tsquery('english','time & stop')
+ORDER BY ts_rank_cd(to_tsvector('english',content),
+                    to_tsquery('english','time & stop')) DESC LIMIT 3;
+   → #1858 Star Platinum: The World (TECHNIQUES)
+   → #2122 The World (TIME STOP)
+   → #1844 Star Platinum (STAR PLATINUM: THE WORLD)
 
-**方式二：命令行**
-```powershell
-Start-Process "C:\Program Files\Docker\Docker\Docker Desktop.exe"
+-- 形态编码正确（★ raw 与 value 并存）
+SELECT form_id, pwr, pwr_raw, dev, dev_raw FROM stand_forms
+WHERE stand_id='star_platinum' ORDER BY raw_order;
+   → f0  pwr=5  pwr_raw=A     dev=5  dev_raw=A
+   → f1  pwr=5  pwr_raw=A     dev=NULL dev_raw=Complete  ← 正确置 NULL
+   → f2  pwr=5  pwr_raw=A     dev=3  dev_raw=C
+
+-- M4 的工作队列
+SELECT count(*) FROM v_conflicts_pending;   → 16
 ```
 
-**等 Docker Desktop 完全启动**（首次约 1-2 分钟，右下角图标不再闪烁）。
-若提示 WSL 2 未安装，点「安装」即可。
-
-> ⚠️ **沙箱限制说明**：WSL 相关的 `wsl.exe` 被本环境的程序黑名单拦截，
-> 因此我无法代为检测或安装 WSL。若 Docker 提示需要 WSL，请手动安装。
+> ⚠️ **tsquery 多词必须用 `&` 连接**：`'time stop'` 会报语法错误，
+> 正确写法是 `'time & stop'`。
 
 ---
 
-## 第 2 步：起数据库
+## 重新执行（幂等，可反复跑）
 
 ```bash
 cd D:/workspace/AI/projects/rag-kb/docker
-docker compose up -d postgres        # 启动（首次会拉镜像，约 3-5 分钟）
+docker compose up -d postgres     # 启动容器（已 healthy 则无操作）
+docker compose ps# 确认状态
+
+cd ..
+python database/load_db.py --all # 建库 + 建表 + 入库 + 验证（约 4 秒）
+```
+
+### 分步执行
+
+```bash
+python database/load_db.py --check    # 环境检查
+python database/load_db.py --init     # 建库 + 建表
+python database/load_db.py --load     # 数据入库
+python database/load_db.py --verify   # 验证数据
+python database/check_schema_consistency.py  # schema 与代码一致性自检
+```
+
+### 常用运维命令
+
+```bash
+# 交互式连接
+docker exec -it ragkb-postgres psql -U ragkb -d ragkb
+
+# 看数据总览
+docker exec ragkb-postgres psql -U ragkb -d ragkb -c "SELECT * FROM v_data_quality;"
+
+# 容器状态 / 日志
+docker compose ps
+docker compose logs -f postgres
+
+# 停止（保留数据）
+docker compose down
+
+# ★ 清库重来
+docker compose down -v                # 删数据卷
+docker compose up -d postgres
+python database/load_db.py --all
+```
+
+---
+
+## 原始操作步骤（首次执行时用）
+
+<details>
+<summary>点击展开：首次建库的完整步骤</summary>
+
+### 第 1 步：启动 Docker Desktop
+
+Docker Desktop 4.93.0 已安装。若守护进程未运行：
+
+- **方式一**：按 `Win` → 输入 `Docker Desktop` → 回车
+- **方式二**：任务栏右下角托盘图标 → 右键 → 启动
+
+等待托盘图标显示绿色（首次约 1–2 分钟）。
+
+> **沙箱限制说明**：`wsl.exe` 在本环境的程序黑名单内，
+> AI 无法代为检测/安装 WSL，也无法启动 GUI 程序。
+
+### 第 2 步：起数据库
+
+```bash
+cd D:/workspace/AI/projects/rag-kb/docker
+docker compose up -d postgres        # 首次会拉镜像，约 3-5 分钟
 docker compose ps                   # 确认 healthy
 ```
 
-期望输出：
-```
-NAME              IMAGE                    STATUS
-ragkb-postgres    pgvector/pgvector:pg16   Up (healthy)
-```
-
----
-
-## 第 3 步：建库 + 入库
+### 第 3 步：建库 + 入库
 
 ```bash
 cd D:/workspace/AI/projects/rag-kb
-V=/c/Users/28188/.workbuddy/binaries/python/envs/default
-
-$V/Scripts/python.exe database/load_db.py --all
+python database/load_db.py --all
 ```
 
-`--all` 会依次执行：
-
-| 步骤 | 内容 |
-|---|---|
-| 1. 环境检查 | psycopg2 / 数据文件 / schema / 连接 |
-| 2. 建库 | 连 `postgres` 库，`CREATE DATABASE ragkb`（已存在则跳过） |
-| 3. 建表 | 执行 `001_init.sql`（7 表 + 4 视图 + 索引，幂等） |
-| 4. 入库 | characters → stands → stand_stats → forms → conditional → conflicts → chunks |
-| 5. 验证 | 行数核对 + 约束检查 + 视图可用性 + 抽样查询 |
-
-**可分步执行**：
-```bash
-python database/load_db.py --check    # 只检查环境
-python database/load_db.py --init     # 只建库建表
-python database/load_db.py --load     # 只入库
-python database/load_db.py --verify   # 只验证
-```
-
----
-
-## 第 4 步：连接数据库
-
-**命令行**：
-```bash
-docker exec -it ragkb-postgres psql -U ragkb -d ragkb
-```
-
-**DBeaver / Navicat / pgAdmin**：
-```
-Host: 127.0.0.1    Port: 5432
-DB:   ragkb        User: ragkb   Password: ragkb
-```
-
-**Python**：
-```python
-import psycopg2
-conn = psycopg2.connect(
-    dbname="ragkb", user="ragkb", password="ragkb",
-    host="127.0.0.1", port=5432,
-)
-```
-
----
-
-## 验证查询
-
-入库后执行这几条，确认一切正常：
-
-```sql
--- 数据总览
-SELECT * FROM v_data_quality;
-
--- 能力分布（应与 M1 编码结果一致）
-SELECT pwr_cat, count(*) FROM stand_stats GROUP BY 1 ORDER BY 2 DESC;
-
--- 破坏力最高的前 5（模拟 T2 极值推理题）
-SELECT name_en, part, pwr FROM v_stand_overview
-WHERE composite IS NOT NULL
-ORDER BY pwr DESC, name_en LIMIT 5;
-
--- 待消解冲突（★ M4 的工作队列）
-SELECT * FROM v_conflicts_pending;
-
--- 六维完整可比的替身（T2 极值题应加此过滤）
-SELECT count(*) FROM v_stand_vector;
-```
-
-**期望值**：
-
-| 查询 | 期望 |
-|---|---|
-| `v_data_quality` | stands 154 / stand_stats 154 / forms 146 / chunks 2407 / conflicts 28 |
-| `pwr_cat` 分布 | RANKED 约 120、EMPTY_SLOT 约 8 |
-| `v_stand_vector` | **123**（composite 非空的替身数）|
-| `v_conflicts_pending` | ≤ 28 |
+</details>
 
 ---
 

@@ -219,8 +219,18 @@ CREATE TABLE IF NOT EXISTS stand_forms (
     form_type  form_type NOT NULL DEFAULT 'base',
     parent_id  TEXT REFERENCES stand_forms(form_id),
 
+    -- 归一化数值（0–5），复用 encode.py 判定表编码
     pwr SMALLINT, spd SMALLINT, rng SMALLINT,
     sta SMALLINT, prc SMALLINT, dev SMALLINT,
+
+    -- ★ 原始字面量与类别（与 stand_stats 一致的审计能力）
+    --形态表的 values 来自渲染层，天然是字面量（'A'/'B'/'?'/'∞'），
+    --   入库时编码为数值，但原始值必须保留以便追溯
+    pwr_raw TEXT, spd_raw TEXT, rng_raw TEXT,
+    sta_raw TEXT, prc_raw TEXT, dev_raw TEXT,
+    pwr_cat stat_category, spd_cat stat_category, rng_cat stat_category,
+    sta_cat stat_category, prc_cat stat_category, dev_cat stat_category,
+
     raw_order  SMALLINT,
 
     CONSTRAINT chk_form_range CHECK (
@@ -239,6 +249,9 @@ CREATE INDEX IF NOT EXISTS idx_forms_type   ON stand_forms(form_type);
 
 COMMENT ON TABLE stand_forms IS
     '替身形态。实测 146 个形态，11 个替身有多形态';
+COMMENT ON COLUMN stand_forms.pwr_raw IS
+    '原始字面量（如 ''A''/''?''/''∞''）。★ 形态表的值来自渲染层，'
+    '入库时用 encode.py 判定表编码为 0–5，raw 保留以便追溯';
 
 -- 2.5 stand_stat_conditional —— 条件值明细
 CREATE TABLE IF NOT EXISTS stand_stat_conditional (

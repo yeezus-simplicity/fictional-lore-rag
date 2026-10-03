@@ -60,7 +60,8 @@
 | `dataset/schema/` | — | SQL schema（幂等迁移） |
 | `evaluation/` | [README](../evaluation/README.md) | 评测集构建 + 判分器 + 实验 |
 | `retrieval/` | [README](../retrieval/README.md) | BM25 + 向量 + RRF + 重排 |
-| `services/` | [README](../services/README.md) | 冲突消解 + 路由 |
+| `services/` | [README](../services/README.md) | 冲突消解 + 路由 + 查询执行器 |
+| `api/` | [README](../api/README.md) | **★ FastAPI 服务（M5）** |
 | `database/` | [README](../database/README.md) | 建库入库 |
 | `tools/` | [README](../tools/README.md) | Playwright 渲染抓取 |
 

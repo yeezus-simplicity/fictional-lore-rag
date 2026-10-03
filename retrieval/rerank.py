@@ -114,6 +114,19 @@ class CrossEncoderReranker:
         ranked = sorted(zip(ids, scores), key=lambda x: -x[1])
         return ranked[:top_k]
 
+    def warmup(self) -> None:
+        """预热：触发 CUDA 上下文初始化与 kernel 编译。
+
+        ★ 必须做：首次推理含 kernel 编译（10–30 秒），
+          若计入延迟统计会严重污染平均延迟数据。
+        """
+        if self.model is None:
+            return
+        t0 = time.time()
+        self.score("warmup query", ["warmup document"])
+        if time.time() - t0 > 5:
+            print(f"  [warmup] 首次推理 {time.time() - t0:.1f}s（含 kernel 编译）")
+
     def info(self) -> dict:
         return {
             "model": self.model_path,

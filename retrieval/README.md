@@ -24,6 +24,8 @@ python run_experiments.py --exp D2     # 只跑核心实验
 | `lexical.py` | BM25 倒排索引 + RRF 融合 + 规则路由（零依赖） |
 | `dense.py` | 向量索引（bge-m3 / char-ngram 双后端 + 优雅降级） |
 | `fetch_model.py` | 模型下载器（绕过 huggingface_hub 的 302 bug） |
+| `rerank.py` | 交叉编码器重排（bge-reranker-v2-m3） |
+| `chunking.py` | 切块视图与溯源映射（D1 对照用） |
 
 ## ★ 核心实验结论（D2）
 
@@ -68,9 +70,28 @@ recall@5 更差（召回广度）。原因：块长方差大（p50=229, max=2174
 | --- | --- | --- |
 | **huggingface.co被拦** | 502 | 用 `hf-mirror.com` |
 | **snapshot_download 得到 0 字节** | "下载成功"但文件空 | 库的 302 跟随逻辑失效，自写 urllib 下载器 |
-| **bge-m3 没有 model.safetensors** | 404 | 只有 `pytorch_model.bin`；**先查仓库文件列表** |
-| **ST 6.x API 变更** | `dtype` 参数不存在 | 多参数回退链；`get_sentence_embedding_dimension` 改名|
+| **权重文件名不通用** | 404 | bge-m3 只有 `pytorch_model.bin`；bge-reranker-v2-m3 有 `model.safetensors`。**下载前先查仓库文件列表** |
+| **ST 6.x API 变更** | `dtype` 参数不存在 | 多参数回退链；`get_sentence_embedding_dimension` 改名 |
 | **本地模型路径** | 加载时触发网络请求失败 | `resolve_model_path()` 优先 `models/` 下的本地目录 |
+| **大文件下载中断** | 2.2GB 传到一半失败 | 大文件（>50MB）改用 `curl -C -` 断点续传 |
+| **rerank 延迟统计被污染** | 首次推理 20s+ | `warmup()` 触发 kernel 编译，计时前必做 |
+
+## 重排层说明（D3）
+
+### 双编码器 vs 交叉编码器
+
+| | bge-m3（双编码器） | bge-reranker（交叉编码器） |
+|---|---|---|
+| 方式 | query/doc **分别**编码成向量再算相似度 | query+doc **拼在一起**过一遍模型 |
+| 预计算 | doc 向量可预计算，检索 O(1) | **不可预计算**，必须实时算 |
+| 精度 | 有上限（交互信息丢失） | 高得多 |
+| 用途 | 全库召回 | **只对Top-N 重排** |
+
+标准范式「召回（快、粗）→ 重排（慢、精）」的理论依据就在这里。
+实测：相关块 0.9952 分，无关块 0.66–0.72 分，区分度明显。
+
+**性能**：约 49ms/条（GPU, batch=16），因此只用于 Top-20/50 重排，
+不可用于全库（2407 块 × 49ms ≈ 118 秒）。
 
 ---
 

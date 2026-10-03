@@ -67,12 +67,16 @@ class Retriever:
         k = top_k or self.top_k
         rankings: list[list[tuple[int, float]]] = []
 
+        # ★ 召回深度：重排需要足够大的候选池，否则「重排」无从下手。
+        #   正确做法是召回 max(重排候选数, 2k)，再截到 k返回。
+        need = max(k * 2, self.rerank_candidates if self.rerank else 0, 20)
+
         if self.bm25 is not None:
             rankings.append(
-                self.bm25.search(query, top_k=max(k * 2, 20), boost_stand=boost_stand))
+                self.bm25.search(query, top_k=need, boost_stand=boost_stand))
         if self.vec is not None and self.embedder is not None:
             qv = self.embedder.encode([query])[0]
-            vhits = self.vec.search(qv, top_k=max(k * 2, 20))
+            vhits = self.vec.search(qv, top_k=need)
             if boost_stand and self.chunk2stand:
                 # 替身名精确匹配加权
                 boosted = []
@@ -87,21 +91,21 @@ class Retriever:
         if not rankings:
             return []
         if len(rankings) == 1 or self.fusion == "none":
-            fused = rankings[0][:k]
+            fused = rankings[0][:need]
         else:
-            fused = rrf_fuse(rankings, k=self.rrf_k, top_k=k)[:k]
+            fused = rrf_fuse(rankings, k=self.rrf_k, top_k=need)
 
         # ---------- 重排阶段 ----------
         if self.rerank and self.reranker is not None and self.reranker.model:
-            # 候选集取Top-N（N > k 才能体现重排价值）
-            cand_n = max(self.rerank_candidates, k)
-            if len(fused) > k or self.rerank_candidates > k:
-                pool = fused[:cand_n]
+            pool = fused[:self.rerank_candidates]
+            if len(pool) > 1:
                 docs = [self.chunk_map.get(cid, {}).get("content", "")
                         for cid, _ in pool]
                 pairs = [(cid, d) for (cid, _), d in zip(pool, docs)]
                 fused = self.reranker.rerank(query, pairs, top_k=k)
-        return fused
+            else:
+                fused = fused[:k]
+        return fused[:k]
 
     chunk2stand: dict = field(default_factory=dict, repr=False)
 
@@ -110,20 +114,28 @@ class Retriever:
 # 评测主循环
 # ==================================================================
 
-def evaluate_retriever(items, corpus, retriever: Retriever) -> dict:
-    """在评测集上跑一个检索器，返回检索层指标 + 延迟。"""
+def evaluate_retriever(items, corpus, retriever: Retriever,
+                       progress: bool = True) -> dict:
+    """在评测集上跑一个检索器，返回检索层指标 + 延迟。
+
+    ★ 预热说明：rerank 首次推理含 CUDA kernel 编译（10–30 秒），
+      必须先warmup 再计时，否则平均延迟会被严重污染。
+    """
     cases: list[RetrievalCase] = []
     chunk2stand = {c["chunk_id"]: c["stand_id"] for c in corpus.chunks}
     chunk_map = {c["chunk_id"]: c for c in corpus.chunks}
     retriever.chunk2stand = chunk2stand
     retriever.chunk_map = chunk_map
 
-    # 预热：首次调用含 CUDA 初始化，避免污染延迟统计
-    if retriever.embedder is not None or retriever.reranker is not None:
+    # 预热
+    if retriever.reranker is not None:
+        retriever.reranker.warmup()
+    if retriever.embedder is not None:
         retriever.search("warmup query", top_k=20)
+    retriever.search("warmup query", top_k=20)
 
     t0 = time.time()
-    for it in items:
+    for n, it in enumerate(items, 1):
         q = it["question"]
         gold_chunks = list(it.get("evidence", {}).get("chunks") or [])
         gold_stands = list((it.get("evidence", {}).get("struct") or {}).keys())
@@ -139,6 +151,12 @@ def evaluate_retriever(items, corpus, retriever: Retriever) -> dict:
             qid=it["qid"], gold_ids=gold_chunks, retrieved=retrieved_ids,
             gold_stands=gold_stands, retrieved_stands=seen,
         ))
+        # 进度：每20 条输出一次 + 预估剩余
+        if progress and (n % 20 == 0 or n == len(items)):
+            el = time.time() - t0
+            eta = el / n * (len(items) - n)
+            print(f"      {n}/{len(items)}  {el:.0f}s 已用,"
+                  f" 预计剩余 {eta:.0f}s", flush=True)
     elapsed = time.time() - t0
 
     out = eval_retrieval(cases)
@@ -296,9 +314,13 @@ def _eval_with_view(items, vc, bm25_index) -> dict:
 
 
 def exp_d3(items, corpus) -> list[dict]:
-    """D3 重排：候选深度扫描。★ 预期质量提升最大的实验"""
+    """D3 重排：候选深度扫描。★ 预期质量提升最大的实验。
+
+    ★ 注意性能：交叉编码器约 49ms/条（GPU，batch=16）。
+      176 条 × 20 候选 ≈ 172 秒/组，故只跑关键配置而非全组合。
+    """
     print("\n" + "-" * 60)
-    print("D3 交叉编码器重排（候选深度扫描）")
+    print("D3 交叉编码器重排")
     print("-" * 60)
 
     # 基线：M3-c 的最优组合（无重排）
@@ -313,6 +335,7 @@ def exp_d3(items, corpus) -> list[dict]:
         return []
 
     results = []
+    print("  [1/3] 基线（无重排）")
     results.append(evaluate_retriever(
         items, corpus,
         Retriever(name="D3-0 无重排（基线）", bm25=bm25, vec=vec,
@@ -322,9 +345,11 @@ def exp_d3(items, corpus) -> list[dict]:
     if rr is None:
         print("  !! reranker 不可用，D3 只产出基线")
         return results
+    rr.warmup()
 
-    # 候选深度扫描
-    for cand in (20, 50, 100):
+    # 候选深度 20/ 50 对照
+    for cand in (20, 50):
+        print(f"  [重排 Top-{cand}]")
         results.append(evaluate_retriever(
             items, corpus,
             Retriever(name=f"D3-{cand} 重排 Top-{cand}", bm25=bm25, vec=vec,
@@ -332,17 +357,11 @@ def exp_d3(items, corpus) -> list[dict]:
                        rerank=True, rerank_candidates=cand, reranker=rr)))
 
     # 消融：仅 BM25 + 重排（去掉向量路）
+    print("  [消融] 仅 BM25 + 重排")
     results.append(evaluate_retriever(
         items, corpus,
         Retriever(name="D3-50 仅BM25+重排（消融向量路）", bm25=bm25,
                    rerank=True, rerank_candidates=50, reranker=rr)))
-
-    # 消融：仅向量 + 重排（去掉 BM25 路）
-    results.append(evaluate_retriever(
-        items, corpus,
-        Retriever(name="D3-50 仅向量+重排（消融 BM25 路）", vec=vec,
-                   embedder=emb, rerank=True, rerank_candidates=50,
-                   reranker=rr)))
     return results
 
 

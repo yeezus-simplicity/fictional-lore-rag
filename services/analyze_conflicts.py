@@ -88,6 +88,7 @@ def analyze_bias() -> dict:
     out: dict[str, dict] = {}
     for mname, mindex in mirrors.items():
         stats = {d: {"hi": 0, "lo": 0, "eq": 0, "sum": 0} for d in DIMS}
+        MIN_N = 5   # 判定「系统性偏向」的最小不一致样本量
         pairs = 0
         for sid, forms in primary.items():
             row = mindex.get(sid)
@@ -109,11 +110,21 @@ def analyze_bias() -> dict:
             dis = s["hi"] + s["lo"]
             s["disagree"] = dis
             s["strength"] = round(s["sum"] / dis, 3) if dis else 0.0
-            s["verdict"] = (
-                "系统���偏高" if dis >= 3 and s["strength"] >= 0.8 else
-                "系统性偏低" if dis >= 3 and s["strength"] <= -0.8 else
-                "无明显偏向" if dis == 0 else "轻微不一致"
-            )
+            # ★ 最小样本量：低于此值不能判定「系统性偏向」
+            #   实测教训：STA 的 strength=+4.00 看着很强，但只有 1 个样本
+            #   —— 强度 = 单条差值，恒等于那条差值，毫无统计意义。
+            s["min_n_required"] = MIN_N
+            s["sample_sufficient"] = dis >= MIN_N
+            if dis == 0:
+                s["verdict"] = "零分歧"
+            elif dis < MIN_N:
+                s["verdict"] = f"★样本不足({dis}<{MIN_N})"
+            elif s["strength"] >= 0.8:
+                s["verdict"] = "系统性偏高"
+            elif s["strength"] <= -0.8:
+                s["verdict"] = "系统性偏低"
+            else:
+                s["verdict"] = "有分歧但无明显偏向"
         out[mname] = {"n_pairs": pairs, "dims": stats}
     return out
 
@@ -191,13 +202,20 @@ def test_hypotheses() -> dict:
         if s["disagree"] >= 3:
             uni.append((d, s["hi"], s["lo"]))
     one_way = all(hi > 0 and lo == 0 for _, hi, lo in uni)
+    enough = all(hi + lo >= 5 for _, hi, lo in uni)
     results.append({
         "id": "H3",
         "hypothesis": "分歧方向单向 → 系统性偏移",
         "metric": "; ".join(f"{d}: 高{hi}/低{lo}" for d, hi, lo in uni) or "无",
-        "verdict": "成立" if one_way else "不成立",
-        "reasoning": "所有分歧都是「镜像源偏高」，无一条反向。"
-                     "随机噪声应对称分布，单向说明是**口径差异**。",
+        # ★ 方向单向 + 样本足够，才能说是「系统性偏移」
+        "verdict": ("成立" if (one_way and enough) else
+                    "★证据不足（方向单向但样本量不足）" if one_way else
+                    "不成立"),
+        "reasoning": "所有分歧确实都是「镜像源偏高」，无一条反向。"
+                     "但**样本量只有 1~3 个** —— "
+                     "方向单向在小样本下可能是巧合。"
+                     "严谨表述：'未观察到反向分歧'，"
+                     "而非'证明了系统性偏移'。",
     })
 
     # H4: 主源在此维度更权威
@@ -259,9 +277,25 @@ def main() -> int:
     print("""
   Tusk 四形态的射程分歧**不是数据错误，而是度量标准差异**。
 
-  三条证据：
-    ① 四个维度（PWR/SPD/PRC/DEV）零分歧 → 镜像源整体可靠
-    ② 分歧只集中在 RNG/STA，且方向全部单向（镜像偏高）
+  ★★ 但必须补充一条**样本量警示**（2026-10-03 复核时发现）：
+
+    | 维度 | 不一致数 | 净偏移 | 偏向强度 | 判定 |
+    |---|---|---|---|---|
+    | RNG | 3 | +5 | +1.67 | ★ 样本不足（3<5），**不下系统性结论** |
+    | STA | 1 | +4 | +4.00 | ★ **只有 1 个样本**，强度恒等于该条差值 |
+
+  ★★ 「STA 偏向强度 +4.00」是**小样本假象** —— 只有 1 个不一致样本
+    （Star Platinum 主源 E / CSV A），强度 = 单条差值 = 4，无统计意义。
+
+    → 因此结论要分两层表述：
+      **可靠**：「分歧只集中在 RNG/STA」—— 这基于「其他四个维度
+      共 530+ 个格子零分歧」这个大样本对比。
+      **证据不足**：「镜像源系统性偏高」—— 不一致数只有 1~3 个。
+
+  三条仍成立的证据：
+    ① 四个维度（PWR/SPD/PRC/DEV）**共 530+ 个格子零分歧**
+       → 镜像源整体可靠（这才是大样本结论）
+    ② 分歧只出现在 RNG/STA（方向一致但样本少）
     ③ jojowiki 官方给出了明确的射程口径定义（「有效射程」：
        射程与精度成反比）；CSV 是无出处的第三方整理表
 

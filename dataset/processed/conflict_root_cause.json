@@ -10,7 +10,9 @@
           "sum": 0,
           "disagree": 0,
           "strength": 0.0,
-          "verdict": "无明显偏向"
+          "min_n_required": 5,
+          "sample_sufficient": false,
+          "verdict": "零分歧"
         },
         "SPD": {
           "hi": 0,
@@ -19,7 +21,9 @@
           "sum": 0,
           "disagree": 0,
           "strength": 0.0,
-          "verdict": "无明显偏向"
+          "min_n_required": 5,
+          "sample_sufficient": false,
+          "verdict": "零分歧"
         },
         "RNG": {
           "hi": 3,
@@ -28,7 +32,9 @@
           "sum": 5,
           "disagree": 3,
           "strength": 1.667,
-          "verdict": "系统���偏高"
+          "min_n_required": 5,
+          "sample_sufficient": false,
+          "verdict": "★样本不足(3<5)"
         },
         "STA": {
           "hi": 1,
@@ -37,7 +43,9 @@
           "sum": 4,
           "disagree": 1,
           "strength": 4.0,
-          "verdict": "轻微不一致"
+          "min_n_required": 5,
+          "sample_sufficient": false,
+          "verdict": "★样本不足(1<5)"
         },
         "PRC": {
           "hi": 0,
@@ -46,7 +54,9 @@
           "sum": 0,
           "disagree": 0,
           "strength": 0.0,
-          "verdict": "无明显偏向"
+          "min_n_required": 5,
+          "sample_sufficient": false,
+          "verdict": "零分歧"
         },
         "DEV": {
           "hi": 0,
@@ -55,7 +65,9 @@
           "sum": 0,
           "disagree": 0,
           "strength": 0.0,
-          "verdict": "无明显偏向"
+          "min_n_required": 5,
+          "sample_sufficient": false,
+          "verdict": "零分歧"
         }
       }
     },
@@ -69,7 +81,9 @@
           "sum": 4,
           "disagree": 1,
           "strength": 4.0,
-          "verdict": "轻微不一致"
+          "min_n_required": 5,
+          "sample_sufficient": false,
+          "verdict": "★样本不足(1<5)"
         },
         "SPD": {
           "hi": 0,
@@ -78,7 +92,9 @@
           "sum": 0,
           "disagree": 0,
           "strength": 0.0,
-          "verdict": "无明显偏向"
+          "min_n_required": 5,
+          "sample_sufficient": false,
+          "verdict": "零分歧"
         },
         "RNG": {
           "hi": 3,
@@ -87,7 +103,9 @@
           "sum": 5,
           "disagree": 3,
           "strength": 1.667,
-          "verdict": "系统���偏高"
+          "min_n_required": 5,
+          "sample_sufficient": false,
+          "verdict": "★样本不足(3<5)"
         },
         "STA": {
           "hi": 0,
@@ -96,7 +114,9 @@
           "sum": 0,
           "disagree": 0,
           "strength": 0.0,
-          "verdict": "无明显偏向"
+          "min_n_required": 5,
+          "sample_sufficient": false,
+          "verdict": "零分歧"
         },
         "PRC": {
           "hi": 0,
@@ -105,7 +125,9 @@
           "sum": 0,
           "disagree": 0,
           "strength": 0.0,
-          "verdict": "无明显偏向"
+          "min_n_required": 5,
+          "sample_sufficient": false,
+          "verdict": "零分歧"
         },
         "DEV": {
           "hi": 0,
@@ -114,7 +136,9 @@
           "sum": 0,
           "disagree": 0,
           "strength": 0.0,
-          "verdict": "无明显偏向"
+          "min_n_required": 5,
+          "sample_sufficient": false,
+          "verdict": "零分歧"
         }
       }
     }
@@ -220,8 +244,8 @@
       "id": "H3",
       "hypothesis": "分歧方向单向 → 系统性偏移",
       "metric": "RNG: 高3/低0",
-      "verdict": "成立",
-      "reasoning": "所有分歧都是「镜像源偏高」，无一条反向。随机噪声应对称分布，单向说明是**口径差异**。"
+      "verdict": "★证据不足（方向单向但样本量不足）",
+      "reasoning": "所有分歧确实都是「镜像源偏高」，无一条反向。但**样本量只有 1~3 个** —— 方向单向在小样本下可能是巧合。严谨表述：'未观察到反向分歧'，而非'证明了系统性偏移'。"
     },
     {
       "id": "H4",

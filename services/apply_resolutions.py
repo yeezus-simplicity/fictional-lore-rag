@@ -68,6 +68,14 @@ def main() -> int:
     resolutions = resolver.resolve_all(conflicts, stands)
     print(f"消解 {len(resolutions)} 条冲突"
           f"（策略：{'含共识' if args.strategy == 'consensus' else '仅主源'}）")
+    # ★ 打印镜像源独立性 —— 共识策略的前提
+    if resolver.mirror_evidence:
+        ev = resolver.mirror_evidence
+        print(f"  镜像源独立性: {ev.get('verdict')}")
+        print(f"    topology ⊆ bogdan: {ev.get('topology_is_subset')}"
+              f"  真正的等级分歧: {ev.get('real_value_conflicts')} 处")
+        if not resolver.mirror_independent:
+            print(f"    ★ 共识策略自动失效，降级为prefer_primary")
 
     if args.dry_run:
         print("\n--dry-run，不写库。消解结果预览：\n")

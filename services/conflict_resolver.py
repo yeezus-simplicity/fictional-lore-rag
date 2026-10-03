@@ -91,14 +91,108 @@ class Resolution:
 class ConflictResolver:
     """冲突消解器。策略与依据分离，便于做消融实验。"""
 
-    def __init__(self, use_consensus: bool = True):
+    def __init__(self, use_consensus: bool = True,
+                 verify_mirror_independence: bool = True):
         """
         Args:
             use_consensus: 是否启用「镜像源共识」策略。
                 开启后 VALUE_MISMATCH 会先检查两个镜像源是否一致。
                 这是 M4 的核心消融变量（D5）。
+            verify_mirror_independence: ★ 根因分析的产物。
+                实测两个 CSV 镜像源**不独立**（topology ⊆ bogdan，
+                共同条目中仅 1 处真正的等级数值分歧）。
+                → 「两个源一致」不构成交叉验证，共识策略失效。
         """
         self.use_consensus = use_consensus
+        self.verify_mirror_independence = verify_mirror_independence
+        self.mirror_independent: Optional[bool] = None
+        self.mirror_evidence: dict = {}
+        if verify_mirror_independence:
+            self.mirror_independent, self.mirror_evidence = \
+                self._check_mirror_independence()
+
+    # ---------------------------------------------------------
+    @staticmethod
+    def _norm_level(s: str) -> Optional[str]:
+        """字面量归一（仅用于独立性判定）。"""
+        s = (s or "").strip().lower()
+        if s in ("e", "d", "c", "b", "a"):
+            return s.upper()
+        if s in ("infinite", "infi", "∞"):
+            return "∞"
+        if s in ("unknown", "situational", "?"):
+            return "?"
+        return None
+
+    @classmethod
+    def _check_mirror_independence(cls) -> tuple[bool, dict]:
+        """检验两个镜像源是否真正独立。
+
+        ★ 本次根因调查最重要的产出。
+          「多源交叉验证」的前提是**源相互独立**。
+          若两源同源（一个是另一个的子集/复制），则「两者一致」是
+          必然的，不提供任何额外置信度。
+
+        判据：
+          - 「only_in_topology == 0 且 only_in_bogdan > 0」→ topology ⊆ bogdan
+          - 归一化后真正的等级分歧 < 3→ 不足以支撑交叉验证
+        """
+        field_dir = ROOT / "docs" / "字段映射"
+        files = {"csv_bogdan": "csv_bogdan_raw.csv",
+                 "csv_topology": "csv_topology_raw.csv"}
+        rows: dict[str, dict[str, dict]] = {}
+        for name, fn in files.items():
+            p = field_dir / fn
+            if not p.exists():
+                return False, {"error": f"{fn} 不存在"}
+            raw = p.read_bytes()
+            text = None
+            for enc in ("utf-8-sig", "utf-8", "cp1252", "latin-1"):
+                try:
+                    text = raw.decode(enc)
+                    break
+                except UnicodeDecodeError:
+                    continue
+            import csv as _csv
+            rows[name] = {
+                re.sub(r"[^a-z0-9]+", "_", r["Stand"].lower()).strip("_"): r
+                for r in _csv.DictReader(text.splitlines())
+            }
+
+        a, b = rows["csv_bogdan"], rows["csv_topology"]
+        common = set(a) & set(b)
+        dims = ["PWR", "SPD", "RNG", "STA", "PRC", "DEV"]
+
+        same = only_a = only_b = real_diff = 0
+        for k in common:
+            for d in dims:
+                x = (a[k].get(d) or "").strip()
+                y = (b[k].get(d) or "").strip()
+                if x == y:
+                    same += 1
+                elif x and not y:
+                    only_a += 1
+                elif y and not x:
+                    only_b += 1
+                else:
+                    nx, ny = cls._norm_level(x), cls._norm_level(y)
+                    if nx and ny and nx != ny:
+                        real_diff += 1
+
+        is_subset = (only_b == 0 and only_a > 0)
+        independent = (not is_subset) and real_diff >= 3
+        evidence = {
+            "common_rows": len(common),
+            "same_cells": same,
+            "only_in_bogdan": only_a,
+            "only_in_topology": only_b,
+            "real_value_conflicts": real_diff,
+            "topology_is_subset": is_subset,
+            "verdict": ("同源（topology ⊆ bogdan）→ 共识策略无效"
+                        if is_subset else
+                        ("独立" if independent else "独立性不明确")),
+        }
+        return independent, evidence
 
     # ---------------------------------------------------------
     def resolve_all(self, conflicts: list[dict], stands: list[dict],
@@ -193,23 +287,52 @@ class ConflictResolver:
             both_mirrors_agree = any(
                 len(srcs) == 2 for srcs in mirror_votes.values())
 
-            if self.use_consensus and both_mirrors_agree:
-                # ★ D5 核心：两个镜像源一致 → 采信它们
+            # ★★ 独立性前置检验（根因分析的结论）
+            #   两个 CSV 镜像源实测不独立（topology ⊆ bogdan），
+            #   「两源一致」是同源复制的必然结果，不构成交叉验证。
+            #   → 独立性不成立时，共识策略自动失效。
+            consensus_usable = (
+                self.use_consensus
+                and both_mirrors_agree
+                and (self.mirror_independent is not False)
+            )
+
+            if not self.use_consensus and both_mirrors_agree:
+                strategy, final_raw = "prefer_primary", value_a
+                confidence = 0.75
+                rationale = ("两镜像一致但主源不同 → 采主源"
+                             "（主源是唯一有口径定义的来源）")
+                sensitivity = "**脆弱**：镜像源一致，若改用共识策略结论翻转"
+            elif consensus_usable:
                 agreed = [v for v, srcs in mirror_votes.items() if len(srcs) == 2]
                 strategy = "prefer_consensus"
                 final_raw = agreed[0]
                 confidence = 0.95
                 rationale = (f"两个镜像源独立给出相同值（{agreed[0]}），"
                              "交叉验证通过，置信度高于单源")
-                sensitivity = "稳健：三源中两源一致，取多数"
+                sensitivity = "稳健：三源中两源独立一致，取多数"
             else:
+                # ★ 修正后的主路径
                 strategy = "prefer_primary"
                 final_raw = value_a
-                confidence = 0.75
-                rationale = ("主源为官方设定集，采主源"
-                             if not both_mirrors_agree else
-                             "镜像源一致但主源不同 → 仍采主源（本策略选择）")
-                sensitivity = ("**脆弱**：镜像源一致，若改用共识策略结论翻转")
+                if both_mirrors_agree and not consensus_usable:
+                    # 两镜像一致但独立性不成立
+                    confidence = 0.8
+                    rationale = (
+                        "两镜像源虽一致，但**经检验二者不独立**"
+                        "（topology ⊆ bogdan，153 处差异均为「有值 vs 空」，"
+                        "仅 1 处真正的等级分歧）→ 一致性不构成交叉验证，"
+                        "采信有官方口径定义的主源")
+                    sensitivity = ("**脆弱**：若假设两镜像独立，"
+                                   "结论会翻转为采信镜像源")
+                elif both_mirrors_agree:
+                    confidence = 0.75
+                    rationale = "镜像源一致但主源不同 → 采主源"
+                    sensitivity = "**脆弱**：镜像源一致，若改用共识策略结论翻转"
+                else:
+                    confidence = 0.75
+                    rationale = "主源为官方设定集，采主源"
+                    sensitivity = "稳健：无第三方支撑，主源是唯一依据"
 
         # ---------- 编码 ----------
         # ★ 复用 dataset/pipeline/encode.py 的判定表，绝不另写一份

@@ -1,0 +1,234 @@
+{
+  "bias": {
+    "csv_bogdan": {
+      "n_pairs": 787,
+      "dims": {
+        "PWR": {
+          "hi": 0,
+          "lo": 0,
+          "eq": 126,
+          "sum": 0,
+          "disagree": 0,
+          "strength": 0.0,
+          "verdict": "无明显偏向"
+        },
+        "SPD": {
+          "hi": 0,
+          "lo": 0,
+          "eq": 135,
+          "sum": 0,
+          "disagree": 0,
+          "strength": 0.0,
+          "verdict": "无明显偏向"
+        },
+        "RNG": {
+          "hi": 3,
+          "lo": 0,
+          "eq": 124,
+          "sum": 5,
+          "disagree": 3,
+          "strength": 1.667,
+          "verdict": "系统���偏高"
+        },
+        "STA": {
+          "hi": 1,
+          "lo": 0,
+          "eq": 139,
+          "sum": 4,
+          "disagree": 1,
+          "strength": 4.0,
+          "verdict": "轻微不一致"
+        },
+        "PRC": {
+          "hi": 0,
+          "lo": 0,
+          "eq": 132,
+          "sum": 0,
+          "disagree": 0,
+          "strength": 0.0,
+          "verdict": "无明显偏向"
+        },
+        "DEV": {
+          "hi": 0,
+          "lo": 0,
+          "eq": 127,
+          "sum": 0,
+          "disagree": 0,
+          "strength": 0.0,
+          "verdict": "无明显偏向"
+        }
+      }
+    },
+    "csv_topology": {
+      "n_pairs": 647,
+      "dims": {
+        "PWR": {
+          "hi": 1,
+          "lo": 0,
+          "eq": 125,
+          "sum": 4,
+          "disagree": 1,
+          "strength": 4.0,
+          "verdict": "轻微不一致"
+        },
+        "SPD": {
+          "hi": 0,
+          "lo": 0,
+          "eq": 135,
+          "sum": 0,
+          "disagree": 0,
+          "strength": 0.0,
+          "verdict": "无明显偏向"
+        },
+        "RNG": {
+          "hi": 3,
+          "lo": 0,
+          "eq": 124,
+          "sum": 5,
+          "disagree": 3,
+          "strength": 1.667,
+          "verdict": "系统���偏高"
+        },
+        "STA": {
+          "hi": 0,
+          "lo": 0,
+          "eq": 0,
+          "sum": 0,
+          "disagree": 0,
+          "strength": 0.0,
+          "verdict": "无明显偏向"
+        },
+        "PRC": {
+          "hi": 0,
+          "lo": 0,
+          "eq": 132,
+          "sum": 0,
+          "disagree": 0,
+          "strength": 0.0,
+          "verdict": "无明显偏向"
+        },
+        "DEV": {
+          "hi": 0,
+          "lo": 0,
+          "eq": 127,
+          "sum": 0,
+          "disagree": 0,
+          "strength": 0.0,
+          "verdict": "无明显偏向"
+        }
+      }
+    }
+  },
+  "diffs": {
+    "dist": {
+      "RNG": {
+        "1": 4,
+        "2": 6
+      }
+    },
+    "examples": {
+      "RNG": [
+        {
+          "stand": "boy_ii_man",
+          "dim": "RNG",
+          "primary": "C",
+          "mirror": "B",
+          "diff": 1
+        },
+        {
+          "stand": "boy_ii_man",
+          "dim": "RNG",
+          "primary": "C",
+          "mirror": "B",
+          "diff": 1
+        },
+        {
+          "stand": "tusk_act1",
+          "dim": "RNG",
+          "primary": "E",
+          "mirror": "D",
+          "diff": 1
+        },
+        {
+          "stand": "tusk_act1",
+          "dim": "RNG",
+          "primary": "E",
+          "mirror": "D",
+          "diff": 1
+        },
+        {
+          "stand": "tusk_act2",
+          "dim": "RNG",
+          "primary": "D",
+          "mirror": "B",
+          "diff": 2
+        },
+        {
+          "stand": "tusk_act2",
+          "dim": "RNG",
+          "primary": "D",
+          "mirror": "B",
+          "diff": 2
+        },
+        {
+          "stand": "tusk_act3",
+          "dim": "RNG",
+          "primary": "D",
+          "mirror": "B",
+          "diff": 2
+        },
+        {
+          "stand": "tusk_act3",
+          "dim": "RNG",
+          "primary": "D",
+          "mirror": "B",
+          "diff": 2
+        },
+        {
+          "stand": "tusk_act4",
+          "dim": "RNG",
+          "primary": "C",
+          "mirror": "A",
+          "diff": 2
+        },
+        {
+          "stand": "tusk_act4",
+          "dim": "RNG",
+          "primary": "C",
+          "mirror": "A",
+          "diff": 2
+        }
+      ]
+    }
+  },
+  "hypotheses": [
+    {
+      "id": "H1",
+      "hypothesis": "CSV 的 RNG 列是 SPD 列的复制（数据导出错误）",
+      "metric": "RNG==SPD 的行 42/154 = 27.3%",
+      "verdict": "否定",
+      "reasoning": "若为复制，该比例应接近 100%；实测约 27%，与随机水平相当。Tusk 四形态恰好 RNG==SPD 属巧合，非规律。"
+    },
+    {
+      "id": "H2",
+      "hypothesis": "分歧集中在特定维度 → 指向度量标准差异",
+      "metric": "零分歧维度 4/6（PWR,SPD,PRC,DEV）；有分歧维度 2/6（RNG,STA）",
+      "verdict": "成立",
+      "reasoning": "PWR/SPD/PRC/DEV 四个维度 0 条分歧，说明镜像源的数据录入整体是可靠的；分歧只出现在 RNG/STA，指向这两个维度的**度量标准不同**。"
+    },
+    {
+      "id": "H3",
+      "hypothesis": "分歧方向单向 → 系统性偏移",
+      "metric": "RNG: 高3/低0",
+      "verdict": "成立",
+      "reasoning": "所有分歧都是「镜像源偏高」，无一条反向。随机噪声应对称分布，单向说明是**口径差异**。"
+    },
+    {
+      "id": "H4",
+      "hypothesis": "主源（jojowiki）在分歧维度上更权威",
+      "metric": "主源有官方射程定义原文；CSV 无任何口径说明",
+      "verdict": "成立",
+      "reasoning": "jojowiki 的 Stand 页面 RANGE 小节明确给出「有效射程」定义（射程与精度成反比，越偏离射程越弱）；CSV 是无出处的第三方整理表，未标注任何口径。→ **主源是唯一有口径定义的来源，应采信主源**。"
+    }
+  ]
+}

@@ -271,9 +271,42 @@ def root():
     }
 
 
+def _try_reconnect() -> bool:
+    """★ 尝试重连数据库并重新初始化依赖它的组件。
+
+    实测踩坑：服务在 Docker 未就绪时启动 → 降级，
+    之后即使 DB 起来了也**永远不会恢复**，
+    用户只能重启服务才知道「其实 DB 早就好了」。
+    → health 每次调用都试一次重连，代价极小（一次 TCP 连接测试）。
+    """
+    if STATE.get("db_ok"):
+        return True
+    try:
+        conn = psycopg2.connect(**PG)
+        conn.autocommit = True
+        cur = conn.cursor()
+        cur.execute("SELECT stand_id, name_en, part_name_en, owner_name_raw "
+                    "FROM stands")
+        rows = cur.fetchall()
+        cur.close()
+
+        STATE["conn"] = conn
+        from executor import StructuredExecutor
+        STATE["structured"] = StructuredExecutor(conn)
+        STATE["db_ok"] = True
+        print("[api] ✓ 数据库已恢复，结构化查询重新启用")
+        return True
+    except Exception:
+        return False
+
+
 @app.get("/health", response_model=HealthResponse,
          summary="健康检查与系统状态")
 def health():
+    # ★ 先尝试重连（DB 可能已恢复但服务还在降级态）
+    #   实测踩坑：插入位置错了，把 health 的签名覆盖掉，
+    #   导致 _try_reconnect 的返回值 True 被当成响应体 → 500
+    _try_reconnect()
     conn = STATE.get("conn")
     db_ok = False
     n = 0

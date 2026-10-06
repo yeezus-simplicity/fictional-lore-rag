@@ -1,0 +1,1526 @@
+{
+  "index_stats": {
+    "base": {
+      "name": "原始语义块",
+      "n_chunks": 2407,
+      "p50": 229,
+      "mean": 289.2,
+      "p90": 563,
+      "total_chars": 696201
+    },
+    "merged512": {
+      "name": "合并到 512",
+      "n_chunks": 1986,
+      "p50": 499,
+      "mean": 517.9,
+      "p90": 734,
+      "total_chars": 1028632
+    }
+  },
+  "config": {
+    "top_k": 3,
+    "n_tasks": 30,
+    "retrieval": "BM25 + bge-m3 + RRF k=30（与 M6 一致）",
+    "variable": "只有索引切分方式不同"
+  },
+  "原始语义块（当前）": {
+    "n": 30,
+    "trace_ratio": 0.9547619047619047,
+    "numeric_ratio": null,
+    "contradiction_rate": 0.0,
+    "entity_ratio": 1.0,
+    "util_ratio": 0.2024,
+    "hedging_rate": 0.5,
+    "avg_evidence_chars": 835.8,
+    "used_chars": 169.2,
+    "avg_answer_chars": 112.6,
+    "avg_gen_ms": 5722.9,
+    "index_time_sec": 25.0,
+    "elapsed_sec": 171.9,
+    "vector_enabled": false,
+    "records": [
+      {
+        "qid": "T1-033",
+        "question": "Echoes (ACT3) 的速度是几级？",
+        "answer": "Echoes ACT3 的速度等级较高，被认为是极其快速的。",
+        "util": {
+          "ratio": 0.15993265993265993,
+          "n_evidence": 3,
+          "n_used": 1
+        },
+        "evidence_chars": 987,
+        "answer_chars": 30,
+        "gen_ms": 1484.3,
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": null,
+          "contradiction": false,
+          "util_ratio": 0.1599,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        }
+      },
+      {
+        "qid": "T1-014",
+        "question": "Foo Fighters 的持续力是几级？",
+        "answer": "根据提供的证据，Foo Fighters 的持续力并没有明确提到。因此，无法确定 Foo Fighters 的持续力等级。",
+        "util": {
+          "ratio": 0.08592517466756817,
+          "n_evidence": 3,
+          "n_used": 0
+        },
+        "evidence_chars": 2080,
+        "answer_chars": 61,
+        "gen_ms": 2965.5,
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.0859,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        }
+      },
+      {
+        "qid": "T4-005",
+        "question": "Aqua Necklace的名称或设定来源是什么？",
+        "answer": "提供的证据中未提及Aqua Necklace的名称或设定来源。",
+        "util": {
+          "ratio": 0.1259259259259259,
+          "n_evidence": 3,
+          "n_used": 1
+        },
+        "evidence_chars": 478,
+        "answer_chars": 31,
+        "gen_ms": 1834.5,
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.1259,
+          "hedging": true,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        }
+      },
+      {
+        "qid": "T7-006",
+        "question": "Chocolate Disco 的破坏力是多少？",
+        "answer": "提供的证据中未提及 Chocolate Disco 的破坏力。",
+        "util": {
+          "ratio": 0.2571428571428571,
+          "n_evidence": 3,
+          "n_used": 3
+        },
+        "evidence_chars": 505,
+        "answer_chars": 31,
+        "gen_ms": 1102.3,
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.2571,
+          "hedging": true,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        }
+      },
+      {
+        "qid": "T4-024",
+        "question": "Stone Free的STRING DECOMPOSITION方面有哪些描述？",
+        "answer": "根据提供的证据，Stone Free的STRING DECOMPOSITION方面描述如下：\n\n- Jolyne可以将身体分解成字符串，并且通常从双手开始。\n- 这种能力使得Jolyne能够自由地操纵这些字符串。",
+        "util": {
+          "ratio": 0.26964433416046324,
+          "n_evidence": 3,
+          "n_used": 2
+        },
+        "evidence_chars": 526,
+        "answer_chars": 106,
+        "gen_ms": 5296.7,
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 0.9,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.2696,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        }
+      },
+      {
+        "qid": "T7-005",
+        "question": "Stray Cat 的射程是多少？",
+        "answer": "提供的证据中未提及Stray Cat的射程。",
+        "util": {
+          "ratio": 0.17840019059531254,
+          "n_evidence": 3,
+          "n_used": 1
+        },
+        "evidence_chars": 721,
+        "answer_chars": 22,
+        "gen_ms": 1339.8,
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.1784,
+          "hedging": true,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        }
+      },
+      {
+        "qid": "T4-021",
+        "question": "King Crimson的TIME ERASURE方面有哪些描述？",
+        "answer": "根据提供的证据，King Crimson的TIME ERASURE（时间侵蚀）能力在《GioGio》的Bizarre Adventure章节中有如下描述：\n\n1. 在Chapter 7-1和7-2中，King Crimson的时间侵蚀能力被描绘为Diavolo通过 teleportation（传送）来逃避玩家的攻击，并从背后进行打击。\n2. 在Chapter 11-1和11-3中，时间侵蚀被展示为对手的动作被慢速化，而Diavolo则以正常速度移动。",
+        "util": {
+          "ratio": 0.2745195639231302,
+          "n_evidence": 3,
+          "n_used": 1
+        },
+        "evidence_chars": 935,
+        "answer_chars": 227,
+        "gen_ms": 11127.4,
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 0.8571,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.2745,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        }
+      },
+      {
+        "qid": "T1-027",
+        "question": "Horus 的射程是几级？",
+        "answer": "提供的证据中未提及Horus的射程等级。",
+        "util": {
+          "ratio": 0.06896551724137931,
+          "n_evidence": 3,
+          "n_used": 0
+        },
+        "evidence_chars": 771,
+        "answer_chars": 20,
+        "gen_ms": 1346.1,
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.069,
+          "hedging": true,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        }
+      },
+      {
+        "qid": "T1-039",
+        "question": "Bad Company 的精密性是几级？",
+        "answer": "根据提供的证据，Bad Company 的精密性是四级。",
+        "util": {
+          "ratio": 0.13339719029374203,
+          "n_evidence": 3,
+          "n_used": 0
+        },
+        "evidence_chars": 1028,
+        "answer_chars": 28,
+        "gen_ms": 1237.8,
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.1334,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        }
+      },
+      {
+        "qid": "T4-025",
+        "question": "Emperor的能力方面有哪些描述？",
+        "answer": "根据提供的证据，Emperor（皇帝）是JoJo的BizarreAdventure系列中的一个Stand，属于Hol Horse。关于Emperor的能力描述如下：\n\n- Emperor虽然有比平均范围更好的近距离范围，但随着子弹达到其范围的极限，其效果会迅速下降。",
+        "util": {
+          "ratio": 0.3134920634920635,
+          "n_evidence": 3,
+          "n_used": 2
+        },
+        "evidence_chars": 536,
+        "answer_chars": 133,
+        "gen_ms": 5875.8,
+        "score": {
+          "trace_ratio": 0.5,
+          "token_coverage": 0.8,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.3135,
+          "hedging": false,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "关于Emperor的能力描述如下：\n\n- Emperor虽然有比平均范围更好的近距离范围，但随着子弹达到其范围的极限，其效果会迅速下降。"
+          ]
+        }
+      },
+      {
+        "qid": "T4-014",
+        "question": "Boy II Man的能量吸取方面有哪些描述？",
+        "answer": "根据提供的证据，Boy II Man的能量吸取能力描述如下：\n\n- Boy II Man的特技是能够从赢得Rock Paper Scissors（RPS）游戏的人那里窃取能量。",
+        "util": {
+          "ratio": 0.3541666666666667,
+          "n_evidence": 3,
+          "n_used": 3
+        },
+        "evidence_chars": 427,
+        "answer_chars": 88,
+        "gen_ms": 4284.7,
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 0.8889,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.3542,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        }
+      },
+      {
+        "qid": "T7-002",
+        "question": "Green, Green Grass of Home 的破坏力是多少？",
+        "answer": "提供的证据中未提及Green, Green Grass of Home的破坏力。",
+        "util": {
+          "ratio": 0.32812333864965443,
+          "n_evidence": 3,
+          "n_used": 3
+        },
+        "evidence_chars": 448,
+        "answer_chars": 40,
+        "gen_ms": 1679.7,
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.3281,
+          "hedging": true,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        }
+      },
+      {
+        "qid": "T4-008",
+        "question": "Cheap Trick的ATTACHMENT方面有哪些描述？",
+        "answer": "Cheap Trick的ATTACHMENT方面描述如下：\n\n1. Cheap Trick可以附着在用户身上，开始时由Masazo Kinoto使用。\n2. 在用户熟睡时，Cheap Trick可以附着在看其背的人身上，使其看起来像是在攻击，从而变得特别危险。\n3. 当Cheap Trick附着在某人身上时，它会成为该人的Stand，即使此人原本已有Stand。\n4. Cheap Trick只能被看其背的人看到，且作为Stand，它不能被用户攻击，除非用户伤害自己，因为Cheap Trick会吸走用户的生命力。\n5. 要安全地移除Cheap Trick，必须小心谨慎，否则可能会导致用户皮肤撕裂，从而造成死亡。",
+        "util": {
+          "ratio": 0.21237502358045654,
+          "n_evidence": 3,
+          "n_used": 1
+        },
+        "evidence_chars": 1144,
+        "answer_chars": 308,
+        "gen_ms": 14303.4,
+        "score": {
+          "trace_ratio": 0.7143,
+          "token_coverage": 0.6429,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.2124,
+          "hedging": false,
+          "n_unsupported": 2,
+          "unsupported_examples": [
+            "Cheap Trick的ATTACHMENT方面描述如下：\n\n1.",
+            "4."
+          ]
+        }
+      },
+      {
+        "qid": "T7-008",
+        "question": "Gold Experience Requiem 的破坏力是多少？",
+        "answer": "根据提供的证据，Gold Experience Requiem 在短时间内可以将一个小石块转化为一只蝎子，并且能够对Diavolo的手造成伤害。这表明它具有一定的破坏力。然而，具体的破坏力数值并未在证据中明确指出。因此，无法给出一个确切的答案。",
+        "util": {
+          "ratio": 0.21519607843137253,
+          "n_evidence": 3,
+          "n_used": 2
+        },
+        "evidence_chars": 730,
+        "answer_chars": 122,
+        "gen_ms": 5883.9,
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 0.9375,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.2152,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        }
+      },
+      {
+        "qid": "T7-010",
+        "question": "Limp Bizkit 的破坏力是多少？",
+        "answer": "提供的证据中未提及 Limp Bizkit 的破坏力。",
+        "util": {
+          "ratio": 0.13468013468013468,
+          "n_evidence": 3,
+          "n_used": 0
+        },
+        "evidence_chars": 386,
+        "answer_chars": 27,
+        "gen_ms": 1397.8,
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.1347,
+          "hedging": true,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        }
+      },
+      {
+        "qid": "T7-007",
+        "question": "Purple Haze 的射程是多少？",
+        "answer": "提供的证据中未提及Purple Haze的射程。",
+        "util": {
+          "ratio": 0.1750841750841751,
+          "n_evidence": 3,
+          "n_used": 1
+        },
+        "evidence_chars": 668,
+        "answer_chars": 24,
+        "gen_ms": 1215.6,
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.1751,
+          "hedging": true,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        }
+      },
+      {
+        "qid": "T7-014",
+        "question": "Purple Haze Distortion 的成长性是多少？",
+        "answer": "提供的证据中未提及Purple Haze Distortion的成长性。",
+        "util": {
+          "ratio": 0.2420634920634921,
+          "n_evidence": 3,
+          "n_used": 2
+        },
+        "evidence_chars": 779,
+        "answer_chars": 36,
+        "gen_ms": 1298.2,
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.2421,
+          "hedging": true,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        }
+      },
+      {
+        "qid": "T1-013",
+        "question": "Tower of Gray 的破坏力是几级？",
+        "answer": "提供的证据中未提及 Tower of Gray 的破坏力等级。",
+        "util": {
+          "ratio": 0.16585365853658537,
+          "n_evidence": 3,
+          "n_used": 2
+        },
+        "evidence_chars": 998,
+        "answer_chars": 31,
+        "gen_ms": 1350.7,
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.1659,
+          "hedging": true,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        }
+      },
+      {
+        "qid": "T1-015",
+        "question": "Yellow Temperance 的持续力是几级？",
+        "answer": "提供的证据中未提及 Yellow Temperance 的持续力等级。",
+        "util": {
+          "ratio": 0.12698412698412698,
+          "n_evidence": 3,
+          "n_used": 0
+        },
+        "evidence_chars": 637,
+        "answer_chars": 35,
+        "gen_ms": 1284.1,
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.127,
+          "hedging": true,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        }
+      },
+      {
+        "qid": "T4-004",
+        "question": "Highway to Hell的整体能力概述是什么？",
+        "answer": "Highway to Hell的整体能力是，它会以受害者的翅膀形状显现，并对指定的受害者造成与Thunder McQueen遭受相同类型的伤害。具体来说，当McQueen试图自杀时，Highway to Hell会在受害者的颈部周围形成一个带有绳索痕迹的物体，模拟出窒息的场景；当McQueen试图淹死自己时，Highway to Hell则会变成液体覆盖受害者的口鼻，模拟出溺水的场景。此外，Highway to Hell还被描述为可以模仿McQueen的姿势。",
+        "util": {
+          "ratio": 0.29429429429429427,
+          "n_evidence": 3,
+          "n_used": 3
+        },
+        "evidence_chars": 933,
+        "answer_chars": 232,
+        "gen_ms": 11315.4,
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.2943,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        }
+      },
+      {
+        "qid": "T4-003",
+        "question": "Limp Bizkit的INVISIBLE REANIMATION方面有哪些描述？",
+        "answer": "根据提供的证据，Limp Bizkit的INVISIBLE REANIMATION能力描述如下：\n\n- 当激活Limp Bizkit后，所有尸体会生成隐形的鬼魂式不死生物。这些“僵尸”表现为从死者身上显现出来的实体敌人，由用户命令攻击。这种能力可以作用于任何之前与用户互动过的尸体，包括但不限于昆虫、标本动物（如鸟类和鳄鱼）、绿岛街监狱的坟墓中的死亡囚犯，甚至包括Sports Maxx本人。此外，Sports Maxx还能追踪他创造的僵尸，尽管他能够感知到绿婴儿并感受到其移动。",
+        "util": {
+          "ratio": 0.2601010101010101,
+          "n_evidence": 3,
+          "n_used": 2
+        },
+        "evidence_chars": 912,
+        "answer_chars": 240,
+        "gen_ms": 13403.6,
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 0.9583,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.2601,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        }
+      },
+      {
+        "qid": "T1-008",
+        "question": "Born This Way 的成长性是几级？",
+        "answer": "提供的证据中未提及 Born This Way 的成长性等级。",
+        "util": {
+          "ratio": 0.17022144522144522,
+          "n_evidence": 3,
+          "n_used": 0
+        },
+        "evidence_chars": 618,
+        "answer_chars": 31,
+        "gen_ms": 1547.2,
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.1702,
+          "hedging": true,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        }
+      },
+      {
+        "qid": "T7-001",
+        "question": "Made in Heaven 的速度是多少？",
+        "answer": "提供的证据中未提及 Made in Heaven 的速度。",
+        "util": {
+          "ratio": 0.1762820512820513,
+          "n_evidence": 3,
+          "n_used": 0
+        },
+        "evidence_chars": 550,
+        "answer_chars": 29,
+        "gen_ms": 1387.2,
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.1763,
+          "hedging": true,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        }
+      },
+      {
+        "qid": "T1-002",
+        "question": "Marilyn Manson 的精密性是几级？",
+        "answer": "提供的证据中未提及 Marilyn Manson 的精密性等级。",
+        "util": {
+          "ratio": 0.2241025641025641,
+          "n_evidence": 3,
+          "n_used": 2
+        },
+        "evidence_chars": 715,
+        "answer_chars": 32,
+        "gen_ms": 1407.9,
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.2241,
+          "hedging": true,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        }
+      },
+      {
+        "qid": "T7-013",
+        "question": "Rolling Stones 的破坏力是多少？",
+        "answer": "根据提供的证据，Rolling Stones 的破坏力主要体现在以下几个方面：\n\n1. **形状变化**：当 Rolling Stones 靠近一个目标时，它会逐渐改变外观，以模仿目标在死亡前的样子。即使尘埃也会模仿目标的形状。\n\n2. **无法改变命运**：尽管 Rolling Stones 可以模仿目标的形状，但无法改变由 Rolling Stones 预测的命运。\n\n3. **阻止追逐**：如果有人触碰非目标对象，句子如 \"Please kill me\"（请杀我）会在他们的皮肤上形成。\n\n4. **不被雕刻的对象**：那些接近 Rolling Stones 但没有被雕刻进石头中的对象不会注定死亡。\n\n因此，根据这些信息，Rolling Stones 的破坏力主要体现在其形状变化和阻止追逐的能力上，而无法改变命运。",
+        "util": {
+          "ratio": 0.2211216279012889,
+          "n_evidence": 3,
+          "n_used": 2
+        },
+        "evidence_chars": 1016,
+        "answer_chars": 364,
+        "gen_ms": 18290.3,
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 0.8361,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.2211,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        }
+      },
+      {
+        "qid": "T1-006",
+        "question": "Ebony Devil 的破坏力是几级？",
+        "answer": "根据提供的证据，Ebony Devil 具备远程控制一个 dolls 的能力，这个 dolls 的力量和速度会随着 Devo 对目标的怨恨程度而增强。因此，Ebony Devil 的破坏力可以认为是四级。",
+        "util": {
+          "ratio": 0.1924342105263158,
+          "n_evidence": 3,
+          "n_used": 2
+        },
+        "evidence_chars": 594,
+        "answer_chars": 102,
+        "gen_ms": 5184.6,
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.1924,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        }
+      },
+      {
+        "qid": "T4-001",
+        "question": "Yellow Temperance的PHYSICAL IMPERVIOUSNESS方面有哪些描述？",
+        "answer": "根据提供的证据，Yellow Temperance在物理上具有以下特点：\n\n1. **吸收能力**：Yellow Temperance能够吸收物理冲击和影响，使其成为橡胶灵魂（Rubber Soul）的防护盾。\n2. **反应速度**：它可以快速反应并捕捉来自星铂金（Star Platinum）的攻击，无论是否裸手或使用物理武器，完全保护橡胶灵魂不受伤害。\n3. **抵抗能力**：它能够抵御冲击、燃烧和冻结等物理伤害，完全保护橡胶灵魂。\n4. **不可替代性**：尽管可以模仿其他Stand，但其物理形态是不可替代的，因为橡胶灵魂需要呼吸。\n5. **自我修复能力**：当受到热能攻击时，会爆炸并扩散，导致大面积烧伤；受到冷能攻击时，会硬化形成刺状物，深入受害者的体内。\n6. **外观变化**：它可以改变橡胶灵魂的外貌，使其看起来像任何他想要的样子，包括模仿其他Stand的外观。",
+        "util": {
+          "ratio": 0.119830567892303,
+          "n_evidence": 3,
+          "n_used": 0
+        },
+        "evidence_chars": 1793,
+        "answer_chars": 393,
+        "gen_ms": 22981.1,
+        "score": {
+          "trace_ratio": 0.4286,
+          "token_coverage": 0.3605,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.1198,
+          "hedging": false,
+          "n_unsupported": 4,
+          "unsupported_examples": [
+            "3. **抵抗能力**：它能够抵御冲击、燃烧和冻结等物理伤害，完全保护橡胶灵魂。",
+            "4. **不可替代性**：尽管可以模仿其他Stand，但其物理形态是不可替代的，因为橡胶灵魂需要呼吸。",
+            "5. **自我修复能力**：当受到热能攻击时，会爆炸并扩散，导致大面积烧伤；"
+          ]
+        }
+      },
+      {
+        "qid": "T4-009",
+        "question": "Foo Fighters的GUARDING THE STAND DISCS方面有哪些描述？",
+        "answer": "根据提供的证据，Foo Fighters在保护Stand Discs方面有以下描述：\n\n- Foo Fighters被Whitesnake告知要待在仓库里保管Discs，并且如果有人接近，他应该杀死其他人，只有他本人除外。\n- Foo Fighters在一次行动中杀死了两个试图进入仓库的犯人，并完全吸收他们的身体，使得这些犯人似乎消失了。这促使成立了寻找失踪囚犯的搜寻小组，其中包括Jolyne Cujoh和Ermes Costello。\n- 在与敌人交战时，Foo Fighters会伪装自己，让尸体互相指责对方，然后决定直接面对敌人。她会重新组装自己，然后向敌人展示她的计划。\n- 当Foo Fighters的主要身体朝牧场移动以搬运Discs时，她的副身体开始拖着守卫进入水中，将Jolyne和Ermes从安全区外带出来，间接地导致他们死亡。\n- 在与Jolyne的追逐过程中，Ermes用K",
+        "util": {
+          "ratio": 0.2012771392081737,
+          "n_evidence": 3,
+          "n_used": 1
+        },
+        "evidence_chars": 2006,
+        "answer_chars": 498,
+        "gen_ms": 26945.3,
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.2013,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        }
+      },
+      {
+        "qid": "T1-003",
+        "question": "D4C Love Train 的持续力是几级？",
+        "answer": "提供的证据中未提及D4C Love Train的持续力等级。",
+        "util": {
+          "ratio": 0.21212121212121213,
+          "n_evidence": 3,
+          "n_used": 2
+        },
+        "evidence_chars": 675,
+        "answer_chars": 30,
+        "gen_ms": 1600.6,
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.2121,
+          "hedging": true,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        }
+      },
+      {
+        "qid": "T7-003",
+        "question": "Achtung Baby 的射程是多少？",
+        "answer": "提供的证据中未提及 Achtung Baby 的射程。",
+        "util": {
+          "ratio": 0.17857142857142858,
+          "n_evidence": 3,
+          "n_used": 1
+        },
+        "evidence_chars": 477,
+        "answer_chars": 27,
+        "gen_ms": 1316.7,
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.1786,
+          "hedging": true,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        }
+      }
+    ]
+  },
+  "合并到 512（M7 推荐）": {
+    "n": 30,
+    "trace_ratio": 0.9212962962962963,
+    "numeric_ratio": 0.5,
+    "contradiction_rate": 0.0,
+    "entity_ratio": 0.9833333333333333,
+    "util_ratio": 0.1787,
+    "hedging_rate": 0.3,
+    "avg_evidence_chars": 1468.2,
+    "used_chars": 262.3,
+    "avg_answer_chars": 154.7,
+    "avg_gen_ms": 8719.7,
+    "index_time_sec": 27.2,
+    "elapsed_sec": 261.9,
+    "vector_enabled": false,
+    "records": [
+      {
+        "qid": "T1-033",
+        "question": "Echoes (ACT3) 的速度是几级？",
+        "answer": "提供的证据中未提及Echoes (ACT3) 的速度等级。",
+        "util": {
+          "ratio": 0.1419753086419753,
+          "n_evidence": 3,
+          "n_used": 0
+        },
+        "evidence_chars": 1454,
+        "answer_chars": 29,
+        "gen_ms": 1785.9,
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.142,
+          "hedging": true,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        }
+      },
+      {
+        "qid": "T1-014",
+        "question": "Foo Fighters 的持续力是几级？",
+        "answer": "根据提供的证据，Foo Fighters 的持续力是 3 级。",
+        "util": {
+          "ratio": 0.08592517466756817,
+          "n_evidence": 3,
+          "n_used": 0
+        },
+        "evidence_chars": 2080,
+        "answer_chars": 31,
+        "gen_ms": 2240.0,
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 0.6667,
+          "numeric_ratio": 0.0,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.0859,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        }
+      },
+      {
+        "qid": "T4-005",
+        "question": "Aqua Necklace的名称或设定来源是什么？",
+        "answer": "Aqua Necklace的设计来源于Jōmon时期的狗ū figurines。它的设计特征包括薄的眼睛和小瞳孔，突出的鼻子和嘴唇，尖锐的牙齿，全身遍布大眼睛，头部像一个头盔，中间有一个裂口，边缘有小圆圈，上方的眼睛周围。它有一条波浪线在脸两侧，从后脑勺延伸到眼睛上方，再向下延伸到下巴。它的下半身通常呈液体状态，可以快速移动，而不是展示腿。",
+        "util": {
+          "ratio": 0.10255220969506684,
+          "n_evidence": 3,
+          "n_used": 0
+        },
+        "evidence_chars": 1503,
+        "answer_chars": 171,
+        "gen_ms": 11876.4,
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.1026,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        }
+      },
+      {
+        "qid": "T7-006",
+        "question": "Chocolate Disco 的破坏力是多少？",
+        "answer": "提供的证据中未提及 Chocolate Disco 的破坏力。",
+        "util": {
+          "ratio": 0.23469387755102042,
+          "n_evidence": 3,
+          "n_used": 3
+        },
+        "evidence_chars": 1095,
+        "answer_chars": 31,
+        "gen_ms": 1710.0,
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.2347,
+          "hedging": true,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        }
+      },
+      {
+        "qid": "T4-024",
+        "question": "Stone Free的STRING DECOMPOSITION方面有哪些描述？",
+        "answer": "根据提供的证据，Stone Free的STRING DECOMPOSITION方面的描述包括：\n\n1. **STRING MANIPULATION**：Jolyne可以将她的身体分解成字符串，并且能够自由地进行操纵。\n2. **STRING INVISIBILITY**：这些字符串对非Stand用户是不可见的。\n3. **STRING SHARPNESS**：这些字符串非常锋利，如果施加足够的力量，可以切割皮肤。\n4. **STRING STRENGTH**：虽然这些字符串不是特别强，但在足够精确的情况下，可以形成更强的绳子。\n5. **STRING PICKPOCKETING**：通过精确控制，这些字符串可以用来从较小的物体中偷窃。\n6. **STRING CONTRACTILE BEHAVIOR**：这些字符串可以像肌肉一样收缩和扩张，允许Stone Free控制其握力。\n7. **S",
+        "util": {
+          "ratio": 0.29394586894586894,
+          "n_evidence": 3,
+          "n_used": 3
+        },
+        "evidence_chars": 1437,
+        "answer_chars": 573,
+        "gen_ms": 31021.5,
+        "score": {
+          "trace_ratio": 0.2222,
+          "token_coverage": 0.4954,
+          "numeric_ratio": null,
+          "entity_ratio": 0.5,
+          "contradiction": false,
+          "util_ratio": 0.2939,
+          "hedging": false,
+          "n_unsupported": 7,
+          "unsupported_examples": [
+            "2. **STRING INVISIBILITY**：这些字符串对非Stand用户是不可见的。",
+            "3. **STRING SHARPNESS**：这些字符串非常锋利，如果施加足够的力量，可以切割皮肤。",
+            "4. **STRING STRENGTH**：虽然这些字符串不是特别强，但在足够精确的情况下，可以形成更强的绳子。"
+          ]
+        }
+      },
+      {
+        "qid": "T7-005",
+        "question": "Stray Cat 的射程是多少？",
+        "answer": "提供的证据中未提及 Stray Cat 的射程。",
+        "util": {
+          "ratio": 0.1741870916211977,
+          "n_evidence": 3,
+          "n_used": 0
+        },
+        "evidence_chars": 1543,
+        "answer_chars": 24,
+        "gen_ms": 1858.2,
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.1742,
+          "hedging": true,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        }
+      },
+      {
+        "qid": "T4-021",
+        "question": "King Crimson的TIME ERASURE方面有哪些描述？",
+        "answer": "根据提供的证据，King Crimson的TIME ERASURE方面的描述如下：\n\n1. 在战斗中，Diavolo无法攻击，而是依靠避免攻击和移动到有利位置，如敌人的盲点。此外，他可以将自己血液推进并附着在敌人身上，以准备一个闪光战术。\n2. 使用其Stand的非凡破坏力，Diavolo在King Crimson的时间流逝能力结束后直接对其发动攻击。\n3. 在动画版中，King Crimson的时间流逝能力被描绘为一种有 glitches 的效果，仿佛动画本身已经错误地跳过了时间。",
+        "util": {
+          "ratio": 0.172145015810784,
+          "n_evidence": 3,
+          "n_used": 0
+        },
+        "evidence_chars": 1581,
+        "answer_chars": 244,
+        "gen_ms": 13901.8,
+        "score": {
+          "trace_ratio": 0.5,
+          "token_coverage": 0.6042,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.1721,
+          "hedging": false,
+          "n_unsupported": 2,
+          "unsupported_examples": [
+            "2. 使用其Stand的非凡破坏力，Diavolo在King Crimson的时间流逝能力结束后直接对其发动攻击。",
+            "3. 在动画版中，King Crimson的时间流逝能力被描绘为一种有 glitches 的效果，仿佛动画本身已经错误地跳过了时间。"
+          ]
+        }
+      },
+      {
+        "qid": "T1-027",
+        "question": "Horus 的射程是几级？",
+        "answer": "提供的证据中未提及Horus的射程等级。",
+        "util": {
+          "ratio": 0.05949864089398973,
+          "n_evidence": 3,
+          "n_used": 0
+        },
+        "evidence_chars": 1406,
+        "answer_chars": 20,
+        "gen_ms": 1705.8,
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.0595,
+          "hedging": true,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        }
+      },
+      {
+        "qid": "T1-039",
+        "question": "Bad Company 的精密性是几级？",
+        "answer": "根据提供的证据，Bad Company 的精密性是四级。",
+        "util": {
+          "ratio": 0.15683023872679044,
+          "n_evidence": 3,
+          "n_used": 0
+        },
+        "evidence_chars": 1250,
+        "answer_chars": 28,
+        "gen_ms": 1450.5,
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.1568,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        }
+      },
+      {
+        "qid": "T4-025",
+        "question": "Emperor的能力方面有哪些描述？",
+        "answer": "根据提供的证据，Emperor（皇帝）的特性包括：\n\n1. **自由控制子弹轨迹**：Emperor的子弹是其Stand的一部分，用户可以自由控制子弹的轨迹，这使得子弹具有较高的精度和灵活性。\n2. **精准射击**：Hol Horse能够通过精确控制子弹，使它们在狭窄的通道中快速移动，甚至能够绕过障碍物。\n3. **范围限制**：尽管子弹具有较好的近距离射击能力，但由于它们仍然是Emperor的一部分，子弹的射程有限，随着射程的增加，其效果会迅速下降。",
+        "util": {
+          "ratio": 0.1663808843375407,
+          "n_evidence": 3,
+          "n_used": 0
+        },
+        "evidence_chars": 1496,
+        "answer_chars": 229,
+        "gen_ms": 14701.6,
+        "score": {
+          "trace_ratio": 0.3333,
+          "token_coverage": 0.6111,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.1664,
+          "hedging": false,
+          "n_unsupported": 2,
+          "unsupported_examples": [
+            "根据提供的证据，Emperor（皇帝）的特性包括：\n\n1. **自由控制子弹轨迹**：Emperor的子弹是其Stand的一部分，用户可以自由控制子弹的轨迹，这使得子弹具有较高的精度和灵活性。",
+            "3. **范围限制**：尽管子弹具有较好的近距离射击能力，但由于它们仍然是Emperor的一部分，子弹的射程有限，随着射程的增加，其效果会迅速下降。"
+          ]
+        }
+      },
+      {
+        "qid": "T4-014",
+        "question": "Boy II Man的能量吸取方面有哪些描述？",
+        "answer": "根据提供的证据，Boy II Man的能量吸取能力描述如下：\n\n- Boy II Man是肯·奥耶吉尼的立牌，出现在《JOJO的奇妙冒险》系列的第四部作品《钻石是永恒的》中。\n- 其能量吸取能力允许它在与用户进行游戏“石头剪刀布”（RPS）时，从输掉比赛的人那里窃取能量。\n- 这种能量的窃取可以通过简单的游戏来实现，而无需实际的战斗或冲突。",
+        "util": {
+          "ratio": 0.214676476136578,
+          "n_evidence": 3,
+          "n_used": 1
+        },
+        "evidence_chars": 1455,
+        "answer_chars": 171,
+        "gen_ms": 13021.9,
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 0.9524,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.2147,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        }
+      },
+      {
+        "qid": "T7-002",
+        "question": "Green, Green Grass of Home 的破坏力是多少？",
+        "answer": "根据提供的证据，Green, Green Grass of Home 的破坏力主要体现在以下几个方面：\n\n1. **缩小周围物体和生物**：它能够使周围的一切物体和生物缩小，使其变得比周围的环境更小。这表明它具有缩小物体的能力。\n\n2. **自动保护用户**：尽管它的大小相对较小，但如果有人接近到一定距离，它会逐渐变大，使得任何自然的尺寸差异变得不重要。这显示了它在保护用户方面的能力。\n\n3. **杀死敌人**：证据中提到它能够杀死其敌人，但具体如何实现这一点并未详细说明。\n\n综合这些信息，可以推断出Green, Green Grass of Home 的破坏力主要体现在缩小周围物体和生物的能力上，以及自动保护用户的能力。然而，关于它如何杀死敌人这一部分，证据中并没有提供足够的信息来确定其破坏力的具体程度。因此，根据现有的证据，我们不能准确地评估Green, Green Grass of ",
+        "util": {
+          "ratio": 0.22947191697191696,
+          "n_evidence": 3,
+          "n_used": 1
+        },
+        "evidence_chars": 1220,
+        "answer_chars": 410,
+        "gen_ms": 24676.2,
+        "score": {
+          "trace_ratio": 0.75,
+          "token_coverage": 0.725,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.2295,
+          "hedging": false,
+          "n_unsupported": 2,
+          "unsupported_examples": [
+            "2. **自动保护用户**：尽管它的大小相对较小，但如果有人接近到一定距离，它会逐渐变大，使得任何自然的尺寸差异变得不重要。",
+            "3. **杀死敌人**：证据中提到它能够杀死其敌人，但具体如何实现这一点并未详细说明。"
+          ]
+        }
+      },
+      {
+        "qid": "T4-008",
+        "question": "Cheap Trick的ATTACHMENT方面有哪些描述？",
+        "answer": "Cheap Trick的ATTACHMENT方面描述如下：\n\n1. 当Cheap Trick附着在用户身上时，它会开始杀死用户，并将其变成一个干瘪的小人。\n2. 在用户死亡后，Cheap Trick会再次附着在观察者的背上，继续其过程。",
+        "util": {
+          "ratio": 0.11589559484296326,
+          "n_evidence": 3,
+          "n_used": 0
+        },
+        "evidence_chars": 1415,
+        "answer_chars": 118,
+        "gen_ms": 6040.4,
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 0.6667,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.1159,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        }
+      },
+      {
+        "qid": "T7-008",
+        "question": "Gold Experience Requiem 的破坏力是多少？",
+        "answer": "Gold Experience Requiem 的破坏力是能够 nullify 任何反对它的行动和意志，阻止他们的行动变为现实。一旦效果激活，没有任何逃脱的可能，任何对手的行动都会被逆转，无论对手的能力如何。",
+        "util": {
+          "ratio": 0.18956916099773244,
+          "n_evidence": 3,
+          "n_used": 2
+        },
+        "evidence_chars": 1224,
+        "answer_chars": 104,
+        "gen_ms": 5183.2,
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.1896,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        }
+      },
+      {
+        "qid": "T7-010",
+        "question": "Limp Bizkit 的破坏力是多少？",
+        "answer": "根据提供的证据，Limp Bizkit 的破坏力主要体现在以下几个方面：\n\n1. **控制能力**：Limp Bizkit 允许 Sports Maxx 控制从死者尸体中复活的“僵尸”，这使得他能够对敌人造成致命伤害。\n\n2. **持久性**：即使在用户死亡后，Limp Bizkit 仍然可以持续存在并被操控，这增加了其威胁性。\n\n3. **不可防御性**：当 Sports Maxx 成为“僵尸”后，他的命令能力使他变得非常难以防御。\n\n因此，Limp Bizkit 的破坏力主要体现在其控制能力和持久性上，使其成为一种非常危险和难以对付的特殊能力。",
+        "util": {
+          "ratio": 0.20275403608736942,
+          "n_evidence": 3,
+          "n_used": 2
+        },
+        "evidence_chars": 1477,
+        "answer_chars": 277,
+        "gen_ms": 15122.4,
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 0.7976,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.2028,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        }
+      },
+      {
+        "qid": "T7-007",
+        "question": "Purple Haze 的射程是多少？",
+        "answer": "根据提供的证据，Purple Haze 的射程是 5 米。",
+        "util": {
+          "ratio": 0.21867007672634273,
+          "n_evidence": 3,
+          "n_used": 1
+        },
+        "evidence_chars": 1095,
+        "answer_chars": 29,
+        "gen_ms": 1903.9,
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": 1.0,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.2187,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        }
+      },
+      {
+        "qid": "T7-014",
+        "question": "Purple Haze Distortion 的成长性是多少？",
+        "answer": "提供的证据中未提及Purple Haze Distortion的成长性。",
+        "util": {
+          "ratio": 0.2569444444444445,
+          "n_evidence": 3,
+          "n_used": 2
+        },
+        "evidence_chars": 1225,
+        "answer_chars": 36,
+        "gen_ms": 1523.1,
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.2569,
+          "hedging": true,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        }
+      },
+      {
+        "qid": "T1-013",
+        "question": "Tower of Gray 的破坏力是几级？",
+        "answer": "根据提供的证据，Tower of Gray 的破坏力是二级。",
+        "util": {
+          "ratio": 0.15272825242872312,
+          "n_evidence": 3,
+          "n_used": 0
+        },
+        "evidence_chars": 1451,
+        "answer_chars": 30,
+        "gen_ms": 1721.2,
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.1527,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        }
+      },
+      {
+        "qid": "T1-015",
+        "question": "Yellow Temperance 的持续力是几级？",
+        "answer": "提供的证据中未提及 Yellow Temperance 的持续力等级。",
+        "util": {
+          "ratio": 0.16955974842767296,
+          "n_evidence": 3,
+          "n_used": 0
+        },
+        "evidence_chars": 1493,
+        "answer_chars": 35,
+        "gen_ms": 1456.9,
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.1696,
+          "hedging": true,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        }
+      },
+      {
+        "qid": "T4-004",
+        "question": "Highway to Hell的整体能力概述是什么？",
+        "answer": "Highway to Hell是Thunder McQueen从Whitesnake处获得的Stand，出现在JoJo's Bizarre Adventure系列的第六部作品《石之海》中。它以受害者的翅膀为原型，对指定的受害者造成与Thunder McQueen遭受相同类型的伤害。",
+        "util": {
+          "ratio": 0.3577863577863578,
+          "n_evidence": 3,
+          "n_used": 3
+        },
+        "evidence_chars": 1295,
+        "answer_chars": 141,
+        "gen_ms": 5768.8,
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.3578,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        }
+      },
+      {
+        "qid": "T4-003",
+        "question": "Limp Bizkit的INVISIBLE REANIMATION方面有哪些描述？",
+        "answer": "根据提供的证据，Limp Bizkit的INVISIBLE REANIMATION能力描述如下：\n\n- 当Sports Maxx激活Limp Bizkit时，所有尸体会生成隐形的鬼魂形态的死灵生物。这些“死灵”表现为从死者身上显现出来的可见敌人，并且由用户命令攻击。该能力可以作用于任何之前与用户互动过的死亡物体，包括但不限于蛆虫、标本动物（如鸟类和鳄鱼）、绿岛街监狱的坟墓中的囚犯尸体，甚至Sports Maxx自己。此外，Sports Maxx还能够追踪他创造的死灵生物的位置，尽管他无法直接控制它们的动作。",
+        "util": {
+          "ratio": 0.1366694409765571,
+          "n_evidence": 3,
+          "n_used": 1
+        },
+        "evidence_chars": 2023,
+        "answer_chars": 256,
+        "gen_ms": 13867.2,
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 0.9688,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.1367,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        }
+      },
+      {
+        "qid": "T1-008",
+        "question": "Born This Way 的成长性是几级？",
+        "answer": "提供的证据中未提及 Born This Way 的成长性等级。",
+        "util": {
+          "ratio": 0.14457002127944527,
+          "n_evidence": 3,
+          "n_used": 0
+        },
+        "evidence_chars": 1672,
+        "answer_chars": 31,
+        "gen_ms": 1686.0,
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.1446,
+          "hedging": true,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        }
+      },
+      {
+        "qid": "T7-001",
+        "question": "Made in Heaven 的速度是多少？",
+        "answer": "Made in Heaven 的控制时间的能力赋予它巨大的速度优势。",
+        "util": {
+          "ratio": 0.10386141636141637,
+          "n_evidence": 3,
+          "n_used": 0
+        },
+        "evidence_chars": 1373,
+        "answer_chars": 34,
+        "gen_ms": 1775.1,
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.1039,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        }
+      },
+      {
+        "qid": "T1-002",
+        "question": "Marilyn Manson 的精密性是几级？",
+        "answer": "提供的证据中未提及 Marilyn Manson 的精密性等级。",
+        "util": {
+          "ratio": 0.20129694281594682,
+          "n_evidence": 3,
+          "n_used": 2
+        },
+        "evidence_chars": 1370,
+        "answer_chars": 32,
+        "gen_ms": 1623.0,
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.2013,
+          "hedging": true,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        }
+      },
+      {
+        "qid": "T7-013",
+        "question": "Rolling Stones 的破坏力是多少？",
+        "answer": "根据提供的证据，Rolling Stones 的破坏力主要体现在以下几个方面：\n\n1. **触碰效果**：当 Rolling Stones 被触摸时，会形成类似于“Please kill me”（请杀我）的句子在皮肤上。这表明它具有一定的文字生成能力，但具体破坏力不明确。\n\n2. **形状变化**：当 Rolling Stones 目标一个受害者时，它的外观会逐渐改变，以反映受害者的死亡状态。这表明它能够模仿受害者的形象，但具体如何影响目标的生死状态并未详细说明。\n\n3. **预测能力**：虽然证据中提到即使破坏 Rolling Stones 或改变其形状也可能改变目标的结局，但最终无法改变由 Rolling Stones 预测的结局。这意味着 Rolling Stones 的破坏力主要体现在模仿和预测能力上，而不是直接的物理破坏。\n\n因此，根据提供的证据，Rolling Stones 的",
+        "util": {
+          "ratio": 0.21528139511070152,
+          "n_evidence": 3,
+          "n_used": 2
+        },
+        "evidence_chars": 1469,
+        "answer_chars": 450,
+        "gen_ms": 23901.2,
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 0.906,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.2153,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        }
+      },
+      {
+        "qid": "T1-006",
+        "question": "Ebony Devil 的破坏力是几级？",
+        "answer": "提供的证据中未提及Ebony Devil的破坏力等级。",
+        "util": {
+          "ratio": 0.12024087024087025,
+          "n_evidence": 3,
+          "n_used": 0
+        },
+        "evidence_chars": 1115,
+        "answer_chars": 27,
+        "gen_ms": 1849.9,
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.1202,
+          "hedging": true,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        }
+      },
+      {
+        "qid": "T4-001",
+        "question": "Yellow Temperance的PHYSICAL IMPERVIOUSNESS方面有哪些描述？",
+        "answer": "根据提供的证据，Yellow Temperance在物理上具有以下特点：\n\n1. **吸收能力**：Yellow Temperance能够吸收大量的物理惩罚和影响，使其成为橡胶灵魂（Rubber Soul）的保护盾。\n2. **反应速度**：它可以快速反应并捕捉来自星铂金（Star Platinum）的攻击，完全保护橡胶灵魂不受伤害。\n3. **防护能力**：它能够抵抗冲击、燃烧和冻结等物理伤害，完全保护橡胶灵魂。\n4. **脆弱性**：尽管如此，Yellow Temperance无法弥补人类的弱点，如呼吸需求。因此，橡胶灵魂的生命是其存在的基础。\n\n这些描述表明Yellow Temperance在物理上具有极高的防护能力，但同时也受限于橡胶灵魂自身的脆弱性。",
+        "util": {
+          "ratio": 0.15889048182808582,
+          "n_evidence": 3,
+          "n_used": 0
+        },
+        "evidence_chars": 2101,
+        "answer_chars": 334,
+        "gen_ms": 17085.9,
+        "score": {
+          "trace_ratio": 0.8333,
+          "token_coverage": 0.6984,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.1589,
+          "hedging": false,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "3. **防护能力**：它能够抵抗冲击、燃烧和冻结等物理伤害，完全保护橡胶灵魂。"
+          ]
+        }
+      },
+      {
+        "qid": "T4-009",
+        "question": "Foo Fighters的GUARDING THE STAND DISCS方面有哪些描述？",
+        "answer": "根据提供的证据，Foo Fighters在保护Stand Discs方面有以下描述：\n\n- Foo Fighters被Whitesnake告知要待在仓库里保管Discs，并且如果有人接近，他应该杀死其他人，只有他本人除外。\n- Foo Fighters在一次行动中杀死了两个试图进入仓库的犯人，并完全吸收他们的身体，使得这些犯人似乎消失了。这促使成立了寻找失踪囚犯的搜寻小组，其中包括Jolyne Cujoh和Ermes Costello。\n- 在与敌人交战时，Foo Fighters会伪装自己，让尸体互相指责对方，然后决定直接面对敌人。她会重新组装自己，然后向敌人展示她的计划。\n- 当Foo Fighters的主要身体朝牧场移动以搬运Discs时，她的副身体开始拖着守卫进入水中，将Jolyne和Ermes从安全区外带出来，间接地导致他们死亡。\n- 在与Jolyne的追逐过程中，Ermes用K",
+        "util": {
+          "ratio": 0.2012771392081737,
+          "n_evidence": 3,
+          "n_used": 1
+        },
+        "evidence_chars": 2006,
+        "answer_chars": 498,
+        "gen_ms": 27596.1,
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.2013,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        }
+      },
+      {
+        "qid": "T1-003",
+        "question": "D4C Love Train 的持续力是几级？",
+        "answer": "根据提供的证据，D4C Love Train 是由 Lucy Steel 的圣体产生的一个特殊现象，它是一种强大的能力，能够使 Stand 达到进化状态。因此，D4C Love Train 的持续力是几级并没有在提供的证据中明确指出。",
+        "util": {
+          "ratio": 0.23389539422326308,
+          "n_evidence": 3,
+          "n_used": 3
+        },
+        "evidence_chars": 1318,
+        "answer_chars": 117,
+        "gen_ms": 6176.3,
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.2339,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        }
+      },
+      {
+        "qid": "T7-003",
+        "question": "Achtung Baby 的射程是多少？",
+        "answer": "根据提供的证据，Achtung Baby 的射程是有限的。具体来说，当物体离开 Achtung Baby 的能力范围时，这些物体仍然保持隐形状态，但可以通过声音或气味被检测到。因此，Achtung Baby 的射程并不是一个具体的数值，而是指其影响范围内的物体。",
+        "util": {
+          "ratio": 0.14773827556505983,
+          "n_evidence": 3,
+          "n_used": 0
+        },
+        "evidence_chars": 1404,
+        "answer_chars": 131,
+        "gen_ms": 7359.9,
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.1477,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        }
+      }
+    ]
+  }
+}

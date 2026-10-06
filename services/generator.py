@@ -97,14 +97,22 @@ class Generator:
     def __init__(self, model_path: Optional[str] = None,
                  device: Optional[str] = None,
                  max_new_tokens: int = 256,
-                 temperature: float = 0.1,
+                 temperature: float = 0.0,
                  load_in_4bit: bool = False):
         """
         Args:
-            temperature: ★ 固定用低温（默认 0.1）
-              理由：忠实度评测需要**确定性**输出。
-              高温度会增加随机性，使评测结果不可复现。
-              这不是「追求更好答案」，而是「保证评测可重复」。
+            temperature: ★ **默认 0 = 贪心解码，保证确定性**
+
+            ★★ 实测踩坑（M9 复核时发现）：
+              原先默认 0.1，注释写「固定用低温保证可复现」—— **这是错的**。
+              transformers 里 `do_sample = temperature > 0`，
+              所以 0.1 仍然会**采样**，同一问句两次结果不同。
+              实测 M9 重跑两次：溯源率差 1.4pp、延迟差 24%，
+              足以让「5pp 阈值」的判据在两次运行之间翻转。
+
+              → **「低温」和「确定性」是两个不同概念**。
+                想要确定性必须 `temperature=0`（贪心解码），
+                不能靠「把温度调低」。
         """
         self.model_path = model_path or (
             str(MODEL_DIR) if (MODEL_DIR / "config.json").exists()
@@ -205,9 +213,11 @@ class Generator:
             out = self.model.generate(
                 **inputs,
                 max_new_tokens=max_new_tokens or self.max_new_tokens,
+                # ★ temperature=0 → 贪心解码（确定性输出）
+                #   绝不能只把温度调低：do_sample=True 仍是采样，不确定。
                 do_sample=self.temperature > 0,
-                temperature=max(self.temperature, 1e-5),
-                top_p=0.9,
+                **({"temperature": self.temperature,
+                    "top_p": 0.9} if self.temperature > 0 else {}),
                 repetition_penalty=1.05,
                 pad_token_id=self.tokenizer.pad_token_id
                 or self.tokenizer.eos_token_id,

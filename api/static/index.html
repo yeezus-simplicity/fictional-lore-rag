@@ -49,6 +49,11 @@ header {
 }
 header h1 { font-size: 15px; font-weight: 600; letter-spacing: .3px; }
 header .sub { color: var(--text-faint); font-size: 12px; }
+/* 服务状态灯 */
+#dot { font-size: 11px; margin-right: 4px; color: var(--text-faint); }
+#dot.ok { color: var(--ok); }
+#dot.bad { color: var(--err); }
+#dot.wait { color: var(--warn); }
 nav { display: flex; gap: 2px; margin-left: auto; }
 nav button {
   background: none; border: 1px solid transparent; color: var(--text-dim);
@@ -196,6 +201,7 @@ td.num { font-family: var(--mono); font-size: 12px; text-align: right; }
 <header>
   <h1>rag-kb</h1>
   <span class="sub">替身数据混合检索问答</span>
+  <span id="dot" title="服务状态">●</span><span id="dotTxt" class="sub">连接中</span>
   <nav>
     <button class="on" data-v="q">问答</button>
     <button data-v="b">数据浏览</button>
@@ -278,6 +284,29 @@ $('#bSamples').insertAdjacentHTML('beforeend',
   ['Star Platinum','The World','Made in Heaven','Tusk','Anubis']
     .map(n=>`<span class="chip" onclick="askB('${esc(n)}')">${esc(n)}</span>`).join(''));
 
+// ---------- 服务状态灯 ----------
+// ★ 教训：界面本身能打开不代表服务活着 —— 静态 HTML 是本地文件，
+//   API 才需要后端。加个探活，用户不用靠「查询失败」才发现服务挂了。
+async function ping(){
+  const dot=$('#dot'), txt=$('#dotTxt');
+  try{
+    const r = await fetch(API+'/health', {cache:'no-store'});
+    const d = await r.json();
+    if(d.status==='ok'){
+      dot.className='ok'; dot.title='服务正常';
+      txt.textContent = `已连接${d.vector_enabled?'（含向量）':''}`;
+    }else{
+      dot.className='wait'; dot.title='数据库降级中';
+      txt.textContent='已连接·降级';
+    }
+  }catch(e){
+    dot.className='bad'; dot.title='服务未启动';
+    txt.textContent='服务未启动';
+  }
+}
+ping();
+setInterval(ping, 10000);
+
 // ---------- 视图切换 ----------
 document.querySelectorAll('nav button').forEach(b=>{
   b.onclick=()=>{
@@ -307,8 +336,31 @@ async function ask(q){
       new URLSearchParams({q:q, top_k:'3'}), {method:'POST'});
     if(!r.ok) throw new Error('HTTP '+r.status);
     render(await r.json());
+    ping();                    // 顺带刷新状态灯
   }catch(e){
-    $('#rout').innerHTML = `<div class="card"><div class="alert err">请求失败：${esc(e.message)}</div></div>`;
+    // ★「Failed to fetch」是浏览器级错误，分不清是服务没起还是网络问题。
+    //   给可操作的提示，而不是把原始英文抛给用户。
+    $('#rout').innerHTML = `
+      <div class="card">
+        <h3>无法连接到服务</h3>
+        <div class="alert err">
+          ${esc(e.message)}
+          <div style="margin-top:10px">
+            最可能的原因：<b>API 服务已停止</b>。它在独立进程里运行，
+            关掉终端或进程被回收后界面就无法查询。
+          </div>
+        </div>
+        <div class="meta" style="margin-top:12px">
+          重新启动：<code>cd D:/workspace/AI/projects/rag-kb</code><br>
+          然后 <code>python api/main.py --no-vector</code><br>
+          再打开 <code>http://127.0.0.1:8765</code>
+        </div>
+        <div class="meta" style="margin-top:8px">
+          当前页面地址：<code>${esc(location.href)}</code><br>
+          界面请求的地址：<code>${esc(location.origin)}</code>
+          ${location.port==='8765' ? '' : '<br>★ 端口不是 8765 —— 请用服务实际输出的端口地址'}
+        </div>
+      </div>`;
   }
   $('#qb').disabled = false;
 }

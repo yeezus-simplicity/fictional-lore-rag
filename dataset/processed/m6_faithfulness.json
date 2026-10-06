@@ -1,0 +1,2371 @@
+{
+  "A": {
+    "summary": {
+      "n": 30,
+      "trace_ratio": 0.9204761904761904,
+      "token_coverage": 0.9192248677248678,
+      "numeric_ratio": 0.2857142857142857,
+      "entity_ratio": 1.0,
+      "contradiction_rate": 0.0,
+      "util_ratio": 0.1851106208097116,
+      "hedging_rate": 0.43333333333333335,
+      "config_key": "A",
+      "config_name": "生成式 + 真实证据",
+      "config_desc": "本项目主指标",
+      "elapsed_sec": 137.0
+    },
+    "records": [
+      {
+        "qid": "T1-033",
+        "question": "Echoes (ACT3) 的速度是几级？",
+        "answer": "Echoes ACT3 是极其快速的。",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": null,
+          "contradiction": false,
+          "util_ratio": 0.1242,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 706.4,
+        "n_gen_tokens": 10
+      },
+      {
+        "qid": "T1-014",
+        "question": "Foo Fighters 的持续力是几级？",
+        "answer": "提供的证据中未提及 Foo Fighters 的持续力等级。",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.0908,
+          "hedging": true,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 901.9,
+        "n_gen_tokens": 13
+      },
+      {
+        "qid": "T4-005",
+        "question": "Aqua Necklace的名称或设定来源是什么？",
+        "answer": "Aqua Necklace的名称或设定来源是JoJo's Bizarre Adventure系列中的第四部分《钻石是永恒的》。",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.2757,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 1860.1,
+        "n_gen_tokens": 27
+      },
+      {
+        "qid": "T7-006",
+        "question": "Chocolate Disco 的破坏力是多少？",
+        "answer": "提供的证据中未提及 Chocolate Disco 的破坏力。",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.2803,
+          "hedging": true,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 832.7,
+        "n_gen_tokens": 12
+      },
+      {
+        "qid": "T4-024",
+        "question": "Stone Free的STRING DECOMPOSITION方面有哪些描述？",
+        "answer": "根据提供的证据，Stone Free的STRING DECOMPOSITION方面的描述如下：\n\n- Jolyne能够将身体分解成字符串，并通常从双手开始。\n- Jolyne可以自由地操纵这些字符串。",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 0.9,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.2696,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 2962.6,
+        "n_gen_tokens": 43
+      },
+      {
+        "qid": "T7-005",
+        "question": "Stray Cat 的射程是多少？",
+        "answer": "提供的证据中未提及 Stray Cat 的射程。",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.1343,
+          "hedging": true,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 919.7,
+        "n_gen_tokens": 13
+      },
+      {
+        "qid": "T4-021",
+        "question": "King Crimson的TIME ERASURE方面有哪些描述？",
+        "answer": "根据提供的证据，King Crimson的TIME ERASURE（时间擦除）能力有以下描述：\n\n1. 在《GioGio的奇遇》中，King Crimson的time erasure能力在第7章第1和2节中被描绘为迪亚波罗（Diavolo）进行teleportation，从而允许他避开玩家的攻击并从背后打击他们。在第11章第1和3节中，time erasure通过让对手的动作变慢，而迪亚波罗则保持正常速度来展示。\n\n2. King Crimson的time erasure能力通常被称为“erase”、“blow away”或“skip”时间。",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 0.8542,
+          "numeric_ratio": 1.0,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.2837,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 9976.7,
+        "n_gen_tokens": 141
+      },
+      {
+        "qid": "T1-027",
+        "question": "Horus 的射程是几级？",
+        "answer": "提供的证据中未提及Horus的射程等级。",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.069,
+          "hedging": true,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 961.2,
+        "n_gen_tokens": 13
+      },
+      {
+        "qid": "T1-039",
+        "question": "Bad Company 的精密性是几级？",
+        "answer": "提供的证据中未提及 Bad Company 的精密性等级。",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.1356,
+          "hedging": true,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 990.7,
+        "n_gen_tokens": 13
+      },
+      {
+        "qid": "T4-025",
+        "question": "Emperor的能力方面有哪些描述？",
+        "answer": "根据提供的证据，Emperor（皇帝）的描述如下：\n\n- Emperor是Hol Horse的枪型Stand。\n- 它的功能是作为武器来帮助Hol Horse。\n- Hol Horse需要通过与其他盟友的合作来获得优势。\n\n关于能力方面的描述，证据中没有提供具体信息。因此，无法从这些证据中获取关于Emperor能力的详细描述。",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.2302,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 5655.8,
+        "n_gen_tokens": 77
+      },
+      {
+        "qid": "T4-014",
+        "question": "Boy II Man的能量吸取方面有哪些描述？",
+        "answer": "根据提供的证据，Boy II Man的能量吸取能力描述如下：\n\n- Boy II Man的“能量”是通过在Rock Paper Scissors游戏中击败对手来获得的。\n- 这种能量可以被男孩II Man用来“威胁”，因为他的能力是通过简单的游戏（如Rock Paper Scissors）来窃取他人的能量。\n- 具体来说，Boy II Man的“能量”是通过其用户在RPS游戏中获胜时获得的，而这种能量可以通过击败对手来窃取。",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.3595,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 7943.6,
+        "n_gen_tokens": 107
+      },
+      {
+        "qid": "T7-002",
+        "question": "Green, Green Grass of Home 的破坏力是多少？",
+        "answer": "根据提供的证据，Green, Green Grass of Home 的破坏力主要体现在以下几个方面：\n\n1. **缩小敌人**：它能够使周围的一切物体缩小，这表明它具有缩小能力。\n2. **攻击能力**：如果一个人靠近它的“消失点”，它会显现出来并试图攻击这个目标。虽然它声称试图将人从存在中抹去，但最终可能会通过更传统的手段，如利用其巨大的体型来碾压受害者，来杀死目标。\n\n这些描述表明，Green, Green Grass of Home 具有缩小和攻击的能力，但具体破坏力的强度并未详细说明。因此，提供的证据中未提及其破坏力的具体程度。",
+        "score": {
+          "trace_ratio": 0.8,
+          "token_coverage": 0.76,
+          "numeric_ratio": 0.0,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.2828,
+          "hedging": false,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "2. **攻击能力**：如果一个人靠近它的“消失点”，它会显现出来并试图攻击这个目标。"
+          ]
+        },
+        "gen_ms": 10630.5,
+        "n_gen_tokens": 141
+      },
+      {
+        "qid": "T4-008",
+        "question": "Cheap Trick的ATTACHMENT方面有哪些描述？",
+        "answer": "Cheap Trick的ATTACHMENT方面描述如下：\n\n1. Cheap Trick可以附着在用户身上，开始时由Masazo Kinoto使用。\n2. 当Cheap Trick附着在某人身上时，它会成为该人的Stand，即使此人原本已有Stand。\n3. 在Cheap Trick附着于某人身上时，只有该人能够看到它，其他人无法看见。\n4. Cheap Trick不能被用户攻击，除非用户伤害自己，因为它是用户的一部分。\n5. 要安全地移除Cheap Trick，必须小心谨慎，避免强行移除，否则会导致用户皮肤撕裂，从而造成死亡。",
+        "score": {
+          "trace_ratio": 0.7143,
+          "token_coverage": 0.6429,
+          "numeric_ratio": 0.0,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.2124,
+          "hedging": false,
+          "n_unsupported": 2,
+          "unsupported_examples": [
+            "Cheap Trick的ATTACHMENT方面描述如下：\n\n1.",
+            "4."
+          ]
+        },
+        "gen_ms": 10383.0,
+        "n_gen_tokens": 132
+      },
+      {
+        "qid": "T7-008",
+        "question": "Gold Experience Requiem 的破坏力是多少？",
+        "answer": "根据提供的证据，Gold Experience Requiem 的破坏力主要体现在其最终能力上，即能够阻止任何反对它的行动和意志，使其无法成为现实。一旦这种效果激活，就没有任何逃脱的机会，任何对手的行为都会被逆转，无论他们的能力如何。\n\n因此，Gold Experience Requiem 的破坏力主要体现在其最终能力上，能够阻止和逆转任何行动，但具体的破坏力强度并未在证据中详细说明。",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.1374,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 7751.9,
+        "n_gen_tokens": 93
+      },
+      {
+        "qid": "T7-010",
+        "question": "Limp Bizkit 的破坏力是多少？",
+        "answer": "提供的证据中未提及 Limp Bizkit 的破坏力。",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.1157,
+          "hedging": true,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 1134.9,
+        "n_gen_tokens": 14
+      },
+      {
+        "qid": "T7-007",
+        "question": "Purple Haze 的射程是多少？",
+        "answer": "Purple Haze 的射程是 5 米。",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": 1.0,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.2071,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 1080.7,
+        "n_gen_tokens": 13
+      },
+      {
+        "qid": "T7-014",
+        "question": "Purple Haze Distortion 的成长性是多少？",
+        "answer": "提供的证据中未提及Purple Haze Distortion的成长性。",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.2421,
+          "hedging": true,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 1154.3,
+        "n_gen_tokens": 14
+      },
+      {
+        "qid": "T1-013",
+        "question": "Tower of Gray 的破坏力是几级？",
+        "answer": "根据提供的证据，Tower of Gray 具有强大的破坏力。它可以通过高速飞行穿过人的头部，从而造成致命伤害。因此，可以将 Tower of Gray 的破坏力等级定为 5 级。",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 0.8889,
+          "numeric_ratio": 0.0,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.1436,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 3755.3,
+        "n_gen_tokens": 47
+      },
+      {
+        "qid": "T1-015",
+        "question": "Yellow Temperance 的持续力是几级？",
+        "answer": "提供的证据中未提及 Yellow Temperance 的持续力等级。",
+        "score": {
+          "trace_ratio": 0.0,
+          "token_coverage": 0.5,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.1064,
+          "hedging": true,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "提供的证据中未提及 Yellow Temperance 的持续力等级。"
+          ]
+        },
+        "gen_ms": 1113.5,
+        "n_gen_tokens": 14
+      },
+      {
+        "qid": "T4-004",
+        "question": "Highway to Hell的整体能力概述是什么？",
+        "answer": "Highway to Hell的整体能力概述是：它会像其受害者一样受到伤害，并且能够共享受害者的伤害，这种特性使得它成为一个非常危险的Stand。",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.2008,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 2948.9,
+        "n_gen_tokens": 36
+      },
+      {
+        "qid": "T4-003",
+        "question": "Limp Bizkit的INVISIBLE REANIMATION方面有哪些描述？",
+        "answer": "根据提供的证据，Limp Bizkit的INVISIBLE REANIMATION方面的描述如下：\n\n- Limp Bizkit能够从死者的尸体中召唤出“僵尸”。\n- 当激活Limp Bizkit时，所有被用户先前互动过的尸体都会生成隐形的鬼魂形态的“僵尸”。\n- 这些“僵尸”是死者在用户命令下复活的可见敌人，但它们是隐形的。\n- Limp Bizkit可以追踪这些“僵尸”，尽管它不能感知到自己创造的“僵尸”。",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 0.9583,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.1717,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 8292.7,
+        "n_gen_tokens": 110
+      },
+      {
+        "qid": "T1-008",
+        "question": "Born This Way 的成长性是几级？",
+        "answer": "提供的证据中未提及 Born This Way 的成长性等级。",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.1609,
+          "hedging": true,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 1055.9,
+        "n_gen_tokens": 14
+      },
+      {
+        "qid": "T7-001",
+        "question": "Made in Heaven 的速度是多少？",
+        "answer": "根据提供的证据，Made in Heaven 的速度是通过控制地球、月球以及整个宇宙的引力来实现的，从而显著加速时间的流动。具体来说，它可以让宇宙中的所有事物（除了活生生的生物）逐渐加快时间的流逝，但活生生的生物无法跟上这种加速。因此，Made in Heaven 的速度主要体现在对时间的控制和加速上，而不是具体的物理速度。",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.0813,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 6619.2,
+        "n_gen_tokens": 88
+      },
+      {
+        "qid": "T1-002",
+        "question": "Marilyn Manson 的精密性是几级？",
+        "answer": "提供的证据中未提及 Marilyn Manson 的精密性等级。",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.233,
+          "hedging": true,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 984.2,
+        "n_gen_tokens": 13
+      },
+      {
+        "qid": "T7-013",
+        "question": "Rolling Stones 的破坏力是多少？",
+        "answer": "提供的证据中未提及 Rolling Stones 的破坏力。",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.1443,
+          "hedging": true,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 904.6,
+        "n_gen_tokens": 12
+      },
+      {
+        "qid": "T1-006",
+        "question": "Ebony Devil 的破坏力是几级？",
+        "answer": "提供的证据中未提及Ebony Devil的破坏力等级。",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.1273,
+          "hedging": true,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 1061.1,
+        "n_gen_tokens": 14
+      },
+      {
+        "qid": "T4-001",
+        "question": "Yellow Temperance的PHYSICAL IMPERVIOUSNESS方面有哪些描述？",
+        "answer": "根据提供的证据，Yellow Temperance在物理上具有以下特点：\n\n1. 它能够吸收物理冲击和影响，使其成为橡胶灵魂（Rubber Soul）的保护盾。\n2. 它可以快速反应并捕捉来自星铂金（Star Platinum）的攻击，完全保护橡胶灵魂不受伤害。\n3. 它能够抵抗燃烧和冻结等物理伤害，完全保护橡胶灵魂。\n4. 它无法弥补人类的弱点，如呼吸需求。\n5. 在橡胶灵魂存活的情况下，Yellow Temperance是不可战胜的，因为它对有机物质有吸收能力，使其成为系列中少数几个可以被形容为“物理上不可穿透”的Stand之一。",
+        "score": {
+          "trace_ratio": 0.6,
+          "token_coverage": 0.4267,
+          "numeric_ratio": 0.0,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.1067,
+          "hedging": false,
+          "n_unsupported": 2,
+          "unsupported_examples": [
+            "3. 它能够抵抗燃烧和冻结等物理伤害，完全保护橡胶灵魂。",
+            "4. 它无法弥补人类的弱点，如呼吸需求。"
+          ]
+        },
+        "gen_ms": 13665.1,
+        "n_gen_tokens": 141
+      },
+      {
+        "qid": "T4-009",
+        "question": "Foo Fighters的GUARDING THE STAND DISCS方面有哪些描述？",
+        "answer": "根据提供的证据，Foo Fighters在守护DISCs方面有以下描述：\n\n1. 她的唯一目标是服从Whitesnake的命令来保护DISCs。\n2. 在她担任守护者期间，她的行为极其残忍，会无情地杀死任何接近DISCs藏身之处的人，无论威胁程度如何。\n3. 她非常重视自己，并通过称呼自己为“sentient”来强调这一点。\n4. 她引用天文学家Fred Hoyle的话，声称“intellect”在宇宙中起着作用，甚至比它还要早，以此证明即使是微小的存在，如浮游生物，也具有智能。",
+        "score": {
+          "trace_ratio": 0.5,
+          "token_coverage": 0.6458,
+          "numeric_ratio": 0.0,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.1462,
+          "hedging": false,
+          "n_unsupported": 2,
+          "unsupported_examples": [
+            "2. 在她担任守护者期间，她的行为极其残忍，会无情地杀死任何接近DISCs藏身之处的人，无论威胁程度如何。",
+            "3. 她非常重视自己，并通过称呼自己为“sentient”来强调这一点。"
+          ]
+        },
+        "gen_ms": 16560.3,
+        "n_gen_tokens": 138
+      },
+      {
+        "qid": "T1-003",
+        "question": "D4C Love Train 的持续力是几级？",
+        "answer": "根据提供的证据，D4C Love Train 是一个由 Lucy Steel 预示的特殊现象，它是一种由圣体之死带来的祝福能力。这种能力是如此强大，以至于它既是致命的，又是无敌的，因为它对“不幸”这一概念有控制权。只有与圣体之死同样规模的奇迹力量才能对抗它。因此，D4C Love Train 的持续力是几级无法从提供的证据中得知。",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.3019,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 11121.8,
+        "n_gen_tokens": 96
+      },
+      {
+        "qid": "T7-003",
+        "question": "Achtung Baby 的射程是多少？",
+        "answer": "提供的证据中未提及 Achtung Baby 的射程。",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.1786,
+          "hedging": true,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 1761.1,
+        "n_gen_tokens": 14
+      }
+    ]
+  },
+  "B": {
+    "summary": {
+      "n": 30,
+      "trace_ratio": 1.0,
+      "token_coverage": 1.0,
+      "numeric_ratio": null,
+      "entity_ratio": 1.0,
+      "contradiction_rate": 0.0,
+      "util_ratio": 0.4366585194840758,
+      "hedging_rate": 0.0,
+      "config_key": "B",
+      "config_name": "抽取式（M5 现状）",
+      "config_desc": "忠实度上界（照抄不可能幻觉）",
+      "elapsed_sec": 1.5
+    },
+    "records": [
+      {
+        "qid": "T1-033",
+        "question": "Echoes (ACT3) 的速度是几级？",
+        "answer": "Echoes has the unusual ability to take on three distinct forms, ACT1, ACT2 and ACT3, which Koichi may call upon alternately.",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": null,
+          "contradiction": false,
+          "util_ratio": 0.3371,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 0.3,
+        "n_gen_tokens": 0
+      },
+      {
+        "qid": "T1-014",
+        "question": "Foo Fighters 的持续力是几级？",
+        "answer": "Foo Fighters (フー・ファイターズ, Fū Faitāzu), commonly referred to as F.F.",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.2957,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 0.1,
+        "n_gen_tokens": 0
+      },
+      {
+        "qid": "T4-005",
+        "question": "Aqua Necklace的名称或设定来源是什么？",
+        "answer": "Aqua Necklace (アクア・ネックレス（水の首飾り）, Akua Nekkuresu) is the Stand of Anjuro Katagiri, featured in the fourth part of the JoJo's Bizarre Adventure series, Diamond is Unbreakable.",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.7097,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 0.1,
+        "n_gen_tokens": 0
+      },
+      {
+        "qid": "T7-006",
+        "question": "Chocolate Disco 的破坏力是多少？",
+        "answer": "Chocolate Disco (チョコレート・ディスコ, Chokorēto Disuko) is the Stand of D-I-S-C-O, featured in the seventh part of the JoJo's Bizarre Adventure series, Steel Ball Run.",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.7821,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 0.1,
+        "n_gen_tokens": 0
+      },
+      {
+        "qid": "T4-024",
+        "question": "Stone Free的STRING DECOMPOSITION方面有哪些描述？",
+        "answer": "If Jolyne gathers the string and meshes it, she can concentrate her power and form Stone Free's humanoid appearance, who may fight in her stead, but Stone Free's range is shortened to around 2 meters.",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.5103,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 0.1,
+        "n_gen_tokens": 0
+      },
+      {
+        "qid": "T7-005",
+        "question": "Stray Cat 的射程是多少？",
+        "answer": "Despite its simplicity, Stray Cat's air power is surprisingly deadly.",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.2711,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 0.1,
+        "n_gen_tokens": 0
+      },
+      {
+        "qid": "T4-021",
+        "question": "King Crimson的TIME ERASURE方面有哪些描述？",
+        "answer": "In GioGio's Bizarre Adventure, King Crimson's time erasure ability is depicted in Chapter 7-1 and 7-2 as Diavolo teleporting, allowing him to evade the player's attacks and strike them from behind.",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.3894,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 0.1,
+        "n_gen_tokens": 0
+      },
+      {
+        "qid": "T1-027",
+        "question": "Horus 的射程是几级？",
+        "answer": "Horus (ホルス神, Horusu-shin, lit.",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.1724,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 0.1,
+        "n_gen_tokens": 0
+      },
+      {
+        "qid": "T1-039",
+        "question": "Bad Company 的精密性是几级？",
+        "answer": "Bad Company (極悪中隊バッド・カンパニー, Baddo Kanpanī) is the Stand of Keicho Nijimura, featured in the fourth part of the JoJo's Bizarre Adventure series, Diamond is Unbreakable.",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.4458,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 0.1,
+        "n_gen_tokens": 0
+      },
+      {
+        "qid": "T4-025",
+        "question": "Emperor的能力方面有哪些描述？",
+        "answer": "However, since they are still part of Emperor, the bullets are still subject to limited range; although having a better-than-average range for a Close-Range Stand, Emperor's effectiveness still drops rapidly as the bullets reach the limits of that range.",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.4087,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 0.1,
+        "n_gen_tokens": 0
+      },
+      {
+        "qid": "T4-014",
+        "question": "Boy II Man的能量吸取方面有哪些描述？",
+        "answer": "Boy II Man's power is to steal the energy of an opponent whenever Ken wins a game of Rock Paper Scissors (RPS).",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.7051,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 0.1,
+        "n_gen_tokens": 0
+      },
+      {
+        "qid": "T7-002",
+        "question": "Green, Green Grass of Home 的破坏力是多少？",
+        "answer": "Green, Green Grass of Home causes everything around the Green Baby to shrink the closer they are to it.",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.5051,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 0.1,
+        "n_gen_tokens": 0
+      },
+      {
+        "qid": "T4-008",
+        "question": "Cheap Trick的ATTACHMENT方面有哪些描述？",
+        "answer": "Cheap Trick's signature ability is to attach itself to its user's back, beginning with Masazo Kinoto.",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.469,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 0.2,
+        "n_gen_tokens": 0
+      },
+      {
+        "qid": "T7-008",
+        "question": "Gold Experience Requiem 的破坏力是多少？",
+        "answer": "Gold Experience Requiem (ゴールド・エクスペリエンス・レクイエム, Gōrudo Ekusuperiensu Rekuiemu) is the Requiem Stand of Giorno Giovanna, featured in the fifth part of the JoJo's Bizarre Adventure series, Vento Aureo.",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.4301,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 0.1,
+        "n_gen_tokens": 0
+      },
+      {
+        "qid": "T7-010",
+        "question": "Limp Bizkit 的破坏力是多少？",
+        "answer": "Limp Bizkit does not have a physical appearance.",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.412,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 0.1,
+        "n_gen_tokens": 0
+      },
+      {
+        "qid": "T7-007",
+        "question": "Purple Haze 的射程是多少？",
+        "answer": "Purple Haze is a close-range Stand with remarkable strength as shown when it breaks a brick wall with a punch.",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.3434,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 0.1,
+        "n_gen_tokens": 0
+      },
+      {
+        "qid": "T7-014",
+        "question": "Purple Haze Distortion 的成长性是多少？",
+        "answer": "Purple Haze Distortion (パープル・ヘイズ・ディストーション, Pāpuru Heizu Disutōshon) is the evolved form of the Stand of Pannacotta Fugo, and is featured in the light novel Purple Haze Feedback.",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.5595,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 0.1,
+        "n_gen_tokens": 0
+      },
+      {
+        "qid": "T1-013",
+        "question": "Tower of Gray 的破坏力是几级？",
+        "answer": "Its speed is so incredible that, according to Gray Fly, Tower of Gray could have several guns shooting at it at the same time at point-blank range and it would still escape unscathed.",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.2429,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 0.1,
+        "n_gen_tokens": 0
+      },
+      {
+        "qid": "T1-015",
+        "question": "Yellow Temperance 的持续力是几级？",
+        "answer": "Yellow Temperance's base is an amorphous, yellow substance, with zero facial features.",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.4351,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 0.1,
+        "n_gen_tokens": 0
+      },
+      {
+        "qid": "T4-004",
+        "question": "Highway to Hell的整体能力概述是什么？",
+        "answer": "Appearing as a set of propellers from their victim, Highway to Hell will inflict to a designated victim all the damage that Thunder McQueen suffers.",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.7544,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 0.1,
+        "n_gen_tokens": 0
+      },
+      {
+        "qid": "T4-003",
+        "question": "Limp Bizkit的INVISIBLE REANIMATION方面有哪些描述？",
+        "answer": "When Sports Maxx activates Limp Bizkit upon command, all corpses will generate invisible wraith-like undead.",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.4158,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 0.1,
+        "n_gen_tokens": 0
+      },
+      {
+        "qid": "T1-008",
+        "question": "Born This Way 的成长性是几级？",
+        "answer": "Born This Way is an automatic Stand defined by constant power independent of the distance from Nijimura and is unusual in that it rides a motorcycle.",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.3122,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 0.1,
+        "n_gen_tokens": 0
+      },
+      {
+        "qid": "T7-001",
+        "question": "Made in Heaven 的速度是多少？",
+        "answer": "Made in Heaven's power is to accelerate the flow of time dramatically, achieved through its ability to control the gravitational forces of the earth, moon, and seemingly the entire universe (in reference to aspects of the theory of relativity).",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.3096,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 0.1,
+        "n_gen_tokens": 0
+      },
+      {
+        "qid": "T1-002",
+        "question": "Marilyn Manson 的精密性是几级？",
+        "answer": "Marilyn Manson (取り立て人 マリリン・マンソン, Toritatenin Maririn Manson, lit.",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.273,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 0.0,
+        "n_gen_tokens": 0
+      },
+      {
+        "qid": "T7-013",
+        "question": "Rolling Stones 的破坏力是多少？",
+        "answer": "When Rolling Stones targets a victim, it'll gradually change appearance to resemble them in their dying moments; even the dust remains of Rolling Stones molds itself in the image of the victim.",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.4949,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 0.1,
+        "n_gen_tokens": 0
+      },
+      {
+        "qid": "T1-006",
+        "question": "Ebony Devil 的破坏力是几级？",
+        "answer": "Ebony Devil's primary ability is possessing a doll.",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.2633,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 0.1,
+        "n_gen_tokens": 0
+      },
+      {
+        "qid": "T4-001",
+        "question": "Yellow Temperance的PHYSICAL IMPERVIOUSNESS方面有哪些描述？",
+        "answer": "Yellow Temperance's blob-like nature and ability to absorb organic matter from physical contact make it one of the few Stands of the series that can be said to be physically invincible.",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.455,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 0.1,
+        "n_gen_tokens": 0
+      },
+      {
+        "qid": "T4-009",
+        "question": "Foo Fighters的GUARDING THE STAND DISCS方面有哪些描述？",
+        "answer": "Foo Fighters was told by Whitesnake to stay at the warehouse where he kept the DISCs, and to kill anyone other than him should they come close.",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.2424,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 0.1,
+        "n_gen_tokens": 0
+      },
+      {
+        "qid": "T1-003",
+        "question": "D4C Love Train 的持续力是几级？",
+        "answer": "D4C Love Train (D4Cディー・フォー・シー-ラブトレイン-, Dī Fō Shī -Rabu Torein-) is a special phenomenon manifested by Lucy Steel, featured in the seventh part of the JoJo's Bizarre Adventure series, Steel Ball Run.",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.7262,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 0.1,
+        "n_gen_tokens": 0
+      },
+      {
+        "qid": "T7-003",
+        "question": "Achtung Baby 的射程是多少？",
+        "answer": "While theoretically useful, Achtung Baby is in practice an inconvenience as the user is a vulnerable baby that hasn't yet learned to control her power.",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 1.0,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.4286,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 0.0,
+        "n_gen_tokens": 0
+      }
+    ]
+  },
+  "C": {
+    "summary": {
+      "n": 30,
+      "trace_ratio": 0.016666666666666666,
+      "token_coverage": 0.016666666666666666,
+      "numeric_ratio": null,
+      "entity_ratio": 0.0,
+      "contradiction_rate": 0.0,
+      "util_ratio": 0.0,
+      "hedging_rate": 0.7,
+      "config_key": "C",
+      "config_name": "生成式 + 空证据",
+      "config_desc": "★ 关键对照：测模型编造程度",
+      "elapsed_sec": 66.6
+    },
+    "records": [
+      {
+        "qid": "T1-033",
+        "question": "Echoes (ACT3) 的速度是几级？",
+        "answer": "提供的证据中未提及Echoes (ACT3) 的具体速度级别。",
+        "score": {
+          "trace_ratio": 0.0,
+          "token_coverage": 0.0,
+          "numeric_ratio": null,
+          "entity_ratio": 0.0,
+          "contradiction": false,
+          "util_ratio": 0.0,
+          "hedging": true,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "提供的证据中未提及Echoes (ACT3) 的具体速度级别。"
+          ]
+        },
+        "gen_ms": 1802.4,
+        "n_gen_tokens": 17
+      },
+      {
+        "qid": "T1-014",
+        "question": "Foo Fighters 的持续力是几级？",
+        "answer": "提供的证据中未提及 Foo Fighters 的持续力等级。",
+        "score": {
+          "trace_ratio": 0.0,
+          "token_coverage": 0.0,
+          "numeric_ratio": null,
+          "entity_ratio": 0.0,
+          "contradiction": false,
+          "util_ratio": 0.0,
+          "hedging": true,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "提供的证据中未提及 Foo Fighters 的持续力等级。"
+          ]
+        },
+        "gen_ms": 1334.0,
+        "n_gen_tokens": 13
+      },
+      {
+        "qid": "T4-005",
+        "question": "Aqua Necklace的名称或设定来源是什么？",
+        "answer": "Aqua Necklace的名称或设定来源是[证据 1]（Aqua Necklace/ability_overview）。",
+        "score": {
+          "trace_ratio": 0.0,
+          "token_coverage": 0.0,
+          "numeric_ratio": null,
+          "entity_ratio": 0.0,
+          "contradiction": false,
+          "util_ratio": 0.0,
+          "hedging": false,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "Aqua Necklace的名称或设定来源是[证据 1]（Aqua Necklace/ability_overview）。"
+          ]
+        },
+        "gen_ms": 2911.9,
+        "n_gen_tokens": 24
+      },
+      {
+        "qid": "T7-006",
+        "question": "Chocolate Disco 的破坏力是多少？",
+        "answer": "提供的证据中未提及 Chocolate Disco 的破坏力。",
+        "score": {
+          "trace_ratio": 0.0,
+          "token_coverage": 0.0,
+          "numeric_ratio": null,
+          "entity_ratio": 0.0,
+          "contradiction": false,
+          "util_ratio": 0.0,
+          "hedging": true,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "提供的证据中未提及 Chocolate Disco 的破坏力。"
+          ]
+        },
+        "gen_ms": 1516.2,
+        "n_gen_tokens": 12
+      },
+      {
+        "qid": "T4-024",
+        "question": "Stone Free的STRING DECOMPOSITION方面有哪些描述？",
+        "answer": "提供的证据中未提及Stone Free在STRING DECOMPOSITION方面的描述。",
+        "score": {
+          "trace_ratio": 0.0,
+          "token_coverage": 0.0,
+          "numeric_ratio": null,
+          "entity_ratio": 0.0,
+          "contradiction": false,
+          "util_ratio": 0.0,
+          "hedging": false,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "提供的证据中未提及Stone Free在STRING DECOMPOSITION方面的描述。"
+          ]
+        },
+        "gen_ms": 1863.8,
+        "n_gen_tokens": 16
+      },
+      {
+        "qid": "T7-005",
+        "question": "Stray Cat 的射程是多少？",
+        "answer": "提供的证据中未提及 Stray Cat 的射程。",
+        "score": {
+          "trace_ratio": 0.0,
+          "token_coverage": 0.0,
+          "numeric_ratio": null,
+          "entity_ratio": 0.0,
+          "contradiction": false,
+          "util_ratio": 0.0,
+          "hedging": true,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "提供的证据中未提及 Stray Cat 的射程。"
+          ]
+        },
+        "gen_ms": 1326.0,
+        "n_gen_tokens": 13
+      },
+      {
+        "qid": "T4-021",
+        "question": "King Crimson的TIME ERASURE方面有哪些描述？",
+        "answer": "提供的证据中未提及King Crimson的TIME ERASURE方面的具体描述。",
+        "score": {
+          "trace_ratio": 0.0,
+          "token_coverage": 0.0,
+          "numeric_ratio": null,
+          "entity_ratio": 0.0,
+          "contradiction": false,
+          "util_ratio": 0.0,
+          "hedging": false,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "提供的证据中未提及King Crimson的TIME ERASURE方面的具体描述。"
+          ]
+        },
+        "gen_ms": 1585.3,
+        "n_gen_tokens": 16
+      },
+      {
+        "qid": "T1-027",
+        "question": "Horus 的射程是几级？",
+        "answer": "提供的证据中未提及Horus的射程等级。",
+        "score": {
+          "trace_ratio": 0.0,
+          "token_coverage": 0.0,
+          "numeric_ratio": null,
+          "entity_ratio": 0.0,
+          "contradiction": false,
+          "util_ratio": 0.0,
+          "hedging": true,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "提供的证据中未提及Horus的射程等级。"
+          ]
+        },
+        "gen_ms": 1613.5,
+        "n_gen_tokens": 13
+      },
+      {
+        "qid": "T1-039",
+        "question": "Bad Company 的精密性是几级？",
+        "answer": "提供的证据中未提及 Bad Company 的精密性等级。",
+        "score": {
+          "trace_ratio": 0.0,
+          "token_coverage": 0.0,
+          "numeric_ratio": null,
+          "entity_ratio": 0.0,
+          "contradiction": false,
+          "util_ratio": 0.0,
+          "hedging": true,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "提供的证据中未提及 Bad Company 的精密性等级。"
+          ]
+        },
+        "gen_ms": 1508.8,
+        "n_gen_tokens": 13
+      },
+      {
+        "qid": "T4-025",
+        "question": "Emperor的能力方面有哪些描述？",
+        "answer": "根据提供的证据，Emperor的能力方面没有具体的描述。",
+        "score": {
+          "trace_ratio": 0.0,
+          "token_coverage": 0.0,
+          "numeric_ratio": null,
+          "entity_ratio": 0.0,
+          "contradiction": false,
+          "util_ratio": 0.0,
+          "hedging": false,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "根据提供的证据，Emperor的能力方面没有具体的描述。"
+          ]
+        },
+        "gen_ms": 1486.6,
+        "n_gen_tokens": 13
+      },
+      {
+        "qid": "T4-014",
+        "question": "Boy II Man的能量吸取方面有哪些描述？",
+        "answer": "根据提供的证据，Boy II Man在能量吸取方面的描述并未提及。",
+        "score": {
+          "trace_ratio": 0.0,
+          "token_coverage": 0.0,
+          "numeric_ratio": null,
+          "entity_ratio": 0.0,
+          "contradiction": false,
+          "util_ratio": 0.0,
+          "hedging": true,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "根据提供的证据，Boy II Man在能量吸取方面的描述并未提及。"
+          ]
+        },
+        "gen_ms": 1660.1,
+        "n_gen_tokens": 16
+      },
+      {
+        "qid": "T7-002",
+        "question": "Green, Green Grass of Home 的破坏力是多少？",
+        "answer": "提供的证据中未提及Green, Green Grass of Home的破坏力。",
+        "score": {
+          "trace_ratio": 0.0,
+          "token_coverage": 0.0,
+          "numeric_ratio": null,
+          "entity_ratio": 0.0,
+          "contradiction": false,
+          "util_ratio": 0.0,
+          "hedging": true,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "提供的证据中未提及Green, Green Grass of Home的破坏力。"
+          ]
+        },
+        "gen_ms": 1635.8,
+        "n_gen_tokens": 16
+      },
+      {
+        "qid": "T4-008",
+        "question": "Cheap Trick的ATTACHMENT方面有哪些描述？",
+        "answer": "提供的证据中未提及Cheap Trick的ATTACHMENT方面的描述。",
+        "score": {
+          "trace_ratio": 0.0,
+          "token_coverage": 0.0,
+          "numeric_ratio": null,
+          "entity_ratio": 0.0,
+          "contradiction": false,
+          "util_ratio": 0.0,
+          "hedging": true,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "提供的证据中未提及Cheap Trick的ATTACHMENT方面的描述。"
+          ]
+        },
+        "gen_ms": 1449.9,
+        "n_gen_tokens": 15
+      },
+      {
+        "qid": "T7-008",
+        "question": "Gold Experience Requiem 的破坏力是多少？",
+        "answer": "提供的证据中未提及 Gold Experience Requiem 的破坏力。",
+        "score": {
+          "trace_ratio": 0.0,
+          "token_coverage": 0.0,
+          "numeric_ratio": null,
+          "entity_ratio": 0.0,
+          "contradiction": false,
+          "util_ratio": 0.0,
+          "hedging": true,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "提供的证据中未提及 Gold Experience Requiem 的破坏力。"
+          ]
+        },
+        "gen_ms": 1784.8,
+        "n_gen_tokens": 15
+      },
+      {
+        "qid": "T7-010",
+        "question": "Limp Bizkit 的破坏力是多少？",
+        "answer": "提供的证据中未提及 Limp Bizkit 的破坏力。",
+        "score": {
+          "trace_ratio": 0.0,
+          "token_coverage": 0.0,
+          "numeric_ratio": null,
+          "entity_ratio": 0.0,
+          "contradiction": false,
+          "util_ratio": 0.0,
+          "hedging": true,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "提供的证据中未提及 Limp Bizkit 的破坏力。"
+          ]
+        },
+        "gen_ms": 1702.4,
+        "n_gen_tokens": 14
+      },
+      {
+        "qid": "T7-007",
+        "question": "Purple Haze 的射程是多少？",
+        "answer": "提供的证据中未提及Purple Haze的射程。",
+        "score": {
+          "trace_ratio": 0.0,
+          "token_coverage": 0.0,
+          "numeric_ratio": null,
+          "entity_ratio": 0.0,
+          "contradiction": false,
+          "util_ratio": 0.0,
+          "hedging": true,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "提供的证据中未提及Purple Haze的射程。"
+          ]
+        },
+        "gen_ms": 1727.7,
+        "n_gen_tokens": 13
+      },
+      {
+        "qid": "T7-014",
+        "question": "Purple Haze Distortion 的成长性是多少？",
+        "answer": "提供的证据中未提及Purple Haze Distortion的成长性。",
+        "score": {
+          "trace_ratio": 0.0,
+          "token_coverage": 0.0,
+          "numeric_ratio": null,
+          "entity_ratio": 0.0,
+          "contradiction": false,
+          "util_ratio": 0.0,
+          "hedging": true,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "提供的证据中未提及Purple Haze Distortion的成长性。"
+          ]
+        },
+        "gen_ms": 1746.4,
+        "n_gen_tokens": 14
+      },
+      {
+        "qid": "T1-013",
+        "question": "Tower of Gray 的破坏力是几级？",
+        "answer": "提供的证据中未提及 Tower of Gray 的破坏力等级。",
+        "score": {
+          "trace_ratio": 0.0,
+          "token_coverage": 0.0,
+          "numeric_ratio": null,
+          "entity_ratio": 0.0,
+          "contradiction": false,
+          "util_ratio": 0.0,
+          "hedging": true,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "提供的证据中未提及 Tower of Gray 的破坏力等级。"
+          ]
+        },
+        "gen_ms": 1322.8,
+        "n_gen_tokens": 14
+      },
+      {
+        "qid": "T1-015",
+        "question": "Yellow Temperance 的持续力是几级？",
+        "answer": "提供的证据中未提及 Yellow Temperance 的持续力等级。",
+        "score": {
+          "trace_ratio": 0.0,
+          "token_coverage": 0.0,
+          "numeric_ratio": null,
+          "entity_ratio": 0.0,
+          "contradiction": false,
+          "util_ratio": 0.0,
+          "hedging": true,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "提供的证据中未提及 Yellow Temperance 的持续力等级。"
+          ]
+        },
+        "gen_ms": 1499.6,
+        "n_gen_tokens": 14
+      },
+      {
+        "qid": "T4-004",
+        "question": "Highway to Hell的整体能力概述是什么？",
+        "answer": "根据提供的证据，Highway to Hell的整体能力概述如下：\n\n- [证据 1]提供了关于Highway to Hell的详细信息，包括其在游戏中的位置和功能。\n- [证据 2]和[证据 3]分别提供了关于Highway to Hell的特定部分或章节的描述，但没有提供一个全面的能力概述。\n\n因此，提供的证据中未提及Highway to Hell的整体能力概述。",
+        "score": {
+          "trace_ratio": 0.0,
+          "token_coverage": 0.0,
+          "numeric_ratio": null,
+          "entity_ratio": 0.0,
+          "contradiction": false,
+          "util_ratio": 0.0,
+          "hedging": false,
+          "n_unsupported": 3,
+          "unsupported_examples": [
+            "根据提供的证据，Highway to Hell的整体能力概述如下：\n\n- [证据 1]提供了关于Highway to Hell的详细信息，包括其在游戏中的位置和功能。",
+            "- [证据 2]和[证据 3]分别提供了关于Highway to Hell的特定部分或章节的描述，但没有提供一个全面的能力概述。",
+            "因此，提供的证据中未提及Highway to Hell的整体能力概述。"
+          ]
+        },
+        "gen_ms": 10388.6,
+        "n_gen_tokens": 89
+      },
+      {
+        "qid": "T4-003",
+        "question": "Limp Bizkit的INVISIBLE REANIMATION方面有哪些描述？",
+        "answer": "提供的证据中未提及Limp Bizkit的INVISIBLE REANIMATION方面的描述。",
+        "score": {
+          "trace_ratio": 0.0,
+          "token_coverage": 0.0,
+          "numeric_ratio": null,
+          "entity_ratio": 0.0,
+          "contradiction": false,
+          "util_ratio": 0.0,
+          "hedging": false,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "提供的证据中未提及Limp Bizkit的INVISIBLE REANIMATION方面的描述。"
+          ]
+        },
+        "gen_ms": 2364.0,
+        "n_gen_tokens": 19
+      },
+      {
+        "qid": "T1-008",
+        "question": "Born This Way 的成长性是几级？",
+        "answer": "提供的证据中未提及 Born This Way 的成长性等级。",
+        "score": {
+          "trace_ratio": 0.0,
+          "token_coverage": 0.0,
+          "numeric_ratio": null,
+          "entity_ratio": 0.0,
+          "contradiction": false,
+          "util_ratio": 0.0,
+          "hedging": true,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "提供的证据中未提及 Born This Way 的成长性等级。"
+          ]
+        },
+        "gen_ms": 1639.9,
+        "n_gen_tokens": 14
+      },
+      {
+        "qid": "T7-001",
+        "question": "Made in Heaven 的速度是多少？",
+        "answer": "提供的证据中未提及 Made in Heaven 的具体速度。",
+        "score": {
+          "trace_ratio": 0.0,
+          "token_coverage": 0.0,
+          "numeric_ratio": null,
+          "entity_ratio": 0.0,
+          "contradiction": false,
+          "util_ratio": 0.0,
+          "hedging": true,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "提供的证据中未提及 Made in Heaven 的具体速度。"
+          ]
+        },
+        "gen_ms": 1548.3,
+        "n_gen_tokens": 13
+      },
+      {
+        "qid": "T1-002",
+        "question": "Marilyn Manson 的精密性是几级？",
+        "answer": "提供的证据中未提及Marilyn Manson的精密性等级。",
+        "score": {
+          "trace_ratio": 0.0,
+          "token_coverage": 0.0,
+          "numeric_ratio": null,
+          "entity_ratio": 0.0,
+          "contradiction": false,
+          "util_ratio": 0.0,
+          "hedging": true,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "提供的证据中未提及Marilyn Manson的精密性等级。"
+          ]
+        },
+        "gen_ms": 1805.8,
+        "n_gen_tokens": 15
+      },
+      {
+        "qid": "T7-013",
+        "question": "Rolling Stones 的破坏力是多少？",
+        "answer": "提供的证据中未提及 Rolling Stones 的破坏力。",
+        "score": {
+          "trace_ratio": 0.0,
+          "token_coverage": 0.0,
+          "numeric_ratio": null,
+          "entity_ratio": 0.0,
+          "contradiction": false,
+          "util_ratio": 0.0,
+          "hedging": true,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "提供的证据中未提及 Rolling Stones 的破坏力。"
+          ]
+        },
+        "gen_ms": 1440.5,
+        "n_gen_tokens": 12
+      },
+      {
+        "qid": "T1-006",
+        "question": "Ebony Devil 的破坏力是几级？",
+        "answer": "提供的证据中未提及Ebony Devil的破坏力等级。",
+        "score": {
+          "trace_ratio": 0.0,
+          "token_coverage": 0.0,
+          "numeric_ratio": null,
+          "entity_ratio": 0.0,
+          "contradiction": false,
+          "util_ratio": 0.0,
+          "hedging": true,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "提供的证据中未提及Ebony Devil的破坏力等级。"
+          ]
+        },
+        "gen_ms": 1865.5,
+        "n_gen_tokens": 14
+      },
+      {
+        "qid": "T4-001",
+        "question": "Yellow Temperance的PHYSICAL IMPERVIOUSNESS方面有哪些描述？",
+        "answer": "提供的证据中未提及Yellow Temperance在PHYSICAL IMPERVIOUSNESS方面的具体描述。",
+        "score": {
+          "trace_ratio": 0.0,
+          "token_coverage": 0.0,
+          "numeric_ratio": null,
+          "entity_ratio": 0.0,
+          "contradiction": false,
+          "util_ratio": 0.0,
+          "hedging": false,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "提供的证据中未提及Yellow Temperance在PHYSICAL IMPERVIOUSNESS方面的具体描述。"
+          ]
+        },
+        "gen_ms": 3442.3,
+        "n_gen_tokens": 21
+      },
+      {
+        "qid": "T4-009",
+        "question": "Foo Fighters的GUARDING THE STAND DISCS方面有哪些描述？",
+        "answer": "提供的证据中未提及Foo Fighters的GUARDING THE STAND DISCS方面的描述。",
+        "score": {
+          "trace_ratio": 0.0,
+          "token_coverage": 0.0,
+          "numeric_ratio": null,
+          "entity_ratio": 0.0,
+          "contradiction": false,
+          "util_ratio": 0.0,
+          "hedging": false,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "提供的证据中未提及Foo Fighters的GUARDING THE STAND DISCS方面的描述。"
+          ]
+        },
+        "gen_ms": 3102.0,
+        "n_gen_tokens": 20
+      },
+      {
+        "qid": "T1-003",
+        "question": "D4C Love Train 的持续力是几级？",
+        "answer": "根据提供的证据，D4C Love Train 的持续力是几级没有具体信息。因此，无法回答这个问题。",
+        "score": {
+          "trace_ratio": 0.5,
+          "token_coverage": 0.5,
+          "numeric_ratio": null,
+          "entity_ratio": 0.0,
+          "contradiction": false,
+          "util_ratio": 0.0,
+          "hedging": false,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "根据提供的证据，D4C Love Train 的持续力是几级没有具体信息。"
+          ]
+        },
+        "gen_ms": 4038.8,
+        "n_gen_tokens": 26
+      },
+      {
+        "qid": "T7-003",
+        "question": "Achtung Baby 的射程是多少？",
+        "answer": "提供的证据中未提及 Achtung Baby 的射程。",
+        "score": {
+          "trace_ratio": 0.0,
+          "token_coverage": 0.0,
+          "numeric_ratio": null,
+          "entity_ratio": 0.0,
+          "contradiction": false,
+          "util_ratio": 0.0,
+          "hedging": true,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "提供的证据中未提及 Achtung Baby 的射程。"
+          ]
+        },
+        "gen_ms": 1901.2,
+        "n_gen_tokens": 14
+      }
+    ]
+  },
+  "D": {
+    "summary": {
+      "n": 30,
+      "trace_ratio": 0.11944444444444445,
+      "token_coverage": 0.14952380952380953,
+      "numeric_ratio": null,
+      "entity_ratio": 0.13333333333333333,
+      "contradiction_rate": 0.0,
+      "util_ratio": 0.03949164851125635,
+      "hedging_rate": 0.7,
+      "config_key": "D",
+      "config_name": "生成式 + 无关注证据",
+      "config_desc": "★ 敏感度检验：指标能否区分证据质量",
+      "elapsed_sec": 119.4
+    },
+    "records": [
+      {
+        "qid": "T1-033",
+        "question": "Echoes (ACT3) 的速度是几级？",
+        "answer": "提供的证据中未提及Echoes (ACT3)的速度等级。",
+        "score": {
+          "trace_ratio": 0.0,
+          "token_coverage": 0.0,
+          "numeric_ratio": null,
+          "entity_ratio": 0.0,
+          "contradiction": false,
+          "util_ratio": 0.0549,
+          "hedging": true,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "提供的证据中未提及Echoes (ACT3)的速度等级。"
+          ]
+        },
+        "gen_ms": 2054.1,
+        "n_gen_tokens": 15
+      },
+      {
+        "qid": "T1-014",
+        "question": "Foo Fighters 的持续力是几级？",
+        "answer": "提供的证据中未提及 Foo Fighters 的持续力等级。",
+        "score": {
+          "trace_ratio": 0.0,
+          "token_coverage": 0.0,
+          "numeric_ratio": null,
+          "entity_ratio": 0.0,
+          "contradiction": false,
+          "util_ratio": 0.0,
+          "hedging": true,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "提供的证据中未提及 Foo Fighters 的持续力等级。"
+          ]
+        },
+        "gen_ms": 1559.2,
+        "n_gen_tokens": 13
+      },
+      {
+        "qid": "T4-005",
+        "question": "Aqua Necklace的名称或设定来源是什么？",
+        "answer": "Aqua Necklace的名称或设定来源是《JoJo的奇妙冒险》系列中的《钻石是永恒的》第四部分。",
+        "score": {
+          "trace_ratio": 0.0,
+          "token_coverage": 0.0,
+          "numeric_ratio": null,
+          "entity_ratio": 0.0,
+          "contradiction": false,
+          "util_ratio": 0.0398,
+          "hedging": false,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "Aqua Necklace的名称或设定来源是《JoJo的奇妙冒险》系列中的《钻石是永恒的》第四部分。"
+          ]
+        },
+        "gen_ms": 3111.1,
+        "n_gen_tokens": 28
+      },
+      {
+        "qid": "T7-006",
+        "question": "Chocolate Disco 的破坏力是多少？",
+        "answer": "提供的证据中未提及 Chocolate Disco 的破坏力。",
+        "score": {
+          "trace_ratio": 0.0,
+          "token_coverage": 0.0,
+          "numeric_ratio": null,
+          "entity_ratio": 0.0,
+          "contradiction": false,
+          "util_ratio": 0.0549,
+          "hedging": true,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "提供的证据中未提及 Chocolate Disco 的破坏力。"
+          ]
+        },
+        "gen_ms": 1355.5,
+        "n_gen_tokens": 12
+      },
+      {
+        "qid": "T4-024",
+        "question": "Stone Free的STRING DECOMPOSITION方面有哪些描述？",
+        "answer": "提供的证据中未提及Stone Free的STRING DECOMPOSITION方面的描述。",
+        "score": {
+          "trace_ratio": 0.0,
+          "token_coverage": 0.0,
+          "numeric_ratio": null,
+          "entity_ratio": 0.0,
+          "contradiction": false,
+          "util_ratio": 0.0,
+          "hedging": false,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "提供的证据中未提及Stone Free的STRING DECOMPOSITION方面的描述。"
+          ]
+        },
+        "gen_ms": 1794.8,
+        "n_gen_tokens": 16
+      },
+      {
+        "qid": "T7-005",
+        "question": "Stray Cat 的射程是多少？",
+        "answer": "提供的证据中未提及 Stray Cat 的射程。",
+        "score": {
+          "trace_ratio": 0.0,
+          "token_coverage": 0.0,
+          "numeric_ratio": null,
+          "entity_ratio": 0.0,
+          "contradiction": false,
+          "util_ratio": 0.0398,
+          "hedging": true,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "提供的证据中未提及 Stray Cat 的射程。"
+          ]
+        },
+        "gen_ms": 1785.5,
+        "n_gen_tokens": 13
+      },
+      {
+        "qid": "T4-021",
+        "question": "King Crimson的TIME ERASURE方面有哪些描述？",
+        "answer": "提供的证据中未提及King Crimson的TIME ERASURE方面的描述。",
+        "score": {
+          "trace_ratio": 0.0,
+          "token_coverage": 0.0,
+          "numeric_ratio": null,
+          "entity_ratio": 0.0,
+          "contradiction": false,
+          "util_ratio": 0.0398,
+          "hedging": true,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "提供的证据中未提及King Crimson的TIME ERASURE方面的描述。"
+          ]
+        },
+        "gen_ms": 2222.8,
+        "n_gen_tokens": 15
+      },
+      {
+        "qid": "T1-027",
+        "question": "Horus 的射程是几级？",
+        "answer": "提供的证据中未提及Horus的射程等级。",
+        "score": {
+          "trace_ratio": 0.0,
+          "token_coverage": 0.0,
+          "numeric_ratio": null,
+          "entity_ratio": 0.0,
+          "contradiction": false,
+          "util_ratio": 0.0,
+          "hedging": true,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "提供的证据中未提及Horus的射程等级。"
+          ]
+        },
+        "gen_ms": 1752.8,
+        "n_gen_tokens": 13
+      },
+      {
+        "qid": "T1-039",
+        "question": "Bad Company 的精密性是几级？",
+        "answer": "提供的证据中未提及 Bad Company 的精密性等级。",
+        "score": {
+          "trace_ratio": 0.0,
+          "token_coverage": 0.0,
+          "numeric_ratio": null,
+          "entity_ratio": 0.0,
+          "contradiction": false,
+          "util_ratio": 0.0398,
+          "hedging": true,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "提供的证据中未提及 Bad Company 的精密性等级。"
+          ]
+        },
+        "gen_ms": 1765.9,
+        "n_gen_tokens": 13
+      },
+      {
+        "qid": "T4-025",
+        "question": "Emperor的能力方面有哪些描述？",
+        "answer": "根据提供的证据，Emperor的能力方面描述如下：\n\n- Ghiaccio可以精确控制自己的力量，能够形成特定形状的冰，如冰刀用于滑冰，或者改变大面积水域的冻结状态。\n- 如果他自愿取消White Album的冻结，受影响的物体会立即恢复到正常温度。\n- 如果Ghiaccio与一个冻结的物体断开接触，该物体会返回到其正常温度。",
+        "score": {
+          "trace_ratio": 0.3333,
+          "token_coverage": 0.6667,
+          "numeric_ratio": null,
+          "entity_ratio": 0.5,
+          "contradiction": false,
+          "util_ratio": 0.062,
+          "hedging": false,
+          "n_unsupported": 2,
+          "unsupported_examples": [
+            "根据提供的证据，Emperor的能力方面描述如下：\n\n- Ghiaccio可以精确控制自己的力量，能够形成特定形状的冰，如冰刀用于滑冰，或者改变大面积水域的冻结状态。",
+            "- 如果他自愿取消White Album的冻结，受影响的物体会立即恢复到正常温度。"
+          ]
+        },
+        "gen_ms": 12070.3,
+        "n_gen_tokens": 89
+      },
+      {
+        "qid": "T4-014",
+        "question": "Boy II Man的能量吸取方面有哪些描述？",
+        "answer": "根据提供的证据，Boy II Man的能量吸取能力描述如下：\n\n- Ghiaccio可以精确控制他的力量。他能够形成特定形状的冰，如刀片来在冰上滑行，或者重新冻结一个大水体。此外，如果他自愿取消White Album被冻结的状态，受影响的物体会立即恢复到正常温度。如果Ghiaccio与一个冻结的物体失去接触，它会返回到正常温度。",
+        "score": {
+          "trace_ratio": 0.5,
+          "token_coverage": 0.6875,
+          "numeric_ratio": null,
+          "entity_ratio": 0.5,
+          "contradiction": false,
+          "util_ratio": 0.062,
+          "hedging": false,
+          "n_unsupported": 2,
+          "unsupported_examples": [
+            "根据提供的证据，Boy II Man的能量吸取能力描述如下：\n\n- Ghiaccio可以精确控制他的力量。",
+            "此外，如果他自愿取消White Album被冻结的状态，受影响的物体会立即恢复到正常温度。"
+          ]
+        },
+        "gen_ms": 12723.1,
+        "n_gen_tokens": 93
+      },
+      {
+        "qid": "T7-002",
+        "question": "Green, Green Grass of Home 的破坏力是多少？",
+        "answer": "提供的证据中未提及Green, Green Grass of Home的破坏力。",
+        "score": {
+          "trace_ratio": 0.0,
+          "token_coverage": 0.0,
+          "numeric_ratio": null,
+          "entity_ratio": 0.0,
+          "contradiction": false,
+          "util_ratio": 0.0398,
+          "hedging": true,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "提供的证据中未提及Green, Green Grass of Home的破坏力。"
+          ]
+        },
+        "gen_ms": 2169.9,
+        "n_gen_tokens": 16
+      },
+      {
+        "qid": "T4-008",
+        "question": "Cheap Trick的ATTACHMENT方面有哪些描述？",
+        "answer": "Cheap Trick（チープ・トリック，Chīpu Torikku）是JoJo的奇妙冒险第四部作品《钻石是永恒的》中的一个角色，它是一种Stand。根据提供的证据，Cheap Trick具备以下ATTACHMENT方面的描述：\n\n- Cheap Trick可以形成特定形状的冰，如刀片，以便在冰上滑行或重新冻结大面积水域。\n- 如果Cheap Trick自愿取消White Album的冻结状态，受影响的物体将立即恢复到正常温度。\n- 当Cheap Trick与一个冻结的物体分离时，该物体会恢复到正常温度。",
+        "score": {
+          "trace_ratio": 1.0,
+          "token_coverage": 0.8458,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.1229,
+          "hedging": false,
+          "n_unsupported": 0,
+          "unsupported_examples": []
+        },
+        "gen_ms": 16421.0,
+        "n_gen_tokens": 122
+      },
+      {
+        "qid": "T7-008",
+        "question": "Gold Experience Requiem 的破坏力是多少？",
+        "answer": "提供的证据中未提及 Gold Experience Requiem 的破坏力。",
+        "score": {
+          "trace_ratio": 0.0,
+          "token_coverage": 0.0,
+          "numeric_ratio": null,
+          "entity_ratio": 0.0,
+          "contradiction": false,
+          "util_ratio": 0.0,
+          "hedging": true,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "提供的证据中未提及 Gold Experience Requiem 的破坏力。"
+          ]
+        },
+        "gen_ms": 2036.3,
+        "n_gen_tokens": 15
+      },
+      {
+        "qid": "T7-010",
+        "question": "Limp Bizkit 的破坏力是多少？",
+        "answer": "提供的证据中未提及 Limp Bizkit 的破坏力。",
+        "score": {
+          "trace_ratio": 0.0,
+          "token_coverage": 0.0,
+          "numeric_ratio": null,
+          "entity_ratio": 0.0,
+          "contradiction": false,
+          "util_ratio": 0.0,
+          "hedging": true,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "提供的证据中未提及 Limp Bizkit 的破坏力。"
+          ]
+        },
+        "gen_ms": 1854.6,
+        "n_gen_tokens": 14
+      },
+      {
+        "qid": "T7-007",
+        "question": "Purple Haze 的射程是多少？",
+        "answer": "提供的证据中未提及Purple Haze的射程。",
+        "score": {
+          "trace_ratio": 0.0,
+          "token_coverage": 0.0,
+          "numeric_ratio": null,
+          "entity_ratio": 0.0,
+          "contradiction": false,
+          "util_ratio": 0.0549,
+          "hedging": true,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "提供的证据中未提及Purple Haze的射程。"
+          ]
+        },
+        "gen_ms": 1654.2,
+        "n_gen_tokens": 13
+      },
+      {
+        "qid": "T7-014",
+        "question": "Purple Haze Distortion 的成长性是多少？",
+        "answer": "提供的证据中未提及Purple Haze Distortion的成长性。",
+        "score": {
+          "trace_ratio": 0.0,
+          "token_coverage": 0.0,
+          "numeric_ratio": null,
+          "entity_ratio": 0.0,
+          "contradiction": false,
+          "util_ratio": 0.0549,
+          "hedging": true,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "提供的证据中未提及Purple Haze Distortion的成长性。"
+          ]
+        },
+        "gen_ms": 1636.5,
+        "n_gen_tokens": 14
+      },
+      {
+        "qid": "T1-013",
+        "question": "Tower of Gray 的破坏力是几级？",
+        "answer": "提供的证据中未提及 Tower of Gray 的破坏力等级。",
+        "score": {
+          "trace_ratio": 0.0,
+          "token_coverage": 0.0,
+          "numeric_ratio": null,
+          "entity_ratio": 0.0,
+          "contradiction": false,
+          "util_ratio": 0.0398,
+          "hedging": true,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "提供的证据中未提及 Tower of Gray 的破坏力等级。"
+          ]
+        },
+        "gen_ms": 1429.7,
+        "n_gen_tokens": 14
+      },
+      {
+        "qid": "T1-015",
+        "question": "Yellow Temperance 的持续力是几级？",
+        "answer": "提供的证据中未提及 Yellow Temperance 的持续力等级。",
+        "score": {
+          "trace_ratio": 0.0,
+          "token_coverage": 0.0,
+          "numeric_ratio": null,
+          "entity_ratio": 0.0,
+          "contradiction": false,
+          "util_ratio": 0.0398,
+          "hedging": true,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "提供的证据中未提及 Yellow Temperance 的持续力等级。"
+          ]
+        },
+        "gen_ms": 1845.1,
+        "n_gen_tokens": 14
+      },
+      {
+        "qid": "T4-004",
+        "question": "Highway to Hell的整体能力概述是什么？",
+        "answer": "Ghiaccio可以精确控制他的力量。他可以形成特定形状的冰，如刀片来在冰上滑行，或者重新冻结一个大水体。此外，如果他自愿取消White Album的冻结，之前受影响的物体将立即恢复到正常温度。如果Ghiaccio与一个冻结的物体失去接触，它会恢复到正常温度。",
+        "score": {
+          "trace_ratio": 0.75,
+          "token_coverage": 0.875,
+          "numeric_ratio": null,
+          "entity_ratio": 1.0,
+          "contradiction": false,
+          "util_ratio": 0.062,
+          "hedging": false,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "此外，如果他自愿取消White Album的冻结，之前受影响的物体将立即恢复到正常温度。"
+          ]
+        },
+        "gen_ms": 8698.4,
+        "n_gen_tokens": 79
+      },
+      {
+        "qid": "T4-003",
+        "question": "Limp Bizkit的INVISIBLE REANIMATION方面有哪些描述？",
+        "answer": "根据提供的证据，Limp Bizkit的INVISIBLE REANIMATION方面描述如下：\n\n- INVISIBLE REANIMATION是一种能力，由Ghiaccio可以控制。\n- Ghiaccio可以通过形成特定形状的冰，如刀片来在冰上滑行或改变大面积水域的冻结状态。\n- 如果Ghiaccio自愿取消White Album的冻结状态，受影响的物体会立即恢复到正常温度。\n- 当Ghiaccio与一个冻结的物体失去接触时，该物体会恢复到正常温度。",
+        "score": {
+          "trace_ratio": 0.5,
+          "token_coverage": 0.7024,
+          "numeric_ratio": null,
+          "entity_ratio": 0.5,
+          "contradiction": false,
+          "util_ratio": 0.062,
+          "hedging": false,
+          "n_unsupported": 2,
+          "unsupported_examples": [
+            "根据提供的证据，Limp Bizkit的INVISIBLE REANIMATION方面描述如下：\n\n- INVISIBLE REANIMATION是一种能力，由Ghiaccio可以控制。",
+            "- 如果Ghiaccio自愿取消White Album的冻结状态，受影响的物体会立即恢复到正常温度。"
+          ]
+        },
+        "gen_ms": 14523.3,
+        "n_gen_tokens": 112
+      },
+      {
+        "qid": "T1-008",
+        "question": "Born This Way 的成长性是几级？",
+        "answer": "提供的证据中未提及 Born This Way 的成长性等级。",
+        "score": {
+          "trace_ratio": 0.0,
+          "token_coverage": 0.0,
+          "numeric_ratio": null,
+          "entity_ratio": 0.0,
+          "contradiction": false,
+          "util_ratio": 0.0398,
+          "hedging": true,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "提供的证据中未提及 Born This Way 的成长性等级。"
+          ]
+        },
+        "gen_ms": 1526.9,
+        "n_gen_tokens": 14
+      },
+      {
+        "qid": "T7-001",
+        "question": "Made in Heaven 的速度是多少？",
+        "answer": "提供的证据中未提及 Made in Heaven 的速度。",
+        "score": {
+          "trace_ratio": 0.0,
+          "token_coverage": 0.0,
+          "numeric_ratio": null,
+          "entity_ratio": 0.0,
+          "contradiction": false,
+          "util_ratio": 0.0398,
+          "hedging": true,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "提供的证据中未提及 Made in Heaven 的速度。"
+          ]
+        },
+        "gen_ms": 1099.1,
+        "n_gen_tokens": 12
+      },
+      {
+        "qid": "T1-002",
+        "question": "Marilyn Manson 的精密性是几级？",
+        "answer": "提供的证据中未提及 Marilyn Manson 的精密性等级。",
+        "score": {
+          "trace_ratio": 0.0,
+          "token_coverage": 0.0,
+          "numeric_ratio": null,
+          "entity_ratio": 0.0,
+          "contradiction": false,
+          "util_ratio": 0.0398,
+          "hedging": true,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "提供的证据中未提及 Marilyn Manson 的精密性等级。"
+          ]
+        },
+        "gen_ms": 1379.4,
+        "n_gen_tokens": 13
+      },
+      {
+        "qid": "T7-013",
+        "question": "Rolling Stones 的破坏力是多少？",
+        "answer": "提供的证据中未提及 Rolling Stones 的破坏力。",
+        "score": {
+          "trace_ratio": 0.0,
+          "token_coverage": 0.0,
+          "numeric_ratio": null,
+          "entity_ratio": 0.0,
+          "contradiction": false,
+          "util_ratio": 0.0,
+          "hedging": true,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "提供的证据中未提及 Rolling Stones 的破坏力。"
+          ]
+        },
+        "gen_ms": 1108.2,
+        "n_gen_tokens": 12
+      },
+      {
+        "qid": "T1-006",
+        "question": "Ebony Devil 的破坏力是几级？",
+        "answer": "提供的证据中未提及Ebony Devil的破坏力等级。",
+        "score": {
+          "trace_ratio": 0.0,
+          "token_coverage": 0.0,
+          "numeric_ratio": null,
+          "entity_ratio": 0.0,
+          "contradiction": false,
+          "util_ratio": 0.0,
+          "hedging": true,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "提供的证据中未提及Ebony Devil的破坏力等级。"
+          ]
+        },
+        "gen_ms": 1218.9,
+        "n_gen_tokens": 14
+      },
+      {
+        "qid": "T4-001",
+        "question": "Yellow Temperance的PHYSICAL IMPERVIOUSNESS方面有哪些描述？",
+        "answer": "根据提供的证据，Yellow Temperance在物理不可穿透性方面的描述如下：\n\n- Ghiaccio可以精确控制他的力量。他可以形成特定形状的冰，如刀片来冰上滑行，或者重新冻结一个大水体。此外，如果他自愿取消White Album的冻结，受影响的物体将立即恢复到正常温度。如果Ghiaccio与一个冻结的物体失去接触，它会恢复到正常温度。",
+        "score": {
+          "trace_ratio": 0.5,
+          "token_coverage": 0.7083,
+          "numeric_ratio": null,
+          "entity_ratio": 0.5,
+          "contradiction": false,
+          "util_ratio": 0.062,
+          "hedging": false,
+          "n_unsupported": 2,
+          "unsupported_examples": [
+            "根据提供的证据，Yellow Temperance在物理不可穿透性方面的描述如下：\n\n- Ghiaccio可以精确控制他的力量。",
+            "此外，如果他自愿取消White Album的冻结，受影响的物体将立即恢复到正常温度。"
+          ]
+        },
+        "gen_ms": 9868.0,
+        "n_gen_tokens": 94
+      },
+      {
+        "qid": "T4-009",
+        "question": "Foo Fighters的GUARDING THE STAND DISCS方面有哪些描述？",
+        "answer": "提供的证据中未提及Foo Fighters的GUARDING THE STAND DISCS方面的描述。",
+        "score": {
+          "trace_ratio": 0.0,
+          "token_coverage": 0.0,
+          "numeric_ratio": null,
+          "entity_ratio": 0.0,
+          "contradiction": false,
+          "util_ratio": 0.0398,
+          "hedging": false,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "提供的证据中未提及Foo Fighters的GUARDING THE STAND DISCS方面的描述。"
+          ]
+        },
+        "gen_ms": 2410.2,
+        "n_gen_tokens": 20
+      },
+      {
+        "qid": "T1-003",
+        "question": "D4C Love Train 的持续力是几级？",
+        "answer": "提供的证据中未提及 D4C Love Train 的持续力等级。",
+        "score": {
+          "trace_ratio": 0.0,
+          "token_coverage": 0.0,
+          "numeric_ratio": null,
+          "entity_ratio": 0.0,
+          "contradiction": false,
+          "util_ratio": 0.0398,
+          "hedging": true,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "提供的证据中未提及 D4C Love Train 的持续力等级。"
+          ]
+        },
+        "gen_ms": 2017.8,
+        "n_gen_tokens": 16
+      },
+      {
+        "qid": "T7-003",
+        "question": "Achtung Baby 的射程是多少？",
+        "answer": "提供的证据中未提及 Achtung Baby 的射程。",
+        "score": {
+          "trace_ratio": 0.0,
+          "token_coverage": 0.0,
+          "numeric_ratio": null,
+          "entity_ratio": 0.0,
+          "contradiction": false,
+          "util_ratio": 0.0549,
+          "hedging": true,
+          "n_unsupported": 1,
+          "unsupported_examples": [
+            "提供的证据中未提及 Achtung Baby 的射程。"
+          ]
+        },
+        "gen_ms": 1617.9,
+        "n_gen_tokens": 14
+      }
+    ]
+  }
+}

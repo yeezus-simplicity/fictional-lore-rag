@@ -187,46 +187,154 @@ def trace_coverage(answer: str, evidence_texts: list[str]) -> dict:
 # 数值型断言的模式：「破坏力是 A」「射程为 E」「速度= C」
 # ★注意否定：维度名里不能吞掉「不」，
 #   否则「破坏力不是 A 级」会被解析成「维度=破坏力不，值=A」→ 判断反向
+# ★ 数字必须用 \d+ （实测踩坑：原写 \d(?:\.\d)? 只匹配 1-2 位，
+#   「射程是 300 米」被截成「3」→ 拿单个数字去比对，误判风险极高）
 _NUM_ASSERT = re.compile(
     r"([一-鿿]{2,4}?)\s*(?:是|为|＝|=|：|:)\s*"
-    r"([ABCDE]|\d(?:\.\d)?|∞|无|未知|不存在)"
+    r"([ABCDE]|\d+(?:\.\d+)?|∞|无|未知|不存在)"
 )
 # 独立出现的等级
 _GRADE_RE = re.compile(r"\b([ABCDE])\s*级\b")
 
 
-def _extract_asserts(answer: str) -> list[dict]:
-    """抽取数值断言，正确处理否定。
+# ★ 维度名归一：抽出标准中文维度名
+#   实测踩坑：「可以将 Tower of Gray 的破坏力等级定为 5 级」
+#   非贪婪匹配把维度抽成「力等级定」—— 「破坏力」+「等级定为」的混合碎片
+_DIM_CANON = {
+    "破坏力": ["破坏力", "力量", "威力", "力"],
+    "速度": ["速度", "速"],
+    "射程": ["射程", "范围", "距离"],
+    "持续力": ["持续力", "耐久", "持久"],
+    "精密性": ["精密性", "精度"],
+    "成长性": ["成长性", "成长"],
+}
 
-    ★★ 实测踩坑：`破坏力不是 A 级` 被解析成「维度=破坏力不，值=A」——
-      否定词被吞进维度名，判断方向完全反了。
-      → 先按否定切分，再抽断言。
+
+def _canon_dim(raw: str) -> Optional[str]:
+    """把片段归一到标准维度名（取最长匹配）。
+
+    ★ 关键：别名表要能覆盖「部分词被切掉」的情况。
+      正则可能只切到「力等级定」，此时「破坏力」匹配不上，
+      但若别名含「力」也能命中 → 故别名表包含单字兜底。
+    """
+    best = None
+    for std, aliases in _DIM_CANON.items():
+        for a in aliases:
+            if a in raw:
+                if best is None or len(a) > len(best[1]):
+                    best = (std, a)
+    return best[0] if best else None
+
+
+def _extract_asserts(answer: str) -> list[dict]:
+    """抽取数值断言，正确处理否定与维度归一。
+
+    ★★ 两个实测踩坑：
+      1. 否定词被吞进维度名：「破坏力不是 A」→ 维度=「破坏力不」
+         → 先按否定切分
+      2. ★ 正则切碎维度：「可以将X的破坏力等级定为 5 级」
+         正则的`[一-鿿]{2,4}?` 从「破」开始匹配 2 字就停 →得到「力」
+         → **放弃从正则捕获组取维度**，改用「就近原则」：
+           在数值位置**向前回溯**找最完整的维度词
     """
     asserts: list[dict] = []
-    # 先按「不是/不为/并不是」把句子切成两半
+    # 先按否定切分
     parts = re.split(r"(不是|不为|并不是)", answer)
     for i, part in enumerate(parts):
-        neg_word = (i > 0 and i % 2 == 0)   # 该段是被否定的部分
+        neg_word = (i > 0 and i % 2 == 0)
         for m in _NUM_ASSERT.finditer(part):
-            dim, val = m.group(1), m.group(2)
-            dim = re.sub(r"[不是为的]", "", dim)
+            val = m.group(2)
+            # ★ 就近归一：取数值位置前 12 字内最长的维度词
+            prefix = part[max(0, m.start() - 12):m.start()]
+            dim = _canon_dim(prefix) or _canon_dim(m.group(1)) or \
+                re.sub(r"[不是为的等级定个]", "", m.group(1))
             asserts.append({
-                "dimension": dim, "value": val,
-                "source": "assert", "negated": neg_word,
+                "dimension": dim, "raw_dimension": m.group(1),
+                "value": val, "source": "assert", "negated": neg_word,
             })
         if neg_word:
-            # ★ 「破坏力不是 A 级」：等级在否定词**之后**，
-            #   前半段抽不到断言 → 从「维度(前半段) + 等级(后半段)」拼一条
-            mneg = re.match(r"\s*([ABCDE])\s*级?", part)
+            # 「破坏力不是 A 级」：等级在否定词之后
+            mneg = re.match(r"\s*([ABCDE]|\d+)\s*级?", part)
             if mneg and i >= 2:
-                prev = parts[i - 2]
-                dims = re.findall(r"([\u4e00-\u9fff]{2,4})", prev)
-                if dims:
-                    asserts.append({
-                        "dimension": dims[-1], "value": mneg.group(1),
-                        "source": "assert", "negated": True,
-                    })
+                prefix = parts[i - 2][-12:]
+                dim = _canon_dim(prefix) or \
+                    (_DIM_CANON and re.findall(r"[\u4e00-\u9fff]{2,4}",
+                                              parts[i - 2])[-1:])
+                dim = dim[0] if isinstance(dim, list) and dim else (dim or "")
+                asserts.append({
+                    "dimension": dim, "raw_dimension": parts[i - 2][-6:],
+                    "value": mneg.group(1), "source": "assert",
+                    "negated": True,
+                })
     return asserts
+
+
+# ★ 证据里的「维度 → 等级/数字」映射
+#★★ 实测踩坑：窗口大小是致命细节。
+#   最初用 ±20 词窗口，证据「Destructive Power: A, Speed: C, Range: B」
+#   里Power 的窗口会含B 和 C → 「射程是 A」被误判为正确。
+#   → 改用**最小必要窗口**（维度词后 0~max_gap 个词）。
+_DIM_ALIAS = {
+    "破坏力": ["destructive", "power", "pwr"],
+    "速度": ["speed", "spd"],
+    "射程": ["range", "rng"],
+    "持续力": ["stamina", "sta", "durability", "persistence"],
+    "精密性": ["precision", "prc"],
+    "成长性": ["growth", "dev", "development"],
+}
+
+
+def extract_dim_values(evidence_text: str, max_gap: int = 4
+                       ) -> tuple[dict[str, set], dict[str, set]]:
+    """从证据里抽「每个维度出现了哪些等级 / 数字」。
+
+    Returns:
+        (每维度的字母等级集合, 每维度的数字集合)
+    """
+    ev = normalize(evidence_text)
+    words = re.findall(r"[a-z][a-z0-9'’]*|\d+(?:\.\d+)?|[a-e]", ev)
+    grades: dict[str, set] = {d: set() for d in _DIM_ALIAS}
+    nums: dict[str, set] = {d: set() for d in _DIM_ALIAS}
+    all_aliases = {a for al in _DIM_ALIAS.values() for a in al}
+    for i, w in enumerate(words):
+        if w not in all_aliases:
+            continue
+        dim = next(d for d, al in _DIM_ALIAS.items() if w in al)
+        # ★★ 向前扫描，但**遇到下一个维度词就停**
+        #   「Power: A, Speed: C」里 Power 只取到 A，
+        #   不会因为 max_gap=4 而把 Speed 的 C 也算进来。
+        for j in range(i + 1, min(i + max_gap + 2, len(words))):
+            g = words[j]
+            if g in all_aliases and g != w:
+                break                      # 撞上下个维度 → 停
+            if re.fullmatch(r"[a-e]", g):
+                grades[dim].add(g)
+            elif re.fullmatch(r"\d+(?:\.\d+)?", g):
+                nums[dim].add(g)
+    return grades, nums
+
+
+# ★ 等级字母 ↔ 0–5 数值的**权威映射**（来自 dataset/pipeline/encode.py）
+#   ★★★ 实测踩坑：我自己推导 `abcde[4-n]`，
+#      n=5 时索引 -1 越界**绕回** 'e' —— 明明 A=5 却算出 E。
+#      原因：字母表是A..E（升序），而数值是 5..1（降序），
+#      索引关系是 `(5-n)-1`，不是 `4-n`。
+#      → 结论：**映射表必须复用数据层的权威定义，不要重新推导。**
+GRADE_TO_VALUE = {"A": 5, "B": 4, "C": 3, "D": 2, "E": 1}
+VALUE_TO_GRADE = {v: k for k, v in GRADE_TO_VALUE.items()}
+
+
+def _looks_like_grade(answer: str, a: dict) -> bool:
+    """判断 0–5 的小数字是「等级」还是「物理量」。
+
+    ★ 实测踩坑：「破坏力等级定为 5 级」应按等级处理（A=5），
+      但「射程是 5 米」是物理量。两者正则形态相同。
+      → 看上下文有没有「等级/级/Level」这类词。
+    """
+    idx = answer.find(a["value"])
+    ctx = answer[max(0, idx - 14): idx + 12] if idx >= 0 else answer
+    return bool(re.search(r"等级|\s级|\blevel\b|rating", ctx, re.I))
+
 
 def numeric_faithfulness(answer: str, evidence_text: str) -> dict:
     """抽取答案里的数值断言，逐条核对。
@@ -247,23 +355,11 @@ def numeric_faithfulness(answer: str, evidence_text: str) -> dict:
                 "details": []}
 
     ev = normalize(evidence_text)
-    ev_words = re.findall(r"[a-z0-9']+", ev)
-    dim_alias = {
-        "破坏力": ["destructive", "power", "pwr"],
-        "速度": ["speed", "spd"],
-        "射程": ["range", "rng"],
-        "持续力": ["stamina", "sta", "durability"],
-        "精密性": ["precision", "prc"],
-        "成长性": ["growth", "dev", "development"],
-    }
-    ev_dim_grades: dict[str, set[str]] = {d: set() for d in dim_alias}
-    for i, w in enumerate(ev_words):
-        for dim, aliases in dim_alias.items():
-            if w in aliases:
-                window = ev_words[max(0, i - 20):i + 21]
-                ev_dim_grades[dim].update(
-                    g for g in window if re.fullmatch(r"[a-e]", g))
+    # ★ 复用公用的最小窗口扫描（contradiction 用的是同一套）
+    ev_dim_grades, ev_dim_nums = extract_dim_values(evidence_text)
+    dim_alias = _DIM_ALIAS          # 供下方按维度 key 查表
     all_grades = set(re.findall(r"\b[a-e]\b", ev))
+    all_nums = set(re.findall(r"\d+(?:\.\d+)?", ev))
 
     ok = 0
     details: list[dict] = []
@@ -275,13 +371,33 @@ def numeric_faithfulness(answer: str, evidence_text: str) -> dict:
 
         if a["source"] == "count_assert":
             in_ev = v in re.findall(r"\d+", ev)
-        else:
-            dim_key = next((d for d in dim_alias if d in dim_raw), None)
-            if dim_key:
-                in_ev = v in ev_dim_grades[dim_key]
+        elif re.fullmatch(r"[a-e]", v) or (
+                v in {"0", "1", "2", "3", "4", "5"} and _looks_like_grade(answer, a)):
+            # ---- 等级类断言（A–E 字母或 0–5 数值）----
+            # ★ 字母与数值是**同一件事的两种表示**：
+            #   证据写 A，答案可能写「5级」（A=5）——
+            #   只做字面比对会把正确回答误判为幻觉。
+            # ★ 0–5 的小整数还需区分「等级」与「物理量」：
+            #   「破坏力等级定为 5 级」是等级；「射程是 5 米」是物理量。
+            dim_key = a["dimension"] if a["dimension"] in dim_alias else None
+            grades = ev_dim_grades[dim_key] if dim_key else all_grades
+            if v in grades:
+                in_ev = True
+            elif v in {"0", "1", "2", "3", "4", "5"}:
+                in_ev = (VALUE_TO_GRADE.get(int(v)) or "").lower() in grades
             else:
-                in_ev = (re.fullmatch(r"[a-e]", v) is not None
-                         and v in all_grades)
+                in_ev = False
+        else:
+            # ---- ★ 物理量类断言（如「射程是 5 米」）----
+            #   实测踩坑：证据里射程写的是 `5 m (16.5 ft)` 这种**带单位的物理量**，
+            #   不是 A–E 等级。原实现只比等级字母 → 全部误判为不支持。
+            dim_key2 = a["dimension"] if a["dimension"] in dim_alias else None
+            if dim_key2 and ev_dim_nums.get(dim_key2):
+                # 优先：在该维度的邻近窗口里找这个数字
+                in_ev = v in ev_dim_nums[dim_key2]
+            else:
+                # 退化：全文里有这个数字就算支持
+                in_ev = v in re.findall(r"\d+(?:\.\d+)?", ev)
 
         # 否定断言：「不是A」在证据里 A 不存在 → 正确
         supported = (not in_ev) if neg else in_ev
@@ -356,22 +472,8 @@ def contradiction(answer: str, evidence_text: str) -> dict:
 
     # --- 2. ★ 维度冲突：证据说 C，答案说 E ---
     # 这类最隐蔽：答案的所有词都在证据里，但配错了维度
-    ev_words = re.findall(r"[a-z0-9']+", ev)
-    dim_alias = {
-        "破坏力": ["destructive", "power", "pwr"],
-        "速度": ["speed", "spd"],
-        "射程": ["range", "rng"],
-        "持续力": ["stamina", "sta", "durability"],
-        "精密性": ["precision", "prc"],
-        "成长性": ["growth", "dev", "development"],
-    }
-    ev_dim_grades: dict[str, set[str]] = {d: set() for d in dim_alias}
-    for i, w in enumerate(ev_words):
-        for dim, aliases in dim_alias.items():
-            if w in aliases:
-                window = ev_words[max(0, i - 20):i + 21]
-                ev_dim_grades[dim].update(
-                    g for g in window if re.fullmatch(r"[a-e]", g))
+    # ★ 复用公用的最小窗口扫描（与 numeric_faithfulness 同一套）
+    ev_dim_grades, _ = extract_dim_values(evidence_text)
 
     # ★复用 _extract_asserts —— 与 numeric_faithfulness 保持同一套抽取逻辑
     for a in _extract_asserts(answer):
@@ -381,7 +483,7 @@ def contradiction(answer: str, evidence_text: str) -> dict:
         if not re.fullmatch(r"[a-e]", val):
             continue
         for dim, grades in ev_dim_grades.items():
-            if dim in a["dimension"] and grades and val not in grades:
+            if dim == a["dimension"] and grades and val not in grades:
                 issues.append(
                     f"维度冲突：答案说{dim}={val.upper()}，"
                     f"但证据里{dim}的等级是 "
@@ -576,6 +678,36 @@ if __name__ == "__main__":
     #   因为句子的词确实都在证据里（star/platinum/破坏力），
     #  只是等级说错了。这正是「溯源率高≠答案对」的典型演示，
     #   必须靠 numeric_ratio 与 contradiction 两个指标才能抓到。
+    # ===★ 回归用例集（实测踩坑全部固化于此）★★
+    ev2 = ("Tower of Gray is a close-range Stand. Destructive Power: A, "
+           "Speed: C, Range: 5 m.")
+    reg_cases = [
+        # —— 等级字母 vs 0–5 数值是同一件事的两种表示 ——
+        ("证据 A，答案写 5 级（换算）", "可以将破坏力等级定为 5 级。", True),
+        ("证据 A，答案写 A 级", "破坏力是 A 级。", True),
+        ("证据 A，答案写 C 级", "破坏力是 C 级。", False),
+        ("证据 A，答案写 3 级", "破坏力是 3 级。", False),
+        # —— 等级 vs 物理量必须区分 ——
+        ("证据 Range: 5 m，答案 5 米", "射程是 5 米。", True),
+        ("证据 Range: 5 m，答案 300 米", "射程是 300 米。", False),
+        # —— 维度不能被切碎，也不能串到相邻维度 ——
+        ("速度 C 正确", "速度是 C。", True),
+        ("速度 A 错误（不能借用破坏力的值）", "速度是 A。", False),
+        ("否定断言", "破坏力不是 A 级。", False),
+    ]
+    print("\n【回归用例】维度隔离 / 等级换算 / 物理量区分")
+    print(f"  {'用例':38s} {'判定':>6s}  结果")
+    print("  " + "-" * 60)
+    reg_bad = 0
+    for label, a, exp in reg_cases:
+        r = numeric_faithfulness(a, ev2)
+        got = r["ratio"] == 1.0
+        if got != exp:
+            reg_bad += 1
+        print(f"  {label:38s} {r['ratio']:>6.2f}  "
+              f"{'OK' if got == exp else '?? 期望' + str(exp)}")
+    print(f"  → 回归失败 {reg_bad}/{len(reg_cases)}")
+
     cases = [
         ("完全抄证据",
          "Star Platinum 的破坏力是 A 级。", True),

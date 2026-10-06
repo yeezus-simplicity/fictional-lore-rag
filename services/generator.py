@@ -47,6 +47,28 @@ USER_TEMPLATE = """问题：{question}
 请基于上述证据回答。"""
 
 
+def _norm_evidence(evidence_texts: list) -> list[dict]:
+    """归一化证据输入：字符串或 dict 都能吃。
+
+    ★ 实测踩坑：warmup 传字符串列表，评测传 dict 列表，
+      原代码假定全是 dict → AttributeError。
+      → 统一在这里归一，下游代码只处理一种形态。
+    """
+    out: list[dict] = []
+    for t in evidence_texts or []:
+        if isinstance(t, dict):
+            out.append({
+                "content": t.get("content", "") or "",
+                "stand_name": t.get("stand_name"),
+                "chunk_type": t.get("chunk_type"),
+                "chunk_id": t.get("chunk_id"),
+            })
+        else:
+            out.append({"content": str(t), "stand_name": None,
+                        "chunk_type": None, "chunk_id": None})
+    return out
+
+
 @dataclass
 class GenAnswer:
     """生成结果（含评测所需的全链路信息）。"""
@@ -114,7 +136,7 @@ class Generator:
 
             kwargs: dict = {"trust_remote_code": True}
             if self._device == "cuda":
-                kwargs["torch_dtype"] = torch.float16
+                kwargs["dtype"] = torch.float16   # transformers 5.x 用 dtype
                 if self.load_in_4bit:
                     try:
                         from transformers import BitsAndBytesConfig
@@ -126,7 +148,7 @@ class Generator:
                     except ImportError:
                         print("[gen] bitsandbytes 未安装，退回 fp16")
             else:
-                kwargs["torch_dtype"] = torch.float32
+                kwargs["dtype"] = torch.float32
 
             self.model = AutoModelForCausalLM.from_pretrained(
                 self.model_path, **kwargs)
@@ -156,11 +178,12 @@ class Generator:
 
         import torch
 
+        norm = _norm_evidence(evidence_texts)
         ev = "\n\n".join(
-            f"[证据 {i + 1}]（来源：{t.get('stand_name', '?')}"
-            f"{'/' + t['chunk_type'] if t.get('chunk_type') else ''}）\n"
-            f"{(t.get('content') if isinstance(t, dict) else t) or ''}"
-            for i, t in enumerate(evidence_texts)
+            f"[证据 {i + 1}]（来源：{t['stand_name'] or '未知'}"
+            f"{'/' + t['chunk_type'] if t['chunk_type'] else ''}）\n"
+            f"{t['content']}"
+            for i, t in enumerate(norm)
         )
         if not ev.strip():
             ev = "（无可用证据）"
@@ -199,8 +222,8 @@ class Generator:
             n_prompt_tokens=int(inputs["input_ids"].shape[1]),
             n_gen_tokens=int(len(gen_ids)),
             elapsed_ms=dt * 1000,
-            evidence_used=[str(t.get("chunk_id")) for t in evidence_texts
-                           if isinstance(t, dict)],
+            evidence_used=[str(t["chunk_id"]) for t in norm
+                           if t["chunk_id"] is not None],
             mode="generate",
         )
 
@@ -212,26 +235,25 @@ class Generator:
         作为忠实度上界对照（B 组）：照抄不可能有幻觉。
         """
         t0 = time.time()
+        norm = _norm_evidence(evidence_texts)
         best, best_hit = "", -1
         words = [w.lower() for w in re.findall(r"[A-Za-z]{3,}", question)]
         words = [w for w in words if w not in ("the", "and", "for")][:8]
 
-        for t in evidence_texts:
-            text = t.get("content", "") if isinstance(t, dict) else str(t)
-            sents = re.split(r"(?<=[.!?])\s+", text)
-            for s in sents:
-                h = sum(s.lower().count(w) for w in words)
+        for t in norm:
+            sents = re.split(r"(?<=[.!?])\s+", t["content"])
+            for sent in sents:
+                h = sum(sent.lower().count(w) for w in words)
                 if h > best_hit:
-                    best, best_hit = s, h
-        if not best and evidence_texts:
-            t = evidence_texts[0]
-            best = (t.get("content", "") if isinstance(t, dict) else str(t))
+                    best, best_hit = sent, h
+        if not best and norm:
+            best = norm[0]["content"]
         return GenAnswer(
             text=best[:max_chars],
             n_prompt_tokens=0, n_gen_tokens=0,
             elapsed_ms=(time.time() - t0) * 1000,
-            evidence_used=[str(t.get("chunk_id")) for t in evidence_texts
-                           if isinstance(t, dict)],
+            evidence_used=[str(t["chunk_id"]) for t in norm
+                           if t["chunk_id"] is not None],
             mode="extractive",
         )
 

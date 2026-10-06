@@ -55,20 +55,34 @@ CONFIGS = {
 
 
 # ==================================================================
-def load_tasks(n: int, seed: int = 42) -> list[dict]:
-    """取评测集里「需要证据」的题目。
+def load_tasks(n: int, seed: int = 42,
+               types: tuple[str, ...] = ("T4", "T1", "T7")) -> list[dict]:
+    """取评测集里「证据 → 答案」结构的题目。
 
-    ★只取 T4（语义理解）—— 它们才有「证据 → 答案」的结构。
-      T1/T2/T3 是结构化查询，走 SQL，不需要文本证据。
+    ★★ 修正（实测发现的设计缺陷）：
+      最初只取 T4（语义理解），结果 **numeric_ratio 全为 None** ——
+      因为 T4 全是描述类问题（「外观形态方面有哪些描述」），
+      根本没有「X 是几级」这种数值断言，指标用不上。
+
+      忠实度的两个维度需要**不同题型**来测：
+        - 溯源/矛盾 → T4（描述类，长文本，容易改写）
+        - 数值正确  → T1（几级）/ T7（多少，含∞/未知等异常值）
+
+    → 默认三类都取，才能同时覆盖两个维度。
     """
     items = json.loads(
         (ROOT / "dataset" / "processed" / "eval_set.json").read_text(
             encoding="utf-8"))
-    t4 = [x for x in items if x["question_type"] == "T4"]
+    pool = [x for x in items if x["question_type"] in types]
+    # 每题型配额，避免某类独大
+    per = max(1, n // len(types))
+    picked: list[dict] = []
     rng = random.Random(seed)
-    if n < len(t4):
-        t4 = rng.sample(t4, n)
-    return t4
+    for t in types:
+        sub = [x for x in pool if x["question_type"] == t]
+        picked.extend(rng.sample(sub, min(per, len(sub))))
+    rng.shuffle(picked)
+    return picked[:n]
 
 
 def load_known_stands() -> set[str]:
@@ -76,9 +90,22 @@ def load_known_stands() -> set[str]:
     return {s["name_en"] for s in stands if s.get("name_en")}
 
 
+def guess_stand_id(question: str, name2id: dict[str, str]) -> Optional[str]:
+    """从问句里猜替身 stand_id（长名优先）。
+
+    ★★ 绝不能用评测集的 gold 块来 boost —— 那是用答案去检索，
+       属于作弊，会让检索指标虚高。必须只从**问句文本**推断。
+    """
+    for name in sorted(name2id, key=len, reverse=True):
+        if name and name.lower() in question.lower():
+            return name2id[name]
+    return None
+
+
 # ==================================================================
 def run_config(cfg_key: str, tasks: list[dict], gen, sem,
-               known: set[str], top_k: int = 3) -> dict:
+               known: set[str], name2id: dict[str, str],
+               top_k: int = 3) -> dict:
     """跑一个配置。"""
     cfg = CONFIGS[cfg_key]
     scores: list = []
@@ -88,20 +115,27 @@ def run_config(cfg_key: str, tasks: list[dict], gen, sem,
     for n, task in enumerate(tasks, 1):
         q = task["question"]
         # 取真实证据（各配置共用同一份，保证唯一变量是「证据如何处理」）
-        sid = sem._guess_stand_id(q) if hasattr(sem, "_guess_stand_id") else None
+        # ★ 从问句推断替身（不用 gold，避免作弊）
+        sid = guess_stand_id(q, name2id)
         raw_ev, _ = sem.search(q, top_k=top_k, boost_stand=sid)
 
         if not raw_ev:
             continue
 
-        # 按配置变换证据
+        # ★ 统一保持 dict 形态（strip/shuffle 返回的是字符串）
+        texts = [e["content"] for e in raw_ev]
         if cfg["evidence"] == "real":
             ev = raw_ev
         elif cfg["evidence"] == "none":
-            ev = strip_evidence([e["content"] for e in raw_ev])
+            # ★ 保留块数与元信息，只清空内容 —— 唯一变量是「有没有内容」
+            ev = [{**e, "content": ""} for e in raw_ev]
+            assert len(ev) == len(texts)
         elif cfg["evidence"] == "shuffled":
-            ev = [{"content": c} for c in
-                  shuffle_evidence([e["content"] for e in raw_ev])]
+            # ★ 换成**其他替身的真实文本**（不是乱码）——
+            #   词袋模型下打乱顺序不改变 token 集合，测不出差异
+            sh = shuffle_evidence(texts)
+            ev = [{**e, "content": sh[i] if i < len(sh) else ""}
+                  for i, e in enumerate(raw_ev)]
         else:
             ev = raw_ev
 
@@ -145,8 +179,14 @@ def print_report(results: dict[str, dict]) -> None:
     print("=" * 74)
 
     def fmt(v, nd=4):
-        return "  n/a" if v is None or (isinstance(v, float) and math.isnan(v)) \
-            else f"{v:.{nd}f}"
+        #★ 区分「真的是 0」与「该指标不适用（None）」
+        #   实测踩坑：T4 没有数值断言 → ratio=None，
+        #   若显示成 0.0000 会让人误以为「数值全错」
+        if v is None:
+            return "   n/a"
+        if isinstance(v, float) and math.isnan(v):
+            return "   n/a"
+        return f"{v:.{nd}f}"
 
     hdr = (f"{'配置':22s} {'溯源':>7s} {'数值':>7s} {'实体':>7s} "
            f"{'矛盾率':>7s} {'利用率':>7s} {'空洞率':>7s}")
@@ -225,7 +265,13 @@ def main() -> int:
 
     tasks = load_tasks(args.n)
     known = load_known_stands()
-    print(f"  题目 {len(tasks)} 条（T4 语义理解型）/ 已知替身 {len(known)} 个")
+    stands = json.loads((PROC / "stands.json").read_text(encoding="utf-8"))
+    name2id = {x["name_en"]: x["stand_id"] for x in stands if x.get("name_en")}
+    n_boost = sum(1 for t in tasks if guess_stand_id(t["question"], name2id))
+    from collections import Counter as _C
+    _tc = _C(t["question_type"] for t in tasks)
+    print(f"  题目 {len(tasks)} 条 {dict(_tc)} / 已知替身 {len(known)} 个")
+    print(f"  其中 {n_boost} 条可从问句推断替身（用于检索加权）")
 
     # 语义检索
     from semantic_executor import SemanticExecutor
@@ -256,7 +302,8 @@ def main() -> int:
             print(f"\n[{key}] 跳过（无生成模型）")
             continue
         print(f"\n[{key}] {CONFIGS[key]['name']}")
-        results[key] = run_config(key, tasks, gen, sem, known, args.top_k)
+        results[key] = run_config(key, tasks, gen, sem, known, name2id,
+                                   args.top_k)
 
     print_report(results)
     OUT.write_text(json.dumps(results, ensure_ascii=False, indent=2),

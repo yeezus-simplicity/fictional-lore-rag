@@ -30,6 +30,7 @@ from pathlib import Path
 from typing import Any, Optional
 
 from fastapi import FastAPI, HTTPException, Query
+from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
@@ -56,19 +57,51 @@ def _init_state(use_vector: bool = True) -> None:
     """启动时初始化：数据库 + 路由器 + 执行器。"""
     t0 = time.time()
 
-    # --- 数据库 ---
-    STATE["conn"] = psycopg2.connect(**PG)
-    STATE["conn"].autocommit = True
+    # --- 数据库（★ 失败时降级，不阻断启动）---
+    #   理由：M3 的检索索引是 pickle 缓存，**不依赖数据库**。
+    #   DB 挂了仍应能提供语义问答，只是结构化查询与数据浏览不可用。
+    #   （实测踩坑：Docker Desktop 没启动时整个服务直接崩，
+    #     连网页界面都打不开——但那时语义检索其实完全可用。）
+    db_ok = True
+    try:
+        STATE["conn"] = psycopg2.connect(**PG)
+        STATE["conn"].autocommit = True
 
-    cur = STATE["conn"].cursor()
-    # ★ stands 表的列是 owner_name_raw（owner_name 会与 characters.name_en 冲突）
-    cur.execute("SELECT stand_id, name_en, part_name_en, owner_name_raw "
-                "FROM stands")
-    rows = cur.fetchall()
-    cur.close()
+        cur = STATE["conn"].cursor()
+        # ★ stands 表的列是 owner_name_raw
+        #   （owner_name 会与 characters.name_en 冲突）
+        cur.execute("SELECT stand_id, name_en, part_name_en, owner_name_raw "
+                    "FROM stands")
+        rows = cur.fetchall()
+        cur.close()
 
-    stands = [{"stand_id": r[0], "name_en": r[1],
-               "part_name_en": r[2], "owner_name": r[3]} for r in rows]
+        stands = [{"stand_id": r[0], "name_en": r[1],
+                   "part_name_en": r[2], "owner_name": r[3]} for r in rows]
+    except Exception as e:
+        db_ok = False
+        STATE["conn"] = None
+        print(f"[api] ⚠ 数据库不可用（{type(e).__name__}）")
+        print("[api]   降级为「仅语义检索」模式：")
+        print("[api]   ✓ 语义问答可用（走本地索引，不依赖 DB）")
+        print("[api]   ✗ 结构化查询 / 数据浏览 / 冲突记录不可用")
+        print("[api]   启动数据库：cd docker && docker compose up -d postgres")
+        # 从 JSON 兜底拿替身名（路由与拒答检测仍需要实体表）
+        sj = ROOT / "dataset" / "processed" / "stands.json"
+        stands = []
+        if sj.exists():
+            data = json.loads(sj.read_text(encoding="utf-8"))
+            for x in data:
+                nm = x.get("name_en")
+                if not nm:
+                    continue
+                stands.append({
+                    "stand_id": x.get("stand_id"),
+                    "name_en": nm,
+                    "part_name_en": x.get("part_name_en"),
+                    "owner_name": x.get("owner_name_raw"),
+                })
+        print(f"[api]   已从 stands.json 载入 {len(stands)} 个替身名（仅用于路由）")
+    STATE["db_ok"] = db_ok
 
     # --- 已知实体（★ 三类：替身 / 部名 / 使用者名，M4 踩过的坑）---
     known_stands = {s["name_en"] for s in stands if s.get("name_en")}
@@ -89,9 +122,11 @@ def _init_state(use_vector: bool = True) -> None:
     STATE["name2id"] = {s["name_en"]: s["stand_id"]
                         for s in stands if s.get("name_en")}
 
-    # --- 结构化执行器 ---
-    from executor import StructuredExecutor
-    STATE["structured"] = StructuredExecutor(STATE["conn"])
+    # --- 结构化执行器（★ 需要 DB）---
+    STATE["structured"] = None
+    if db_ok:
+        from executor import StructuredExecutor
+        STATE["structured"] = StructuredExecutor(STATE["conn"])
 
     # --- 语义执行器（M3 检索层）---
     from semantic_executor import SemanticExecutor
@@ -101,8 +136,10 @@ def _init_state(use_vector: bool = True) -> None:
     STATE["semantic"] = sem
     STATE["vector_ok"] = vector_ok
 
-    # --- 冲突消解状态（M4）---
+    # --- 冲突消解状态（M4）★ 需要 DB ---
     try:
+        if not STATE.get("db_ok"):
+            raise RuntimeError("数据库不可用")
         cur = STATE["conn"].cursor()
         cur.execute("""
             SELECT resolution, count(*),
@@ -198,7 +235,7 @@ class HealthResponse(BaseModel):
 
 app = FastAPI(
     title="rag-kb 混合检索 API",
-    version="0.5.0",
+    version="0.6.0",
     description=(
         "基于 jojowiki 替身数据的混合检索系统。\n\n"
         "**核心特性**\n"
@@ -216,11 +253,18 @@ app.add_middleware(
 
 
 # ------------------------------------------------------------------
+STATIC_DIR = Path(__file__).resolve().parent / "static"
+
+
 @app.get("/", include_in_schema=False)
 def root():
+    """★ 网页界面（单文件 HTML，零依赖）。"""
+    html = STATIC_DIR / "index.html"
+    if html.exists():
+        return FileResponse(html)
     return {
         "service": "rag-kb 混合检索 API",
-        "version": "0.5.0",
+        "version": "0.6.0",
         "docs": "/docs",
         "health": "/health",
         "main_endpoint": "POST /query",
@@ -261,6 +305,9 @@ def query(
 ):
     """统一查询入口。内部按路由分流。"""
     t0 = time.time()
+    # ★ DB 不可用时的降级标记（必须在函数体里，
+    #   放进 Pydantic 模型会报「需要类型注解」——实测踩过）
+    db_unavailable = False
     router = STATE["router"]
     decision = router.route(q)
     route = decision.route
@@ -286,38 +333,53 @@ def query(
 
     # ---------- structured ----------
     elif route in ("structured", "hybrid"):
-        result, ev = STATE["structured"].execute(q, STATE["name2id"])
-        evidence.extend(ev)
-        if result is None:
-            # 路由说是结构化但解析不出意图 → 降级到语义
-            snippets, meta = STATE["semantic"].search(
-                q, top_k=top_k, boost_stand=_guess_stand(q, STATE))
-            if snippets:
-                answer = [s["content"] for s in snippets]
-                answer_type = "snippet"
-                evidence.extend(_to_evidence(snippets))
-                retrieval_meta = _meta_to_dict(meta)
-            else:
-                answer = {"note": "未能解析该问题"}
-                answer_type = "none"
+        if STATE["structured"] is None:
+            # ★ DB 不可用：明确告知，而不是抛 500
+            #   实测踩坑：原先把 else 块写歪了，result/ev 作用域错乱 → 500
+            answer = {
+                "note": "结构化查询需要数据库，当前数据库不可用。",
+                "hint": "启动方式：cd docker && docker compose up -d postgres",
+            }
+            answer_type = "none"
+            # ★ 注意：route_reason 不是局部变量！
+            #   它来自 decision.reason，只在返回 dict 时用（第 396 行）。
+            #   之前写成 `route_reason += ...` → UnboundLocalError（实测踩过）：
+            #   Python 在编译期把它判定为局部变量，读时却从未赋值。
+            #   正确做法：加一个单独的降级说明字段。
+            db_unavailable = True
         else:
-            answer = result
-            answer_type = result.get("type", "structured")
-            # 冲突/可靠性信息
-            warning, confidence = _extract_warning(result)
+            result, ev = STATE["structured"].execute(q, STATE["name2id"])
+            evidence.extend(ev)
+            if result is None:
+                # 路由说是结构化但解析不出意图 → 降级到语义
+                snippets, meta = STATE["semantic"].search(
+                    q, top_k=top_k, boost_stand=_guess_stand(q, STATE))
+                if snippets:
+                    answer = [s["content"] for s in snippets]
+                    answer_type = "snippet"
+                    evidence.extend(_to_evidence(snippets))
+                    retrieval_meta = _meta_to_dict(meta)
+                else:
+                    answer = {"note": "未能解析该问题"}
+                    answer_type = "none"
+            else:
+                answer = result
+                answer_type = result.get("type", "structured")
+                # 冲突/可靠性信息
+                warning, confidence = _extract_warning(result)
 
-            # hybrid：补语义描述
-            if route == "hybrid":
-                sid = result.get("stand_id") or _guess_stand(q, STATE)
-                extra = STATE["semantic"].keyword_snippets(q, sid) \
-                    if sid else []
-                if extra:
-                    answer = {**result, "description_snippets": extra}
-                    evidence.append({
-                        "type": "retrieval",
-                        "stand_id": sid,
-                        "note": "混合路由补充的原文描述",
-                    })
+                # hybrid：补语义描述
+                if route == "hybrid":
+                    sid = result.get("stand_id") or _guess_stand(q, STATE)
+                    extra = STATE["semantic"].keyword_snippets(q, sid) \
+                        if sid else []
+                    if extra:
+                        answer = {**result, "description_snippets": extra}
+                        evidence.append({
+                            "type": "retrieval",
+                            "stand_id": sid,
+                            "note": "混合路由补充的原文描述",
+                        })
 
     # ---------- semantic ----------
     else:
@@ -336,7 +398,9 @@ def query(
     return {
         "question": q,
         "route": route,
-        "route_reason": decision.reason,
+        "route_reason": decision.reason
+                      + ("（但数据库不可用，无法执行 SQL）"
+                         if db_unavailable else ""),
         "answer": answer,
         "answer_type": answer_type,
         "evidence": [Evidence(**e) for e in evidence if _valid_evidence(e)],
@@ -351,6 +415,9 @@ def query(
 @app.get("/stands/{stand_id}", summary="查单个替身的完整信息")
 def get_stand(stand_id: str):
     """返回替身的全部结构化信息 + 冲突状态 + 文本块数。"""
+    if not STATE.get("db_ok"):
+        return {"error": "数据库不可用",
+                "hint": "cd docker && docker compose up -d postgres"}
     conn = STATE["conn"]
     cur = conn.cursor()
     cur.execute("""
@@ -400,6 +467,10 @@ def get_conflicts(
     limit: int = Query(50, ge=1, le=500),
 ):
     """返回冲突记录。pending = 未定值（含刻意的 keep_unknown）。"""
+    if not STATE.get("db_ok"):
+        return {"count": 0, "conflicts": [],
+                "error": "数据库不可用",
+                "hint": "cd docker && docker compose up -d postgres"}
     conn = STATE["conn"]
     cur = conn.cursor()
     sql = """
@@ -428,9 +499,12 @@ def get_conflicts(
 @app.get("/stats", summary="系统统计")
 def get_stats():
     """数据完整性与分布概览。"""
+    out: dict[str, Any] = {}
+    if not STATE.get("db_ok"):
+        return {"error": "数据库不可用", "degraded_mode": True,
+                "hint": "cd docker && docker compose up -d postgres"}
     conn = STATE["conn"]
     cur = conn.cursor()
-    out: dict[str, Any] = {}
 
     cur.execute("SELECT * FROM v_data_quality")
     out["data_quality"] = {r[0]: {"n_rows": r[1], "detail": r[2]}

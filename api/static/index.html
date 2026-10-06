@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>rag-kb · 替身数据检索问答</title>
+<style>
+/* ============================================================
+   设计约束（刻意不用 AI 味写法）：
+   - 深色系，非紫蓝渐变
+   - 等宽字体只用于代码/数字，不用全站 monospace
+   - 边框半径小（4px），不用超大圆角
+   - 阴影克制，不用发光/玻璃拟态
+   ============================================================ */
+:root {
+  --bg: #14161a;
+  --bg-panel: #1c1f25;
+  --bg-hover: #23262d;
+  --border: #2e323a;
+  --border-strong: #3d424c;
+  --text: #e2e5ea;
+  --text-dim: #9aa0ab;
+  --text-faint: #6b7280;
+  --accent: #4a9eff;
+  --accent-dim: #2d5a99;
+  --ok: #3fb950;
+  --warn: #d29922;
+  --err: #f85149;
+  --mono: ui-monospace, "Cascadia Code", Consolas, monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font: 14px/1.6 -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+  min-height: 100vh;
+}
+/* 顶栏 */
+header {
+  border-bottom: 1px solid var(--border);
+  padding: 14px 22px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  position: sticky;
+  top: 0;
+  background: var(--bg);
+  z-index: 10;
+}
+header h1 { font-size: 15px; font-weight: 600; letter-spacing: .3px; }
+header .sub { color: var(--text-faint); font-size: 12px; }
+nav { display: flex; gap: 2px; margin-left: auto; }
+nav button {
+  background: none; border: 1px solid transparent; color: var(--text-dim);
+  padding: 5px 13px; cursor: pointer; font-size: 13px; border-radius: 4px;
+}
+nav button:hover { color: var(--text); background: var(--bg-hover); }
+nav button.on {
+  color: var(--text); border-color: var(--border-strong);
+  background: var(--bg-panel);
+}
+/* 布局 */
+.wrap { max-width: 1180px; margin: 0 auto; padding: 22px; }
+.view { display: none; }
+.view.on { display: block; }
+/* 查询框 */
+.qbox { display: flex; gap: 8px; margin-bottom: 18px; }
+input[type=text] {
+  flex: 1; background: var(--bg-panel); border: 1px solid var(--border);
+  color: var(--text); padding: 10px 13px; border-radius: 4px; font-size: 14px;
+}
+input[type=text]:focus {
+  outline: none; border-color: var(--accent-dim);
+}
+button.go {
+  background: var(--accent-dim); border: 1px solid var(--accent);
+  color: #fff; padding: 10px 22px; border-radius: 4px; cursor: pointer;
+  font-size: 14px; font-weight: 500;
+}
+button.go:hover { background: var(--accent); }
+button.go:disabled { opacity: .5; cursor: wait; }
+/* 示例问句 */
+.samples {
+  display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px;
+}
+.samples span { color: var(--text-faint); font-size: 12px; margin-right: 4px; }
+.chip {
+  background: var(--bg-panel); border: 1px solid var(--border);
+  color: var(--text-dim); padding: 4px 10px; border-radius: 3px;
+  font-size: 12px; cursor: pointer;
+}
+.chip:hover { border-color: var(--accent-dim); color: var(--text); }
+/* 卡片 */
+.card {
+  background: var(--bg-panel); border: 1px solid var(--border);
+  border-radius: 5px; padding: 16px; margin-bottom: 12px;
+}
+.card h3 {
+  font-size: 12px; color: var(--text-dim); font-weight: 600;
+  text-transform: uppercase; letter-spacing: .8px; margin-bottom: 12px;
+}
+/* 路由标记 */
+.route {
+  display: inline-block; padding: 2px 8px; border-radius: 3px;
+  font-size: 11px; font-family: var(--mono); margin-right: 8px;
+}
+.route.structured { background: #1c3a2e; color: var(--ok); }
+.route.semantic  { background: #1e2f4a; color: var(--accent); }
+.route.hybrid    { background: #3d2f1a; color: var(--warn); }
+.route.abstain   { background: #4a1f1f; color: var(--err); }
+/* 答案 */
+.answer { font-size: 15px; line-height: 1.75; white-space: pre-wrap; }
+.answer-refused { color: var(--warn); }
+.meta { color: var(--text-faint); font-size: 12px; margin-top: 10px; }
+/* 警告 */
+.alert {
+  border-left: 3px solid var(--warn); background: #2a2415;
+  padding: 9px 13px; border-radius: 0 3px 3px 0; margin-top: 12px;
+  font-size: 13px; color: #e8c56a;
+}
+.alert.err { border-color: var(--err); background: #2a1a1a; color: #f0958f; }
+/* 答案类型分发 */
+.kv { display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; font-size: 13px; }
+.kv dt { color: var(--text-faint); }
+.kv dd { font-family: var(--mono); font-size: 12px; }
+.tag {
+  display: inline-block; padding: 1px 7px; border-radius: 2px;
+  font-size: 11px; font-family: var(--mono);
+  background: var(--bg-hover); color: var(--text-dim);
+  margin: 2px 4px 2px 0;
+}
+/* 证据 */
+details.ev { border-top: 1px solid var(--border); padding-top: 10px; margin-top: 10px; }
+details.ev summary {
+  cursor: pointer; color: var(--text-dim); font-size: 12px;
+  list-style: none; user-select: none;
+}
+details.ev summary::-webkit-details-marker { display: none; }
+details.ev summary:before { content: "▸ "; color: var(--text-faint); }
+details.ev[open] summary:before { content: "▾ "; }
+details.ev summary:hover { color: var(--text); }
+.ev-item {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 3px; padding: 10px 12px; margin-top: 8px;
+}
+.ev-head {
+  display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+  font-size: 11px; font-family: var(--mono); color: var(--text-faint);
+  margin-bottom: 6px;
+}
+.ev-text { font-size: 12.5px; line-height: 1.65; color: var(--text-dim); }
+/* 检索过程 */
+.steps { counter-reset: s; }
+.step {
+  position: relative; padding: 8px 0 8px 32px;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+.step:last-child { border-bottom: none; }
+.step:before {
+  counter-increment: s; content: counter(s);
+  position: absolute; left: 0; top: 8px;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--bg-hover); color: var(--text-dim);
+  font-size: 11px; display: flex; align-items: center;
+  justify-content: center; font-family: var(--mono);
+}
+.step .t { color: var(--text); }
+.step .d { color: var(--text-faint); font-size: 12px; margin-top: 2px; }
+.step.hit:before { background: var(--accent-dim); color: #fff; }
+.step.miss:before { background: #3d1f1f; color: var(--err); }
+/* 表格 */
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th, td {
+  text-align: left; padding: 7px 11px;
+  border-bottom: 1px solid var(--border);
+}
+th { color: var(--text-faint); font-size: 11px; text-transform: uppercase;
+     letter-spacing: .5px; font-weight: 600; }
+tr:hover td { background: var(--bg-hover); }
+td.num { font-family: var(--mono); font-size: 12px; text-align: right; }
+/* 冲突 */
+.c-cat { font-family: var(--mono); font-size: 11px; }
+.c-cat.UNKNOWN { color: var(--warn); }
+.c-cat.INFINITE { color: var(--accent); }
+.c-cat.RANKED { color: var(--ok); }
+.c-cat.EMPTYSLOT { color: var(--text-faint); }
+.c-cat.UNCATEGORIZED { color: var(--text-dim); }
+.ok { color: var(--ok); } .bad { color: var(--err); }
+.empty { color: var(--text-faint); font-size: 13px; padding: 22px; text-align: center; }
+.loading { color: var(--text-dim); font-size: 13px; padding: 18px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>rag-kb</h1>
+  <span class="sub">替身数据混合检索问答</span>
+  <nav>
+    <button class="on" data-v="q">问答</button>
+    <button data-v="b">数据浏览</button>
+    <button data-v="c">冲突记录</button>
+    <button data-v="s">系统状态</button>
+  </nav>
+</header>
+
+<div class="wrap">
+
+<!-- ══════════ 问答 ══════════ -->
+<div class="view on" id="v-q">
+  <div class="qbox">
+    <input type="text" id="qi" placeholder="问一个问题，例如：Star Platinum 的破坏力是几级？"
+           autocomplete="off">
+    <button class="go" id="qb">查询</button>
+  </div>
+  <div class="samples">
+    <span>试试：</span>
+  </div>
+
+  <div id="rout"></div>
+
+  <!-- 检索过程 -->
+  <div class="card" id="procCard" style="display:none">
+    <h3>检索过程</h3>
+    <div class="steps" id="proc"></div>
+  </div>
+
+  <!-- 答案 -->
+  <div id="ans"></div>
+</div>
+
+<!-- ══════════ 数据浏览 ══════════ -->
+<div class="view" id="v-b">
+  <div class="qbox">
+    <input type="text" id="bi" placeholder="输入替身名或 stand_id，如：Star Platinum / star_platinum"
+           autocomplete="off">
+    <button class="go" id="bb">查询</button>
+  </div>
+  <div class="samples" id="bSamples"><span>试试：</span></div>
+  <div id="bans"></div>
+</div>
+
+<!-- ══════════ 冲突 ══════════ -->
+<div class="view" id="v-c">
+  <div style="margin-bottom:14px">
+    <button class="chip" onclick="loadC('all')">全部</button>
+    <button class="chip" onclick="loadC('pending')">待消解</button>
+    <button class="chip" onclick="loadC('resolved')">已消解</button>
+  </div>
+  <div id="cans" class="loading">加载中…</div>
+</div>
+
+<!-- ══════════ 状态 ══════════ -->
+<div class="view" id="v-s">
+  <div id="sans" class="loading">加载中…</div>
+</div>
+
+</div>
+
+<script>
+const API = location.origin;
+const $ = s => document.querySelector(s);
+const esc = s => (s==null?'':String(s)).replace(/[&<>"]/g,
+  c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+const SAMPLES = [
+  'Star Platinum 的破坏力是几级？',
+  '所有替身中，破坏力最高的是哪个？',
+  'Made in Heaven 的速度是多少？',
+  'Tusk 的射程是多少？',
+  '使用者 Giorno Giovanna 有哪些替身？',
+  'Anubis 的外观形态方面有哪些描述？',
+  'Star Platinum Ultimate 的能力值是多少？'
+];
+$('.samples').insertAdjacentHTML('beforeend',
+  SAMPLES.map(q=>`<span class="chip" onclick="ask('${esc(q)}')">${esc(q)}</span>`).join(''));
+$('#bSamples').insertAdjacentHTML('beforeend',
+  ['Star Platinum','The World','Made in Heaven','Tusk','Anubis']
+    .map(n=>`<span class="chip" onclick="askB('${esc(n)}')">${esc(n)}</span>`).join(''));
+
+// ---------- 视图切换 ----------
+document.querySelectorAll('nav button').forEach(b=>{
+  b.onclick=()=>{
+    document.querySelectorAll('nav button').forEach(x=>x.classList.remove('on'));
+    document.querySelectorAll('.view').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    $('#v-'+b.dataset.v).classList.add('on');
+    if(b.dataset.v==='c') loadC('all');
+    if(b.dataset.v==='s') loadS();
+  };
+});
+$('#qi').onkeydown = e => { if(e.key==='Enter') ask(); };
+$('#bi').onkeydown = e => { if(e.key==='Enter') askB(); };
+
+// ---------- 问答 ----------
+async function ask(q){
+  q = (q!==undefined? q : $('#qi').value).trim();
+  if(!q) return;
+  $('#qb').disabled = true;
+  $('#rout').innerHTML = '<div class="card"><div class="loading">检索中…</div></div>';
+  $('#ans').innerHTML = '';
+  $('#procCard').style.display = 'none';
+  try{
+    // ★ /query 的参数是 **query string**（q / top_k），不是 JSON body
+    //   实测踩坑：按 body 传 {question:...} → 422 Unprocessable Content
+    const r = await fetch(`${API}/query?` +
+      new URLSearchParams({q:q, top_k:'3'}), {method:'POST'});
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    render(await r.json());
+  }catch(e){
+    $('#rout').innerHTML = `<div class="card"><div class="alert err">请求失败：${esc(e.message)}</div></div>`;
+  }
+  $('#qb').disabled = false;
+}
+
+function render(d){
+  // 路由卡
+  $('#rout').innerHTML = `
+    <div class="card">
+      <span class="route ${esc(d.route)}">${esc(d.route)}</span>
+      <span class="meta" style="display:inline">${esc(d.route_reason)}</span>
+      <div class="meta">${d.elapsed_ms.toFixed(0)} ms · 答案类型 ${esc(d.answer_type)}
+        ${d.confidence!=null? ' · 置信度 '+d.confidence : ''}</div>
+    </div>`;
+  renderProcess(d);
+  renderAnswer(d);
+}
+
+function renderProcess(d){
+  const steps = [];
+  steps.push({cls:'', t:'路由判定',
+    d:`识别为 <b>${esc(d.route)}</b> —— ${esc(d.route_reason)}`});
+  const ev = d.evidence||[];
+  if(d.retrieval_meta){
+    const rm = d.retrieval_meta;
+    if(rm.retrieval) steps.push({cls:'', t:'检索',
+      d:`${esc(rm.retrieval)}${rm.rrf_k?'（RRF k='+rm.rrf_k+'）':''}`});
+  }
+  ev.forEach((e,i)=>{
+    steps.push({cls:'hit', t:`证据 ${i+1}`,
+      d:`${esc(e.type)}`
+        + (e.stand_name? ` · ${esc(e.stand_name)}`:'')
+        + (e.chunk_type? ` · ${esc(e.chunk_type)}`:'')
+        + (e.chunk_id!=null? ` · #${e.chunk_id}`:'')
+        + (e.table? ` · 表 ${esc(e.table)}`:'')
+        + (e.field? ` · 字段 ${esc(e.field)}`:'')});
+  });
+  if(!ev.length) steps.push({cls:'miss', t:'无证据', d:'未检索到相关片段'});
+  steps.push({cls:'', t:'生成/组织',
+    d: d.answer_type==='snippet'? '抽取式：直接返回原文片段（零生成）'
+      : '抽取式：结构化查询直接返回字段值（零生成）'});
+  $('#proc').innerHTML = steps.map(s=>
+    `<div class="step ${s.cls}"><div class="t">${s.t}</div><div class="d">${s.d}</div></div>`
+  ).join('');
+  $('#procCard').style.display = '';
+}
+
+function renderAnswer(d){
+  const a = d.answer;
+  let body = '';
+  let refused = false;
+
+  if(a && a.abstained){ refused = true; body = esc(a.reason);
+    if(a.hint) body += '\n\n提示：' + esc(a.hint);
+  }
+  else if(Array.isArray(a)){
+    body = a.map(x=>esc(x)).join('\n\n');
+  }
+  else if(a && typeof a==='object'){
+    body = renderStructured(a);
+  }
+  else body = esc(String(a ?? '（无内容）'));
+
+  let html = `<div class="card">
+    <h3>答案</h3>
+    <div class="answer ${refused?'answer-refused':''}">${body}</div>`;
+  if(d.warning) html += `<div class="alert">⚠ ${esc(d.warning)}</div>`;
+  html += renderEvidence(d.evidence);
+  html += '</div>';
+  $('#ans').innerHTML = html;
+}
+
+const CAT_CN = {RANKED:'正常等级',UNKNOWN:'未知（存在争议）',
+  INFINITE:'无限',EMPTYSLOT:'空缺',UNCATEGORIZED:'未分类'};
+
+function renderStructured(a){
+  const t = a.type;
+  // ★ 降级提示（DB 不可用时 answer 是 {note, hint}，没有 type 字段）
+  if(a.note && !t){
+    return `<div style="color:var(--warn)">${esc(a.note)}</div>` +
+           (a.hint? `<div class="meta" style="margin-top:8px">${
+             esc(a.hint)}</div>` : '');
+  }
+  if(t==='fact'){
+    return `<dl class="kv">
+      <dt>替身</dt><dd>${esc(a.stand_name)}</dd>
+      <dt>维度</dt><dd>${esc(a.dimension_cn)}（${esc(a.dimension)}）</dd>
+      <dt>数值</dt><dd>${esc(a.value_label ?? '—')}</dd>
+      <dt>原始值</dt><dd>${esc(a.raw ?? '—')}</dd>
+      <dt>类别</dt><dd>${esc(CAT_CN[a.category]||a.category)}
+        <span class="c-cat ${esc(a.category)}">${esc(a.category)}</span></dd>
+    </dl>`;
+  }
+  if(t==='extreme' || t==='extreme_top'){
+    const items = a.winners || a.items || [];
+    return `<div style="margin-bottom:8px">${esc(a.dimension_cn)} ${esc(a.direction||'最高')}
+      = <b>${esc(a.value_label ?? (items[0]&&items[0].label) ?? '—')}</b></div>
+      <div>${items.map(x=>`<span class="tag">${esc(x.name)}</span>`).join('')}</div>`;
+  }
+  if(t==='count' || t==='count_by_level'){
+    return `<dl class="kv"><dt>范围</dt><dd>${esc(a.scope||a.dimension_cn)}</dd>
+      <dt>数量</dt><dd><b>${esc(a.count)}</b></dd></dl>`;
+  }
+  if(t==='owner'){
+    return `<dl class="kv"><dt>替身</dt><dd>${esc(a.stand_name)}</dd>
+      <dt>使用者</dt><dd><b>${esc(a.owner)}</b></dd></dl>`;
+  }
+  if(t==='stands_of_owner'){
+    return `<div style="margin-bottom:8px">${esc(a.owner)} 的替身（${a.count} 个）</div>
+      <div>${(a.stands||[]).map(x=>`<span class="tag">${esc(x.name)}</span>`).join('')}</div>`;
+  }
+  if(t==='forms'){
+    return `<div>${esc(a.stand_name)} 共 <b>${a.count}</b> 个形态</div>
+      <div>${(a.items||[]).map(x=>`<span class="tag">${esc(x.form_id||x)}</span>`).join('')}</div>`;
+  }
+  if(t==='part_stats'){
+    return `<table><thead><tr><th>部</th><th>名称</th>
+      <th style="text-align:right">替身数</th>
+      <th style="text-align:right">六维完整</th>
+      <th style="text-align:right">平均综合</th></tr></thead><tbody>
+      ${(a.parts||[]).map(p=>`<tr><td>${p.part}</td><td>${esc(p.name)}</td>
+        <td class="num">${p.n_stands}</td>
+        <td class="num">${p.n_with_composite}</td>
+        <td class="num">${p.avg_composite ?? '—'}</td></tr>`).join('')}
+      </tbody></table>`;
+  }
+  return `<pre style="font-size:12px;white-space:pre-wrap">${
+    esc(JSON.stringify(a,null,2))}</pre>`;
+}
+
+function renderEvidence(ev){
+  if(!ev || !ev.length) return '';
+  return `<details class="ev"><summary>证据 ${ev.length} 条（点击展开原文）</summary>
+    ${ev.map((e,i)=>`
+      <div class="ev-item">
+        <div class="ev-head">
+          <span>#${i+1}</span><span>${esc(e.type)}</span>
+          ${e.stand_name?`<span>${esc(e.stand_name)}</span>`:''}
+          ${e.chunk_type?`<span>${esc(e.chunk_type)}</span>`:''}
+          ${e.chunk_id!=null?`<span>chunk#${e.chunk_id}</span>`:''}
+          ${e.table?`<span>表:${esc(e.table)}</span>`:''}
+          ${e.field?`<span>字段:${esc(e.field)}</span>`:''}
+          ${e.stand_id?`<span>${esc(e.stand_id)}</span>`:''}
+        </div>
+        ${e.content? `<div class="ev-text">${esc(e.content)}</div>`:''}
+      </div>`).join('')}
+    </details>`;
+}
+
+// ---------- 数据浏览 ----------
+async function askB(n){
+  n = (n!==undefined? n : $('#bi').value).trim();
+  if(!n) return;
+  $('#bans').innerHTML = '<div class="card"><div class="loading">查询中…</div></div>';
+  try{
+    // 先按名称找 stand_id
+    let id = n.toLowerCase().replace(/[^a-z0-9]+/g,'_');
+    if(!/^_|_$/.test(id)) id = id;
+    let r = await fetch(`${API}/stands/${encodeURIComponent(id)}`);
+    if(!r.ok){
+      // 退而用 search（从 chunks 找）
+      r = await fetch(`${API}/query?` +
+        new URLSearchParams({q:n, top_k:'1'}), {method:'POST'});
+      const d = await r.json();
+      $('#bans').innerHTML = `<div class="card"><h3>未找到 stand_id</h3>
+        <div class="meta">尝试的 id：${esc(id)}</div>
+        <div class="meta">提示：检索接口对「${esc(n)}」的答案类型是
+        ${esc(d.answer_type)}，请到「问答」页查看</div></div>`;
+      return;
+    }
+    renderStand(await r.json());
+  }catch(e){
+    $('#bans').innerHTML = `<div class="card"><div class="alert err">${esc(e.message)}</div></div>`;
+  }
+}
+
+function renderStand(d){
+  const st = d.stats || {};
+  const dims = ['PWR','SPD','RNG','STA','PRC','DEV'];
+  const DN = {PWR:'破坏力',SPD:'速度',RNG:'射程',STA:'持续力',PRC:'精密性',DEV:'成长性'};
+  let rows = '';
+  for(const k of dims){
+    const v = st[k], raw = st[k+'_raw'], cat = st[k+'_cat'];
+    const cn = {RANKED:'正常',UNKNOWN:'未知',INFINITE:'无限',
+                EMPTYSLOT:'空缺',UNCATEGORIZED:'未分类'}[cat] || cat;
+    rows += `<tr><td>${DN[k]}</td>
+      <td class="num">${v==null?'—':esc(v)}</td>
+      <td class="num">${raw==null?'—':esc(raw)}</td>
+      <td class="c-cat ${esc(cat||'')}">${esc(cn)}</td></tr>`;
+  }
+  $('#bans').innerHTML = `
+    <div class="card">
+      <h3>${esc(d.name_en||d.stand_id)}</h3>
+      <dl class="kv">
+        <dt>stand_id</dt><dd>${esc(d.stand_id)}</dd>
+        <dt>所属部</dt><dd>${d.part==null?'—':esc(d.part)+' · '+esc(d.part_name||'')}</dd>
+        <dt>使用者</dt><dd>${esc(d.owner||'—')}</dd>
+        <dt>形态数</dt><dd>${esc(d.n_forms??'—')}</dd>
+        <dt>综合分</dt><dd>${st.composite==null?'—':esc(st.composite)}</dd>
+        <dt>文本块</dt><dd>${esc(d.n_chunks??'—')}</dd>
+      </dl>
+    </div>
+    <div class="card">
+      <h3>六维能力值</h3>
+      <table><thead><tr><th>维度</th><th style="text-align:right">值</th>
+        <th style="text-align:right">原始</th><th>类别</th></tr></thead>
+        <tbody>${rows}</tbody></table>
+    </div>
+    ${(d.forms&&d.forms.length)? `<div class="card"><h3>形态列表</h3>
+      <div>${d.forms.map(f=>`<span class="tag">${esc(f.name_en||f)}</span>`).join('')}</div>
+    </div>`:''}
+    ${(d.conflicts&&d.conflicts.length)? `<div class="card"><h3>冲突记录</h3>
+      <table><thead><tr><th>维度</th><th>主源</th><th>镜像源</th><th>消解</th>
+        <th>策略</th></tr></thead><tbody>
+      ${d.conflicts.map(c=>`<tr><td>${esc(c.dimension)}</td>
+        <td class="num">${esc(c.primary_value??'—')}</td>
+        <td class="num">${esc(c.mirror_value??'—')}</td>
+        <td class="num">${esc(c.resolved_value??'—')}</td>
+        <td>${esc(c.resolution||'—')}</td></tr>`).join('')}
+      </tbody></table></div>`:''}`;
+}
+
+// ---------- 冲突 ----------
+async function loadC(status){
+  $('#cans').innerHTML = '<div class="loading">加载中…</div>';
+  try{
+    const r = await fetch(`${API}/conflicts?status=${status}&limit=40`);
+    const d = await r.json();
+    const list = d.conflicts || d.items || [];
+    if(!list.length){ $('#cans').innerHTML='<div class="empty">没有符合条件的记录</div>'; return; }
+    const CN = {RANKED:'正常',UNKNOWN:'未知',INFINITE:'无限',
+                EMPTYSLOT:'空缺',UNCATEGORIZED:'未分类'};
+    $('#cans').innerHTML = `<div class="card">
+      <h3>冲突记录（${d.count ?? list.length} 条）</h3>
+      <table><thead><tr><th>替身</th><th>维度</th><th>主源</th><th>镜像源</th>
+        <th>消解值</th><th>类别</th><th>策略</th></tr></thead><tbody>
+      ${list.map(c=>`<tr>
+        <td>${esc(c.stand_name||c.stand_id)}</td>
+        <td>${esc(c.dimension||'')}</td>
+        <td class="num">${esc(c.primary_value??c.primary_raw??'—')}</td>
+        <td class="num">${esc(c.mirror_value??c.mirror_raw??'—')}</td>
+        <td class="num">${esc(c.resolved_value??'—')}</td>
+        <td class="c-cat ${esc(c.category||'')}">${esc(CN[c.category]||c.category||'—')}</td>
+        <td>${esc(c.resolution||'—')}</td></tr>`).join('')}
+      </tbody></table></div>`;
+  }catch(e){
+    $('#cans').innerHTML = `<div class="card"><div class="alert err">${esc(e.message)}</div></div>`;
+  }
+}
+
+// ---------- 状态 ----------
+async function loadS(){
+  $('#sans').innerHTML = '<div class="loading">加载中…</div>';
+  try{
+    const [h, st] = await Promise.all([
+      fetch(`${API}/health`).then(r=>r.json()),
+      fetch(`${API}/stats`).then(r=>r.json())
+    ]);
+    const rs = h.resolution_stats||{};
+    const dn = {0:'零分歧',1:'未消解',2:'待定',3:'已定'};
+    $('#sans').innerHTML = `
+      <div class="card"><h3>服务状态</h3>
+        <dl class="kv">
+          <dt>状态</dt><dd class="${h.status==='ok'?'ok':'bad'}">${esc(h.status)}</dd>
+          <dt>数据库</dt><dd>${esc(h.database)}</dd>
+          <dt>替身数</dt><dd>${esc(h.n_stands)}</dd>
+          <dt>向量检索</dt><dd>${h.vector_enabled?'启用':'未启用（纯 BM25）'}</dd>
+          <dt>未消解冲突</dt><dd>${esc(h.n_unresolved_conflicts)}</dd>
+        </dl></div>
+      <div class="card"><h3>冲突消解统计</h3>
+        <table><thead><tr><th>维度</th><th style="text-align:right">总数</th>
+          <th style="text-align:right">已定值</th><th style="text-align:right">未消解</th>
+          <th style="text-align:right">状态</th></tr></thead><tbody>
+        ${Object.entries(rs).map(([k,v])=>`
+          <tr><td>${esc(dn[v.n]??k)}</td>
+            <td class="num">${v.n}</td><td class="num">${v.n_resolved}</td>
+            <td class="num bad">${v.n-v.n_resolved}</td>
+            <td class="num">${v.n?(v.n_resolved/v.n*100).toFixed(0):0}%</td></tr>`).join('')}
+        </tbody></table></div>
+      <div class="card"><h3>数据质量</h3>
+        <pre style="font-size:12px;white-space:pre-wrap">${
+          esc(JSON.stringify(st.data_quality||st, null, 2))}</pre></div>`;
+  }catch(e){
+    $('#sans').innerHTML = `<div class="card"><div class="alert err">${esc(e.message)}</div></div>`;
+  }
+}
+</script>
+</body>
+</html>

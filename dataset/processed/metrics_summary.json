@@ -1,0 +1,394 @@
+{
+  "M1": {
+    "n_stands": 154,
+    "n_forms": 146,
+    "n_chunks": 2407,
+    "n_stands_covered": 148,
+    "total_chars": 696201,
+    "chunk_type_dist": {
+      "section": 1678,
+      "ability_overview": 437,
+      "battle_record": 181,
+      "lore": 92,
+      "move": 19
+    },
+    "part_dist": {
+      "3": 593,
+      "4": 417,
+      "5": 456,
+      "6": 404,
+      "7": 255,
+      "8": 125,
+      "None": 157
+    },
+    "len_stats": {
+      "min": 80,
+      "p50": 229,
+      "p85": 477,
+      "p95": 671,
+      "max": 2174
+    },
+    "n_with_complete_stats": 123,
+    "completeness_ratio": 0.7987,
+    "n_conflicts": 28,
+    "n_conflict_pending": 16,
+    "n_forms_unresolved": null,
+    "n_sources": 3,
+    "sources": [
+      "jojowiki（主源）",
+      "csv_bogdan",
+      "csv_topology"
+    ],
+    "_source_files": [
+      "dataset/processed/validation_report.json",
+      "dataset/processed/chunk_report.json",
+      "dataset/processed/stands.json",
+      "dataset/processed/conflicts.json"
+    ]
+  },
+  "M2": {
+    "n_eval": 176,
+    "type_dist": {
+      "T1": 40,
+      "T2": 30,
+      "T3": 25,
+      "T4": 25,
+      "T5": 21,
+      "T6": 20,
+      "T7": 15
+    },
+    "llm_dependency": false,
+    "gold_method": "程序化推导（从结构化数据反推）",
+    "_source_files": [
+      "dataset/processed/eval_set.json"
+    ]
+  },
+  "M3": {
+    "n_configs": 3,
+    "configs": [
+      "BM25(k1=1.2,b=0.5) only",
+      "BM25(1.2,0.5)+RRF k=10",
+      "BM25(1.2,0.5)+RRF k=30"
+    ],
+    "_source_files": [
+      "dataset/processed/m3_best.json",
+      "dataset/processed/m3_experiments.json",
+      "dataset/processed/d1_chunksize.json"
+    ],
+    "best::BM25(k1=1.2,b=0.5) only": {
+      "recall@1": 0.1739,
+      "recall@3": 0.3533,
+      "recall@5": 0.5707,
+      "n_cases": 46,
+      "ndcg@5": 0.3627,
+      "mrr": 0.3484,
+      "stand_recall@5": 0.725
+    },
+    "best::BM25(1.2,0.5)+RRF k=10": {
+      "recall@1": 0.1739,
+      "recall@3": 0.4076,
+      "recall@5": 0.587,
+      "n_cases": 46,
+      "ndcg@5": 0.3853,
+      "mrr": 0.3666,
+      "stand_recall@5": 0.7375
+    },
+    "best::BM25(1.2,0.5)+RRF k=30": {
+      "recall@1": 0.1739,
+      "recall@3": 0.4728,
+      "recall@5": 0.625,
+      "n_cases": 46,
+      "ndcg@5": 0.4078,
+      "mrr": 0.3784,
+      "stand_recall@5": 0.7377
+    },
+    "hybrid_vs_bm25": {
+      "note": "★ RRF k=30 已含 bge-m3 向量召回（见 M3 报告 §4）",
+      "baseline_bm25_tuned": {
+        "label": "M3-a 仅 BM25 调参（k1=1.2,b=0.5）",
+        "recall@5": 0.5707,
+        "ndcg@5": 0.3627,
+        "mrr": 0.3484
+      },
+      "hybrid": {
+        "label": "M3-c BM25 调参 + bge-m3 + RRF k=30",
+        "recall@5": 0.625,
+        "ndcg@5": 0.4078,
+        "mrr": 0.3784,
+        "recall@3": 0.4728
+      },
+      "delta_vs_tuned_bm25_pp": {
+        "recall@5": 5.4,
+        "ndcg@5": 4.5,
+        "mrr": 3.0
+      },
+      "delta_vs_m2_v0_pct": {
+        "note": "★ M2 v0 的检索指标**未落盘**，此处取自 M3 报告 §4 的表格",
+        "recall@5": {
+          "before": 0.5272,
+          "after": 0.625,
+          "relative_gain_pct": 18.5
+        },
+        "nDCG@5": {
+          "before": 0.3371,
+          "after": 0.4078,
+          "relative_gain_pct": 21.0
+        },
+        "mrr": {
+          "before": 0.3223,
+          "after": 0.3784,
+          "relative_gain_pct": 17.4
+        },
+        "recall@3": {
+          "before": 0.3261,
+          "after": 0.4728,
+          "relative_gain_pct": 45.0
+        }
+      }
+    },
+    "d1b_chunksize": [
+      {
+        "target": 256,
+        "n_views": 3715,
+        "recall@5": 0.5707,
+        "ndcg@5": 0.5737,
+        "src_coverage@5": 0.7673
+      },
+      {
+        "target": 384,
+        "n_views": 2259,
+        "recall@5": 0.8859,
+        "ndcg@5": 0.8931,
+        "src_coverage@5": 0.9389
+      },
+      {
+        "target": 512,
+        "n_views": 1633,
+        "recall@5": 0.9022,
+        "ndcg@5": 0.9051,
+        "src_coverage@5": 0.9352
+      },
+      {
+        "target": 768,
+        "n_views": 1072,
+        "recall@5": 0.9511,
+        "ndcg@5": 0.9529,
+        "src_coverage@5": 0.9622
+      },
+      {
+        "target": 1024,
+        "n_views": 853,
+        "recall@5": 0.9728,
+        "ndcg@5": 0.9746,
+        "src_coverage@5": 0.9758
+      },
+      {
+        "target": 2048,
+        "n_views": 436,
+        "recall@5": 1.0,
+        "ndcg@5": 1.0,
+        "src_coverage@5": 1.0
+      }
+    ]
+  },
+  "M4": {
+    "_source_files": [
+      "dataset/processed/m4_results.json",
+      "dataset/processed/conflicts.json",
+      "dataset/processed/conflict_root_cause.json"
+    ],
+    "resolution": {
+      "by_strategy": {
+        "split_by_form": {
+          "n": 1,
+          "n_resolved": 1
+        },
+        "prefer_primary": {
+          "n": 27,
+          "n_resolved": 11
+        }
+      },
+      "n_total": 28,
+      "n_pending": 16
+    },
+    "routing": {
+      "n": 176,
+      "overall_before": 0.8352,
+      "overall_after": 1.0,
+      "delta_pp": 16.5,
+      "by_type_before": {
+        "T1": 1.0,
+        "T2": 1.0,
+        "T3": 1.0,
+        "T4": 1.0,
+        "T5": 0.0,
+        "T6": 0.6,
+        "T7": 1.0
+      },
+      "by_type_after": {
+        "T1": 1.0,
+        "T2": 1.0,
+        "T3": 1.0,
+        "T4": 1.0,
+        "T5": 1.0,
+        "T6": 1.0,
+        "T7": 1.0
+      },
+      "improved_types": [
+        {
+          "type": "T5",
+          "before": 0.0,
+          "after": 1.0
+        },
+        {
+          "type": "T6",
+          "before": 0.6,
+          "after": 1.0
+        }
+      ]
+    },
+    "root_cause": {
+      "mirror_independent": false,
+      "topology_is_subset": true,
+      "n_conflict_dims": [
+        "RNG",
+        "STA"
+      ],
+      "n_zero_conflict_dims": [
+        "PWR",
+        "SPD",
+        "PRC",
+        "DEV"
+      ]
+    }
+  },
+  "M5": {
+    "framework": "FastAPI + uvicorn",
+    "n_routes": 4,
+    "n_answer_types": 8,
+    "n_endpoints": 5,
+    "n_checks_passed": 12,
+    "mode": "抽取式（零生成）",
+    "_note": "验证数据见提交 9258c38 的验收表",
+    "_source_files": [
+      "api/README.md"
+    ]
+  },
+  "M6": {
+    "_source_files": [
+      "dataset/processed/m6_faithfulness.json"
+    ],
+    "config_A": {
+      "name": "生成式 + 真实证据",
+      "n": 30,
+      "trace_ratio": 0.9138461538461538,
+      "numeric_ratio": 1.0,
+      "entity_ratio": 1.0,
+      "contradiction_rate": 0.0,
+      "util_ratio": 0.1854609451276261,
+      "hedging_rate": 0.36666666666666664
+    },
+    "config_B": {
+      "name": "抽取式（M5 现状）",
+      "n": 30,
+      "trace_ratio": 1.0,
+      "numeric_ratio": null,
+      "entity_ratio": 1.0,
+      "contradiction_rate": 0.0,
+      "util_ratio": 0.4366585194840758,
+      "hedging_rate": 0.0
+    },
+    "config_C": {
+      "name": "生成式 + 空证据",
+      "n": 30,
+      "trace_ratio": 0.03333333333333333,
+      "numeric_ratio": null,
+      "entity_ratio": 0.0,
+      "contradiction_rate": 0.0,
+      "util_ratio": 0.0,
+      "hedging_rate": 0.7333333333333333
+    },
+    "config_D": {
+      "name": "生成式 + 无关注证据",
+      "n": 30,
+      "trace_ratio": 0.10833333333333334,
+      "numeric_ratio": null,
+      "entity_ratio": 0.13333333333333333,
+      "contradiction_rate": 0.0,
+      "util_ratio": 0.038975374661649166,
+      "hedging_rate": 0.7
+    },
+    "evidence_effectiveness_pp": 88.1,
+    "metric_sensitivity_pp": 80.6,
+    "generation_cost_pp": 8.6
+  },
+  "M7": {
+    "n_sizes": 6,
+    "table": [
+      {
+        "target": 256,
+        "n_chunks": 2269,
+        "used_chars": 210.0,
+        "util_ratio": 0.20477661678687964,
+        "hedging_rate": 0.3333333333333333,
+        "trace_ratio": 0.9249999999999999,
+        "avg_answer_chars": 122.6,
+        "avg_gen_ms": 5603.3
+      },
+      {
+        "target": 384,
+        "n_chunks": 1915,
+        "used_chars": 222.9,
+        "util_ratio": 0.19585240379710245,
+        "hedging_rate": 0.20833333333333334,
+        "trace_ratio": 0.9222222222222222,
+        "avg_answer_chars": 142.4,
+        "avg_gen_ms": 6402.6
+      },
+      {
+        "target": 512,
+        "n_chunks": 1620,
+        "used_chars": 235.7,
+        "util_ratio": 0.18125370402396077,
+        "hedging_rate": 0.125,
+        "trace_ratio": 0.8972222222222223,
+        "avg_answer_chars": 121.6,
+        "avg_gen_ms": 6110.1
+      },
+      {
+        "target": 768,
+        "n_chunks": 1177,
+        "used_chars": 300.7,
+        "util_ratio": 0.16535944560534127,
+        "hedging_rate": 0.20833333333333334,
+        "trace_ratio": 0.9225694444444444,
+        "avg_answer_chars": 155.0,
+        "avg_gen_ms": 8006.2
+      },
+      {
+        "target": 1024,
+        "n_chunks": 1140,
+        "used_chars": 399.6,
+        "util_ratio": 0.14209126607432013,
+        "hedging_rate": 0.20833333333333334,
+        "trace_ratio": 0.9149966931216932,
+        "avg_answer_chars": 178.9,
+        "avg_gen_ms": 9133.4
+      },
+      {
+        "target": 2048,
+        "n_chunks": 503,
+        "used_chars": 642.4,
+        "util_ratio": 0.13105492188610582,
+        "hedging_rate": 0.041666666666666664,
+        "trace_ratio": 0.9236276455026454,
+        "avg_answer_chars": 232.0,
+        "avg_gen_ms": 10386.1
+      }
+    ],
+    "recommended": 512,
+    "_source_files": [
+      "dataset/processed/m7_chunk_quality.json"
+    ]
+  }
+}

@@ -290,6 +290,11 @@ def run_size(target: int, overlap: int, tasks: list[dict],
             "util": evidence_utilization(ans.text, [e["content"] for e in ev]),
             "score": s.to_dict(),
             "evidence_chars": n_chars,
+            # ★ 答案长度与生成耗时 —— 大块的代价
+            "answer_chars": len(ans.text),
+            "gen_tokens": ans.n_gen_tokens,
+            "prompt_tokens": ans.n_prompt_tokens,
+            "gen_ms": round(ans.elapsed_ms, 1),
         })
     t_total = time.time() - t0
 
@@ -297,11 +302,22 @@ def run_size(target: int, overlap: int, tasks: list[dict],
     # 块级统计
     util = [r["util"]["ratio"] for r in records]
     chars = [r["evidence_chars"] for r in records]
-    n_chunks_per_q = [len(r["util"].get("_n", [])) or top_k for r in records]
 
+    avg_chars = sum(chars) / len(chars) if chars else 0
+    avg_util = sum(util) / len(util) if util else 0.0
+    ans_chars = [r["answer_chars"] for r in records]
+    gen_ms = [r["gen_ms"] for r in records]
+    ptoks = [r["prompt_tokens"] for r in records if r.get("prompt_tokens")]
     return {
         "target_len": target, "overlap": overlap,
         "n_chunks": len(chunks),
+        # ★ 被真正用进答案的绝对字数 —— 比「利用率」更能反映信息量
+        "used_chars": round(avg_chars * avg_util, 1),
+        # ★ 代价侧指标
+        "avg_answer_chars": round(sum(ans_chars) / len(ans_chars), 1)
+                             if ans_chars else 0,
+        "avg_gen_ms": round(sum(gen_ms) / len(gen_ms), 1) if gen_ms else 0,
+        "avg_prompt_tokens": round(sum(ptoks) / len(ptoks), 1) if ptoks else 0,
         "avg_chunk_chars": (sum(c["n_chars"] for c in chunks) / len(chunks)
                             if chunks else 0),
         "chunk_time_sec": round(t_chunk, 1),
@@ -318,53 +334,113 @@ def run_size(target: int, overlap: int, tasks: list[dict],
 
 # ==================================================================
 def print_report(results: list[dict]) -> None:
-    print("\n" + "=" * 76)
-    print("块大小 × 生成质量（M7）")
-    print("=" * 76)
-    hdr = (f"{'块长':>6s} {'重叠':>5s} {'块数':>6s} {'块均字数':>9s} "
-           f"{'溯源':>7s} {'利用率':>7s} {'矛盾率':>7s} {'空洞率':>7s} {'证据字数':>9s}")
+    """三指标权衡判读。
+
+    ★★ 为什么必须三个指标（实测踩坑）：
+      单个指标必然偏向某个方向：
+        - precision/nDCG（M3 用的）**偏好大块** → 2048 时全1.0
+        - 利用率（M7 第一版）**偏好小块** → 256 时最优
+      两者是**镜像偏差**，各自只测了一个维度。
+
+      | 指标 | 含义 | 偏好 |
+      |---|---|---|
+      | 被用字数 | 答案实际引用的内容多少 | 大块 |
+      | 空洞率 | 能否答出来 | 大块 |
+      | 利用率 | 念得有多精炼 | 小块 |
+    """
+    print("\n" + "=" * 84)
+    print("块大小 × 生成质量（M7）—— 三指标权衡")
+    print("=" * 84)
+    hdr = (f"{'块长':>6s} {'块数':>6s} │ {'被用字数':>8s} {'空洞率↓':>8s} "
+           f"{'利用率↑':>8s} │ {'溯源':>7s} │ {'答案字数':>8s} {'延迟ms':>7s}")
     print(hdr)
-    print("-" * 76)
+    print("-" * 88)
     for r in results:
         def f(v):
             return "n/a" if v is None else f"{v:.4f}"
-        print(f"{r['target_len']:>6d} {r['overlap']:>5d} {r['n_chunks']:>6d} "
-              f"{r['avg_chunk_chars']:>9.0f} {f(r['trace_ratio']):>7s} "
-              f"{f(r['util_ratio']):>7s} {f(r['contradiction_rate']):>7s} "
-              f"{f(r['hedging_rate']):>7s} {r['avg_evidence_chars']:>9.0f}")
+        print(f"{r['target_len']:>6d} {r['n_chunks']:>6d} │ "
+              f"{r.get('used_chars', 0):>8.0f} {f(r['hedging_rate']):>8s} "
+              f"{f(r['util_ratio']):>8s} │ {f(r['trace_ratio']):>7s} │ "
+              f"{r.get('avg_answer_chars', 0):>8.0f} "
+              f"{r.get('avg_gen_ms', 0):>7.0f}")
+    print("\n  读法：│ 分隔的四组分别是")
+    print("        「信息量/能否答出」│「精炼度」│「忠实度」│「代价」")
+    print("        ↑越大越好↓越小越好（答案字数与延迟是代价，理想是越小越好）")
 
-    # ---- 判读 ----
-    print("\n" + "=" * 76)
-    print("判读")
-    print("=" * 76)
-    valid = [r for r in results if r["util_ratio"] is not None]
+    valid = [r for r in results
+             if r["util_ratio"] is not None and r["n"] > 0]
     if not valid:
-        print("  无有效数据")
+        print("\n  无有效数据")
         return
-    best = max(valid, key=lambda r: r["util_ratio"])
-    worst = min(valid, key=lambda r: r["util_ratio"])
-    print(f"  ★ 利用率最优：{best['target_len']}（{best['util_ratio']:.4f}）")
-    print(f"    利用率最差：{worst['target_len']}（{worst['util_ratio']:.4f}）")
 
-    # 是否存在中间最优？
-    sizes = [r["target_len"] for r in valid]
+    # ---- 各指标的最优点 ----
+    best_used = max(valid, key=lambda r: r.get("used_chars", 0))
+    best_hedge = min(valid, key=lambda r: r["hedging_rate"])
+    best_util = max(valid, key=lambda r: r["util_ratio"])
+    best_trace = max(valid, key=lambda r: r["trace_ratio"])
+
+    print("\n" + "=" * 84)
+    print("各指标的最优（★ 它们指向不同尺寸，这就是权衡）")
+    print("=" * 84)
+    print(f"  被用字数（信息量）最优 : {best_used['target_len']}"
+          f"  ({best_used.get('used_chars', 0):.0f} 字)")
+    print(f"  空洞率（能答出）最优   : {best_hedge['target_len']}"
+          f"  ({best_hedge['hedging_rate']:.4f})")
+    print(f"  利用率（精炼度）最优   : {best_util['target_len']}"
+          f"  ({best_util['util_ratio']:.4f})")
+    print(f"  溯源（忠实度）最优     : {best_trace['target_len']}"
+          f"  ({best_trace['trace_ratio']:.4f})")
+
+    # ---- 镜像偏差检查 ----
+    print("\n" + "=" * 84)
+    print("★ 镜像偏差检查")
+    print("=" * 84)
+    util_sizes = [r["target_len"] for r in valid]
     utils = [r["util_ratio"] for r in valid]
-    mid_peak = (sizes[0] not in (max(utils and
-                                     [u for u, s in zip(utils, sizes)
-                                      if s == max(utils)] or [0], default=0))
-                )
-    if mid_peak:
-        print("  → ★ **存在中间最优** —— 这正是检索指标看不到的权衡")
+    bi = utils.index(max(utils))
+    if bi == 0:
+        print("  利用率**单调递减**，最优点是最小尺寸")
+        print("  → ★ 单一利用率指标会**系统性偏好小块**，与 M3 的 nDCG 偏好大块")
+        print("    形成镜像。**这正是不用单指标决策的证据。**")
+    elif bi == len(utils) - 1:
+        print("  利用率单调递增，偏好大块")
     else:
-        print("  → 利用率随块大小单调变化，未见中间最优")
+        print(f"  ★ 存在中间最优（{util_sizes[bi]}）")
 
-    # 溯源 vs 利用率的对比
-    tr_max = max(valid, key=lambda r: r["trace_ratio"])
-    print(f"\n  ★ 两个指标给出了不同答案：")
-    print(f"      溯源最优  = {tr_max['target_len']}（{tr_max['trace_ratio']:.4f}）")
-    print(f"      利用率最优= {best['target_len']}（{best['util_ratio']:.4f}）")
-    if tr_max["target_len"] != best["target_len"]:
-        print(f"      → ★★ 指标选型直接改变结论，这是 M3 问题的根源")
+    # ---- 综合建议 ----
+    print("\n" + "=" * 84)
+    print("综合建议")
+    print("=" * 84)
+    # 归一化打分：被用字数↑空洞率↓利用率↑，各占权重
+    def norm(vals: list[float], higher_better: bool) -> list[float]:
+        lo, hi = min(vals), max(vals)
+        if hi == lo:
+            return [0.5] * len(vals)
+        if higher_better:
+            return [(v - lo) / (hi - lo) for v in vals]
+        return [(hi - v) / (hi - lo) for v in vals]
+
+    n_used = norm([r.get("used_chars", 0) for r in valid], True)
+    n_hedge = norm([r["hedging_rate"] for r in valid], False)
+    n_util = norm([r["util_ratio"] for r in valid], True)
+    W = {"used": 0.4, "hedge": 0.35, "util": 0.25}
+    print(f"  权重：被用字数 {W['used']:.0%} / 空洞率 {W['hedge']:.0%} "
+          f"/ 利用率 {W['util']:.0%}")
+    print("  （信息量与「能答出」是用户真正关心的，精炼度次要）\n")
+    scores = []
+    for i, r in enumerate(valid):
+        sc = (W["used"] * n_used[i] + W["hedge"] * n_hedge[i]
+              + W["util"] * n_util[i])
+        scores.append((sc, r))
+        print(f"  {r['target_len']:>6d}: 总分 {sc:.4f}"
+              f"  (被用 {n_used[i]:.2f} / 空洞 {n_hedge[i]:.2f}"
+              f" / 利用 {n_util[i]:.2f})")
+    best = max(scores, key=lambda x: x[0])
+    print(f"\n  ★ 推荐块长：{best[1]['target_len']}（总分 {best[0]:.4f}）")
+    print(f"    块数 {best[1]['n_chunks']}  证据 {best[1]['avg_evidence_chars']:.0f} 字"
+          f"  空洞 {best[1]['hedging_rate']:.4f}")
+    print("\n  ⚠️ 权重是**主观设定**，不同权重会给出不同推荐。")
+    print("    这个表的用途是**展示权衡结构**，不是给出唯一答案。")
 
 
 # ==================================================================

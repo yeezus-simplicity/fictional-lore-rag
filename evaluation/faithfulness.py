@@ -189,9 +189,13 @@ def trace_coverage(answer: str, evidence_texts: list[str]) -> dict:
 #   否则「破坏力不是 A 级」会被解析成「维度=破坏力不，值=A」→ 判断反向
 # ★ 数字必须用 \d+ （实测踩坑：原写 \d(?:\.\d)? 只匹配 1-2 位，
 #   「射程是 300 米」被截成「3」→ 拿单个数字去比对，误判风险极高）
+# ★ 等级字母必须**独立**出现（前后不接拉丁字母）
+#   实测踩坑：「被描绘为 Diavolo 通过…」里的 D 被当成「破坏力=D」
+#   —— Diavolo 是人名，D 只是名字的一部分。
+#   → 加前后向断言(?<![A-Za-z])([ABCDE])(?![A-Za-z])
 _NUM_ASSERT = re.compile(
     r"([一-鿿]{2,4}?)\s*(?:是|为|＝|=|：|:)\s*"
-    r"([ABCDE]|\d+(?:\.\d+)?|∞|无|未知|不存在)"
+    r"((?<![A-Za-z])[ABCDE](?![A-Za-z])|\d+(?:\.\d+)?|∞|无|未知|不存在)"
 )
 # 独立出现的等级
 _GRADE_RE = re.compile(r"\b([ABCDE])\s*级\b")
@@ -226,6 +230,30 @@ def _canon_dim(raw: str) -> Optional[str]:
     return best[0] if best else None
 
 
+def _is_list_index(context: str, m, val: str) -> bool:
+    """判断这个数字是不是「列表序号」而非事实断言。
+
+    ★★ 实测踩坑：「破坏力主要体现在以下几个方面：1. 缩小敌人」里的 1
+      被抽成「破坏力=1」—— 凭空的假断言拉低了整个 numeric 指标。
+      正确做法：它其实是**列表序号**，不是维度取值。
+
+    判据（命中任一即视为序号）：
+      - 数值前面是「：」「、」或列表符号（1. 2. 3.）
+      - 数值后面紧跟「.」「、」（如「1. 缩小」）
+      - 数值前 8 字内有「以下」「方面」「几点」「如下」
+    """
+    i = m.start(2)                       # 数值在 part 中的位置
+    before = context[max(0, i - 10):i]
+    after = context[m.end(2):m.end(2) + 3]
+    # 「1. xxx」形式
+    if re.match(r"^\s*[.、）)]", after):
+        return True
+    # 「以下方面：1」形式
+    if re.search(r"(以下|如下|方面|几点|下列)[^。；]{0,6}$", before):
+        return True
+    return False
+
+
 def _extract_asserts(answer: str) -> list[dict]:
     """抽取数值断言，正确处理否定与维度归一。
 
@@ -248,6 +276,12 @@ def _extract_asserts(answer: str) -> list[dict]:
             prefix = part[max(0, m.start() - 12):m.start()]
             dim = _canon_dim(prefix) or _canon_dim(m.group(1)) or \
                 re.sub(r"[不是为的等级定个]", "", m.group(1))
+            # ★★ 剔除「列表序号」这类假断言
+            #   实测踩坑：「体现在以下几个方面：1. 缩小敌人」里的 1
+            #   被当成「破坏力=1」→ 凭空的假断言拉低整个指标。
+            #   判据：数值紧跟列表符号（、. 或数字点）或在「以下方面」之后。
+            if _is_list_index(part, m, val):
+                continue
             asserts.append({
                 "dimension": dim, "raw_dimension": m.group(1),
                 "value": val, "source": "assert", "negated": neg_word,

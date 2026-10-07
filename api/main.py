@@ -136,6 +136,13 @@ def _init_state(use_vector: bool = True) -> None:
     STATE["semantic"] = sem
     STATE["vector_ok"] = vector_ok
 
+    # --- 生成器（M6/M11）★ 延迟加载 ---
+    #   不在这里 new：加载模型要 ~20 秒 + 3GB 显存，
+    #   而默认走抽取式，根本不需要模型。
+    #   用户传 mode=generate 时才加载（见 _get_generator）。
+    STATE["generator"] = None
+    STATE["generator_error"] = None
+
     # --- 冲突消解状态（M4）★ 需要 DB ---
     try:
         if not STATE.get("db_ok"):
@@ -218,6 +225,12 @@ class QueryResponse(BaseModel):
     warning: Optional[str] = Field(
         None, description="★ 可靠性警告（如未消解冲突、数据缺失）")
     elapsed_ms: float
+    # ★ M11：生成式信息（mode=generate 时才有）
+    mode: str = Field("extract", description="extract / generate")
+    generation: Optional[dict] = Field(
+        None, description="生成层详情：模型 / token / 延迟")
+    faithfulness: Optional[dict] = Field(
+        None, description="★ 机械核对的忠实度（不依赖 LLM 判分）")
 
 
 class HealthResponse(BaseModel):
@@ -269,6 +282,55 @@ def root():
         "health": "/health",
         "main_endpoint": "POST /query",
     }
+
+
+def _get_generator():
+    """★ 延迟加载生成器（首次调用时才加载模型）。
+
+    实测踩坑（M6 → M11）：如果服务启动时就new Generator()，
+    每个用户都得多等 20 秒 + 占 3GB 显存——而默认的抽取式根本不用模型。
+    """
+    gen = STATE.get("generator")
+    if gen is not None:
+        return gen
+    if STATE.get("generator_error"):
+        return None
+    try:
+        from generator import Generator
+        gen = Generator(lazy=True)
+        STATE["generator"] = gen
+        return gen
+    except Exception as e:
+        STATE["generator_error"] = f"{type(e).__name__}: {e}"
+        print(f"[api] 生成器不可用：{STATE['generator_error']}")
+        return None
+
+
+def _score_faithfulness(answer_text: str, evidence_texts: list[str]) -> dict | None:
+    """★ 对生成结果做机械核对的忠实度自评。
+
+    不依赖 LLM 判分（M6 的结论：1.5B 做评审员不可靠），
+    只做机械核对：答案里的断言能否在证据里找到。
+    """
+    if not answer_text or not evidence_texts:
+        return None
+    try:
+        sys.path.insert(0, str(ROOT / "evaluation"))
+        from faithfulness import aggregate, score_one
+        sc = score_one(answer_text, evidence_texts,
+                       STATE.get("known", set()))
+        agg = aggregate([sc])
+        d = sc.to_dict()
+        return {
+            "trace_ratio": agg["trace_ratio"],
+            "numeric_ratio": agg["numeric_ratio"],
+            "contradiction_rate": agg["contradiction_rate"],
+            "util_ratio": agg["util_ratio"],
+            "hedging": d.get("hedging"),
+            "n_unsupported": d.get("n_unsupported", 0),
+        }
+    except Exception as e:
+        return {"error": f"{type(e).__name__}: {e}"}
 
 
 def _try_reconnect() -> bool:
@@ -335,12 +397,18 @@ def query(
     q: str = Query(..., min_length=1, max_length=500,
                    description="自然语言问题，如「Star Platinum 的破坏力是几级？」"),
     top_k: int = Query(5, ge=1, le=20, description="语义检索返回条数"),
+    mode: str = Query("extract", pattern="^(extract|generate)$",
+                      description=("extract=抽取式（默认，零生成零幻觉）/ "
+                                  "generate=生成式（Qwen2.5-1.5B，忠实度约束）")),
 ):
     """统一查询入口。内部按路由分流。"""
     t0 = time.time()
     # ★ DB 不可用时的降级标记（必须在函数体里，
     #   放进 Pydantic 模型会报「需要类型注解」——实测踩过）
     db_unavailable = False
+    # ★ M11：生成式字段（mode=generate 时填充）
+    generation: dict | None = None
+    faithfulness: dict | None = None
     router = STATE["router"]
     decision = router.route(q)
     route = decision.route
@@ -421,8 +489,48 @@ def query(
             q, top_k=top_k, boost_stand=sid)
         retrieval_meta = _meta_to_dict(meta)
         if snippets:
-            answer = [s["content"] for s in snippets]
-            answer_type = "snippet"
+            ev_texts = [s["content"] for s in snippets]
+            # ★ M11：生成式分支。抽取式保持默认，行为完全不变。
+            if mode == "generate":
+                gen = _get_generator()
+                if gen is None:
+                    answer = {
+                        "note": "生成模型不可用，已回退到抽取式。",
+                        "error": STATE.get("generator_error"),
+                        "hint": "先跑 fetch_model.py 下载 Qwen2.5-1.5B",
+                    }
+                    answer_type = "snippet"
+                    warning = (warning or "") + "；生成模型不可用，已回退抽取式"
+                else:
+                    t_gen = time.time()
+                    gen.ensure_loaded()
+                    if gen.model is None:
+                        answer = {
+                            "note": "生成模型加载失败，已回退到抽取式。",
+                            "error": gen.info().get("error"),
+                        }
+                        answer_type = "snippet"
+                        warning = ((warning or "")
+                                   + "；生成模型加载失败，已回退抽取式")
+                    else:
+                        res = gen.generate(q, ev_texts)
+                        answer = res.text
+                        answer_type = "generated"
+                        generation = {
+                            "model": gen.info().get("model", ""),
+                            "device": gen.info().get("device"),
+                            "temperature": gen.temperature,
+                            "n_prompt_tokens": res.n_prompt_tokens,
+                            "n_gen_tokens": res.n_gen_tokens,
+                            "elapsed_ms": round(res.elapsed_ms, 1),
+                            "load_ms": round((time.time() - t_gen) * 1000, 1),
+                        }
+                        # ★ 机械核对的忠实度 —— 让用户看到这次回答有多可信
+                        faithfulness = _score_faithfulness(
+                            res.text, ev_texts)
+            else:
+                answer = [s["content"] for s in snippets]
+                answer_type = "snippet"
             evidence.extend(_to_evidence(snippets))
         else:
             answer = {"note": "未检索到相关内容"}
@@ -441,6 +549,9 @@ def query(
         "confidence": confidence,
         "warning": warning,
         "elapsed_ms": round((time.time() - t0) * 1000, 1),
+        "mode": mode,
+        "generation": generation,
+        "faithfulness": faithfulness,
     }
 
 

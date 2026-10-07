@@ -67,6 +67,81 @@ python api/main.py --no-vector         # 纯 BM25，启动快
 
 ---
 
+### ★ 抽取式 vs 生成式（M11）
+
+`/query` 支持 `mode` 参数：
+
+| mode | 行为 | 延迟 | 适用 |
+|---|---|---|---|
+| `extract`（默认） | 返回数据源原文片段 | **0.1秒** | 要证据、要快 |
+| `generate` | Qwen2.5-1.5B 生成，带忠实度约束 | 约 5 秒 | 要可读的答案 |
+
+```bash
+# 抽取式（默认）
+curl -X POST "http://127.0.0.1:8765/query?q=Tusk的形态与外观&top_k=2"
+
+# 生成式
+curl -X POST "http://127.0.0.1:8765/query?q=Tusk的形态与外观&top_k=2&mode=generate"
+```
+
+**生成式响应会多三个字段**：
+
+```json
+{
+  "mode": "generate",
+  "answer_type": "generated",
+  "generation": {
+    "model": "...Qwen2.5-1.5B-Instruct",
+    "device": "cuda", "temperature": 0.0,
+    "n_prompt_tokens": 359, "n_gen_tokens": 88,
+    "elapsed_ms": 6705.0
+  },
+  "faithfulness": {
+    "trace_ratio": 0.75,       // 机械核对的溯源率
+    "numeric_ratio": null,
+    "contradiction_rate": 0.0,
+    "util_ratio": 0.16,
+    "hedging": false
+  }
+}
+```
+
+### ★★★ 忠实度是机械核对的，不是LLM 判分
+
+`faithfulness` 字段来自 M6 的指标（`evaluation/faithfulness.py`），
+**纯字符串/集合运算，不调用任何 LLM**。
+
+> 理由（M6 的结论）：1.5B 模型做评审员本身不可靠，
+> 换成强模型又引入「评审模型的评测」问题。
+> 「是否忠实」是二元可机械核对的，比「是否聪明」简单得多。
+
+所以这个数字**可以直接在界面上看到**，用户能自己判断这次回答可不可信。
+
+### ★ 生成层是延迟加载的
+
+服务启动时**不加载**生成模型（约 20 秒 + 3GB 显存），
+只有第一次`mode=generate` 时才加载。之后一直常驻。
+
+- 首次调用：约 80-120 秒（含加载）
+- 后续调用：约 5 秒
+
+若模型加载失败，会**自动回退到抽取式**并在 `warning` 里说明，
+不会让整个服务挂掉。
+
+### 实测对比（同一个问题）
+
+| | 抽取式 | 生成式 |
+|---|---|---|
+| 答案 | `["Anubis is able to control whoever draws it, no matter how strong their will..."]` | `Anubis 的外观形态描述如下：- Anubis 是...人类的身体和黑暗犬类的头...` |
+| 可读性 | 英文原文，需要自己读 | 直接回答问题 |
+| 忠实度 | 1.00（照抄不可能错） | 0.75 ~ 1.00（视问题） |
+| 延迟 | 0.1 秒 | 约 5 秒 |
+
+★ 这正是 M6 的结论「生成带来 8.6pp 忠实度损失，换来可读性」——
+现在可以在界面上亲手验证。
+
+---
+
 ## 原有 API 文档
 
 M5：把 M1-M4 串成可调用的系统。

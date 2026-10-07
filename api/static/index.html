@@ -84,6 +84,32 @@ button.go {
 }
 button.go:hover { background: var(--accent); }
 button.go:disabled { opacity: .5; cursor: wait; }
+/* 模式切换 */
+.modes { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
+.mlabel { color: var(--text-faint); font-size: 12px; }
+.mbtn {
+  background: var(--bg-panel); border: 1px solid var(--border);
+  color: var(--text-dim); padding: 4px 13px; border-radius: 3px;
+  font-size: 13px; cursor: pointer;
+}
+.mbtn:hover { color: var(--text); border-color: var(--border-strong); }
+.mbtn.on { background: var(--accent-dim); border-color: var(--accent); color: #fff; }
+.mhint { color: var(--text-faint); font-size: 11.5px; margin-left: 4px; }
+.mhint.gen { color: var(--warn); }
+/* 生成式信息卡 */
+.geninfo {
+  margin-top: 10px; padding-top: 10px;
+  border-top: 1px solid var(--border);
+  font-size: 11.5px; color: var(--text-faint);
+}
+.geninfo b { color: var(--text-dim); font-weight: 500; }
+.fbar {
+  height: 3px; background: var(--bg-hover); border-radius: 2px;
+  margin-top: 3px; overflow: hidden;
+}
+.fbar i { display: block; height: 100%; background: var(--ok); }
+.fbar i.warn { background: var(--warn); }
+.fbar i.bad { background: var(--err); }
 /* 示例问句 */
 .samples {
   display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px;
@@ -219,6 +245,15 @@ td.num { font-family: var(--mono); font-size: 12px; text-align: right; }
            autocomplete="off">
     <button class="go" id="qb">查询</button>
   </div>
+  <!-- ★ M11：抽取式 / 生成式 对比 -->
+  <div class="modes">
+    <span class="mlabel">回答方式</span>
+    <button class="mbtn on" id="mExtract"
+            title="返回数据源原文片段。零生成、零幻觉、秒级响应">抽取式</button>
+    <button class="mbtn" id="mGenerate"
+            title="Qwen2.5-1.5B 生成。带忠实度约束，但慢约 5 秒">生成式</button>
+    <span class="mhint" id="mHint">返回原文片段，不生成任何内容</span>
+  </div>
   <div class="samples">
     <span>试试：</span>
   </div>
@@ -284,6 +319,23 @@ $('#bSamples').insertAdjacentHTML('beforeend',
   ['Star Platinum','The World','Made in Heaven','Tusk','Anubis']
     .map(n=>`<span class="chip" onclick="askB('${esc(n)}')">${esc(n)}</span>`).join(''));
 
+// ---------- 模式切换（M11）----------
+let MODE = 'extract';
+const HINTS = {
+  extract: '返回原文片段，不生成任何内容',
+  generate: 'Qwen2.5-1.5B 生成 · 忠实度约束 · 约 5 秒',
+};
+$('#mExtract').onclick = () => setMode('extract');
+$('#mGenerate').onclick = () => setMode('generate');
+function setMode(m){
+  MODE = m;
+  $('#mExtract').classList.toggle('on', m==='extract');
+  $('#mGenerate').classList.toggle('on', m==='generate');
+  const h = $('#mHint');
+  h.textContent = HINTS[m];
+  h.classList.toggle('gen', m==='generate');
+}
+
 // ---------- 服务状态灯 ----------
 // ★ 教训：界面本身能打开不代表服务活着 —— 静态 HTML 是本地文件，
 //   API 才需要后端。加个探活，用户不用靠「查询失败」才发现服务挂了。
@@ -333,7 +385,7 @@ async function ask(q){
     // ★ /query 的参数是 **query string**（q / top_k），不是 JSON body
     //   实测踩坑：按 body 传 {question:...} → 422 Unprocessable Content
     const r = await fetch(`${API}/query?` +
-      new URLSearchParams({q:q, top_k:'3'}), {method:'POST'});
+      new URLSearchParams({q:q, top_k:'3', mode:MODE}), {method:'POST'});
     if(!r.ok) throw new Error('HTTP '+r.status);
     render(await r.json());
     ping();                    // 顺带刷新状态灯
@@ -415,6 +467,10 @@ function renderAnswer(d){
   if(a && a.abstained){ refused = true; body = esc(a.reason);
     if(a.hint) body += '\n\n提示：' + esc(a.hint);
   }
+  else if(typeof a==='string'){
+    // ★ 生成式：answer 是自然语言字符串
+    body = esc(a);
+  }
   else if(Array.isArray(a)){
     body = a.map(x=>esc(x)).join('\n\n');
   }
@@ -424,9 +480,10 @@ function renderAnswer(d){
   else body = esc(String(a ?? '（无内容）'));
 
   let html = `<div class="card">
-    <h3>答案</h3>
+    <h3>答案${d.mode==='generate'?' <span style="color:var(--warn);font-weight:400">（生成式）</span>':''}</h3>
     <div class="answer ${refused?'answer-refused':''}">${body}</div>`;
   if(d.warning) html += `<div class="alert">⚠ ${esc(d.warning)}</div>`;
+  if(d.generation) html += renderGeneration(d.generation, d.faithfulness);
   html += renderEvidence(d.evidence);
   html += '</div>';
   $('#ans').innerHTML = html;
@@ -488,6 +545,36 @@ function renderStructured(a){
   }
   return `<pre style="font-size:12px;white-space:pre-wrap">${
     esc(JSON.stringify(a,null,2))}</pre>`;
+}
+
+function renderGeneration(g, f){
+  // ---- 生成层详情 ----
+  const model = (g.model||'').split('\\').pop();
+  let h = `<div class="geninfo"><b>生成层</b>：${esc(model)}`
+        + ` · ${esc(g.device||'')} · temp=${g.temperature}`
+        + `<br><b>token</b>：prompt ${g.n_prompt_tokens} → gen ${g.n_gen_tokens}`
+        + `<br><b>耗时</b>：生成 ${g.elapsed_ms} ms`
+        + (g.load_ms>1000? `（含首次加载 ${(g.load_ms/1000).toFixed(0)} s）`:'');
+  // ---- 忠实度（机械核对，不是 LLM 判分）----
+  if(f && !f.error){
+    const t = f.trace_ratio;
+    const cls = t>=0.95?'ok':(t>=0.7?'warn':'bad');
+    const num = (f.numeric_ratio==null? null : f.numeric_ratio);
+    h += `<br><b>忠实度</b>（机械核对）：溯源
+      <span class="${cls}" style="font-family:var(--mono)">${
+        t==null?'n/a':t.toFixed(2)}</span>`;
+    if(num!=null) h+= ` · 数值 ${num.toFixed(2)}`;
+    if(f.contradiction_rate>0) h+= ` · <span class="bad">矛盾 ${f.contradiction_rate.toFixed(2)}</span>`;
+    if(f.hedging) h+= ` · <span style="color:var(--warn)">空洞回答</span>`;
+    h += `<div class="fbar"><i class="${cls}" style="width:${
+      Math.round((t||0)*100)}%"></i></div>`;
+    h += `<span style="font-size:11px">${
+      t>=0.95?'几乎完全忠于证据':
+      t>=0.7?'大部分有据，少部分超出证据':'★ 有明显超出证据的内容'}</span>`;
+  }else if(f && f.error){
+    h += `<br><span class="bad">忠实度计算失败：${esc(f.error)}</span>`;
+  }
+  return h + `</div>`;
 }
 
 function renderEvidence(ev){

@@ -98,7 +98,8 @@ class Generator:
                  device: Optional[str] = None,
                  max_new_tokens: int = 256,
                  temperature: float = 0.0,
-                 load_in_4bit: bool = False):
+                 load_in_4bit: bool = False,
+                 lazy: bool = False):
         """
         Args:
             temperature: ★ **默认 0 = 贪心解码，保证确定性**
@@ -125,7 +126,20 @@ class Generator:
         self.tokenizer = None
         self._error = None
         self._device = device
+        # ★ lazy=True 时不立刻加载模型（~20 秒 + 3GB 显存）。
+        #   服务用它：只有真正请求生成式时才加载，
+        #   否则每个用户启动服务都要等模型，白白浪费。
+        if not lazy:
+            self._load()
+
+    def ensure_loaded(self) -> bool:
+        """确保模型已加载（lazy 模式用）。"""
+        if self.model is not None:
+            return True
+        if self._error:
+            return False
         self._load()
+        return self.model is not None
 
     # ---------------------------------------------------------
     def _load(self) -> None:

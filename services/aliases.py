@@ -165,6 +165,20 @@ def extract_ja_name(name_ja: Optional[str]) -> Optional[str]:
 # 构建别名表
 # ============================================================
 
+# ★ M15：中文名词典（由 dataset/sources/zh_names/build_zh_map.py 生成）
+ZH_MAP_PATH = PROC / "stand_name_zh.json"
+
+
+def load_zh_map() -> dict[str, dict]:
+    """载入中文名词典。文件缺失时返回空 dict（降级但不崩）。"""
+    if not ZH_MAP_PATH.exists():
+        return {}
+    try:
+        return json.loads(ZH_MAP_PATH.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        return {}
+
+
 def build_alias_table() -> tuple[dict[str, str], dict[str, list[str]]]:
     """构建 (别名 → stand_id) 与 (stand_id → 别名列表)。
 
@@ -175,6 +189,7 @@ def build_alias_table() -> tuple[dict[str, str], dict[str, list[str]]]:
     if not p.exists():
         return {}, {}
     stands = json.loads(p.read_text(encoding="utf-8"))
+    zh_map = load_zh_map()
 
     alias2id: dict[str, str] = {}
     id2alias: dict[str, list[str]] = {}
@@ -193,6 +208,21 @@ def build_alias_table() -> tuple[dict[str, str], dict[str, list[str]]]:
         if ja_name and ja_name not in names:
             names.append(ja_name)
         names.extend(extract_zh_aliases(s.get("name_ja")))
+
+        # ★★ M15：优先用中文名词典（M15 构建，覆盖 130 个替身）
+        #   词典里的 name_zh 是简体且经过质量校验；
+        #   括号里挖出来的可能是日文汉字（「黄金体験」）或单字（「力」）。
+        zh_rec = zh_map.get(sid) or {}
+        for zh in (zh_rec.get("name_zh_variants") or []):
+            if zh and zh not in names:
+                names.append(zh)
+        if zh_rec.get("name_zh") and zh_rec["name_zh"] not in names:
+            names.append(zh_rec["name_zh"])
+        # ★ 被标记为不可匹配的（如含繁体字的「審判」）不进别名
+        if zh_rec.get("_excluded_from_matching"):
+            names = [n for n in names
+                     if not (zh_rec.get("name_zh") == n
+                             and zh_rec.get("_excluded_from_matching"))]
 
         id2alias[sid] = names
         for n in names:
@@ -232,6 +262,88 @@ def match_stand(question: str, alias2id: dict[str, str]) -> Optional[str]:
             if name and simplify_zh(name).lower() in q2.lower():
                 return alias2id[name]
     return None
+
+
+# ============================================================
+# 模糊候选（★ 只作提示，不作答案）
+# ============================================================
+# ★★ 设计依据（M15 实测结论，见 evaluation/eval_fuzzy_alias.py）：
+#     阈值 2 → 正例命中 100%，但负例误匹配 11.8%（不可用）
+#     阈值 3 → 负例误匹配 0%，但正例命中仅 44%
+#     阈值 4 → 负例 0%，正例仅 16%
+#
+#   ★ 结论：任何阈值都达不到「既好用又安全」。
+#     → 所以**不用它决定答案**，只在精确匹配失败时给候选提示：
+#       「你是不是想问『黄金体验』？」
+#     → 误匹配的危害从「答错」降为「多问一句」。
+#
+#   ★ M14 的教训是「单字名抢匹配」；这里进一步说明
+#     **放宽匹配的风险靠调参解决不了，只能靠限制用途**。
+
+# ★ 只对长度 ≥3 的中文名做候选（2 字太短，评测显示误匹配率 11.8%）
+_FUZZY_MIN_LEN = 3
+
+
+def _cjk_fragments(question: str, min_len: int = 2) -> list[str]:
+    """从问句里切出连续中文片段（长度递减）。"""
+    runs = re.findall(r"[一-鿿]+", question)
+    frags: list[str] = []
+    for run in runs:
+        for size in range(len(run), min_len - 1, -1):
+            for i in range(len(run) - size + 1):
+                frags.append(run[i:i + size])
+    # 长片段优先（更具体）
+    return sorted(set(frags), key=len, reverse=True)
+
+
+def suggest_stands(question: str,
+                   id2alias: dict[str, list[str]],
+                   limit: int = 3) -> list[dict]:
+    """给出模糊候选（仅提示，**不决定答案**）。
+
+    ★ 与 `match_stand` 的区别：
+       match_stand 精确匹配 → 返回唯一结果，可以直接用
+       suggest_stands 模糊 → 返回多个候选，**必须让用户确认**
+
+    Returns:
+        [{"stand_id", "name", "matched_by", "reason"}, ...]
+        按匹配到的别名长度降序（越长越可信）
+    """
+    hits: dict[str, dict] = {}
+    for sid, names in id2alias.items():
+        for name in names:
+            if len(name) < _FUZZY_MIN_LEN:
+                continue
+            if not re.search(r"[一-鿿]", name):
+                continue
+            # 情况 A：问句包含完整别名（如「黄金体验的能力」含「黄金体验」）
+            if name in question:
+                hits[sid] = {"stand_id": sid, "name": name,
+                             "matched_by": "input_contains_name"}
+                break
+            # 情况 B：别名包含问句片段（如「黄金」⊂「黄金体验」）
+            if len(question) >= _FUZZY_MIN_LEN:
+                for frag in _cjk_fragments(question):
+                    if len(frag) >= _FUZZY_MIN_LEN and frag in name:
+                        hits.setdefault(sid, {
+                            "stand_id": sid, "name": name,
+                            "matched_by": f"fragment:{frag}"})
+                        break
+            if sid in hits:
+                break
+    # ★ 排序规则（实测踩坑后加的）：
+    #   「黄金体验」既是独立替身，也是「黄金体验·镇魂歌」的一部分，
+    #   两者长度不同 → 按长度降序会选中「黄金体验·镇魂歌」（更长），
+    #   但用户输入「黄金体验的破坏力」时想问的是**前者**。
+    #   → 优先「问句包含它」而非「它包含问句片段」，长度短者优先。
+    out = sorted(
+        hits.values(),
+        key=lambda h: (h["matched_by"] != "input_contains_name",
+                       len(h["name"])))[:limit]
+    for h in out:
+        h["reason"] = (f"未精确匹配到替身名，但问句里有「{h['name']}」"
+                       f"（{h['matched_by']}）")
+    return out
 
 
 # ============================================================
@@ -293,3 +405,33 @@ if __name__ == "__main__":
             bad += 1
         print(f"  {'OK ' if ok else 'XX '}{q:32s} {exp:18s} {got}")
     print(f"\n  失败 {bad}/{len(cases)}")
+
+    # ---- 模糊候选（只作提示，不决定答案）----
+    print("\n【模糊候选】只提示，不决定答案")
+    fuzzy = [
+        ("黄金体验的破坏力", "gold_experience"),
+        ("黄金的能力", "gold_experience"),
+        ("白金之星的形态", "star_platinum"),
+    ]
+    fbad = 0
+    for q, exp in fuzzy:
+        sug = suggest_stands(q, i2a)
+        got = sug[0]["stand_id"] if sug else None
+        ok = got == exp
+        if not ok:
+            fbad += 1
+        via = sug[0]["matched_by"] if sug else "-"
+        print(f"  {'OK ' if ok else 'XX '}{q:20s} → {got}  ({via})")
+    print(f"  → 失败 {fbad}/{len(fuzzy)}")
+
+    print("\n  ★ 负例（无关问句不应产生候选）:")
+    nfalse = 0
+    for q in ["破坏力是多少", "形态与外观", "今天天气怎么样"]:
+        sug = suggest_stands(q, i2a)
+        if sug:
+            nfalse += 1
+            print(f"    {q:16s} → 误报 {len(sug)} 个："
+                  f"{[x['name'] for x in sug][:3]}")
+        else:
+            print(f"    {q:16s} → 无候选 ✓")
+    print(f"  → 误报 {nfalse}/3")

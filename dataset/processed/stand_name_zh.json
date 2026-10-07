@@ -1,0 +1,837 @@
+{
+  "anubis": {
+    "name_en": "Anubis",
+    "name_zh": "安努比斯神",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "atum": {
+    "name_en": "Atum",
+    "name_zh": "阿多姆神",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "cream": {
+    "name_en": "Cream",
+    "name_zh": "亚空瘴气",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "death_thirteen": {
+    "name_en": "Death Thirteen",
+    "name_zh": "死神13",
+    "level": "A",
+    "source": "jojowiki name_ja"
+  },
+  "geb": {
+    "name_en": "Geb",
+    "name_zh": "盖布神",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "high_priestess": {
+    "name_en": "High Priestess",
+    "name_zh": "女教皇",
+    "level": "A",
+    "source": "jojowiki name_ja"
+  },
+  "horus": {
+    "name_en": "Horus",
+    "name_zh": "霍尔斯神",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "judgement": {
+    "name_en": "Judgement",
+    "name_zh": "审判",
+    "level": "C",
+    "source": "jojogh.jojo6.com",
+    "name_ja_official": "審判",
+    "_note": "官方 name_ja 是日文汉字写法（審判），用户多用简体（审判），两者都收录；繁体/日文形另存aliases",
+    "_excluded_from_matching": true
+  },
+  "khnum": {
+    "name_en": "Khnum",
+    "name_zh": "库努姆神",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "osiris": {
+    "name_en": "Osiris",
+    "name_zh": "奥西里斯",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "sethan": {
+    "name_en": "Sethan",
+    "name_zh": "瑟多神",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "tenore_sax": {
+    "name_en": "Tenore Sax",
+    "name_zh": "迪那·塞克斯",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "tohth": {
+    "name_en": "Tohth",
+    "name_zh": "托托神",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "dark_blue_moon": {
+    "name_en": "Dark Blue Moon",
+    "name_zh": "暗青之月",
+    "level": "C",
+    "source": "jojogh.jojo6.com",
+    "name_ja_official": "暗青の月",
+    "_note": "官方 name_ja 是日文汉字写法（暗青の月），用户多用简体（暗青之月），两者都收录；繁体/日文形另存aliases"
+  },
+  "emperor": {
+    "name_en": "Emperor",
+    "name_zh": "皇帝",
+    "level": "A",
+    "source": "jojowiki name_ja"
+  },
+  "ebony_devil": {
+    "name_en": "Ebony Devil",
+    "name_zh": "悪魔",
+    "level": "A",
+    "source": "jojowiki name_ja"
+  },
+  "empress": {
+    "name_en": "Empress",
+    "name_zh": "女帝",
+    "level": "A",
+    "source": "jojowiki name_ja"
+  },
+  "hanged_man": {
+    "name_en": "Hanged Man",
+    "name_zh": "吊られた男",
+    "level": "A",
+    "source": "jojowiki name_ja"
+  },
+  "hermit_purple": {
+    "name_en": "Hermit Purple",
+    "name_zh": "隐者之紫",
+    "level": "C",
+    "source": "jojogh.jojo6.com",
+    "name_ja_official": "隠者の紫",
+    "_note": "官方 name_ja 是日文汉字写法（隠者の紫），用户多用简体（隐者之紫），两者都收录；繁体/日文形另存aliases"
+  },
+  "hierophant_green": {
+    "name_en": "Hierophant Green",
+    "name_zh": "绿之法皇",
+    "level": "C",
+    "source": "jojogh.jojo6.com",
+    "name_ja_official": "法皇の緑",
+    "_note": "官方 name_ja 是日文汉字写法（法皇の緑），用户多用简体（绿之法皇），两者都收录；繁体/日文形另存aliases"
+  },
+  "justice": {
+    "name_en": "Justice",
+    "name_zh": "正義",
+    "level": "A",
+    "source": "jojowiki name_ja"
+  },
+  "lovers": {
+    "name_en": "Lovers",
+    "name_zh": "恋人",
+    "level": "A",
+    "source": "jojowiki name_ja"
+  },
+  "magician_s_red": {
+    "name_en": "Magician's Red",
+    "name_zh": "红色魔术师",
+    "level": "C",
+    "source": "jojogh.jojo6.com",
+    "name_ja_official": "魔術師の赤",
+    "_note": "官方 name_ja 是日文汉字写法（魔術師の赤），用户多用简体（红色魔术师），两者都收录；繁体/日文形另存aliases"
+  },
+  "silver_chariot": {
+    "name_en": "Silver Chariot",
+    "name_zh": "银色战车",
+    "level": "C",
+    "source": "jojogh.jojo6.com",
+    "name_ja_official": "銀の戦車",
+    "_note": "官方 name_ja 是日文汉字写法（銀の戦車），用户多用简体（银色战车），两者都收录；繁体/日文形另存aliases"
+  },
+  "star_platinum": {
+    "name_en": "Star Platinum",
+    "name_zh": "白金之星",
+    "level": "C",
+    "source": "jojogh.jojo6.com",
+    "name_ja_official": "星の白金",
+    "_note": "官方 name_ja 是日文汉字写法（星の白金），用户多用简体（白金之星），两者都收录；繁体/日文形另存aliases"
+  },
+  "strength": {
+    "name_en": "Strength",
+    "name_zh": "力量",
+    "level": "C",
+    "source": "jojogh.jojo6.com",
+    "name_ja_official_single": "力",
+    "_note": "jojowiki 的 name_ja 括号是日文汉字直译（'力'），但中文圈通行译名是'力量'；单字名会误匹配（M14 实测），故采用后者"
+  },
+  "sun": {
+    "name_en": "Sun",
+    "name_zh": "太陽",
+    "level": "A",
+    "source": "jojowiki name_ja"
+  },
+  "the_fool": {
+    "name_en": "The Fool",
+    "name_zh": "愚者",
+    "level": "A",
+    "source": "jojowiki name_ja"
+  },
+  "the_world": {
+    "name_en": "The World",
+    "name_zh": "世界",
+    "level": "A",
+    "source": "jojowiki name_ja"
+  },
+  "tower_of_gray": {
+    "name_en": "Tower of Gray",
+    "name_zh": "灰塔",
+    "level": "C",
+    "source": "jojogh.jojo6.com",
+    "name_ja_official": "灰の塔",
+    "_note": "官方 name_ja 是日文汉字写法（灰の塔），用户多用简体（灰塔），两者都收录；繁体/日文形另存aliases"
+  },
+  "wheel_of_fortune": {
+    "name_en": "Wheel of Fortune",
+    "name_zh": "命运的车轮",
+    "level": "C",
+    "source": "jojogh.jojo6.com",
+    "name_ja_official": "運命の車輪",
+    "_note": "官方 name_ja 是日文汉字写法（運命の車輪），用户多用简体（命运的车轮），两者都收录；繁体/日文形另存aliases"
+  },
+  "yellow_temperance": {
+    "name_en": "Yellow Temperance",
+    "name_zh": "黄色节制",
+    "level": "C",
+    "source": "jojogh.jojo6.com",
+    "name_ja_official": "黄の節制",
+    "_note": "官方 name_ja 是日文汉字写法（黄の節制），用户多用简体（黄色节制），两者都收录；繁体/日文形另存aliases"
+  },
+  "aqua_necklace": {
+    "name_en": "Aqua Necklace",
+    "name_zh": "银水链",
+    "level": "C",
+    "source": "jojogh.jojo6.com",
+    "name_ja_official": "水の首飾り",
+    "_note": "官方 name_ja 是日文汉字写法（水の首飾り），用户多用简体（银水链），两者都收录；繁体/日文形另存aliases"
+  },
+  "atom_heart_father": {
+    "name_en": "Atom Heart Father",
+    "name_zh": "破碎的慈父心",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "bad_company": {
+    "name_en": "Bad Company",
+    "name_zh": "极恶中队",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "boy_ii_man": {
+    "name_en": "Boy II Man",
+    "name_zh": "猜拳小子",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "cheap_trick": {
+    "name_en": "Cheap Trick",
+    "name_zh": "廉价魔术",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "cinderella": {
+    "name_en": "Cinderella",
+    "name_zh": "灰姑娘",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "crazy_diamond": {
+    "name_en": "Crazy Diamond",
+    "name_zh": "疯狂钻石",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "enigma": {
+    "name_en": "Enigma",
+    "name_zh": "摺纸师",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "earth_wind_and_fire": {
+    "name_en": "Earth Wind and Fire",
+    "name_zh": "大地·风和火",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "harvest": {
+    "name_en": "Harvest",
+    "name_zh": "钱宝宝",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "heaven_s_door": {
+    "name_en": "Heaven's Door",
+    "name_zh": "天堂之门",
+    "level": "C",
+    "source": "jojogh.jojo6.com",
+    "name_ja_official": "天国への扉",
+    "_note": "官方 name_ja 是日文汉字写法（天国への扉），用户多用简体（天堂之门），两者都收录；繁体/日文形另存aliases"
+  },
+  "highway_star": {
+    "name_en": "Highway Star",
+    "name_zh": "高速之星",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "killer_queen": {
+    "name_en": "Killer Queen",
+    "name_zh": "皇后杀手",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "sheer_heart_attack": {
+    "name_en": "Sheer Heart Attack",
+    "name_zh": "穿心攻击",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "bites_the_dust": {
+    "name_en": "Bites the Dust",
+    "name_zh": "負けて死ね",
+    "level": "A",
+    "source": "jojowiki name_ja"
+  },
+  "love_deluxe": {
+    "name_en": "Love Deluxe",
+    "name_zh": "紫色恋人",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "pearl_jam": {
+    "name_en": "Pearl Jam",
+    "name_zh": "珍珠果酱",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "ratt": {
+    "name_en": "Ratt",
+    "name_zh": "虫眼",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "red_hot_chili_pepper": {
+    "name_en": "Red Hot Chili Pepper",
+    "name_zh": "辛红辣椒",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "super_fly": {
+    "name_en": "Super Fly",
+    "name_zh": "超能平底锅",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "surface": {
+    "name_en": "Surface",
+    "name_zh": "うわっ面",
+    "level": "A",
+    "source": "jojowiki name_ja"
+  },
+  "the_lock": {
+    "name_en": "The Lock",
+    "name_zh": "心锁",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "the_hand": {
+    "name_en": "The Hand",
+    "name_zh": "轰炸空间",
+    "level": "C",
+    "source": "jojogh.jojo6.com",
+    "name_ja_official_single": "手",
+    "_note": "jojowiki 的 name_ja 括号是日文汉字直译（'手'），但中文圈通行译名是'轰炸空间'；单字名会误匹配（M14 实测），故采用后者"
+  },
+  "stray_cat": {
+    "name_en": "Stray Cat",
+    "name_zh": "猫草",
+    "level": "A",
+    "source": "jojowiki name_ja"
+  },
+  "black_sabbath": {
+    "name_en": "Black Sabbath",
+    "name_zh": "黑色安息日",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "baby_face": {
+    "name_en": "Baby Face",
+    "name_zh": "婴儿面孔",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "gold_experience": {
+    "name_en": "Gold Experience",
+    "name_zh": "黄金体验",
+    "level": "C",
+    "source": "jojogh.jojo6.com",
+    "name_ja_official": "黄金体験",
+    "_note": "官方 name_ja 是日文汉字写法（黄金体験），用户多用简体（黄金体验），两者都收录；繁体/日文形另存aliases"
+  },
+  "sticky_fingers": {
+    "name_en": "Sticky Fingers",
+    "name_zh": "万能手指",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "metallica": {
+    "name_en": "Metallica",
+    "name_zh": "金属制品",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "purple_haze": {
+    "name_en": "Purple Haze",
+    "name_zh": "紫色烟雾",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "moody_blues": {
+    "name_en": "Moody Blues",
+    "name_zh": "蓝色忧郁",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "sex_pistols": {
+    "name_en": "Sex Pistols",
+    "name_zh": "性感手枪",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "the_grateful_dead": {
+    "name_en": "The Grateful Dead",
+    "name_zh": "幸福死亡",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "aerosmith": {
+    "name_en": "Aerosmith",
+    "name_zh": "空中狙击手",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "beach_boy": {
+    "name_en": "Beach Boy",
+    "name_zh": "海滩男孩",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "man_in_the_mirror": {
+    "name_en": "Man in the Mirror",
+    "name_zh": "镜中人",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "chariot_requiem": {
+    "name_en": "Chariot Requiem",
+    "name_zh": "战车镇魂歌",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "clash": {
+    "name_en": "Clash",
+    "name_zh": "冲击",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "gold_experience_requiem": {
+    "name_en": "Gold Experience Requiem",
+    "name_zh": "黄金体验·镇魂歌",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "green_day": {
+    "name_en": "Green Day",
+    "name_zh": "绿色末日",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "king_crimson": {
+    "name_en": "King Crimson",
+    "name_zh": "墓碑銘",
+    "level": "A",
+    "source": "jojowiki name_ja"
+  },
+  "kraft_work": {
+    "name_en": "Kraft Work",
+    "name_zh": "工匠",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "little_feet": {
+    "name_en": "Little Feet",
+    "name_zh": "小脚",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "mr_president": {
+    "name_en": "Mr.President",
+    "name_zh": "乌龟",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "notorious_b_i_g": {
+    "name_en": "Notorious B.I.G",
+    "name_zh": "臭名昭著",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "oasis": {
+    "name_en": "Oasis",
+    "name_zh": "沙漠绿洲",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "rolling_stones": {
+    "name_en": "Rolling Stones",
+    "name_zh": "命运之石",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "soft_machine": {
+    "name_en": "Soft Machine",
+    "name_zh": "柔软机器",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "spice_girl": {
+    "name_en": "Spice Girl",
+    "name_zh": "辣妹",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "talking_head": {
+    "name_en": "Talking Head",
+    "name_zh": "谈话头脑",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "white_album": {
+    "name_en": "White Album",
+    "name_zh": "白色相册",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "whitesnake": {
+    "name_en": "Whitesnake",
+    "name_zh": "白蛇",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "c_moon": {
+    "name_en": "C-MOON",
+    "name_zh": "新月",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "jail_house_lock": {
+    "name_en": "Jail House Lock",
+    "name_zh": "恶魔枷锁",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "stone_free": {
+    "name_en": "Stone Free",
+    "name_zh": "自由之石",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "goo_goo_dolls": {
+    "name_en": "Goo Goo Dolls",
+    "name_zh": "变化人偶",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "under_world": {
+    "name_en": "Under World",
+    "name_zh": "地底世界",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "bohemian_rhapsody": {
+    "name_en": "Bohemian Rhapsody",
+    "name_zh": "波西米亚狂想曲",
+    "level": "C",
+    "source": "jojogh.jojo6.com",
+    "name_ja_official": "自由人の狂想曲",
+    "_note": "官方 name_ja 是日文汉字写法（自由人の狂想曲），用户多用简体（波西米亚狂想曲），两者都收录；繁体/日文形另存aliases"
+  },
+  "burning_down_the_house": {
+    "name_en": "Burning Down the House",
+    "name_zh": "幽灵房间",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "diver_down": {
+    "name_en": "Diver Down",
+    "name_zh": "潜伏者",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "dragon_s_dream": {
+    "name_en": "Dragon's Dream",
+    "name_zh": "龙之梦",
+    "level": "C",
+    "source": "jojogh.jojo6.com",
+    "name_ja_official": "龍の夢",
+    "_note": "官方 name_ja 是日文汉字写法（龍の夢），用户多用简体（龙之梦），两者都收录；繁体/日文形另存aliases"
+  },
+  "foo_fighters": {
+    "name_en": "Foo Fighters",
+    "name_zh": "无名斗士",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "green_green_grass_of_home": {
+    "name_en": "Green, Green Grass of Home",
+    "name_zh": "绿草之家",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "highway_to_hell": {
+    "name_en": "Highway to Hell",
+    "name_zh": "地狱高速路",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "kiss": {
+    "name_en": "Kiss",
+    "name_zh": "亲吻",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "jumpin_jack_flash": {
+    "name_en": "Jumpin' Jack Flash",
+    "name_zh": "旋转闪光",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "limp_bizkit": {
+    "name_en": "Limp Bizkit",
+    "name_zh": "圆舞黑鹰",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "made_in_heaven": {
+    "name_en": "Made in Heaven",
+    "name_zh": "天堂制造",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "manhattan_transfer": {
+    "name_en": "Manhattan Transfer",
+    "name_zh": "曼哈顿转播站",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "marilyn_manson": {
+    "name_en": "Marilyn Manson",
+    "name_zh": "追债人玛丽莲",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "planet_waves": {
+    "name_en": "Planet Waves",
+    "name_zh": "行星波导",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "survivor": {
+    "name_en": "Survivor",
+    "name_zh": "生存",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "weather_report": {
+    "name_en": "Weather Report",
+    "name_zh": "天气预报",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "yo_yo_ma": {
+    "name_en": "Yo-Yo Ma",
+    "name_zh": "陀螺",
+    "level": "C",
+    "source": "jojogh.jojo6.com"
+  },
+  "20th_century_boy": {
+    "name_en": "20th Century BOY",
+    "name_zh": "20世纪少年",
+    "level": "B",
+    "source": "bilibili+萌娘百科"
+  },
+  "ball_breaker": {
+    "name_en": "Ball Breaker",
+    "name_zh": "铁球破坏者",
+    "level": "B",
+    "source": "bilibili+萌娘百科"
+  },
+  "boku_no_rhythm_wo_kiitekure": {
+    "name_en": "Boku no Rhythm wo Kiitekure",
+    "name_zh": "聆听我的旋律",
+    "level": "B",
+    "source": "bilibili+萌娘百科"
+  },
+  "chocolate_disco": {
+    "name_en": "Chocolate Disco",
+    "name_zh": "巧克力迪斯科",
+    "level": "B",
+    "source": "bilibili+萌娘百科"
+  },
+  "civil_war": {
+    "name_en": "Civil War",
+    "name_zh": "南北战争",
+    "level": "B",
+    "source": "bilibili+萌娘百科"
+  },
+  "cream_starter": {
+    "name_en": "Cream Starter",
+    "name_zh": "护霜旅行者",
+    "level": "B",
+    "source": "bilibili+萌娘百科"
+  },
+  "dirty_deeds_done_dirt_cheap": {
+    "name_en": "Dirty Deeds Done Dirt Cheap",
+    "name_zh": "恶行易施",
+    "level": "B",
+    "source": "bilibili+萌娘百科"
+  },
+  "d4c_love_train": {
+    "name_en": "D4C Love Train",
+    "name_zh": "D4C爱的列车",
+    "level": "B",
+    "source": "bilibili+萌娘百科"
+  },
+  "mandom": {
+    "name_en": "Mandom",
+    "name_zh": "男人领域",
+    "level": "B",
+    "source": "bilibili+萌娘百科"
+  },
+  "scary_monsters": {
+    "name_en": "Scary Monsters",
+    "name_zh": "骇人恶兽",
+    "level": "B",
+    "source": "bilibili+萌娘百科"
+  },
+  "sugar_mountain": {
+    "name_en": "Sugar Mountain",
+    "name_zh": "香糖山之泉",
+    "level": "B",
+    "source": "bilibili+萌娘百科"
+  },
+  "tatoo_you": {
+    "name_en": "TATOO YOU!",
+    "name_zh": "为你纹身",
+    "level": "B",
+    "source": "bilibili+萌娘百科"
+  },
+  "tomb_of_the_boom_1_2_3": {
+    "name_en": "Tomb of the Boom 1 2 3",
+    "name_zh": "盛世之墓",
+    "level": "B",
+    "source": "bilibili+萌娘百科"
+  },
+  "tubular_bells": {
+    "name_en": "Tubular Bells",
+    "name_zh": "管钟",
+    "level": "B",
+    "source": "bilibili+萌娘百科"
+  },
+  "tusk_act1": {
+    "name_en": "Tusk ACT1",
+    "name_zh": "牙ACT1",
+    "level": "B",
+    "source": "bilibili+萌娘百科"
+  },
+  "tusk_act2": {
+    "name_en": "Tusk ACT2",
+    "name_zh": "牙ACT2",
+    "level": "B",
+    "source": "bilibili+萌娘百科"
+  },
+  "tusk_act3": {
+    "name_en": "Tusk ACT3",
+    "name_zh": "牙ACT3",
+    "level": "B",
+    "source": "bilibili+萌娘百科"
+  },
+  "tusk_act4": {
+    "name_en": "Tusk ACT4",
+    "name_zh": "牙ACT4",
+    "level": "B",
+    "source": "bilibili+萌娘百科"
+  },
+  "wired": {
+    "name_en": "Wired",
+    "name_zh": "连线",
+    "level": "B",
+    "source": "bilibili+萌娘百科"
+  },
+  "oh_lonesome_me": {
+    "name_en": "Oh! Lonesome Me",
+    "name_zh": "喔!寂寞的我",
+    "level": "C",
+    "source": "bilibili+萌娘百科（异译并列）",
+    "name_zh_variants": [
+      "喔!寂寞的我",
+      "哦!孤独的我"
+    ]
+  },
+  "in_a_silent_way": {
+    "name_en": "In a Silent Way",
+    "name_zh": "寂静之道",
+    "level": "C",
+    "source": "bilibili+萌娘百科（异译并列）",
+    "name_zh_variants": [
+      "寂静之道",
+      "沉默之道"
+    ]
+  },
+  "catch_the_rainbow": {
+    "name_en": "Catch the Rainbow",
+    "name_zh": "触碰彩虹",
+    "level": "C",
+    "source": "bilibili+萌娘百科（异译并列）",
+    "name_zh_variants": [
+      "触碰彩虹",
+      "彩虹捕手"
+    ]
+  },
+  "ticket_to_ride": {
+    "name_en": "Ticket to Ride",
+    "name_zh": "泪之乘车券",
+    "level": "C",
+    "source": "bilibili+萌娘百科（异译并列）",
+    "name_zh_variants": [
+      "泪之乘车券",
+      "泪之乘车劵"
+    ]
+  },
+  "hey_ya": {
+    "name_en": "Hey Ya!",
+    "name_zh": "嘿呀!",
+    "level": "C",
+    "source": "bilibili+萌娘百科（异译并列）",
+    "name_zh_variants": [
+      "嘿呀!",
+      "嘿呀"
+    ]
+  }
+}

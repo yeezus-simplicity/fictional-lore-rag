@@ -500,6 +500,18 @@ class Router:
         # 引号内的实体最可靠
         quoted = re.findall(r"[\"'“”]([^\"'“”]{2,40})[\"'“”]", q)
 
+        # ★★ M15：中文实体（M14 加了中文名支持，但路由没跟上 —— 副作用）
+        #   实测：「天堂制造是什么」「黄金体验是什么」全被 abstain，
+        #   因为 _extract_entities 只抽英文专有名词 → 中文名问句cands=[]。
+        #   → 这里把「在已知中文别名里的片段」也当候选实体。
+        zh_hits: list[str] = []
+        for name in self.known_all or ():
+            if len(name) >= 2 and re.search(r"[\u4e00-\u9fff]", name) \
+                    and name in q:
+                zh_hits.append(name)
+        # 长名优先（「黄金体验」应排在「黄金」前面）
+        zh_hits.sort(key=len, reverse=True)
+
         # 专有名词（混合大小写）
         proper = re.findall(
             r"\b([A-Z][a-z][A-Za-z0-9'’\-]*"
@@ -520,6 +532,10 @@ class Router:
                 continue
             if len(c) >= 3 and re.search(r"[A-Za-z]", c):
                 out.append(c)
+        # ★★ 中文实体优先放最前（M15）
+        #   路由后续逻辑会用 candidates 判断「有没有已知实体」，
+        #   中文名问句若不进来，会被领域判据误判为「不相关」而 abstain。
+        out = zh_hits + out
         # 去重保序
         seen = set()
         return [x for x in out if not (x in seen or seen.add(x))]

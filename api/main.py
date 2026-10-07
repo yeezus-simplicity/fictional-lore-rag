@@ -182,6 +182,9 @@ def _init_state(use_vector: bool = True,
     STATE["vector_ok"] = vector_ok
     # ★ M12：记录索引配置，health 与界面都要读它
     STATE["chunk_merge_target"] = chunk_merge_target
+    # ★ M15：替身 → 别名列表（模糊候选提示用）
+    #   正常路径已在上面设过；异常降级时兜底为空 dict（不崩）
+    STATE.setdefault("id2alias", {})
 
     # --- 生成器（M6/M11）★ 延迟加载 ---
     #   不在这里 new：加载模型要 ~20 秒 + 3GB 显存，
@@ -289,6 +292,9 @@ class QueryResponse(BaseModel):
         None, description="生成层详情：模型 / token / 延迟")
     faithfulness: Optional[dict] = Field(
         None, description="★ 机械核对的忠实度（不依赖 LLM 判分）")
+    # ★ M15：模糊候选（未精确匹配到替身名时给出的提示，不代替答案）
+    suggestions: Optional[list] = Field(
+        None, description="模糊候选：「你是不是想问 X？」")
 
 
 class HealthResponse(BaseModel):
@@ -485,6 +491,20 @@ def query(
     warning: Optional[str] = None
     confidence: Optional[float] = None
 
+    # ★★ M15：模糊候选（只在**没有精确匹配**时给，且只作提示）
+    #   评测结论（evaluation/eval_fuzzy_alias.py）：
+    #     阈值 2 → 正例 100% 但负例误匹配 11.8%（不可用）
+    #     阈值 3 → 负例 0% 但正例仅 44%
+    #   → 任何阈值都做不到「既好用又安全」
+    #   → 所以**不让它决定答案**，只提示「你是不是想问 X」
+    fuzzy_suggestions: list[dict] = []
+    if STATE.get("id2alias") and _guess_stand(q, STATE) is None:
+        try:
+            from aliases import suggest_stands
+            fuzzy_suggestions = suggest_stands(q, STATE["id2alias"])
+        except Exception:
+            fuzzy_suggestions = []
+
     # ---------- abstain ----------
     if route == "abstain":
         answer = {
@@ -617,6 +637,8 @@ def query(
         "mode": mode,
         "generation": generation,
         "faithfulness": faithfulness,
+        # ★ M15：模糊候选（★ 只提示，不代替答案）
+        "suggestions": fuzzy_suggestions or None,
     }
 
 

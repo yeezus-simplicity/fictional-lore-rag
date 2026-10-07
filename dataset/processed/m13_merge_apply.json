@@ -1,0 +1,127 @@
+{
+  "_note": "M13：把 M9 推荐的 512块长应用到主索引（配置层）的端到端实测",
+  "_method": {
+    "retrieval": "BM25（--no-vector）",
+    "n_queries": 4,
+    "warmup": "先跑一题预热模型（★ 第一轮没预热，算出错误的 +4%）",
+    "metric": "generation.elapsed_ms（口径与 M9 的 avg_gen_ms 一致）",
+    "compare": "python -m ... 起子进程服务，两组独立端口"
+  },
+  "base_no_merge": {
+    "chunk_merge_target": null,
+    "n_chunks": 2407,
+    "avg_gen_ms": 6620.0,
+    "avg_prompt_tokens": 441.0,
+    "avg_gen_tokens": 72.0,
+    "avg_evidence_chars": 1233.0,
+    "records": [
+      {
+        "q": "Anubis 的外观形态方面有哪些描述？",
+        "gen_ms": 6223,
+        "prompt_tokens": 432,
+        "gen_tokens": 62,
+        "evidence_chars": 1096
+      },
+      {
+        "q": "Tusk 的形态与外观有哪些描述？",
+        "gen_ms": 6554,
+        "prompt_tokens": 523,
+        "gen_tokens": 75,
+        "evidence_chars": 1628
+      },
+      {
+        "q": "Star Platinum 的形态与外观有哪些描述？",
+        "gen_ms": 12484,
+        "prompt_tokens": 463,
+        "gen_tokens": 136,
+        "evidence_chars": 1385
+      },
+      {
+        "q": "Diver Boy 的外观有什么特点？",
+        "gen_ms": 1219,
+        "prompt_tokens": 347,
+        "gen_tokens": 13,
+        "evidence_chars": 824
+      }
+    ]
+  },
+  "merged_512": {
+    "chunk_merge_target": 512,
+    "n_chunks": 1986,
+    "avg_gen_ms": 10158.0,
+    "avg_prompt_tokens": 532.0,
+    "avg_gen_tokens": 103.0,
+    "avg_evidence_chars": 1623.0,
+    "records": [
+      {
+        "q": "Anubis 的外观形态方面有哪些描述？",
+        "gen_ms": 7673,
+        "prompt_tokens": 572,
+        "gen_tokens": 78,
+        "evidence_chars": 1652
+      },
+      {
+        "q": "Tusk 的形态与外观有哪些描述？",
+        "gen_ms": 15042,
+        "prompt_tokens": 550,
+        "gen_tokens": 152,
+        "evidence_chars": 1710
+      },
+      {
+        "q": "Star Platinum 的形态与外观有哪些描述？",
+        "gen_ms": 16406,
+        "prompt_tokens": 524,
+        "gen_tokens": 168,
+        "evidence_chars": 1665
+      },
+      {
+        "q": "Diver Boy 的外观有什么特点？",
+        "gen_ms": 1510,
+        "prompt_tokens": 484,
+        "gen_tokens": 13,
+        "evidence_chars": 1465
+      }
+    ]
+  },
+  "delta_pct": {
+    "gen_ms": 53.4,
+    "prompt_tokens": 20.6,
+    "gen_tokens": 43.1,
+    "evidence_chars": 31.6,
+    "n_chunks": -17.5
+  },
+  "cross_check_with_m9": {
+    "m9_latency_pct": 52.4,
+    "note": "★ 两次独立测量（不同检索配置、不同题集、不同时间）互相印证"
+  },
+  "hedging_mechanism_from_m9": {
+    "note": "★ M13 的 8 题样本太小抓不到，用 M9 的 30 题记录查清了机制",
+    "base_hedging": 15,
+    "merged_hedging": 9,
+    "both": 7,
+    "fixed_by_merge": 8,
+    "broken_by_merge": 2,
+    "newly_broken_questions": [
+      "Ebony Devil 的破坏力是几级？",
+      "Echoes (ACT3) 的速度是几级？"
+    ],
+    "conclusion": "★ 合并不是纯赚：修好 8 条、弄坏 2 条，净+6"
+  },
+  "self_correction": {
+    "first_round_pct": 4,
+    "why_wrong": [
+      "样本太小（8 题）且未预热 → 噪声往相反方向偏",
+      "口径混用：拿端到端 HTTP 延迟比 M9 的 avg_gen_ms"
+    ],
+    "correct_pct": 53.4,
+    "lesson": "★ 单次小样本测量不能用来推翻或确认另一个测量，只能质疑它"
+  },
+  "invariants": {
+    "n_base_ids_total": 2407,
+    "n_traceable": 2407,
+    "merged_ids_unique": true,
+    "merged_ids_conflict_with_base": false,
+    "eval_refs_total": 55,
+    "eval_refs_broken": 0
+  }
+}

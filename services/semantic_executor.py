@@ -23,14 +23,31 @@ PROC = ROOT / "dataset" / "processed"
 class SemanticExecutor:
     """语义检索执行器。懒加载索引（首次调用时才建向量索引）。"""
 
-    def __init__(self, use_vector: bool = True, verbose: bool = False):
+    def __init__(self,
+                 use_vector: bool = True,
+                 verbose: bool = False,
+                 chunk_merge_target: Optional[int] = None):
+        """
+        Args:
+            use_vector: 是否启用向量检索（False = 纯 BM25，秒级）
+            verbose: 打印诊断信息
+            chunk_merge_target:
+                ★ M12：语义块合并目标长度（字符）。
+                None / 0 → **不合并**（默认，保持 M6–M11 的历史行为）。
+                512     → 合并到 512（M9 实测推荐）。
+
+                为什么默认不合并：M6/M7/M9 的评测数据都是在
+                **不合并**的索引上跑出来的，改默认值会让历史结论不可复现。
+        """
         self.use_vector = use_vector
         self.verbose = verbose
+        self.chunk_merge_target = chunk_merge_target or None
         self._chunks: Optional[list] = None
         self._bm25 = None
         self._vec = None
         self._embedder = None
         self._chunk_map: Optional[dict] = None
+        self._src_index: Optional[dict] = None   # ★ 原始 id → 合并块
         self._loaded = False
 
     # ---------------------------------------------------------
@@ -40,11 +57,27 @@ class SemanticExecutor:
             return self._vec is not None
         self._loaded = True
         try:
-            self._chunks = json.loads(
-                (PROC / "text_chunks.json").read_text(encoding="utf-8"))
+            sys.path.insert(0, str(ROOT / "retrieval"))
+            from merging import build_chunks, index_stats
+            self._chunks = build_chunks(self.chunk_merge_target)
         except FileNotFoundError:
             print("[semantic] text_chunks.json 缺失，语义检索不可用")
             return False
+        except ImportError:
+            # 没有 merging 模块时退回原始行为（向后兼容）
+            self._chunks = json.loads(
+                (PROC / "text_chunks.json").read_text(encoding="utf-8"))
+
+        # ★ M12：记录合并统计与溯源索引
+        if self.chunk_merge_target:
+            st = index_stats(self._chunks)
+            print(f"[semantic] 块合并 {self.chunk_merge_target}："
+                  f"{st['n_chunks']} 块（均 {st['mean_chars']:.0f} 字，"
+                  f"{st['n_merged']} 个由多块合并）")
+            self._src_index = {}
+            for c in self._chunks:
+                for bid in c.get("base_chunk_ids", [c["chunk_id"]]):
+                    self._src_index[bid] = c
 
         self._chunk_map = {c["chunk_id"]: c for c in self._chunks}
         sys.path.insert(0, str(ROOT / "retrieval"))
@@ -63,13 +96,30 @@ class SemanticExecutor:
                 if self.verbose:
                     print(f"[semantic] 向量不可用（{self._embedder._load_error}）")
                 return False
-            self._vec = build_index(self._chunks, backend="dense",
-                                    cache_name="m3_bge_m3", verbose=self.verbose)
+            self._vec = build_index(
+                self._chunks, backend="dense",
+                # ★★ 缓存 key 必须含合并参数 ——
+                #   否则 512 模式会读到「不合并」的旧缓存，
+                #   或反过来（实测踩过：缓存是按 chunk_id 列表算的）
+                cache_name=(f"m3_bge_m3_merge{self.chunk_merge_target}"
+                            if self.chunk_merge_target else "m3_bge_m3"),
+                verbose=self.verbose)
             return True
         except Exception as e:
             if self.verbose:
                 print(f"[semantic] 向量索引构建失败：{type(e).__name__}: {e}")
             return False
+
+    def trace_to_base(self, chunk_id: int) -> list[int]:
+        """★ M12：把合并块的 id 展开成原始 chunk_id 列表。
+
+        界面上展示证据时用 —— 用户点开一条证据，
+        应该能看到它是由哪几个原始块合并来的。
+        """
+        c = self._chunk_map.get(chunk_id)
+        if not c:
+            return []
+        return c.get("base_chunk_ids", [chunk_id])
 
     # ---------------------------------------------------------
     def search(self, question: str, top_k: int = 5,
@@ -112,6 +162,12 @@ class SemanticExecutor:
                 "content": c.get("content"),
                 "retrieval_score": round(float(score), 4),
                 "source_url": c.get("source_url"),
+                # ★ M12：合并信息 —— 界面上显示「由 N 个原始块合并」
+                #   base_chunk_ids 让证据可回溯到原始块（见 trace_to_base）
+                "n_base_blocks": c.get("n_base_blocks", 1),
+                "base_chunk_ids": c.get("base_chunk_ids", [cid]),
+                "merged": bool(c.get("merged", False)),
+                "n_chars": c.get("n_chars", len(c.get("content", ""))),
             })
 
         meta = [{
@@ -119,6 +175,10 @@ class SemanticExecutor:
             "rrf_k": 30 if len(rankings) > 1 else None,
             "n_candidates": sum(len(r) for r in rankings),
             "vector_enabled": self._vec is not None,
+            # ★ M12：把当前索引配置写进 meta ——
+            #   界面要能显示「当前用的是什么索引」，否则用户无法判断结果差异
+            "chunk_merge_target": self.chunk_merge_target,
+            "n_chunks": len(self._chunks),
             "bm25_params": {"k1": 1.2, "b": 0.5},
         }]
         return evidence, meta

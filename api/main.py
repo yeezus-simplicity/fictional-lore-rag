@@ -53,8 +53,17 @@ from load_db import PG  # noqa: E402
 STATE: dict[str, Any] = {}
 
 
-def _init_state(use_vector: bool = True) -> None:
-    """启动时初始化：数据库 + 路由器 + 执行器。"""
+def _init_state(use_vector: bool = True,
+                chunk_merge_target: Optional[int] = None) -> None:
+    """启动时初始化：数据库 + 路由器 + 执行器。
+
+    Args:
+        use_vector: 是否启用向量检索
+        chunk_merge_target:
+            ★ M12：块合并目标（字符）。None/0 = 不合并（默认）。
+            512 = M9 实测推荐（空洞率 0.50 → 0.30，代价延迟 +52%）。
+            详见 retrieval/merging.py 的模块文档。
+    """
     t0 = time.time()
 
     # --- 数据库（★ 失败时降级，不阻断启动）---
@@ -130,11 +139,14 @@ def _init_state(use_vector: bool = True) -> None:
 
     # --- 语义执行器（M3 检索层）---
     from semantic_executor import SemanticExecutor
-    sem = SemanticExecutor(use_vector=use_vector, verbose=True)
+    sem = SemanticExecutor(use_vector=use_vector, verbose=True,
+                           chunk_merge_target=chunk_merge_target)
     t_sem = time.time()
     vector_ok = sem.load()
     STATE["semantic"] = sem
     STATE["vector_ok"] = vector_ok
+    # ★ M12：记录索引配置，health 与界面都要读它
+    STATE["chunk_merge_target"] = chunk_merge_target
 
     # --- 生成器（M6/M11）★ 延迟加载 ---
     #   不在这里 new：加载模型要 ~20 秒 + 3GB 显存，
@@ -177,7 +189,9 @@ async def lifespan(app: FastAPI):
     # ★ 直接用 `uvicorn api:app` 启动时不会走 main()，
     #   app.state.use_vector 未设置 → 用 getattr 兜底
     use_vector = getattr(app.state, "use_vector", True)
-    _init_state(use_vector=use_vector)
+    # ★ M12：块合并配置（None = 不合并，保持 M6–M11 的历史行为）
+    chunk_merge = getattr(app.state, "chunk_merge_target", None)
+    _init_state(use_vector=use_vector, chunk_merge_target=chunk_merge)
     yield
     conn = STATE.get("conn")
     if conn:
@@ -205,6 +219,15 @@ class Evidence(BaseModel):
     content: Optional[str] = None
     source_url: Optional[str] = None
     note: Optional[str] = None
+    # ★ M12：合并块溯源信息
+    #   （本模型是白名单模式，未声明的字段会被 FastAPI 过滤掉——
+    #     实测踩过：字段加了但响应里没有，就是这个原因）
+    n_base_blocks: int = Field(1, description="本证据由几个原始块合并而来")
+    base_chunk_ids: list[int] = Field(
+        default_factory=list,
+        description="★ 可回溯的原始 chunk_id 列表（合并块的来源）")
+    merged: bool = Field(False, description="是否为合并块")
+    n_chars: int = Field(0, description="证据字符数")
 
 
 class QueryResponse(BaseModel):
@@ -240,6 +263,9 @@ class HealthResponse(BaseModel):
     vector_enabled: bool
     resolution_stats: dict
     n_unresolved_conflicts: int
+    # ★ M12：把索引配置暴露出来 —— 用户要能确认「当前用的是哪套索引」
+    chunk_merge_target: Optional[int] = None
+    n_chunks: int = 0
 
 
 # ==================================================================
@@ -388,6 +414,10 @@ def health():
         "vector_enabled": STATE.get("vector_ok", False),
         "resolution_stats": STATE.get("resolutions", {}),
         "n_unresolved_conflicts": STATE.get("n_unresolved", -1),
+        # ★ M12：把索引配置暴露出来（用户要能确认「当前用的是哪套索引」）
+        "chunk_merge_target": STATE.get("chunk_merge_target"),
+        "n_chunks": len(STATE.get("semantic")._chunks)
+                     if STATE.get("semantic") else 0,
     }
 
 
@@ -751,15 +781,22 @@ def main() -> int:
     ap.add_argument("--no-vector", action="store_true",
                     help="不加载向量模型（纯 BM25，启动快）")
     ap.add_argument("--log-level", default="info")
+    ap.add_argument("--chunk-merge", type=int, default=None,
+                    metavar="N",
+                    help=("★ M12：把语义块合并到约 N 字符。"
+                          "512=M9 实测推荐（空洞率 0.50→0.30，"
+                          "代价是延迟 +52%%）。默认不合并。"))
     args = ap.parse_args()
 
     import uvicorn
     app.state.use_vector = not args.no_vector
+    app.state.chunk_merge_target = args.chunk_merge
 
     print("=" * 62)
     print("rag-kb 混合检索 API")
     print("=" * 62)
     print(f"  模式: {'BM25 + bge-m3' if not args.no_vector else '仅 BM25'}")
+    print(f"  索引: {f'语义块合并到 {args.chunk_merge} 字符' if args.chunk_merge else '原始语义块（2407）'}")
     print(f"  地址: http://{args.host}:{args.port}")
     print(f"  文档: http://{args.host}:{args.port}/docs")
     print("=" * 62)

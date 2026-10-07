@@ -326,6 +326,31 @@ def collect_m7() -> dict:
     }
 
 
+def collect_m13() -> dict:
+    """M13 块合并应用到主索引（配置层）。"""
+    d = _load("m13_merge_apply.json")
+    if not d:
+        return {"unavailable": True, "reason": "m13_merge_apply.json 未找到"}
+    a = d.get("base_no_merge") or {}
+    b = d.get("merged_512") or {}
+    return {
+        "n_queries": (d.get("_method") or {}).get("n_queries"),
+        "method": d.get("_method"),
+        "base": {k: a.get(k) for k in
+                 ("chunk_merge_target", "n_chunks", "avg_gen_ms",
+                  "avg_prompt_tokens", "avg_gen_tokens", "avg_evidence_chars")},
+        "merged_512": {k: b.get(k) for k in
+                       ("chunk_merge_target", "n_chunks", "avg_gen_ms",
+                        "avg_prompt_tokens", "avg_gen_tokens", "avg_evidence_chars")},
+        "delta_pct": d.get("delta_pct"),
+        "cross_check_with_m9": d.get("cross_check_with_m9"),
+        "hedging_mechanism": d.get("hedging_mechanism_from_m9"),
+        "self_correction": d.get("self_correction"),
+        "invariants": d.get("invariants"),
+        "_source_files": ["dataset/processed/m13_merge_apply.json"],
+    }
+
+
 def collect_m9() -> dict:
     """M9 索引应用验证（闭环 M7）。"""
     d = _load("m9_index_verify.json")
@@ -453,6 +478,12 @@ PUBLIC_NUMBERS = {
     "M9.空洞率_原始": ("M9", "base/hedging_rate", 0.5000),
     "M9.空洞率_512": ("M9", "merged_512/hedging_rate", 0.3000),
     "M9.矛盾率_512": ("M9", "merged_512/contradiction_rate", 0.0),
+    # ★ M13：这些数字已进 docs/M13索引应用.md，必须可校验
+    "M13.合并后块数": ("M13", "merged_512/n_chunks", 1986),
+    "M13.生成耗时增幅": ("M13", "delta_pct/gen_ms", 53.4),
+    "M13.prompt_token增幅": ("M13", "delta_pct/prompt_tokens", 20.6),
+    "M13.M9交叉验证": ("M13", "cross_check_with_m9/m9_latency_pct", 52.4),
+    "M13.评测引用失效": ("M13", "invariants/eval_refs_broken", 0),
 }
 
 
@@ -496,6 +527,7 @@ def main() -> int:
         "M4": collect_m4(), "M5": collect_m5(), "M6": collect_m6(),
         "M7": collect_m7(),
         "M9": collect_m9(),
+        "M13": collect_m13(),
     }
 
     issues = self_check(metrics) + check_public(metrics)
@@ -561,6 +593,21 @@ def main() -> int:
               f" / 延迟 {b.get('avg_gen_ms'):.0f} → {mg.get('avg_gen_ms'):.0f}ms"
               f"（+{m9.get('latency_increase_pct')}%）")
         print(f"     ★ 矛盾率两组均为 {mg.get('contradiction_rate')}（无编造）")
+
+    m13 = metrics.get("M13", {})
+    if m13.get("unavailable"):
+        print(f"  M13 索引应用 数据缺失（{m13.get('reason')}）")
+    else:
+        bl, mg2, dl = m13["base"], m13["merged_512"], m13["delta_pct"]
+        print(f"  M13 合并应用：{bl['n_chunks']} → {mg2['n_chunks']} 块"
+              f"（{dl['n_chunks']:+.0f}%）")
+        print(f"     生成耗时 {bl['avg_gen_ms']:.0f} → {mg2['avg_gen_ms']:.0f}ms"
+              f"（{dl['gen_ms']:+.0f}%）· prompt tok {dl['prompt_tokens']:+.0f}%")
+        xc = m13.get("cross_check_with_m9") or {}
+        print(f"     ★ 与 M9 交叉验证：{xc.get('m9_latency_pct')}% 互相印证")
+        sc = m13.get("self_correction") or {}
+        print(f"     ★ 我第一轮测成 {sc.get('first_round_pct'):+}%（样本小+未预热），"
+              f"第二轮才得到正确值 {sc.get('correct_pct')}%")
 
     if not args.check:
         OUT.write_text(json.dumps(metrics, ensure_ascii=False, indent=2),

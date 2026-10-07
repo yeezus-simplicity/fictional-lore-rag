@@ -48,13 +48,17 @@ def db_ready() -> bool:
         return sk.connect_ex(("127.0.0.1", 5432)) == 0
 
 
-def banner(port: int, with_vector: bool) -> None:
+def banner(port: int, with_vector: bool,
+           chunk_merge: Optional[int] = None) -> None:
     print("=" * 64)
     print("  rag-kb 混合检索服务")
     print("=" * 64)
     print()
     print(f"  网页界面   http://127.0.0.1:{port}")
     print(f"  接口文档   http://127.0.0.1:{port}/docs")
+    # ★ M12：把索引配置打在启动横幅里 —— 换索引是「换检索质量」，
+    #   用户必须一眼看出当前用的是哪套，否则结果变好/变差都无从归因
+    print(f"  索引       {f'语义块合并到 {chunk_merge} 字符（M9 推荐）' if chunk_merge else '原始语义块（2407）'}")
     print()
     print("-" * 64)
 
@@ -101,6 +105,10 @@ def main() -> int:
     ap.add_argument("--no-browser", action="store_true", help="不自动开浏览器")
     ap.add_argument("--with-vector", action="store_true",
                     help="启用向量检索（更准，但启动慢约 30 秒）")
+    ap.add_argument("--chunk-merge", type=int, default=None, metavar="N",
+                    help=("★ 语义块合并到约 N 字符。"
+                          "512=M9 实测推荐（空洞率 0.50→0.30，"
+                          "代价是延迟 +52%%）。默认不合并。"))
     args = ap.parse_args()
 
     port = args.port
@@ -125,7 +133,7 @@ def main() -> int:
         print("  或换端口：python start.py --port 8766")
         return 1
 
-    banner(port, args.with_vector)
+    banner(port, args.with_vector, args.chunk_merge)
 
     if not args.no_browser:
         open_browser_later(port)
@@ -134,6 +142,8 @@ def main() -> int:
            "--port", str(port)]
     if not args.with_vector:
         cmd.append("--no-vector")
+    if args.chunk_merge:
+        cmd += ["--chunk-merge", str(args.chunk_merge)]
 
     print("  正在启动…\n")
     try:

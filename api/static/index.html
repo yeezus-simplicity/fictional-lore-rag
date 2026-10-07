@@ -344,12 +344,18 @@ async function ping(){
   try{
     const r = await fetch(API+'/health', {cache:'no-store'});
     const d = await r.json();
+    // ★ M12：把索引配置显示出来 ——
+    //   换索引会直接改变检索质量，用户必须能一眼看出当前用的哪套，
+    //   否则「结果变好了 / 变差了」都无从归因。
+    const idx = (d.chunk_merge_target
+      ? `合并${d.chunk_merge_target}`
+      : `原始${d.n_chunks||'?'}`);
     if(d.status==='ok'){
       dot.className='ok'; dot.title='服务正常';
-      txt.textContent = `已连接${d.vector_enabled?'（含向量）':''}`;
+      txt.textContent = `已连接 · ${d.vector_enabled?'混合检索':'BM25'} · ${idx}`;
     }else{
       dot.className='wait'; dot.title='数据库降级中';
-      txt.textContent='已连接·降级';
+      txt.textContent=`已连接·降级 · ${idx}`;
     }
   }catch(e){
     dot.className='bad'; dot.title='服务未启动';
@@ -587,11 +593,17 @@ function renderEvidence(ev){
           ${e.stand_name?`<span>${esc(e.stand_name)}</span>`:''}
           ${e.chunk_type?`<span>${esc(e.chunk_type)}</span>`:''}
           ${e.chunk_id!=null?`<span>chunk#${e.chunk_id}</span>`:''}
+          ${e.merged?`<span style="color:var(--warn)">由 ${e.n_base_blocks} 个原始块合并</span>`:''}
+          ${(!e.merged && e.n_chars)?`<span>${e.n_chars} 字</span>`:''}
           ${e.table?`<span>表:${esc(e.table)}</span>`:''}
           ${e.field?`<span>字段:${esc(e.field)}</span>`:''}
           ${e.stand_id?`<span>${esc(e.stand_id)}</span>`:''}
         </div>
         ${e.content? `<div class="ev-text">${esc(e.content)}</div>`:''}
+        ${(e.merged && e.base_chunk_ids && e.base_chunk_ids.length)
+          ? `<div class="meta" style="margin-top:6px">
+               可回溯的原始块：${e.base_chunk_ids.map(x=>'#'+x).join('、')}
+             </div>` : ''}
       </div>`).join('')}
     </details>`;
 }

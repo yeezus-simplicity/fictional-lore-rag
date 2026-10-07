@@ -23,6 +23,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re# ★ M14：别名表要用它判断「含中文」
 import sys
 import time
 from contextlib import asynccontextmanager
@@ -119,6 +120,18 @@ def _init_state(use_vector: bool = True,
                        if s.get("part_name_en")}
     known_entities |= {s.get("owner_name") for s in stands
                        if s.get("owner_name")}
+    # ★ M14：把中文别名也纳入已知实体 ——
+    #   否则用户问「黄金体验…」时，路由器会认为「黄金体验」是编造的
+    #   → 触发拒答。
+    try:
+        from aliases import build_alias_table as _bat
+        _a2i, _i2a = _bat()
+        for _names in _i2a.values():
+            for _n in _names:
+                if _n and re.search(r"[\u4e00-\u9fff]", _n):
+                    known_entities.add(_n)
+    except Exception:
+        pass
     known_entities.discard(None)
     known_entities.discard("")
 
@@ -127,9 +140,31 @@ def _init_state(use_vector: bool = True,
     STATE["router"] = Router(known_stands=known_stands,
                              known_entities=known_entities)
     STATE["known"] = known_stands
-    # name → id 映射（_guess_stand 用）
-    STATE["name2id"] = {s["name_en"]: s["stand_id"]
-                        for s in stands if s.get("name_en")}
+    # ---- name → id 映射（★ M14：全量别名，不只英文名）----
+    #实测问题：用户问「黄金体验的能力」，而 name2id 只有英文名
+    #   → 认不出实体 → 兜底返回篇章统计表（完全答非所问）。
+    # → 这里用 aliases.build_alias_table()，含
+    #   英文名 + 日文名 + 中文别名（含简繁通配）。
+    #
+    # ★ 降级：别名表构建失败时退回「仅英文名」，不阻断启动。
+    name2id = {s["name_en"]: s["stand_id"]
+               for s in stands if s.get("name_en")}
+    try:
+        from aliases import build_alias_table
+        alias2id, id2alias = build_alias_table()
+        if alias2id:
+            # ★ 合并（别名表里也有英文名，这里以别名表为准更全）
+            name2id = {**name2id, **alias2id}
+            STATE["id2alias"] = id2alias
+            n_zh = sum(1 for v in id2alias.values()
+                       if any(re.search(r"[\u4e00-\u9fff]", x) for x in v))
+            print(f"[api] 别名表：{len(name2id)} 个名字 → "
+                  f"{len(set(name2id.values()))} 个替身"
+                  f"（其中 {n_zh} 个带中文名）")
+    except Exception as e:
+        print(f"[api] ⚠ 别名表构建失败（{type(e).__name__}），"
+              f"退回仅英文名：中文名提问会识别不了")
+    STATE["name2id"] = name2id
 
     # --- 结构化执行器（★ 需要 DB）---
     STATE["structured"] = None
@@ -711,14 +746,26 @@ def get_stats():
 # ------------------------------------------------------------------
 
 def _guess_stand(q: str, state: dict) -> Optional[str]:
-    """猜问句里的替身 id。
+    """猜问句里的替身 id（★ M14：走全量别名表）。
 
     ★ 长名优先：避免 "Tusk" 抢走 "Tusk ACT1"。
+    ★ 中文名也认：见 STATE["name2id"] 的构建（aliases.build_alias_table）。
     """
     name2id = state.get("name2id", {})
     for name in sorted(name2id, key=len, reverse=True):
         if name and name.lower() in q.lower():
             return name2id[name]
+    # ★ 兜底：用别名的简繁通配再试一次
+    #   （用户可能混用简繁，如「黄金体験」/「黄金体验」）
+    try:
+        from aliases import simplify_zh
+        q2 = simplify_zh(q)
+        if q2 != q:
+            for name in sorted(name2id, key=len, reverse=True):
+                if name and simplify_zh(name).lower() in q2.lower():
+                    return name2id[name]
+    except Exception:
+        pass
     return None
 
 
@@ -743,9 +790,41 @@ def _meta_to_dict(meta) -> Optional[dict]:
     return None
 
 
+# Evidence 模型的字段类型（用于入参校验）
+_EVIDENCE_STR_FIELDS = ("type", "table", "field", "stand_id", "chunk_type",
+                        "section", "content", "source_url", "note")
+
+
 def _valid_evidence(e: dict) -> bool:
-    """过滤掉缺必填字段的 evidence。"""
-    return isinstance(e, dict) and bool(e.get("type"))
+    """★ 过滤掉不合法的 evidence。
+
+    实测踩坑（本项目第三次在Evidence 白名单模型上栽）：
+      1. M13：`n_base_blocks` 没在模型里声明 → 响应里看不到
+      2. M14a：`note` 塞了 dict → Pydantic ValidationError → **500**
+      3. M14b：`_valid_evidence` 只查 `type` 存在，
+                类型不匹配的一路漏到 Pydantic 才炸
+
+    → 这里**在建Evidence 之前**就把类型不对的挡掉，
+      最多丢一条证据，不会让整个请求 500。
+    """
+    if not isinstance(e, dict) or not e.get("type"):
+        return False
+    # ★ 类型预检：字符串字段里塞了非字符串 → 直接拒
+    for k in _EVIDENCE_STR_FIELDS:
+        v = e.get(k)
+        if v is not None and not isinstance(v, str):
+            return False
+    # 数值字段
+    for k in ("part", "chunk_id", "n_base_blocks", "n_chars"):
+        v = e.get(k)
+        if v is not None and not isinstance(v, int):
+            return False
+    # 列表字段
+    for k in ("tables", "base_chunk_ids"):
+        v = e.get(k)
+        if v is not None and not isinstance(v, list):
+            return False
+    return True
 
 
 def _to_evidence(snippets: list[dict]) -> list[dict]:

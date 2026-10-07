@@ -408,6 +408,29 @@ class Router:
         r"(描述|介绍|概述|历史|性格|外观|来源|设定|怎么|如何|"
         r"运作|方面|是什么|招式|appearance|personality|history)", re.I)
 
+    # ★★ M14 新增：**领域相关性**前置判据
+    #   实测踩坑（用户报的 bug）：
+    #     Q「今天天气怎么样」→ SEMANTIC 里的万能词「怎么」命中
+    #                      → 路由到 semantic → 检索返回 Heaven's Door 的介绍
+    #   ★ 一个完全不相关的问句，却得到「看起来合理」的答案。
+    #
+    #   这里判「问句里有没有本数据集的实体或维度词」：
+    #     有 → 才允许走语义/结构化
+    #     没有 → 明确拒答，而不是硬答
+    #
+    #   ★ 注意不能只看「有没有已知实体」——
+    #     「Tusk 是什么颜色」有实体但没维度词，
+    #     而「破坏力最高的是哪个」没实体但有维度词，两者都要放行。
+    DOMAIN_HINT = re.compile(
+        # 六维维度词（中英）
+        r"(破坏力|速度|射程|持续力|精密性|成长性|能力|形态|"
+        r"power|speed|range|stamina|precision|growth|ability|form)|"
+        # 结构性问法
+        r"(几级|多少级|是多少|使用者|持有者|拥有|最高|最强|多少个|几个|"
+        r"排名|部|章节|who|whose|how many|rank)|"
+        # 数据集专有概念
+        r"(替身|stand|觉醒|能力值|必杀|替身能力)", re.I)
+
     def __init__(self, known_stands: Optional[set[str]] = None,
                  known_entities: Optional[set[str]] = None):
         """
@@ -522,6 +545,19 @@ class Router:
                     break
         signals["candidates"] = candidates[:4]
         signals["unknown_entity"] = unknown_hit
+
+        # ★★ M14 前置：领域相关性检查（放在所有意图判定之前）
+        #   没有领域信号 → 明确拒答，而不是强行匹配某个意图
+        has_domain = bool(self.DOMAIN_HINT.search(q))
+        signals["has_domain_hint"] = has_domain
+        # 已知实体也算领域信号（「Tusk 的外观」有实体）
+        has_entity = bool(candidates) and unknown_hit is None
+        if not has_domain and not has_entity:
+            return RouteDecision(
+                "abstain",
+                "问句里没有本数据集的实体或维度词"
+                "（本库只收录 JoJo 替身数据）→ 不做无依据的回答",
+                signals)
 
         if unknown_hit or fabricated_signal or oor_part or version_like:
             # 归因：说明是靠哪条规则判定的

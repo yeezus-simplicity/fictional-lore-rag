@@ -54,19 +54,53 @@ INTENT_EXTREME = re.compile(
     r"(最高|最大|最强|最低|最小|最弱|多少个|几个|排名|综合|总分|"
     r"所有替身|同时满足|达到)")
 INTENT_PART = re.compile(r"(第\s*(\d+)\s*部)")
+# ★ 篇章统计的**显式**触发词（M14 新增）
+#   原来没有这些词，靠 detect_intent 的兜底"碰巧"触发 ——
+#   代价是所有识别失败的问题都落到这里。
+INTENT_PART_COUNT = re.compile(
+    r"(每(部|个篇章|一部)|各(部|篇章)|分(部|篇章)|"
+    r"按(部|篇章)|部.*(统计|分布|数量)|"
+    r"(篇章|部分).*(统计|分布|多少个|几个))")
 
 
 def detect_intent(question: str) -> str:
-    """判断结构化子意图。"""
+    """判断结构化子意图。
+
+    ★★ 修正（M14 实测踩坑）：**`part_count` 不能当兜底默认值。**
+
+      原实现最后一行是 `return "part_count"`，
+      于是**任何匹配不上其他意图的问题**都会返回「按篇章分组的统计表」。
+
+      用户实测撞到的就是这个：
+          Q「黄金体验的能力」
+          A → Stardust Crusaders 33 个替身 / Diamond is Unbreakable 29 个…
+             （一张完全无关的统计表，且看起来"合理"）
+
+      根因链：
+        ① 中文名「黄金体验」不在 name2id（只收录英文名）→ 认不出实体
+        ② 「能力」不在 INTENT_FACT 的关键词里 → 也不匹配 fact
+        ③ → 落到兜底 part_count → 返回统计表
+
+      ★ 一个「看起来合理但完全无关」的答案，比明确报错有害得多——
+        用户会以为系统在回答他。
+
+      修正：
+        - 篇章统计改为**显式意图**（必须问「每部/各部/分部」才触发）
+        - 认不出实体时返回 `unknown`，由上层给出明确提示与建议
+    """
     if INTENT_FORMS.search(question):
         return "forms"
     if INTENT_OWNER.search(question):
         return "owner"
+    if INTENT_PART_COUNT.search(question):
+        # ★ 必须显式问「每部/各部/分部」才给篇章统计
+        return "part_count"
     if INTENT_EXTREME.search(question):
         return "extreme"
     if INTENT_FACT.search(question):
         return "fact"
-    return "part_count"
+    # ★ 兜底改为「认不出」，而不是篇章统计
+    return "unknown"
 
 
 def extract_dim(question: str) -> Optional[str]:
@@ -126,8 +160,50 @@ class StructuredExecutor:
             "owner": self._owner,
             "forms": self._forms,
             "part_count": self._part_count,
-        }.get(intent, self._fact)
+        }.get(intent)
+        # ★ M14：认不出意图时**明确说不知道**，不给无关答案
+        if fn is None:
+            return self._unknown(question, name2id)
         return fn(question, name2id)
+
+    # ---------------------------------------------------------
+    def _unknown(self, question: str, name2id: dict[str, str]):
+        """★ M14：意图与实体都认不出时的**明确**回应。
+
+        实测踩坑（用户报的 bug）：
+          Q「黄金体验的能力」
+          原实现 → 兜底 part_count → 返回一张
+                   「Stardust Crusaders 33 个替身…」的统计表
+                   —— **看起来合理但完全答非所问**，用户以为系统在回答他。
+
+        这里改成说清楚三件事：
+          1. 我没听懂（哪些词没认出来）
+          2. 你可以在数据里搜到哪些相近的名字
+          3. 怎么正确提问
+        """
+        sid = extract_stand_name(question, name2id)
+        hints: list[str] = []
+
+        # ★ 如果实体认不出但描述里像是在问某个替身，给替代建议
+        if not sid:
+            # 问句里的中文片段，尝试当别名查（服务层会用全量别名表）
+            for frag in re.findall(r"[\u4e00-\u9fff]{2,}", question):
+                if frag in name2id:
+                    hints.append(f"你想问的是「{frag}」（{name2id[frag]}）？")
+
+        # ★ 注意：Evidence.note 是 **str**（Pydantic 白名单模型，
+        #   塞 dict 会 ValidationError → 500。实测踩过）。
+        #   要传结构化信息得用 Evidence 上已声明的字段。
+        lines = ["未能理解这个问题。"]
+        if hints:
+            lines.append("、".join(hints))
+        lines.append("请用替身名提问，例如「Star Platinum 的能力是什么」"
+                     "或「Star Platinum 的破坏力是几级」。")
+        return None, [{
+            "type": "note",
+            "note": "".join(lines),
+            "stand_id": sid,          # 认出来了就带上（认不出是 None）
+        }]
 
     # ---------------------------------------------------------
     def _fact(self, question: str, name2id: dict[str, str]):

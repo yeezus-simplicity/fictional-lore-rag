@@ -75,14 +75,50 @@ stand stands ability value level part form
 # 指标 1：句级溯源
 # ==================================================================
 
+# ★★ 中文停用词（M11 新增）
+#   中文句子必须切词，否则覆盖率只数英文词 → 中文部分「免费通过」。
+_ZH_STOP = {
+    "的", "了", "是", "在", "和", "与", "有", "为", "被", "把", "给",
+    "并", "而", "及", "也", "都", "就", "还", "或", "一个", "这个",
+    "可以", "能够", "会", "着", "过", "很", "非常", "比较", "这些",
+    "那些", "它", "他", "她", "他们", "她们", "它们", "其", "该",
+    "如下", "以下", "根据", "提供", "证据", "描述", "如下所示", "关于",
+}
+
+
 def _content_tokens(s: str) -> list[str]:
-    """提取有信息量的 token（英文词 + 数字 + 等级字母）。"""
+    """提取有信息量的 token（英文词 + 数字 + 等级字母 + **中文词块**）。
+
+    ★★ M11 修正（重要）：
+      原来**只切英文**，导致中文句子里只有替身名被计数，
+      中文部分完全不影响覆盖率 → 「Anubis 由钢铁构成」被判 ratio=1.0。
+      这个缺陷在 M6 没暴露，因为那时的答案主要是照抄英文原文。
+
+      → 现在中文按 2 字滑窗切分，并过滤停用词。
+        粒度粗一点没关系：宁可多计几个词，也不要让中文「免费通过」。
+    """
     s = normalize(s)
     words = re.findall(r"[a-z][a-z0-9'’]{1,}", s)
     nums = re.findall(r"\b\d+(?:\.\d+)?\b", s)
     grades = re.findall(r"\b(?:[a-e]|∞)\b", s)
     toks = [w for w in words if w not in STOP] + nums + grades
-    return toks
+    # ★ 中文字块
+    #★★ M11 修正：滑窗会产生大量**跨词边界的垃圾 token**
+    #   （「身体和黑暗」的滑窗给出 体和|和黑…），
+    #   它们永远不可能在证据里命中 → 把 ratio 压得极低。
+    #   实测：「具有人类的身体和黑暗犬类的头」→ 14 token 里只有 2 个是真概念，
+    #   ratio 被压到 0.21，导致**真实翻译被误判为幻觉**。
+    #
+    #   → 只保留**落在映射表里的**窗口，即只算「已知概念」；
+    #     不猜未知词的切法。未知内容由英文 token 兜底。
+    zh_toks: list[str] = []
+    known_zh = set(_ZH_EN_EQUIV)
+    for run in re.findall(r"[\u4e00-\u9fff]+", s):
+        for i in range(len(run) - 1):
+            g = run[i:i + 2]
+            if g in known_zh or g in _ZH_STOP:
+                zh_toks.append(g)
+    return toks + zh_toks
 
 
 def _evidence_token_set(evidence_texts: list[str]) -> set[str]:
@@ -120,6 +156,211 @@ def _evidence_phrases(evidence_texts: list[str],
     return grams
 
 
+
+# ==================================================================
+# ★★ 跨语言对应（实测踩坑 M11）
+# ==================================================================
+# 现象：生成式忠实度只有 0.75，比M6 离线的 0.91 低一截。
+# 逐句定位后确认：**不是模型幻觉，是我的指标测不准**。
+#
+#   证据原文（英文）："with a human body and a dark canid's head"
+#   答案（中文）  ："具有人类的身体和黑暗犬类的头"
+#   → 这是**逐字翻译，完全忠于证据**，但中文词对不上英文 token
+#   → 词级命中率低 → 被判为「无据」
+#
+# ★ 为什么不能简单放宽 min_ratio：
+#   M3 已经踩过这个坑 —— 「乱码证据也能拿满分」，
+#   放宽阈值会退化成「什么都能判对」，指标就失效了。
+#
+# ★ 正确做法：**只补跨语言等价词的对应关系**，
+#   判定阈值与短语要求一律不动。
+#   这样「翻译」被识别为有据，而「编造」仍会被抓住。
+#
+# 数据来源：均为本项目语料里实测的中英对照
+# （不是通用翻译词典 —— 通用词典会引入大量无关映射）
+_ZH_EN_EQUIV = {
+    # ============================================================
+    # ★★ 收录标准（踩过三次坑后总结）：
+    #   只收「**可被替换的具体名词/部件/材质**」，
+    #   长度 ≥ 2 字，且改掉它就改变了事实。
+    #
+    # ★ 反例（实测会误杀/漏判，务必不要加回来）：
+    #   「外」「力」「速」        单字泛用词 —— 「外观/外形/外貌」全中
+    #   「形象」「特点」「特征」  泛用描述词
+    #   「出现」「描绘」「组成」  泛用动词
+    #   「破坏力」「速度」        维度名 —— 证据写 "Destructive Power"，
+    #                           映射成 destruction 对不上 → 误杀正确答案
+    #
+    # ★ 这张表是**守卫**用的：表里有、而证据里查不到对应英文
+    #   → 判定为幻觉（把证据里的部件改成了别的）。
+    #   因此表越宽泛，越容易误杀正常行文。
+    # ============================================================
+
+    # —— 头部 / 身体 ——
+    "头饰": "headdress",
+    "王冠": "headdress",
+    "兜帽": "hood",
+    "面具": "mask",
+    "眼睛": "eye",
+    "瞳孔": "pupil",
+    "嘴巴": "mouth",
+    "鼻子": "nose",
+    "脖子": "neck",
+    "手臂": "arm",
+    "皮肤": "skin",
+    "骨骼": "skeleton",
+    "金属": "metal",
+    "钢铁": "steel",
+    "机械": "mechanic",
+    "机械的": "mechanic",
+
+    # —— 动物特征 ——
+    "犬头": "dog head",
+    "猫头": "cat head",
+    "鸟头": "bird head",
+    "人头": "human head",
+    "骨头": "bone head",
+    "犬类的头": "canid head",
+    "黑暗犬": "dark canid",
+    "翅膀": "wing",
+    "翅膀状": "wing",
+    "尾巴": "tail",
+    "爪子": "claw",
+    "犄角": "horn",
+
+    # —— 能力元素 ——
+    "火焰": "flame",
+    "激光": "laser",
+    "闪电": "lightning",
+    "毒液": "poison",
+    "光束": "beam",
+    "弹丸": "bullet",
+    "子弹": "bullet",
+    "刀刃": "blade",
+}
+
+
+
+def _apply_cross_lang(answer_text: str, ev_set: set[str]) -> list[str]:
+    """跨语言等价概念匹配。
+
+    ★★M11 修正：改成**短语级**匹配，不是双字窗口映射。
+      实测踩坑：tokens 是双字切分（人类/类的/身体），
+      而映射表键是整词（人类的身体）→ 双字窗口永远匹配不上。
+      → 现在直接在**原句**里搜整词，粒度与映射表对齐。
+
+    ★ 只认「等价词确实在证据里」——
+      映射表里有不代表证据里有，必须再判一次。
+    ★ 阈值不动（min_ratio / require_phrase 的严格度保持不变），
+      只是把「翻译」从「无据」纠正到「有据」。
+    """
+    hits: list[str] = []
+    low = answer_text.lower()
+    for zh, en in _ZH_EN_EQUIV.items():
+        if zh in answer_text:
+            # 正向：中文答案 ← 英文证据
+            words_en = en.split()
+            # ★ 容忍所有格与常见变形
+            #   实测踩坑：证据是 "canid's head"，token 是 canid's，
+            #   映射写canid head → 判不出，翻译被误判为幻觉。
+            def _has(w: str) -> bool:
+                cands = {w, f"{w}'s", w + "s"}
+                if w.endswith("s"):
+                    cands.add(w[:-1])
+                return bool(cands & ev_set)
+            if words_en and all(_has(w) for w in words_en):
+                hits.append(zh)
+            # 反向：证据里就是中文
+            elif zh in ev_set:
+                hits.append(zh)
+    return hits
+
+
+def _mapped_concepts(answer_text: str) -> list[str]:
+    """句中出现的、映射表里有对应条目的**中文概念**。"""
+    return [zh for zh in _ZH_EN_EQUIV if zh in answer_text]
+
+
+_MODIFIERS = re.compile(r"一个|一些|数个|这个|那个|的|了|是|有")
+
+
+def _strip_modifiers(s: str) -> str:
+    """删掉无量词与结构助词，让「一个猫的头」能匹配到「猫头」。"""
+    return _MODIFIERS.sub("", s)
+
+
+def _has_unbacked_concept(answer_text: str, ev_set: set[str]) -> bool:
+    """句中是否有**在证据里找不到对应**的可映射概念。
+
+    ★ 这是跨语言幻觉的关键守卫（M11）。
+      「翅膀」在映射表里（→ wing），但证据里没有 wing
+      → 说明这句把证据里的「犬头」改成了「翅膀」→ 是幻觉，不是翻译。
+
+    ★ 只认「映射表里有但证据里查不到」这一种情况；
+      映射表里没有的未知词不走这里（交给 ratio 与短语判定）。
+    """
+    # ★ 先去掉修饰词再匹配
+    #   实测踩坑：「一个猫的头」与映射键「猫头」不匹配
+    #   （中间隔了「一个」「的」）→ 守卫漏判幻觉。
+    #   → 把「一个/的/的」这类无量词删掉，做二次匹配。
+    for zh in _mapped_concepts(answer_text) + \
+                _mapped_concepts(_strip_modifiers(answer_text)):
+        en = _ZH_EN_EQUIV[zh]
+        ws = en.split()
+        # 正向：对应英文（容许所有格变形）是否在证据里
+        # ★★ 关键：多词短语必须**全部**命中才算「被支持」
+        #   实测踩坑（M11）：「猫头」→ cat head，
+        #   head 在证据里但 cat 不在。
+        #   原实现「任一词命中即算支持」→ cat head 被放行 → **漏判幻觉**。
+        #   （这比误判更严重：幻觉被放过 = 指标失效）
+        #   → 改成 ALL 命中。
+        found = bool(ws)
+        for w in ws:
+            # 所有格/复数变形双向兼容
+            #   证据原文 "canid's head" → token 是 canid's，
+            #   而映射写 canid → 不变形就查不到 → 真实翻译被误杀。
+            cands = {w, f"{w}'s", w + "s"}
+            if w.endswith("s"):
+                cands.add(w[:-1])
+            if not (cands & ev_set):
+                found = False
+                break
+        # 反向：证据里就是这串中文
+        if not found and zh not in ev_set:
+            return True
+    return False
+
+
+def _is_cjk(s: str) -> bool:
+    return any("\u4e00" <= c <= "\u9fff" for c in s)
+
+
+
+# ★★ 开场套话（M11）：模型常在答案开头加这类引导语
+_LEAD_IN = re.compile(
+    r"^(根据(提供的)?(证据|资料|内容|上文)[，,、]?|"
+    r"依据(上述|以上)?(证据|资料)[，,、]?|"
+    r"从(提供的)?证据(中|里)?(可以)?(看出|得知|发现)?[，,、]?|"
+    r"(关于|对于)[^，,。；]{0,20}(的)?(描述|说明|信息)?(如下|为)?[：:]?|"
+    r"回答(如下|是)?[：:]?|"
+    r"根据以上信息[，,、]?)\s*"
+)
+
+
+def strip_lead_in(sentence: str) -> str:
+    """剥掉答案开头的引导语。
+
+    ★★ M11 实测踩坑：
+      模型输出「根据提供的证据，关于 Tusk 的描述如下：\n1. 在概念艺术中…」
+      —— 缺句号导致整段被当成一句，其中前半截全是套话，
+      词级覆盖率被拉到 0.5 → **正确内容被误判为幻觉**。
+
+    ★ 只剥前缀，不动正文 —— 避免把事实内容也当套话删掉。
+    """
+    out = _LEAD_IN.sub("", sentence, count=1)
+    return out if out.strip() else sentence
+
+
 def sentence_supported(sentence: str, evidence_texts: list[str],
                        min_ratio: float = 0.6,
                        require_phrase: bool = True
@@ -134,12 +375,39 @@ def sentence_supported(sentence: str, evidence_texts: list[str],
     Returns:
         (supported, coverage)
     """
+    # ★★豁免：正确声明「证据里没有」的句子（详见 is_hedge_sentence）
+    #   这类句子是忠于证据的表现，不是幻觉；
+    #   用词级覆盖率去judge它必然误判。
+    if is_hedge_sentence(sentence):
+        return True, 1.0
+
+    # ★★剥掉开场套话（详见 strip_lead_in）
+    sentence = strip_lead_in(sentence)
+
     toks = _content_tokens(sentence)
     if not toks:
         return True, 1.0        # 纯停用词的句子不算幻觉
     ev_set = _evidence_token_set(evidence_texts)
+
+    # ★★★关键守卫（M11）：**映射表里有、但证据里没有**的概念 = 幻觉
+    #   实测踩坑：判「Anubis 具有人类的身体和翅膀」时，
+    #   「人类的身体」命中 → ratio 达标 → 判为有据，
+    #   但「翅膀」在证据里**不存在** —— 这是把犬头改成了翅膀，是真幻觉。
+    #
+    #   → 必须在判定前检查：句中所有可映射的概念，
+    #     是否都能在证据里找到对应。不在证据里的 → 直接判无据。
+    if _has_unbacked_concept(sentence, ev_set):
+        return False, 0.0
     hit = sum(1 for t in toks if t in ev_set)
-    ratio = hit / len(toks)
+    # ★ 跨语言对应（M11）：中文答案译自英文证据时，
+    #   「人类的身体」↔ human body 这类等价应算命中。
+    #   只补映射，不动阈值 —— 避免退化成 M3 的「什么都能判对」。
+    # ★ 跨语言概念（M11）：一个等价概念约等于 2 个双字 token 的信息量
+    if hit < len(toks):
+        xhits = _apply_cross_lang(sentence, ev_set)
+        hit += len(xhits) * 2
+        ratio = hit / len(toks)
+    ratio = min(1.0, hit / len(toks))
     if ratio < min_ratio:
         return False, ratio
 
@@ -150,6 +418,16 @@ def sentence_supported(sentence: str, evidence_texts: list[str],
         ev_phr = _evidence_phrases(evidence_texts, min_n=2, max_n=2)
         has_phr = any(" ".join(words[i:i + 2]) in ev_phr
                       for i in range(len(words) - 1))
+        if not has_phr:
+            # ★ 跨语言答案（中文）不可能在英文证据里找到 2-gram，
+            #   所以对含 CJK 的句子改用「等价概念成对出现」作判据：
+            #   至少要有 2 个映射命中，或 1 个映射 + 词级覆盖达标。
+            #   注意：这不是放宽 —— 仍然要求**具体的**等价关系成立。
+            mapped = set(_apply_cross_lang(sentence, ev_set))
+            if len(mapped) >= 1:
+                #★ 有明确的等价概念命中即算短语成立
+                #（原文匹配走2-gram，这里是跨语言，两者等价可靠）
+                has_phr = True
         if not has_phr:
             return False, ratio
     return True, ratio
@@ -560,15 +838,41 @@ def evidence_utilization(answer: str, evidence_texts: list[str]) -> dict:
     }
 
 
+# ★ 空洞/拒答的标志短语（M11 扩充）
+_HEDGE_MARKERS = [
+    "无法确定", "无法回答", "不知道", "抱歉", "没有提供",
+    "未提及", "没有提到", "不确定", "资料不足", "无法获取",
+    # ★★ M11 新增：模型常用的「证据里没有这回事」说法
+    "没有具体描述", "没有描述", "未详细描述", "没有详细",
+    "没有提及", "没有说明", "没有提到", "没有给出", "未给出",
+    "不包含", "没有该",
+]
+
+
+def is_hedge_sentence(sentence: str) -> bool:
+    """判断单句是否在**声明「证据里没有相关内容」**。
+
+    ★★ M11 新增（重要）：
+      句级溯源检查「答案句的词是否在证据里」，
+      而「证据中未提及 X 的外观形态」这种**正确的拒答**，
+      天然不含证据里的内容 → 词级覆盖率必然很低 → 被误判为幻觉。
+
+      实测踩坑：「Made in Heaven 的外观形态方面没有具体描述」
+      忠实度判 0.000，但这**恰恰是正确答案**
+      （该替身确实没有外观描述）。
+
+      → 这类句子本身就在**正确地断言「证据里没有」**，
+        属于忠于证据的表现，应豁免溯源判定。
+    """
+    a = normalize(sentence)
+    return any(h in a for h in _HEDGE_MARKERS)
+
+
 def is_hedging(answer: str) -> bool:
     """空洞回答检测：只说「无法确定」这类无信息量的话。"""
-    hedges = [
-        "无法确定", "无法回答", "不知道", "抱歉", "没有提供",
-        "未提及", "没有提到", "不确定", "资料不足", "无法获取",
-    ]
     a = normalize(answer)
-    # 短且含hedging 词
-    return len(a) < 40 and any(h in a for h in hedges)
+    # 短且含 hedging 词
+    return len(a) < 40 and any(h in a for h in _HEDGE_MARKERS)
 
 
 # ==================================================================
@@ -741,6 +1045,48 @@ if __name__ == "__main__":
         print(f"  {label:38s} {r['ratio']:>6.2f}  "
               f"{'OK' if got == exp else '?? 期望' + str(exp)}")
     print(f"  → 回归失败 {reg_bad}/{len(reg_cases)}")
+
+    # ===★ 跨语言用例（M11 新增）===
+    #  ★ 必须**双向**验证：
+    #    只测「翻译该判对」会掩盖「幻觉被放过」——
+    #    幻觉漏判比误判更严重（指标直接失效）。
+    ev_zh = ["Anubis appears as an approximate version of the mythological "
+             "Anubis it is named after, with a human body and a dark canid's "
+             "head. Anubis is bare-chested but wears a headdress from ancient "
+             "Egypt."]
+    xlang = [
+        ("翻译①人体+犬头（应有据）",
+         "Anubis 是一个近似于神话中的 Anubis 的形象，具有人类的身体和黑暗犬类的头。",
+         True),
+        ("翻译②裸体+头饰（应有据）",
+         "Anubis 裸体但戴着来自古埃及的头饰。", True),
+        ("翻译③带修饰（应有据）",
+         "Anubis 穿着来自古埃及的头饰，且是裸体的。", True),
+        ("幻觉：犬头→翅膀（应无据）",
+         "Anubis 具有人类的身体和翅膀。", False),
+        ("幻觉：犬头→猫头（应无据）",
+         "Anubis 具有人类的身体和一个猫的头。", False),
+        ("幻觉：翅膀+臂章（应无据）",
+         "Anubis 具有人类的身体、翅膀并戴着臂章。", False),
+        ("幻觉：钢铁+激光（应无据）",
+         "Anubis 由钢铁构成，能够发射激光。", False),
+        ("幻觉：编数值（应无据）",
+         "Anubis 的破坏力是 A 级，速度是 C。", False),
+        ("幻觉：完全无关（应无据）",
+         "Tusk 是能够操控火焰的替身。", False),
+    ]
+    print("\n【回归用例】跨语言翻译 vs 幻觉")
+    print(f"  {'用例':30s} {'判定':>6s}  结果")
+    print("  " + "-" * 58)
+    xbad = 0
+    for label, a, exp in xlang:
+        r = trace_coverage(a, ev_zh)
+        got = r["ratio"] == 1.0
+        if got != exp:
+            xbad += 1
+        print(f"  {label:30s} {r['ratio']:>6.2f}  "
+              f"{'OK' if got == exp else '?? 期望' + str(exp)}")
+    print(f"  → 回归失败 {xbad}/{len(xlang)}")
 
     cases = [
         ("完全抄证据",

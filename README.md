@@ -11,21 +11,33 @@
 ## 快速开始
 
 ```bash
-# 1. 启动 API（抽取式，秒级响应）
-python api/main.py                    # 打开 http://127.0.0.1:8000/docs
+# 1) 依赖（务必指定官方源）+ 模型（约 7.3 GB，必须自己下）
+pip install -i https://pypi.org/simple -r requirements.txt
+python retrieval/fetch_model.py --repo BAAI/bge-m3
 
-# 2. 跑评测
-python evaluation/run_bench.py                    # 检索基线
-python evaluation/run_m4_eval.py                  # 路由 + 消解
+# 2) 启动（自动避开被占端口、自动开浏览器）
+python start.py                        # 或双击 start.bat
+# 打开 http://127.0.0.1:8765
+
+# 3) 可选：起数据库（结构化查询 / 数据浏览 / 冲突记录）
+cd docker && docker compose up -d postgres && cd ..
+python database/load_db.py --all
+#  ★ 不起也能跑 —— 会自动降级为「仅语义检索」，语义问答完全可用
+
+# 4) 跑评测
 python evaluation/run_faithfulness_eval.py        # 忠实度四配置对照
 python evaluation/run_chunk_quality_eval.py       # 块大小 × 生成质量
 
-# 3. 指标自检（★ 简历上的每个数字都在这里校验）
+# 5) 指标自检（★ 简历上的每个数字都在这里校验）
 python evaluation/collect_metrics.py --check
 ```
 
-依赖：`pip install fastapi uvicorn pydantic psycopg2-binary torch transformers`
-模型：`bge-m3`（嵌入）+ `bge-reranker-v2-m3`（重排）+ `Qwen2.5-1.5B-Instruct`（生成）
+**完整环境说明见 [docs/数据准备.md](docs/数据准备.md)** ——
+含「仓库里有什么/没有什么」「已知会踩的坑」「完整验证清单」。
+
+> ★ **只想快速看一眼？** 跳过模型下载，直接
+> `python api/main.py --port 8765 --no-vector` —— 纯 BM25 检索，秒级启动，
+> 网页界面、语义问答、拒答都能用。
 
 ---
 

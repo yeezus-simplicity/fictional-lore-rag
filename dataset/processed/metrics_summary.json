@@ -387,8 +387,47 @@
       }
     ],
     "recommended": 512,
+    "_recommended_basis": "M9 实测 A/B（M7 加权分最高的2048 因延迟代价未被采纳）",
     "_source_files": [
       "dataset/processed/m7_chunk_quality.json"
+    ]
+  },
+  "M9": {
+    "config_base": "原始语义块（当前）",
+    "config_merged": "合并到 512（M7 推荐）",
+    "base": {
+      "n": 30,
+      "trace_ratio": 0.9547619047619047,
+      "hedging_rate": 0.5,
+      "used_chars": 169.2,
+      "util_ratio": 0.2024,
+      "avg_evidence_chars": 835.8,
+      "avg_answer_chars": 112.6,
+      "avg_gen_ms": 5722.9,
+      "contradiction_rate": 0.0
+    },
+    "merged_512": {
+      "n": 30,
+      "trace_ratio": 0.9212962962962963,
+      "hedging_rate": 0.3,
+      "used_chars": 262.3,
+      "util_ratio": 0.1787,
+      "avg_evidence_chars": 1468.2,
+      "avg_answer_chars": 154.7,
+      "avg_gen_ms": 8719.7,
+      "contradiction_rate": 0.0
+    },
+    "delta": {
+      "trace_ratio": -0.0335,
+      "hedging_rate": -0.2,
+      "used_chars": 93.1,
+      "avg_gen_ms": 2996.8,
+      "avg_answer_chars": 42.1
+    },
+    "latency_increase_pct": 52.4,
+    "hedging_reduction_pp": 20.0,
+    "_source_files": [
+      "dataset/processed/m9_index_verify.json"
     ]
   }
 }

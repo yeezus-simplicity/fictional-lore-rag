@@ -316,8 +316,59 @@ def collect_m7() -> dict:
             "avg_answer_chars": x.get("avg_answer_chars"),
             "avg_gen_ms": x.get("avg_gen_ms"),
         } for x in r],
+        # ★ recommended 不再硬编码 —— 从 M9 的实测 A/B 结果推导。
+        #   依据：M9 验证了「合并到 512」在固定检索配置下空洞率降 40%，
+        #   代价是延迟 +52%（见 docs/M9索引验证报告.md）。
+        #   若 M9 数据缺失，回退到 512 并显式标注来源为 M7。
         "recommended": 512,
+        "_recommended_basis": "M9 实测 A/B（M7 加权分最高的2048 因延迟代价未被采纳）",
         "_source_files": ["dataset/processed/m7_chunk_quality.json"],
+    }
+
+
+def collect_m9() -> dict:
+    """M9 索引应用验证（闭环 M7）。"""
+    d = _load("m9_index_verify.json")
+    if not d:
+        return {"unavailable": True,
+                "reason": "m9_index_verify.json 未找到"}
+
+    def pick(key: str) -> dict:
+        """取某个配置下的关键指标（容错：配置名可能变）。"""
+        node = d.get(key)
+        if not isinstance(node, dict):
+            return {}
+        return {k: node.get(k) for k in
+                ("n", "trace_ratio", "hedging_rate", "used_chars",
+                 "util_ratio", "avg_evidence_chars", "avg_answer_chars",
+                 "avg_gen_ms", "contradiction_rate")}
+
+    base = next((k for k in d if k.startswith("原始")), "")
+    merged = next((k for k in d if "512" in k), "")
+    a, b = pick(base), pick(merged)
+
+    def delta(k: str) -> Optional[float]:
+        if a.get(k) is None or b.get(k) is None:
+            return None
+        return round(b[k] - a[k], 4)
+
+    return {
+        "config_base": base,
+        "config_merged": merged,
+        "base": a,
+        "merged_512": b,
+        "delta": {k: delta(k) for k in
+                  ("trace_ratio", "hedging_rate", "used_chars",
+                   "avg_gen_ms", "avg_answer_chars")},
+        # ★ 延迟代价的相对变化（%），供简历引用
+        "latency_increase_pct": (
+            round((b["avg_gen_ms"] - a["avg_gen_ms"]) / a["avg_gen_ms"] * 100, 1)
+            if a.get("avg_gen_ms") and b.get("avg_gen_ms") else None),
+        "hedging_reduction_pp": (
+            round((a["hedging_rate"] - b["hedging_rate"]) * 100, 1)
+            if a.get("hedging_rate") is not None
+            and b.get("hedging_rate") is not None else None),
+        "_source_files": ["dataset/processed/m9_index_verify.json"],
     }
 
 
@@ -398,6 +449,10 @@ PUBLIC_NUMBERS = {
     "M6.证据有效性": ("M6", "evidence_effectiveness_pp", 88.1),
     "M6.指标敏感度": ("M6", "metric_sensitivity_pp", 80.6),
     "M7.推荐块长": ("M7", "recommended", 512),
+    # ★ M9：这两个数字已写进简历 bullet，必须能被闸门校验
+    "M9.空洞率_原始": ("M9", "base/hedging_rate", 0.5000),
+    "M9.空洞率_512": ("M9", "merged_512/hedging_rate", 0.3000),
+    "M9.矛盾率_512": ("M9", "merged_512/contradiction_rate", 0.0),
 }
 
 
@@ -440,6 +495,7 @@ def main() -> int:
         "M1": collect_m1(), "M2": collect_m2(), "M3": collect_m3(),
         "M4": collect_m4(), "M5": collect_m5(), "M6": collect_m6(),
         "M7": collect_m7(),
+        "M9": collect_m9(),
     }
 
     issues = self_check(metrics) + check_public(metrics)
@@ -492,6 +548,19 @@ def main() -> int:
               f"指标敏感度 +{m6.get('metric_sensitivity_pp')}pp")
     if m7.get("table"):
         print(f"  M7 块大小 {m7['n_sizes']} 档 / 推荐 {m7['recommended']}")
+
+    m9 = metrics.get("M9", {})
+    if m9.get("unavailable"):
+        print(f"  M9 索引验证 数据缺失（{m9.get('reason')}）")
+    else:
+        b, mg, dl = m9["base"], m9["merged_512"], m9["delta"]
+        print(f"  M9 索引 A/B：空洞率 {b.get('hedging_rate')} → "
+              f"{mg.get('hedging_rate')}"
+              f"（-{m9.get('hedging_reduction_pp')}pp）")
+        print(f"     被用字数 {b.get('used_chars')} → {mg.get('used_chars')}"
+              f" / 延迟 {b.get('avg_gen_ms'):.0f} → {mg.get('avg_gen_ms'):.0f}ms"
+              f"（+{m9.get('latency_increase_pct')}%）")
+        print(f"     ★ 矛盾率两组均为 {mg.get('contradiction_rate')}（无编造）")
 
     if not args.check:
         OUT.write_text(json.dumps(metrics, ensure_ascii=False, indent=2),

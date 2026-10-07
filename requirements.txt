@@ -1,25 +1,61 @@
-# rag-kb 数据管道依赖
-# 安装：pip install -i https://pypi.org/simple -r requirements.txt
-# 注意：本环境 pip 默认清华镜像会导致解析失败，必须显式指定官方源
+# ============================================================
+# rag-kb 依赖清单
+# ============================================================
+# ★★ 本清单由「实际 import」反查生成，不是手抄的
+#   （原清单里 FlagEmbedding / jieba 等从未被 import，属幽灵依赖）。
+#   验证方式见 docs/数据准备.md §4。
+#
+# 安装（务必显式指定官方源，本环境默认清华镜像会解析失败）：
+#   pip install -i https://pypi.org/simple -r requirements.txt
+# ============================================================
 
-# --- 抓取 ---
-requests>=2.34# HTTP 抓取
-beautifulsoup4>=4.15          # HTML 辅助解析
-lxml>=6.1.1                   # HTML/XML 解析（主力）
-html5lib>=1.1                 # 容错解析（备用）
+# ---------- 服务层（启动 API 必需）----------
+fastapi>=0.142                  # Web 框架
+uvicorn>=0.54                   # ASGI 服务器
+pydantic>=2.13                 # 数据校验
+psycopg2-binary>=2.9.13         # PostgreSQL 驱动（结构化查询必需）
 
-# --- 数据处理 ---
+# ---------- 检索层（混合检索必需）----------
+# ★ 缺任一项，SemanticExecutor 会自动降级为「纯 BM25」
+#   —— 服务照常可用，只是召回降低（不会崩）。
+torch>=2.6                      # 需匹配本机 CUDA 版本（实测 cu124）
+transformers>=5.18              # ★ 必须 >=5，见下方说明
+sentence-transformers>=6.1      # bge-m3 的内部实现依赖它
+numpy>=2.5                      # 向量运算
+
+# ---------- 数据管道（M1 抓取与清洗）----------
+# 克隆已含 dataset/processed 产物 → 只跑服务可不装这部分
+requests>=2.34                  # HTTP 抓取
+beautifulsoup4>=4.15            # HTML 辅助解析
+lxml>=6.1.1                     # HTML/XML 解析（主力）
 pandas>=3.0.5
+sqlalchemy>=2.1.2               # load_db 用
 
-# --- 数据库 ---
-psycopg2-binary>=2.9.13       # PostgreSQL 驱动
-sqlalchemy>=2.1.2             # ORM
+# ---------- 可选 ----------
+# html5lib>=1.1                 # 容错解析（备用，抓取失败时才需要）
+# pgvector                     # 向量扩展（docker-compose 自动装）
 
-# --- 后续 M2/M3 需补充 ---
-# httpx>=0.28.1               # 异步 HTTP
-# FlagEmbedding             # bge-m3 embedding / reranker
-# sentence-transformers      # 文本编码
-# torch                      # 需匹配 CUDA 12.x
-# pgvector                   # 向量扩展（通过 docker-compose 装）
-# langgraph                  # M5 Agent 编排
-# prometheus-client          # M7 指标埋点
+# ============================================================
+# ★ 版本约束（实测踩坑，2026-10）
+# ============================================================
+#   transformers 必须 >= 5.0
+#     bge-m3 走 FlagEmbedding 的 BGEM3 池化逻辑，
+#     在 transformers 4.x 下会因内部 API 变更而报错。
+#     实测 4.x 不可用 / 5.18.0 正常。
+#     ★ 没写下来会让人浪费半天时间排查一个不属于自己的 bug。
+#
+#   实测通过的组合：
+#     torch==2.6.0+cu124   transformers==5.18.0
+#     sentence-transformers==6.1.0   numpy==2.5.2
+#     fastapi==0.142.2     uvicorn==0.54.0
+#     psycopg2-binary==2.9.13     pydantic==2.13.5
+# ============================================================
+
+# ============================================================
+# ★ 已移除的幽灵依赖（实测：代码里从未 import）
+# ============================================================
+#   FlagEmbedding            只是 transformers 的间接依赖，不必显式装
+#   jieba                    未使用（分词用 BM25 自带正则）
+#   scikit-learn             只在 evaluation 探索脚本里用过
+#   httpx / langgraph / prometheus-client   M5/M7 未实现，未使用
+# ============================================================

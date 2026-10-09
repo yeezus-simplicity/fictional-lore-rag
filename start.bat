@@ -4,7 +4,9 @@ REM   rag-kb quick start
 REM   Double-click to run. Keep this window OPEN.
 REM ============================================================
 
-cd /d "D:\workspace\AI\projects\rag-kb"
+REM ★ 用脚本自身所在目录，不要写死绝对路径
+REM   （原来写死了开发机的路径，别人 clone 后必然跑不起来）
+cd /d "%~dp0"
 
 echo.
 echo  ============================================
@@ -19,16 +21,14 @@ REM  fastapi, so probe candidates with a real import test.
 REM ------------------------------------------------------------
 set PY=
 
-if exist "C:\Users\28188\.workbuddy\binaries\python\envs\default\Scripts\python.exe" (
-    "C:\Users\28188\.workbuddy\binaries\python\envs\default\Scripts\python.exe" -c "import fastapi, uvicorn, psycopg2" >nul 2>&1
-    if not errorlevel 1 set PY=C:\Users\28188\.workbuddy\binaries\python\envs\default\Scripts\python.exe
-)
-
+REM ★ 项目内虚拟环境优先（推荐：python -m venv .venv）
 if not defined PY if exist ".venv\Scripts\python.exe" (
     .venv\Scripts\python.exe -c "import fastapi, uvicorn, psycopg2" >nul 2>&1
     if not errorlevel 1 set PY=%CD%\.venv\Scripts\python.exe
 )
 
+REM ★ 其次用 PATH 里的 python / py
+REM   （原来这里还探测一条开发机专属的绝对路径，已移除 —— 那对别人无意义）
 if not defined PY (
     for %%P in (python.exe py.exe) do (
         if not defined PY (

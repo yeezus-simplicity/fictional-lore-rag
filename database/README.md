@@ -53,7 +53,7 @@ SELECT count(*) FROM v_conflicts_pending;   → 16
 ## 重新执行（幂等，可反复跑）
 
 ```bash
-cd D:/workspace/AI/projects/rag-kb/docker
+cd docker
 docker compose up -d postgres     # 启动容器（已 healthy 则无操作）
 docker compose ps# 确认状态
 
@@ -115,7 +115,7 @@ Docker Desktop 4.93.0 已安装。若守护进程未运行：
 ### 第 2 步：起数据库
 
 ```bash
-cd D:/workspace/AI/projects/rag-kb/docker
+cd docker
 docker compose up -d postgres        # 首次会拉镜像，约 3-5 分钟
 docker compose ps                   # 确认 healthy
 ```
@@ -123,7 +123,7 @@ docker compose ps                   # 确认 healthy
 ### 第 3 步：建库 + 入库
 
 ```bash
-cd D:/workspace/AI/projects/rag-kb
+# 在项目根目录执行
 python database/load_db.py --all
 ```
 

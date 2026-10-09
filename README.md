@@ -37,24 +37,32 @@ python evaluation/collect_metrics.py --check
 
 ### ★ 重建原文语料（clone 后必须做一次）
 
-仓库**不包含**抓取到的第三方原文（版权原因，见 `LICENSE`）。
-三个目录/文件不入库，需要本地重建 —— 否则语义检索没有语料：
+仓库**不包含**抓取到的第三方原文与体积大的中间产物（版权 / 体积原因）：
 
 | 缺失内容 | 是什么 | 重建方式 |
 |---|---|---|
-| `dataset/processed/text_chunks.json` | 2407 个文本块（**检索语料**） | `run_pipeline.py --refetch` |
-| `dataset/sources/stand_stats_main.html` | 源页面快照（清洗输入） | 同上（抓取时自动产生） |
-| `models/` | bge-m3 等模型权重（约 7.3 GB） | `retrieval/fetch_model.py` |
+| `dataset/sources/rendered/` | 渲染后的详情页 JSON（**切块的输入**） | 渲染抓取（见下） |
+| `dataset/processed/text_chunks.json` | 2407 个文本块（**检索语料**） | 同上，自动切块 |
+| `models/` | bge-m3 等权重（约 7.3 GB） | `retrieval/fetch_model.py` |
 | `index/` | embedding 缓存（199 MB） | **自动生成**，无需手动 |
 
-```bash
-# 抓取 → 切块 → 编码 → 合并 → 校验（约 10 分钟，需外网）
-python dataset/pipeline/run_pipeline.py --refetch
+★ **已提交的结构化数据不用重抓**（`stands.json` / `details.json` /
+`stand_stats.json` / 两个 CSV 都在仓库里），所以**不要加 `--refetch`**
+——那会重新抓 154 个详情页、白等约 10 分钟。
 
-# 模型权重（必须自己下，不入库）
+```bash
+# 1) 渲染抓取依赖（只做一次）：需要 Node.js 18+
+cd tools && npm install && npx playwright install chromium && cd ..
+
+# 2) 模型权重（不入库，必须自己下）
 python retrieval/fetch_model.py --repo BAAI/bge-m3
+
+# 3) 重建语料 —— 会检测到 rendered/ 为空，自动触发渲染抓取
+python dataset/pipeline/run_pipeline.py
 ```
 
+★ 第 3 步走完「静态抓取 → 渲染抓取 → 切块 → 编码 → 合并 → 校验」全流程；
+  若只想手动只抓渲染页，可单独用 `tools/render_fetch.js`（见 `tools/README.md`）。
 ★ 抓取需要外网，且请自行遵守来源站点（jojowiki / 中文维基）的使用条款。
 ★ 本项目仅用于技术演示，第三方内容版权归荒木飞吕彦 / 集英社所有。
 

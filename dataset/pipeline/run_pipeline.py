@@ -33,6 +33,8 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
+import shutil
 import subprocess
 import sys
 import time
@@ -62,8 +64,17 @@ TOPOLOGY_CSV = FIELD_DIR / "csv_topology_raw.csv"
 # 渲染抓取工具
 TOOLS_DIR = Path(__file__).resolve().parents[2] / "tools"
 RENDER_DIR = DATA_DIR / "rendered"
-NODE = Path(r"C:\Users\28188\.workbuddy\binaries\node\versions\22.22.2-5\node.exe")
-NODE_MODULES = Path(r"C:\Users\28188\.workbuddy\binaries\node\workspace\node_modules")
+
+# ★★ Node 查找顺序（M23 修正）★★
+#   原来这里**写死了开发机的绝对路径**（C:\Users\...\node.exe），
+#   别人 clone 后那路径不存在 → 渲染抓取直接失败、语料重建不了。
+#   → 依次尝试：环境变量 NODE_BIN → PATH 里的 node → 裸 "node"
+#   node_modules 也改用 tools/ 下的标准位置（npm install 装在那里）。
+NODE = (os.environ.get("NODE_BIN")
+        or shutil.which("node")
+        or "node")
+NODE_MODULES = Path(os.environ.get("NODE_PATH")
+                    or (TOOLS_DIR / "node_modules"))
 
 OUT_DIR = Path(__file__).resolve().parents[1] / "processed"
 DETAILS_JSON = DATA_DIR / "details.json"
@@ -90,10 +101,16 @@ def run_render_fetch(delay_ms: int = 700) -> bool:
     if not script.exists():
         print(f"  渲染脚本不存在：{script}")
         return False
-    if not NODE.exists():
-        print(f"  Node 不存在：{NODE}")
+    # ★ NODE 现在是字符串（可能是 PATH 里的 "node"），不能再 .exists()
+    if not NODE:
+        print("  找不到 node —— 请安装 Node.js，"
+              "或设置环境变量 NODE_BIN 指向 node 可执行文件")
         return False
-    env = {**__import__("os").environ, "NODE_PATH": str(NODE_MODULES)}
+    if not NODE_MODULES.exists():
+        print(f"  渲染依赖未安装：{NODE_MODULES} 不存在")
+        print(f"  请先执行：cd {TOOLS_DIR} && npm install")
+        return False
+    env = {**os.environ, "NODE_PATH": str(NODE_MODULES)}
     print(f"  渲染抓取中（间隔 {delay_ms}ms，约 {154 * delay_ms / 1000 / 60:.1f} 分钟）…")
     try:
         r = subprocess.run(
@@ -105,6 +122,9 @@ def run_render_fetch(delay_ms: int = 700) -> bool:
         for line in tail:
             print(f"    {line}")
         return r.returncode == 0
+    except FileNotFoundError:
+        print(f"  无法执行 node（{NODE}）—— 请确认 Node.js 已装且在 PATH 中")
+        return False
     except subprocess.TimeoutExpired:
         print("  渲染抓取超时")
         return False

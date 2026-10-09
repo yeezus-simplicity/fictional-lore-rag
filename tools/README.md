@@ -10,12 +10,22 @@
 
 ## 前置
 
-```bash
-# Playwright（已随项目安装到WorkBuddy 的 node workspace）
-NODE_PATH=<node-workspace>/node_modules
+需要 **Node.js 18+**。
 
-# 浏览器（本机已有 chromium-1234 / chromium-1243）
-# 若缺失：npx playwright install chromium
+```bash
+cd tools
+npm install                      # 装 playwright（本目录下生成 node_modules）
+
+# 浏览器内核（首次）
+npx playwright install chromium
+```
+
+`run_pipeline.py` 会自动找 node 与 `tools/node_modules`，无需手动配 `NODE_PATH`。
+若 node 不在 PATH，或依赖装在别处，可用环境变量覆盖：
+
+```bash
+export NODE_BIN=/path/to/node           # Windows: set NODE_BIN=...
+export NODE_PATH=/path/to/node_modules  # 覆盖默认的 tools/node_modules
 ```
 
 ## 用法
@@ -25,8 +35,11 @@ node render_fetch.js                  # 增量（已抓的跳过）
 node render_fetch.js --force          # 全量重抓（约 7 分钟）
 node render_fetch.js --limit 10       # 只抓前 10 个
 node render_fetch.js --only a,b,c     # 指定 stand_id
-node render_fetch.js --delay 1200# 放慢限速
+node render_fetch.js --delay 1200     # 放慢限速
 ```
+
+★ 输出写到 `dataset/sources/rendered/`（**不入库**，体积大）。
+  它是 `dataset/pipeline/chunk.py` 的输入 —— 没有它就无法重建文本块。
 
 ## 抽取内容
 

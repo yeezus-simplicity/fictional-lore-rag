@@ -386,6 +386,12 @@ class QueryResponse(BaseModel):
     #   「「它」→ Star Platinum」，让用户看见系统怎么理解代词的。
     coref: Optional[dict] = Field(
         None, description="指代消解：{pronoun, resolved_to, from_question}")
+    # ★★ M32：中文摘要卡 ★★
+    #   从**结构化数据**拼出（中文名/日文原名/使用者/分部/六维中文等级），
+    #   用于缓解「语料全是英文、答案看不动」的观感。
+    #   ★ 不替换英文原文 —— 证据链必须保持可追溯。
+    zh_card: Optional[dict] = Field(
+        None, description="中文摘要：{name_zh, name_ja, owner, part, stats_cn}")
     stand_images: Optional[dict] = Field(
         None, description="替身图片：{stand,user,manga,anime} 分组 + URL")
 
@@ -585,6 +591,8 @@ def query(
     # ★★ M17：雷达图与图片（认得出替身时才填）
     radar_svg_out: Optional[str] = None
     stand_imgs: Optional[dict] = None
+    # ★★ M32：中文摘要卡（认得出替身时填）—— 缓解「答案全是英文」的观感
+    zh_card: Optional[dict] = None
 
     # ---------- M25：指代消解（必须最早做）----------
     # ★ 时机很关键：必须在 router.route() 之前。
@@ -797,7 +805,7 @@ def query(
                 c2 = STATE["conn"].cursor()
                 c2.execute("""SELECT s.name_en, s.owner_name_raw,
                                   st.pwr,st.spd,st.rng,st.sta,st.prc,st.dev,
-                                  st.missing_count
+                                  st.missing_count, s.part, s.stand_type
                            FROM stands s
                            LEFT JOIN stand_stats st ON st.stand_id=s.stand_id
                            WHERE s.stand_id=%s""", (sid,))
@@ -812,6 +820,44 @@ def query(
                     radar_svg_out = radar_svg(
                         rp["stats"], missing=rp["missing"],
                         title=f"{zh_rec.get('name_zh') or row[0]} 六维能力")
+
+                    # ★★ M32：中文摘要卡 ★★
+                    #   用户反馈「答案返回一堆英文介绍看不懂」——
+                    #   根因是语料全部来自 jojowiki 英文站（2407/2407 块英文）。
+                    #   做法不是机翻（会破坏「证据可追溯」），而是
+                    #   **用本来就有的中文数据**拼一张摘要卡：
+                    #     中文名 / 日文原名 / 使用者 / 分部 / 六维中文等级
+                    #   英文原文仍保留（可折叠），保证证据链不被污染。
+                    try:
+                        from executor import DIM_CN, LEVEL_CN
+                        # ★ DIM_CN 的键是**大写**（"PWR"），而 row 里按
+                        #   小写顺序排 —— 必须 .lower() 再 index，
+                        #   否则 ValueError（被下面的 except 吞掉，
+                        #   表现成 zh_card 静默为 None）。
+                        _order = ["pwr", "spd", "rng", "sta", "prc", "dev"]
+                        _lv = {}
+                        for _k, _cn in DIM_CN.items():
+                            _v = row[2 + _order.index(_k.lower())]
+                            _lv[_cn] = (LEVEL_CN.get(int(_v))
+                                        if isinstance(_v, (int, float))
+                                        else None)
+                        _alias = (STATE.get("id2alias") or {}).get(sid) or []
+                        _ja = next((a for a in _alias
+                                    if re.search(r"[\u3040-\u30ff]", a)), None)
+                        zh_card = {
+                            "stand_id": sid,
+                            "name_zh": zh_rec.get("name_zh"),
+                            "name_en": row[0],
+                            "name_ja": _ja,
+                            "owner": (row[1] or "").split(",")[0].strip() or None,
+                            "part": row[9],
+                            "stats_cn": _lv,
+                            "missing": rp["missing"],
+                            "type": _clean_stand_type(row[10]),
+                        }
+                    except Exception:  # noqa: BLE001
+                        zh_card = None
+
                     # ★ M18：异步取图 —— 没缓存就起后台任务、立即返回 pending
                     stand_imgs = image_payload(
                         row[0], sid, (row[1] or "").split(",")[0].strip())
@@ -889,12 +935,38 @@ def query(
         # ★★ M17：六维雷达图 + 替身图片
         "radar_svg": radar_svg_out,
         "stand_images": stand_imgs,
+        # ★★ M32：中文摘要卡（名称/使用者/分部/六维中文等级）
+        #   —— 与英文原文并列，不替换它（证据链保持可追溯）
+        "zh_card": zh_card,
         # ★★ M25：指代消解信息（发生替换时才有）
         "coref": coref_info,
     }
 
 
 # ------------------------------------------------------------------
+@app.get("/similar/{stand_id}", summary="找六维最接近的替身（M32）")
+def get_similar(stand_id: str,
+                k: int = Query(5, ge=1, le=10, description="返回条数")):
+    """按**六维数值**找相似替身。
+
+    ★ 为什么不用向量索引：它需要 7 GB 模型，而且编码的是
+      「描述文本」的语义，不是「能力数值」—— 描述风格相近但
+      能力迥异的替身可能被判为相似。六维距离更贴题且可解释。
+
+    ★ 缺失维度**不按 0 计**：只比较两边都有值的维度，
+      共同维度少于 3 个时不参与比较，并在 note 里说明排除了多少个。
+      不足时明确返回「数据不足」，**不硬给排名**。
+    """
+    if not STATE.get("db_ok"):
+        return {"error": "数据库不可用",
+                "hint": "cd docker && docker compose up -d postgres"}
+    try:
+        from similarity import similar_stands
+        return similar_stands(STATE["conn"], stand_id, k=k)
+    except Exception as e:  # noqa: BLE001
+        return {"error": f"{type(e).__name__}: {e}"}
+
+
 @app.get("/stands/{stand_id}", summary="查单个替身的完整信息")
 def get_stand(stand_id: str):
     """返回替身的全部结构化信息 + 冲突状态 + 文本块数。"""
@@ -1169,6 +1241,35 @@ def get_stats():
 # ------------------------------------------------------------------
 # 辅助
 # ------------------------------------------------------------------
+
+# ★★ M32：替身类型清洗 ★★
+#   stands.stand_type 是从 infobox 多项**直接拼接**来的，实测值形如：
+#     "Close-RangeRange Irrelevant (Star Platinum: The World)ReconnaissanceNatural Humanoid"
+#   （没有分隔符、还夹着括号注记）—— 直接显示没法看。
+#   → 按已知类型词提取、译成中文、用「·」连接；识别不出就返回 None。
+_STAND_TYPE_CN: tuple[tuple[str, str], ...] = (
+    ("Close-Range", "近距离型"), ("Long-Range", "远距离型"),
+    ("Range Irrelevant", "射程无关"), ("Reconnaissance", "侦查型"),
+    ("Natural Humanoid", "自然人型"), ("Artificial Humanoid", "人造人型"),
+    ("Automatic", "自动操纵型"), ("Colony", "群体型"), ("Bound", "依附型"),
+    ("Integrated", "一体型"), ("Wearable", "穿戴型"), ("Tool", "道具型"),
+    ("Materialized", "物质化型"), ("Phenomenon", "现象型"),
+    ("Spirit", "精神型"), ("Psychic", "超能力型"),
+)
+_TYPE_NOTE_RE = re.compile(r"\([^)]*\)")
+
+
+def _clean_stand_type(raw: Optional[str]) -> Optional[str]:
+    """把拼接的类型串清成「近距离型 · 自然人型」；识别不出返回 None。"""
+    if not raw:
+        return None
+    t = _TYPE_NOTE_RE.sub(" ", str(raw))     # 去掉括号里的注记
+    hits: list[str] = []
+    for en, cn in _STAND_TYPE_CN:
+        if en.lower() in t.lower() and cn not in hits:
+            hits.append(cn)
+    return " · ".join(hits) if hits else None
+
 
 def _display_name_of(q: str, state: dict) -> Optional[str]:
     """返回问句里出现的**替身写法本身**（不是 id）。

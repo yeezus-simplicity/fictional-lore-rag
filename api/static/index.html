@@ -404,6 +404,43 @@ td.num { font-family: var(--mono); font-size: 12px; text-align: right; }
 }
 #newChat:hover { background: var(--bg-hover); color: var(--text); }
 
+/* ---- M32：中文摘要卡（替身档案） ---- */
+.zh-card {
+  border: 1px solid var(--border-strong); border-left: 3px solid var(--accent);
+  border-radius: 8px; padding: 14px 16px; margin-bottom: 14px;
+  background: var(--bg-panel);
+}
+.zc-title { font-size: 13px; font-weight: 500; margin-bottom: 10px; }
+.zc-title span { font-weight: 400; font-size: 11px; color: var(--text-faint); }
+.zc-row { display: flex; gap: 12px; padding: 4px 0; font-size: 13px; }
+.zc-k { flex: 0 0 52px; color: var(--text-faint); font-size: 12px; padding-top: 1px; }
+.zc-v { flex: 1; color: var(--text); }
+.zc-sub { color: var(--text-dim); font-size: 12px; margin-left: 8px; }
+.zc-dims { display: flex; flex-wrap: wrap; gap: 4px 14px; }
+.zc-dim { font-size: 12px; color: var(--text-dim); }
+.zc-dim b { color: var(--accent); font-weight: 600; margin-left: 3px; }
+.zc-dim b.zc-na { color: var(--text-faint); font-weight: 400; font-size: 11px; }
+
+/* ---- M32：英文原文折叠 ---- */
+.en-fold { border: 1px dashed var(--border-strong); border-radius: 6px; padding: 8px 12px; }
+.en-fold summary { cursor: pointer; font-size: 12px; color: var(--text-dim); }
+.en-fold summary:hover { color: var(--text); }
+.en-body { margin-top: 10px; white-space: pre-wrap; line-height: 1.7;
+  font-size: 13px; color: var(--text-dim); }
+
+/* ---- M32：相似替身 ---- */
+.sim-scope { font-weight: 400; font-size: 11px; color: var(--text-faint); }
+.sim-list { display: flex; flex-direction: column; gap: 8px; }
+.sim-item { border: 1px solid var(--border); border-radius: 6px;
+  padding: 10px 12px; cursor: pointer; transition: background .15s; }
+.sim-item:hover { background: var(--bg-hover); border-color: var(--border-strong); }
+.sim-name { font-size: 13px; font-weight: 500; color: var(--text); }
+.sim-meta { font-size: 11px; color: var(--text-faint); margin-top: 3px; }
+.sim-diff { margin-top: 6px; display: flex; flex-wrap: wrap; gap: 4px 10px; }
+.sd { font-size: 11px; color: var(--text-dim); font-family: var(--mono); }
+.sim-note { margin-top: 10px; padding-top: 8px;
+  border-top: 1px dashed var(--border-strong); font-size: 11px; }
+
 .ok { color: var(--ok); } .bad { color: var(--err); }
 .empty { color: var(--text-faint); font-size: 13px; padding: 22px; text-align: center; }
 .loading { color: var(--text-dim); font-size: 13px; padding: 18px; }
@@ -719,6 +756,41 @@ function renderProcess(d){
   $('#procCard').style.display = '';
 }
 
+// ★★ M32：中文摘要卡 ★★
+//   用户反馈「答案返回一堆英文介绍看不懂」。
+//   根因：语料全部来自 jojowiki 英文站（2407/2407 块都是英文）。
+//   ★ 处理方式刻意**不用机器翻译** —— 那会破坏「证据可追溯」这个
+//     项目的立身之本。改用**本来就有中文的数据**拼一张卡：
+//     中文名 / 日文原名 / 使用者 / 登场部数 / 六维中文等级 / 类型。
+//   英文原文仍然保留（下面折叠展示），中文只是「看得懂的第一层」。
+function renderZhCard(zc){
+  if(!zc) return '';
+  const names = [zc.name_en, zc.name_ja].filter(Boolean);
+  const rows = [];
+  rows.push(`<div class="zc-row"><span class="zc-k">名称</span>
+    <span class="zc-v"><b>${esc(zc.name_zh||zc.name_en||'—')}</b>
+    ${names.length? `<span class="zc-sub">${esc(names.join(' · '))}</span>`:''}</span></div>`);
+  if(zc.owner) rows.push(`<div class="zc-row"><span class="zc-k">使用者</span>
+    <span class="zc-v">${esc(zc.owner)}</span></div>`);
+  if(zc.part) rows.push(`<div class="zc-row"><span class="zc-k">登场</span>
+    <span class="zc-v">第 ${esc(String(zc.part))} 部</span></div>`);
+  if(zc.type) rows.push(`<div class="zc-row"><span class="zc-k">类型</span>
+    <span class="zc-v">${esc(zc.type)}</span></div>`);
+  if(zc.stats_cn){
+    const s = Object.entries(zc.stats_cn)
+      .map(([k,v])=>`<span class="zc-dim">${esc(k)}
+        <b class="${v?'':'zc-na'}">${v?esc(v):'无数据'}</b></span>`).join('');
+    rows.push(`<div class="zc-row"><span class="zc-k">六维</span>
+      <span class="zc-v zc-dims">${s}</span></div>`);
+  }
+  return `<div class="zh-card">
+    <div class="zc-title">替身档案
+      <span>（中文信息，来自结构化数据 · 也可直接用日文名或英文名提问）</span>
+    </div>
+    ${rows.join('')}
+  </div>`;
+}
+
 function renderAnswer(d){
   const a = d.answer;
   let body = '';
@@ -732,14 +804,19 @@ function renderAnswer(d){
     body = esc(a);
   }
   else if(Array.isArray(a)){
-    body = a.map(x=>esc(x)).join('\n\n');
+    // ★ M32：英文原文**默认收起** —— 中文档案卡已经在上面给了要点。
+    //   用户的原话是「答案返回一堆英文介绍看不懂」，
+    //   所以默认不该再甩一大段英文；想看原文的点一下展开即可。
+    body = `<details class="en-fold">
+      <summary>展开英文原文（${a.length} 段，语料来源 jojowiki）</summary>
+      <div class="en-body">${a.map(x=>esc(x)).join('\n\n')}</div></details>`;
   }
   else if(a && typeof a==='object'){
     body = renderStructured(a);
   }
   else body = esc(String(a ?? '（无内容）'));
 
-  let html = `<div class="card">
+  let html = `${renderZhCard(d.zh_card)}<div class="card">
     <h3>答案${d.mode==='generate'?' <span style="color:var(--warn);font-weight:400">（生成式）</span>':''}</h3>
     <div class="answer ${refused?'answer-refused':''}">${body}</div>`;
   if(d.warning) html += `<div class="alert">⚠ ${esc(d.warning)}</div>`;
@@ -748,9 +825,48 @@ function renderAnswer(d){
   html += renderMedia(d);
   html += renderEvidence(d.evidence);
   html += '</div>';
+  html += '<div id="simBox"></div>';   // ★ M32：相似替身占位
   $('#ans').innerHTML = html;
   // ★ M19：图片渲染完按真实宽高比调整卡片高度（否则竖图留大片空白）
   applyShotHeights($('#ans'));
+  // ★ M32：异步拉相似替身 —— 不阻塞主答案（它是增强项）
+  if(d.zh_card && d.zh_card.stand_id) loadSimilar(d.zh_card.stand_id);
+}
+
+// ★★ M32：相似替身（按六维数值）★★
+//   ★ 刻意用数值距离而不是向量索引：能力相似本来就该看六维，
+//     且不依赖 7 GB 模型（--no-vector 下也能用）。
+//   ★ 后端只在**共同维度 ≥3** 时才给推荐，不足会返回 note 说明原因。
+function loadSimilar(sid){
+  fetch(`${API}/similar/${encodeURIComponent(sid)}?k=5`)
+    .then(r=>r.json())
+    .then(d=>{
+      const box = document.getElementById('simBox');
+      if(!box) return;
+      if(d.error){ box.innerHTML = ''; return; }
+      const list = d.similar || [];
+      const head = `<div class="card"><h3>相似替身
+        <span class="sim-scope">${esc(d.scope||'')}</span></h3>`;
+      if(!list.length){
+        box.innerHTML = head +
+          `<div class="meta">${esc(d.note||'数据不足，暂不给出推荐')}</div></div>`;
+        return;
+      }
+      const items = list.map(x=>{
+        const diffs = Object.entries(x.diff||{}).slice(0,6)
+          .map(([k,v])=>`<span class="sd">${esc(k)} ${v>0?'+':''}${v}</span>`)
+          .join('');
+        return `<div class="sim-item" role="button" tabindex="0"
+             onclick='ask(${JSON.stringify(x.name + ' 的六维能力')})'>
+          <div class="sim-name">${esc(x.name)}</div>
+          <div class="sim-meta">距离 ${x.distance} · 共同维度 ${x.common_dims}</div>
+          <div class="sim-diff">${diffs}</div>
+        </div>`;
+      }).join('');
+      box.innerHTML = head + `<div class="sim-list">${items}</div>
+        ${d.note? `<div class="meta sim-note">${esc(d.note)}</div>`:''}</div>`;
+    })
+    .catch(()=>{ /* 相似替身是增强项，失败不影响主答案 */ });
 }
 
 /* ================================================================

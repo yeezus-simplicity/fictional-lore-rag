@@ -499,12 +499,17 @@ class Router:
     #     「Tusk 是什么颜色」有实体但没维度词，
     #     而「破坏力最高的是哪个」没实体但有维度词，两者都要放行。
     DOMAIN_HINT = re.compile(
-        # 六维维度词（中英）
-        r"(破坏力|速度|射程|持续力|精密性|成长性|能力|形态|"
+        # 六维维度词（中文简体 + 繁体 + 日文 + 英文）
+        # ★ M31：原来只有简体，导致「スタープラチナの破壊力」这类
+        #   全日文问句 has_domain=False → 被 abstain 拒答（实测）。
+        #   日文「破壊力」与简体「破坏力」只差一个字，但正则匹配不到。
+        r"(破坏力|破壞力|破壊力|速度|スピード|射程|持续力|持續力|持続力|"
+        r"精密性|成长性|成長性|能力|形态|形態|スタンド|"
         r"power|speed|range|stamina|precision|growth|ability|form)|"
         # 结构性问法
-        r"(几级|多少级|是多少|使用者|持有者|拥有|最高|最强|多少个|几个|"
-        r"排名|部|章节|who|whose|how many|rank)|"
+        r"(几级|幾級|何級|多少级|是多少|使用者|持有者|拥有|最高|最强|"
+        r"多少个|几个|排名|部|章节|"
+        r"who|whose|how many|rank|誰|いくつ)|"
         # 数据集专有概念
         r"(替身|stand|觉醒|能力值|必杀|替身能力)", re.I)
 
@@ -588,9 +593,18 @@ class Router:
         #   实测：「天堂制造是什么」「黄金体验是什么」全被 abstain，
         #   因为 _extract_entities 只抽英文专有名词 → 中文名问句cands=[]。
         #   → 这里把「在已知中文别名里的片段」也当候选实体。
+        #
+        # ★★ M31：把字符集放宽到含**日文假名** ★★
+        #   实测缺口：别名表里明明有日文名（star_platinum →
+        #   'スタープラチナ'），但问「スタープラチナ 破壊力」时
+        #   stand_entity=None → 又被 abstain 拒答。
+        #   根因就是这里只认 \u4e00-\u9fff（汉字），而片假名在
+        #   \u30A0-\u30FF —— 压根没进匹配范围。
+        #   → 加上 \u3040-\u30ff（平假名 + 片假名）。
         zh_hits: list[str] = []
         for name in self.known_all or ():
-            if len(name) >= 2 and re.search(r"[\u4e00-\u9fff]", name) \
+            if len(name) >= 2 \
+                    and re.search(r"[\u4e00-\u9fff\u3040-\u30ff]", name) \
                     and name in q:
                 zh_hits.append(name)
         # 长名优先（「黄金体验」应排在「黄金」前面）

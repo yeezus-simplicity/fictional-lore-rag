@@ -26,6 +26,20 @@ DIM_CN = {
     "PWR": "破坏力", "SPD": "速度", "RNG": "射程",
     "STA": "持续力", "PRC": "精密性", "DEV": "成长性",
 }
+
+# ★★ M31：维度的多语言别名（简体 / 繁体 / 日文）★★
+#   原来 extract_dim 只认 DIM_CN 里的**简体**名，于是
+#   「スタープラチナの破壊力」虽然被判成 fact 意图（INTENT_FACT 认日文），
+#   却在这步抽不出维度 → 拿不到数值，最后退回一段英文原文。
+#   实测症状：route=structured 但答案是 ['Star Platinum is a humanoid...']。
+DIM_ALIASES: dict[str, tuple[str, ...]] = {
+    "PWR": ("破坏力", "破壞力", "破壊力", "パワー"),
+    "SPD": ("速度", "スピード"),
+    "RNG": ("射程", "射程距離", "レンジ"),
+    "STA": ("持续力", "持續力", "持続力", "スタミナ"),
+    "PRC": ("精密性", "精度", "プレシジョン"),
+    "DEV": ("成长性", "成長性", "ポテンシャル"),
+}
 LEVEL_CN = {0: "无", 1: "E", 2: "D", 3: "C", 4: "B", 5: "A"}
 AGG_CN = {"max": "最高", "min": "最低", "count": "数量", "top": "最强前"}
 
@@ -43,8 +57,13 @@ CAT_CN = {
 }
 
 # 意图识别
+# ★ M31：维度词补上**繁体与日文** —— 原来只有简体，
+#   于是「スタープラチナの破壊力」虽然路由放行了，意图却认不出来，
+#   只能退回语义检索拿一段英文原文，而不是直接查到数值。
 INTENT_FACT = re.compile(
-    r"(是几级|多少级|是多少|能力值|破坏力|速度|射程|持续力|精密性|成长性)")
+    r"(是几级|幾級|何級|多少级|是多少|能力值|能力値|"
+    r"破坏力|破壞力|破壊力|速度|スピード|射程|"
+    r"持续力|持續力|持続力|精密性|成长性|成長性)")
 INTENT_OWNER = re.compile(
     r"(使用者是谁|谁使用|持有者|是谁的)|"          # 正查：某替身的使用者
     r"(?:使用者|持有者)\s*.{2,30}?(?:有哪些|拥有|的替身)"  # 反查：某使用者有哪些替身
@@ -156,10 +175,15 @@ def _stand_zh(stand_id: str) -> Optional[str]:
 
 
 def extract_dim(question: str) -> Optional[str]:
-    """从问句里抽六维名。"""
+    """从问句里抽六维名。
+
+    ★ M31：支持**简体 / 繁体 / 日文**三种写法（见 DIM_ALIASES）。
+      英文缩写（PWR 等）也认。
+    """
     for d in DIMS:
-        if DIM_CN[d] in question or re.search(rf"\b{d}\b", question, re.I):
-            return d
+        for alias in DIM_ALIASES.get(d, (DIM_CN[d],)):
+            if alias in question or re.search(rf"\b{d}\b", question, re.I):
+                return d
     return None
 
 

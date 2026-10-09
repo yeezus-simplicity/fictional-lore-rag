@@ -51,3 +51,10 @@ models/
 docker/.env
 *.sqlite
 *.db
+
+# ---- M17：替身图片（体积大 + 有版权，用 fetch_stand_images.py 重抓）----
+# ★★ 必须用 /images/ 根锚定，不能写 images/ ★★
+#   gitignore 的 `images/`（无前导斜杠）会匹配**任意层级**的 images 目录
+#   → 会把dataset/sources/images/fetch_stand_images.py 一起忽略掉（实测已中招）。
+/images/
+/.tmp_preview/

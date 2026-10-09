@@ -130,6 +130,62 @@ button.go:disabled { opacity: .5; cursor: wait; }
   font-size: 12px; color: var(--text-dim); font-weight: 600;
   text-transform: uppercase; letter-spacing: .8px; margin-bottom: 12px;
 }
+/* ================================================================
+   M17：雷达图 + 图片
+   ================================================================ */
+.media-block {
+  margin-top: 16px; padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+.media-title {
+  font-size: 11px; color: var(--text-dim); letter-spacing: .8px;
+  text-transform: uppercase; margin-bottom: 10px;
+}
+.media-title .cnt, .img-group-t .cnt {
+  display: inline-block; margin-left: 6px; padding: 1px 6px;
+  border-radius: 3px; background: var(--bg-panel); color: var(--accent);
+  font-size: 10px; font-family: var(--mono);
+}
+.radar-wrap {
+  display: flex; justify-content: center; padding: 4px 0 2px;
+}
+/* 图片网格：按类别分组，缩略图可点开 */
+.img-group { margin-bottom: 14px; }
+.img-group-t {
+  font-size: 12px; color: var(--text); margin-bottom: 8px;
+  font-weight: 600;
+}
+.img-grid {
+  display: grid; gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+}
+.shot { margin: 0; }
+.shot img {
+  width: 100%; aspect-ratio: 1/1; object-fit: cover;
+  border: 1px solid var(--border); border-radius: 4px;
+  background: var(--bg-page); cursor: zoom-in; display: block;
+  transition: border-color .15s ease;
+}
+.shot img:hover { border-color: var(--accent); }
+.shot figcaption {
+  margin-top: 4px; font-size: 10px; color: var(--text-dim);
+  text-align: center; overflow: hidden; text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.img-note {
+  margin-top: 8px; font-size: 10px; color: var(--text-dim); opacity: .8;
+}
+/* 点击放大的浮层 */
+.zoom {
+  position: fixed; inset: 0; z-index: 9999;
+  background: rgba(0,0,0,.88); display: none;
+  align-items: center; justify-content: center; cursor: zoom-out;
+  padding: 24px;
+}
+.zoom img {
+  max-width: 100%; max-height: 100%;
+  border: 1px solid var(--border); border-radius: 4px;
+}
 /* 路由标记 */
 .route {
   display: inline-block; padding: 2px 8px; border-radius: 3px;
@@ -490,9 +546,75 @@ function renderAnswer(d){
     <div class="answer ${refused?'answer-refused':''}">${body}</div>`;
   if(d.warning) html += `<div class="alert">⚠ ${esc(d.warning)}</div>`;
   if(d.generation) html += renderGeneration(d.generation, d.faithfulness);
+  // ★★ M17：六维雷达图 + 替身图片
+  html += renderMedia(d);
   html += renderEvidence(d.evidence);
   html += '</div>';
   $('#ans').innerHTML = html;
+}
+
+/* ================================================================
+   M17：雷达图 + 图片渲染
+   ================================================================ */
+const IMG_KIND_CN = {
+  stand:'替身本体', user:'替身使者', manga:'漫画截图',
+  anime:'动画截图', misc:'其他'
+};
+
+function renderMedia(d){
+  let out = '';
+  // ---- 雷达图（接口返回的是内联 SVG 字符串）----
+  if(d.radar_svg && d.radar_svg.includes('<svg')){
+    out += `<div class="media-block">
+      <div class="media-title">六维能力</div>
+      <div class="radar-wrap">${d.radar_svg}</div>
+    </div>`;
+  }
+  // ---- 图片网格 ----
+  const im = d.stand_images || {};
+  const groups = ['stand','user','manga','anime','misc'];
+  const has = groups.some(k => (im[k]||[]).length);
+  if(has){
+    const secs = groups.map(k=>{
+      const arr = im[k]||[];
+      if(!arr.length) return '';
+      const cells = arr.map(x=>
+        `<figure class="shot">
+           <img src="${esc(x.url)}" alt="${esc(IMG_KIND_CN[k]||k)}"
+                loading="lazy" onclick="zoomImg('${esc(x.url)}')">
+           <figcaption title="${esc(x.caption||'')}">${esc(IMG_KIND_CN[k]||k)}</figcaption>
+         </figure>`).join('');
+      return `<div class="img-group">
+          <div class="img-group-t">${esc(IMG_KIND_CN[k]||k)}
+            <span class="cnt">${arr.length}</span></div>
+          <div class="img-grid">${cells}</div>
+        </div>`;
+    }).join('');
+    const note = im.note ? `<div class="img-note">${esc(im.note)}</div>` : '';
+    out += `<div class="media-block">
+      <div class="media-title">相关图片 <span class="cnt">${im.total||0}</span></div>
+      ${secs}${note}
+      <div class="img-note">分类按 jojowiki 源文件名推断（悬停缩略图可看原名）；
+        版权归荒木飞吕彦 / 集英社所有，来源 jojowiki.com</div>
+    </div>`;
+  }else if(im && im.error){
+    out += `<div class="media-block">
+      <div class="media-title">相关图片</div>
+      <div class="img-note">未能获取：${esc(im.error)}</div></div>`;
+  }
+  return out;
+}
+
+function zoomImg(url){
+  let z = document.getElementById('zoom');
+  if(!z){
+    z = document.createElement('div');
+    z.id = 'zoom'; z.className = 'zoom';
+    z.onclick = ()=>{ z.style.display='none'; };
+    document.body.appendChild(z);
+  }
+  z.innerHTML = `<img src="${esc(url)}" alt="">`;
+  z.style.display = 'flex';
 }
 
 const CAT_CN = {RANKED:'正常等级',UNKNOWN:'未知（存在争议）',

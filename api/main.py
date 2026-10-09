@@ -46,6 +46,11 @@ import psycopg2  # noqa: E402
 import psycopg2.extras  # noqa: E402
 
 from load_db import PG  # noqa: E402
+# ★★ M17：雷达图 + 图片服务
+from media import (ensure_images, public_images, radar_payload)  # noqa: E402
+from radar_chart import radar_svg  # noqa: E402
+
+IMG_DIR = ROOT / "images"
 
 # ==================================================================
 # 全局状态
@@ -55,7 +60,8 @@ STATE: dict[str, Any] = {}
 
 
 def _init_state(use_vector: bool = True,
-                chunk_merge_target: Optional[int] = None) -> None:
+                chunk_merge_target: Optional[int] = None,
+                images_enabled: bool = True) -> None:
     """启动时初始化：数据库 + 路由器 + 执行器。
 
     Args:
@@ -64,8 +70,12 @@ def _init_state(use_vector: bool = True,
             ★ M12：块合并目标（字符）。None/0 = 不合并（默认）。
             512 = M9 实测推荐（空洞率 0.50 → 0.30，代价延迟 +52%）。
             详见 retrieval/merging.py 的模块文档。
+        images_enabled:
+            ★ M17：是否返回替身图片（--no-images 关闭）。
+            必须在启动时写进 STATE，_images_enabled() 只认 STATE。
     """
     t0 = time.time()
+    STATE["images_enabled"] = bool(images_enabled)
 
     # --- 数据库（★ 失败时降级，不阻断启动）---
     #   理由：M3 的检索索引是 pickle 缓存，**不依赖数据库**。
@@ -232,11 +242,17 @@ def _init_state(use_vector: bool = True,
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # ★ 直接用 `uvicorn api:app` 启动时不会走 main()，
-    #   app.state.use_vector 未设置 → 用 getattr 兜底
+    #   app.state.use_vector 未设置→ 用 getattr 兜底
     use_vector = getattr(app.state, "use_vector", True)
     # ★ M12：块合并配置（None = 不合并，保持 M6–M11 的历史行为）
     chunk_merge = getattr(app.state, "chunk_merge_target", None)
-    _init_state(use_vector=use_vector, chunk_merge_target=chunk_merge)
+    # ★★ M17：图片开关必须在这里传进 STATE ★★
+    #   ★ 踩坑：只写 app.state.images_enabled 是不够的——
+    #     _images_enabled() 优先读 STATE，而STATE 是 _init_state 建的，
+    #     不显式传进去就永远是默认值 True → --no-images 静默失效
+    #     （实测 /stands/{id} 在 --no-images 下仍返回 9 张图）。
+    _init_state(use_vector=use_vector, chunk_merge_target=chunk_merge,
+                images_enabled=getattr(app.state, "images_enabled", True))
     yield
     conn = STATE.get("conn")
     if conn:
@@ -302,6 +318,11 @@ class QueryResponse(BaseModel):
     # ★ M15：模糊候选（未精确匹配到替身名时给出的提示，不代替答案）
     suggestions: Optional[list] = Field(
         None, description="模糊候选：「你是不是想问 X？」")
+    # ★★ M17：可视化（缺失维度在 radar_svg 里已标注「无数据」，不填 0）
+    radar_svg: Optional[str] = Field(
+        None, description="六维雷达图 SVG（问属性/替身时返回）")
+    stand_images: Optional[dict] = Field(
+        None, description="替身图片：{stand,user,manga,anime} 分组 + URL")
 
 
 class HealthResponse(BaseModel):
@@ -487,6 +508,9 @@ def query(
     # ★ M11：生成式字段（mode=generate 时填充）
     generation: dict | None = None
     faithfulness: dict | None = None
+    # ★★ M17：雷达图与图片（认得出替身时才填）
+    radar_svg_out: Optional[str] = None
+    stand_imgs: Optional[dict] = None
     router = STATE["router"]
     decision = router.route(q)
     route = decision.route
@@ -663,6 +687,45 @@ def query(
             answer = {"note": "未检索到相关内容"}
             answer_type = "none"
 
+    # ★★★ M17：附上雷达图与图片 ★★★
+    # 触发条件：路由认出了替身（answer 里有 stand_id，或能猜出来），
+    #   且**没有拒答**。abstain 时不该配图 —— 那是无关问题。
+    # ★ 图片可能走网络抓取（首次 5-15 秒），所以：
+    #   - 只在认得出实体时做
+    #   - 严格限时，失败就返回空列表，不影响主答案
+    if route != "abstain" and _images_enabled():
+        sid = None
+        if isinstance(answer, dict):
+            sid = answer.get("stand_id")
+        if not sid:
+            sid = _guess_stand(q, STATE)
+        if sid and STATE.get("conn"):
+            try:
+                c2 = STATE["conn"].cursor()
+                c2.execute("""SELECT s.name_en, s.owner_name_raw,
+                                  st.pwr,st.spd,st.rng,st.sta,st.prc,st.dev,
+                                  st.missing_count
+                           FROM stands s
+                           LEFT JOIN stand_stats st ON st.stand_id=s.stand_id
+                           WHERE s.stand_id=%s""", (sid,))
+                row = c2.fetchone()
+                c2.close()
+                if row:
+                    rp = radar_payload(
+                        {k: row[2 + i] for i, k in enumerate(
+                            ("pwr", "spd", "rng", "sta", "prc", "dev"))},
+                        missing_count=row[8] or 0)
+                    zh_rec = (STATE.get("zh_map") or {}).get(sid) or {}
+                    radar_svg_out = radar_svg(
+                        rp["stats"], missing=rp["missing"],
+                        title=f"{zh_rec.get('name_zh') or row[0]} 六维能力")
+                    mf = ensure_images(row[0], sid,
+                                       (row[1] or "").split(",")[0].strip())
+                    stand_imgs = public_images(mf)
+            except Exception:
+                # ★ 图片/雷达图是增强项，出错绝不能影响主答案
+                radar_svg_out = radar_svg_out or None
+
     return {
         "question": q,
         "route": route,
@@ -681,6 +744,9 @@ def query(
         "faithfulness": faithfulness,
         # ★ M15：模糊候选（★ 只提示，不代替答案）
         "suggestions": fuzzy_suggestions or None,
+        # ★★ M17：六维雷达图 + 替身图片
+        "radar_svg": radar_svg_out,
+        "stand_images": stand_imgs,
     }
 
 
@@ -729,11 +795,34 @@ def get_stand(stand_id: str):
     zh_variants = [v for v in (zh_rec.get("name_zh_variants") or [])
                    if v and v != name_zh]
 
+    # ★★★ M17：六维雷达图（SVG 内联，免图片请求）
+    #   缺失维度留空 + 标注「无数据」，**不填 0**（填 0 会被误读成"能力为零"）
+    stat_row = {k: r[9 + i] for i, k in
+                enumerate(("pwr", "spd", "rng", "sta", "prc", "dev"))}
+    rp = radar_payload(stat_row, missing_count=r[16] or 0)
+    radar = radar_svg(
+        rp["stats"], missing=rp["missing"],
+        title=f"{name_zh or r[1]} 六维能力")
+
+    # ★★★ M17：图片（懒加载；首次约5-15 秒，之后走本地缓存）
+    imgs: dict[str, Any] = {}
+    if _images_enabled():
+        owner = (r[5] or "").split(",")[0].strip()
+        mf = ensure_images(r[1], stand_id, owner)
+        imgs = public_images(mf)
+        if not imgs.get("total"):
+            imgs = {"stand_id": stand_id, "total": 0,
+                    "note": "暂无本地图片（可运行 fetch_stand_images.py 抓取）"}
+
     return {
         "stand_id": r[0], "name_en": r[1], "name_ja": r[2],
         # ---- M16 新增：中文名与异译 ----
         "name_zh": name_zh,
         "name_zh_variants": zh_variants,
+        # ---- M17 新增：雷达图与图片 ----
+        "radar_svg": radar,
+        "stats_detail": rp,
+        "images": imgs,
         "part": r[3], "part_name": r[4],
         "owner_raw": r[5], "stand_type": r[6], "reference": r[7],
         "form_count": r[8],
@@ -744,6 +833,50 @@ def get_stand(stand_id: str):
         "n_text_chunks": n_chunks,
         "conflicts": conflicts,
     }
+
+
+# ==================================================================
+# M17：图片服务
+# ==================================================================
+def _images_enabled() -> bool:
+    """是否启用图片（可用 --no-images 关闭）。
+
+    ★ 图片抓取要走代理、有网络延迟（首次约 5-15秒/替身），
+      所以提供开关：离线演示或只看文字时关掉更快。
+    ★ 从 app.state 读（命令行 --no-images 写在那里），
+      读不到时默认开启 —— 图片是增强功能，不该因为没配就消失。
+    """
+    if "images_enabled" in STATE:
+        return bool(STATE["images_enabled"])
+    return bool(getattr(app.state, "images_enabled", True))
+
+
+@app.get("/images/{stand_id}/{filename}",
+         summary="本地图片（M17：fetch_stand_images.py 抓取后存此）")
+def serve_image(stand_id: str, filename: str):
+    """返回本地缓存的图片文件。
+
+    ★ 安全：必须挡掉路径穿越（../）。
+      stand_id 与 filename 都只允许字母数字下划线连字符，
+      校验不过直接 400 —— 不要用 (IMG_DIR / stand_id / filename).resolve()
+      那种写法，否则 ../ 就能读到项目外的文件。
+    """
+    safe = re.compile(r"^[A-Za-z0-9_\-.]+$")
+    if not safe.match(stand_id) or not safe.match(filename):
+        raise HTTPException(400, "非法路径")
+    p = IMG_DIR / stand_id / filename
+    if not p.exists() or not p.is_file():
+        raise HTTPException(404, "图片不存在")
+    if filename == "_images.json":
+        raise HTTPException(400, "清单文件不作为图片提供")
+    mime = {".png": "image/png", ".jpg": "image/jpeg",
+            ".jpeg": "image/jpeg", ".gif": "image/gif",
+            ".webp": "image/webp"}.get(Path(filename).suffix.lower())
+    if not mime:
+        raise HTTPException(400, "不支持的图片格式")
+    # ★ 缓存：图片内容不可变（文件名带序号，抓一次就不再变）
+    return FileResponse(p, media_type=mime,
+                        headers={"Cache-Control": "public, max-age=604800"})
 
 
 @app.get("/conflicts", summary="查冲突（支持按状态过滤）")
@@ -935,6 +1068,9 @@ def main() -> int:
     ap.add_argument("--reload", action="store_true", help="开发模式热重载")
     ap.add_argument("--no-vector", action="store_true",
                     help="不加载向量模型（纯 BM25，启动快）")
+    # ★ M17
+    ap.add_argument("--no-images", action="store_true",
+                    help="不返回替身图片（图片首次抓取需联网，默认开启）")
     ap.add_argument("--log-level", default="info")
     ap.add_argument("--chunk-merge", type=int, default=None,
                     metavar="N",
@@ -946,6 +1082,8 @@ def main() -> int:
     import uvicorn
     app.state.use_vector = not args.no_vector
     app.state.chunk_merge_target = args.chunk_merge
+    # ★ M17：--no-images 关闭图片（抓图要走代理，首次有网络延迟）
+    app.state.images_enabled = not args.no_images
 
     print("=" * 62)
     print("rag-kb 混合检索 API")

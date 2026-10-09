@@ -109,6 +109,9 @@ def main() -> int:
                     help=("★ 语义块合并到约 N 字符。"
                           "512=M9 实测推荐（空洞率 0.50→0.30，"
                           "代价是延迟 +52%%）。默认不合并。"))
+    # ★ M17
+    ap.add_argument("--no-images", action="store_true",
+                    help="不返回替身图片（首次抓图需联网，默认开启）")
     args = ap.parse_args()
 
     port = args.port
@@ -144,6 +147,11 @@ def main() -> int:
         cmd.append("--no-vector")
     if args.chunk_merge:
         cmd += ["--chunk-merge", str(args.chunk_merge)]
+    # ★ M17：透传 --no-images
+    #   ★★ 踩坑：start.py 只是转发器，不透传的话新开关会静默失效
+    #     （实测 /stands/{id} 在 --no-images 下仍返回 9 张图）。
+    if args.no_images:
+        cmd.append("--no-images")
 
     print("  正在启动…\n")
     try:

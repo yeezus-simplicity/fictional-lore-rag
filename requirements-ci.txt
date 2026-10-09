@@ -1,0 +1,30 @@
+# ============================================================
+# CI 专用依赖（不含 torch）
+# ============================================================
+# ★ 为什么单独一份，而不是复用 requirements.txt：
+#   requirements.txt 里有 torch + transformers + sentence-transformers
+#   （约 7 GB）。CI 上装它既慢又不必要 —— 测试全部用
+#   `--no-vector` 启动（纯 BM25），向量层本来就不参与。
+#
+# ★ 这也印证了一件事：**向量检索是可选增强，不是必需路径**
+#   （见 retrieval/dense.py 的「优雅降级」设计）。
+#
+# 本地要跑完整检索，仍然装 requirements.txt。
+# ============================================================
+
+# ---------- 服务层（起 API 必需）----------
+fastapi>=0.142
+uvicorn>=0.54
+pydantic>=2.13
+psycopg2-binary>=2.9.13
+
+# ---------- 数据层（load_db / 语料合成）----------
+sqlalchemy>=2.1.2
+requests>=2.34
+beautifulsoup4>=4.15
+lxml>=6.1.1
+pandas>=3.0.5
+numpy>=2.5
+
+# ---------- UI 测试（4 个 test_*_ui / gui_e2e 需要）----------
+playwright>=1.40

@@ -1,0 +1,92 @@
+name: tests
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: ragkb
+          POSTGRES_USER: ragkb
+          POSTGRES_PASSWORD: ragkb
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      PGHOST: localhost
+      PGPORT: "5432"
+      PGDATABASE: ragkb
+      PGUSER: ragkb
+      PGPASSWORD: ragkb
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # ★ 不装 requirements.txt —— 里面有 torch（约 7 GB）。
+      #   全部测试以 --no-vector 启动（纯 BM25），向量层不参与。
+      - name: 安装依赖
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-ci.txt
+
+      - name: 安装浏览器（UI 测试用）
+        run: python -m playwright install --with-deps chromium
+
+      # 真实语料（2407 块描述原文）不入库（第三方版权，见 LICENSE）。
+      # 这里从仓库已有的结构化数据现合成一份最小语料，
+      # 足够让服务启动并支撑流程类测试。
+      - name: 合成最小语料
+        run: python evaluation/make_min_fixture.py
+
+      - name: 建库并导入数据
+        run: python database/load_db.py --all
+
+      - name: 静态检查（语法/可达性）
+        run: python -m compileall -q api services retrieval dataset evaluation
+
+      # ★ 测试逐个跑（每个自己起服务、自己选端口）。
+      #   某个失败不中断其余，最后统一看结果。
+      - name: 跑测试
+        run: |
+          set +e
+          FAILED=""
+          for t in \
+            test_alias_and_relevance \
+            test_m20_owner_query \
+            test_m21_names \
+            test_m25_multiturn \
+            test_m22_conflicts_ui \
+            test_m25_multiturn_ui \
+            test_gui_e2e \
+            test_degraded_mode
+          do
+            echo "::group::$t"
+            timeout 400 python evaluation/$t.py
+            RC=$?
+            echo "rc=$RC"
+            echo "::endgroup::"
+            if [ $RC -ne 0 ]; then FAILED="$FAILED $t"; fi
+          done
+          if [ -n "$FAILED" ]; then
+            echo "::error::失败的测试：$FAILED"
+            exit 1
+          fi
+          echo "★ 全部测试通过"

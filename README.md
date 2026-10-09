@@ -1,5 +1,7 @@
 # fictional-lore-rag
 
+[![tests](https://github.com/yeezus-simplicity/fictional-lore-rag/actions/workflows/tests.yml/badge.svg)](https://github.com/yeezus-simplicity/fictional-lore-rag/actions/workflows/tests.yml)
+
 > **JoJo 替身数据混合检索系统** —— 从多源数据清洗到生成式问答的完整链路
 > 156 替身 / 144 角色 / 2407 文本块 / 混合检索 +18.5% / 证据有效性 88.1pp
 
@@ -70,6 +72,38 @@ python dataset/pipeline/run_pipeline.py
   若只想手动只抓渲染页，可单独用 `tools/render_fetch.js`（见 `tools/README.md`）。
 ★ 抓取需要外网，且请自行遵守来源站点（jojowiki / 中文维基）的使用条款。
 ★ 本项目仅用于技术演示，第三方内容版权归荒木飞吕彦 / 集英社所有。
+
+---
+
+## 测试与 CI
+
+CI（GitHub Actions）在每次 push / PR 时跑 8 套回归测试，**不需要下载 7 GB 模型**：
+
+| 层 | 内容 |
+|---|---|
+| 静态 | `compileall` 全量语法检查 |
+| 接口 | 别名与相关性 / 角色归属 / 中文名 / 多轮追问 |
+| 界面 | 冲突消解卡 / 多轮追问 UI / 端到端主流程（Playwright） |
+| 降级 | DB 不可用时的优雅降级（用 `PGPORT=1` 强制制造） |
+
+两个关键设计：
+
+- **跳过 torch**：CI 只装 `requirements-ci.txt`（服务层 + 数据层），
+  所有测试以 `--no-vector` 启动（纯 BM25）。
+  ★ 这反过来印证了「向量检索是可选增强，不是必需路径」。
+- **合成语料**：真实语料（2407 块描述原文）因版权不入库，
+  CI 里用 `evaluation/make_min_fixture.py` 从**仓库已有的结构化数据**
+  现场合成一份最小语料（165 块），足够让服务启动并支撑流程测试。
+
+本地复现 CI：
+
+```bash
+python evaluation/make_min_fixture.py     # 合成语料
+python evaluation/test_m25_multiturn.py   # 任选一个测试
+```
+
+> ★ 合成语料**只能验证流程**，不能用于评测检索质量
+> （它不含描述原文）。真实评测请先按上文重建语料。
 
 **完整环境说明见 [docs/数据准备.md](docs/数据准备.md)** ——
 含「仓库里有什么/没有什么」「已知会踩的坑」「完整验证清单」。

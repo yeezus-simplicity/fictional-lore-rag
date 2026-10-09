@@ -1,7 +1,7 @@
-# rag-kb
+# fictional-lore-rag
 
 > **JoJo 替身数据混合检索系统** —— 从多源数据清洗到生成式问答的完整链路
-> 154替身 / 2407 文本块 / 混合检索 +18.5% / 证据有效性 88.1pp
+> 156 替身 / 144 角色 / 2407 文本块 / 混合检索 +18.5% / 证据有效性 88.1pp
 
 一个把「数据质量 → 检索 → 路由 → 冲突消解 → 生成评测」串起来的可运行系统。
 **最有价值的产出不是那些数字，而是三个可迁移的方法论发现**（见下文「三个发现」）。
@@ -11,6 +11,9 @@
 ## 快速开始
 
 ```bash
+git clone https://github.com/yeezus-simplicity/fictional-lore-rag.git
+cd fictional-lore-rag
+
 # 1) 依赖（务必指定官方源）+ 模型（约 7.3 GB，必须自己下）
 pip install -i https://pypi.org/simple -r requirements.txt
 python retrieval/fetch_model.py --repo BAAI/bge-m3
@@ -31,6 +34,29 @@ python evaluation/run_chunk_quality_eval.py       # 块大小 × 生成质量
 # 5) 指标自检（★ 简历上的每个数字都在这里校验）
 python evaluation/collect_metrics.py --check
 ```
+
+### ★ 重建原文语料（clone 后必须做一次）
+
+仓库**不包含**抓取到的第三方原文（版权原因，见 `LICENSE`）。
+三个目录/文件不入库，需要本地重建 —— 否则语义检索没有语料：
+
+| 缺失内容 | 是什么 | 重建方式 |
+|---|---|---|
+| `dataset/processed/text_chunks.json` | 2407 个文本块（**检索语料**） | `run_pipeline.py --refetch` |
+| `dataset/sources/stand_stats_main.html` | 源页面快照（清洗输入） | 同上（抓取时自动产生） |
+| `models/` | bge-m3 等模型权重（约 7.3 GB） | `retrieval/fetch_model.py` |
+| `index/` | embedding 缓存（199 MB） | **自动生成**，无需手动 |
+
+```bash
+# 抓取 → 切块 → 编码 → 合并 → 校验（约 10 分钟，需外网）
+python dataset/pipeline/run_pipeline.py --refetch
+
+# 模型权重（必须自己下，不入库）
+python retrieval/fetch_model.py --repo BAAI/bge-m3
+```
+
+★ 抓取需要外网，且请自行遵守来源站点（jojowiki / 中文维基）的使用条款。
+★ 本项目仅用于技术演示，第三方内容版权归荒木飞吕彦 / 集英社所有。
 
 **完整环境说明见 [docs/数据准备.md](docs/数据准备.md)** ——
 含「仓库里有什么/没有什么」「已知会踩的坑」「完整验证清单」。

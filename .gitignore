@@ -72,3 +72,6 @@ dataset/sources/zh_names/_cache_*
 #   ★ 别人 clone 后按 README「重建原文语料」一节跑抓取即可重建。
 dataset/processed/text_chunks.json
 dataset/sources/stand_stats_main.html
+
+# ---- filter-branch 的临时产物（不要提交）----
+.git-rewrite/

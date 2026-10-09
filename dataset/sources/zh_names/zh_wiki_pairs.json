@@ -1,0 +1,644 @@
+{
+  "starplatinum": [
+    "白金之星"
+  ],
+  "hermitpurple": [
+    "隐者之紫"
+  ],
+  "magiciansred": [
+    "魔术师之红"
+  ],
+  "hierophantgreen": [
+    "绿色法皇"
+  ],
+  "towerofgray": [
+    "灰之塔"
+  ],
+  "silverchariot": [
+    "银色战车"
+  ],
+  "darkbluemoon": [
+    "暗蓝之月"
+  ],
+  "strength": [
+    "力量"
+  ],
+  "ebonydevil": [
+    "黑檀木恶魔"
+  ],
+  "yellowtemperance": [
+    "黄色节制"
+  ],
+  "hangedman": [
+    "倒吊人"
+  ],
+  "emperor": [
+    "皇帝"
+  ],
+  "empress": [
+    "女帝"
+  ],
+  "wheeloffortune": [
+    "命运之轮"
+  ],
+  "justice": [
+    "正义"
+  ],
+  "lovers": [
+    "恋人"
+  ],
+  "sun": [
+    "太阳"
+  ],
+  "death13": [
+    "死神13"
+  ],
+  "mannishboy": [
+    "除非目标在沉睡前就提前召出替身能保持至梦中"
+  ],
+  "judgement": [
+    "审判"
+  ],
+  "highpriestess": [
+    "女教皇"
+  ],
+  "thefool": [
+    "愚者"
+  ],
+  "theworld": [
+    "世界"
+  ],
+  "unnamed": [
+    "名称不详"
+  ],
+  "geb": [
+    "盖布神"
+  ],
+  "khnum": [
+    "克努姆神"
+  ],
+  "thoth": [
+    "托特神"
+  ],
+  "anubis": [
+    "阿努比斯神"
+  ],
+  "bast": [
+    "巴丝特女神"
+  ],
+  "sethan": [
+    "赛特神"
+  ],
+  "osiris": [
+    "欧西里斯神"
+  ],
+  "horus": [
+    "荷鲁斯神"
+  ],
+  "atum": [
+    "亚图姆神"
+  ],
+  "tenorsax": [
+    "高音萨克斯"
+  ],
+  "cream": [
+    "亚空瘴气"
+  ],
+  "crazydiamond": [
+    "疯狂钻石"
+  ],
+  "aquanecklace": [
+    "银水链",
+    "水项链"
+  ],
+  "thehand": [
+    "轰炸空间",
+    "空间魔手"
+  ],
+  "badcompany": [
+    "极恶中队",
+    "破坏军团"
+  ],
+  "redhotchilipepper": [
+    "呛辣红椒",
+    "辛红辣椒"
+  ],
+  "thelock": [
+    "心锁"
+  ],
+  "echoesact1": [
+    "回音Act 1"
+  ],
+  "echoesact2": [
+    "回音Act 2"
+  ],
+  "echoesact3": [
+    "回音Act 3",
+    "回音 ACT3"
+  ],
+  "surface": [
+    "表面"
+  ],
+  "lovedeluxe": [
+    "奢美之恋",
+    "紫色恋人"
+  ],
+  "pearljam": [
+    "珍珠果酱"
+  ],
+  "achtungbaby": [
+    "透明宝宝"
+  ],
+  "heavensdoor": [
+    "天堂之门"
+  ],
+  "ratt": [
+    "鼠王",
+    "虫蚀"
+  ],
+  "harvest": [
+    "收成者",
+    "钱宝宝"
+  ],
+  "killerqueen": [
+    "杀手皇后"
+  ],
+  "cinderella": [
+    "灰姑娘",
+    "英语 ： Cinderella"
+  ],
+  "atomheartfather": [
+    "原子心之父",
+    "破碎慈父心"
+  ],
+  "boyiiman": [
+    "大人小孩双拍档"
+  ],
+  "earthwindandfire": [
+    "大地，风，火"
+  ],
+  "highwaystar": [
+    "公路之星",
+    "高速之星"
+  ],
+  "straycat": [
+    "迷途猫"
+  ],
+  "superfly": [
+    "超级飞人",
+    "超能平底锅"
+  ],
+  "cheaptrick": [
+    "廉价把戏"
+  ],
+  "goldexperience": [
+    "黄金体验"
+  ],
+  "goldexperiencerequiem": [
+    "黄金体验镇魂曲"
+  ],
+  "stickyfingers": [
+    "钢链手指"
+  ],
+  "blacksabbath": [
+    "黑色安息日"
+  ],
+  "moodyblues": [
+    "忧郁蓝调",
+    "蓝色忧郁"
+  ],
+  "softmachine": [
+    "柔软机器"
+  ],
+  "sexpistols": [
+    "性感手枪"
+  ],
+  "kraftwork": [
+    "手艺工作"
+  ],
+  "littlefeet": [
+    "小脚"
+  ],
+  "aerosmith": [
+    "航空史密斯",
+    "史密斯飞船"
+  ],
+  "maninthemirror": [
+    "镜中人"
+  ],
+  "purplehaze": [
+    "紫烟"
+  ],
+  "purplehazedistortion": [
+    "紫烟破音"
+  ],
+  "mrpresident": [
+    "总裁先生"
+  ],
+  "beachboy": [
+    "海滩男孩"
+  ],
+  "thegratefuldead": [
+    "壮烈成仁"
+  ],
+  "babyface": [
+    "娃娃脸",
+    "婴儿面孔"
+  ],
+  "whitealbum": [
+    "白色相簿"
+  ],
+  "kingcrimson": [
+    "绯红之王",
+    "深红之王"
+  ],
+  "clash": [
+    "冲击"
+  ],
+  "talkinghead": [
+    "脸部特写"
+  ],
+  "notoriousbig": [
+    "恶名昭彰的B.I.G"
+  ],
+  "spicegirl": [
+    "辣妹"
+  ],
+  "metallica": [
+    "金属制品"
+  ],
+  "greenday": [
+    "青春岁月"
+  ],
+  "oasis": [
+    "绿洲"
+  ],
+  "silverchariotrequiem": [
+    "银色战车镇魂曲"
+  ],
+  "rollingstone": [
+    "滚石"
+  ],
+  "voodoochild": [
+    "巫毒之子"
+  ],
+  "allalongwatchtower": [
+    "永恒的守望塔"
+  ],
+  "rainydaydreamaway": [
+    "雨天迷梦"
+  ],
+  "dollydagger": [
+    "洋娃娃匕首"
+  ],
+  "nightbirdflying": [
+    "夜鸟飞翔"
+  ],
+  "manicdepression": [
+    "狂躁抑郁"
+  ],
+  "stonefree": [
+    "石之自由"
+  ],
+  "googoodolls": [
+    "咕咕娃娃"
+  ],
+  "starplatinumtheworld": [
+    "白金之星·世界"
+  ],
+  "manhattantransfer": [
+    "曼哈顿传送站"
+  ],
+  "whitesnake": [
+    "白蛇"
+  ],
+  "cmoon": [
+    "新月"
+  ],
+  "madeinheaven": [
+    "天堂制造"
+  ],
+  "kiss": [
+    "亲吻"
+  ],
+  "highwaytohell": [
+    "地狱高速"
+  ],
+  "burningdownthehouse": [
+    "放火烧厝"
+  ],
+  "foofighters": [
+    "斗魂骇客",
+    "简称F.F"
+  ],
+  "marilynmanson": [
+    "讨债人 玛丽琳曼森"
+  ],
+  "weatherreport": [
+    "天气预报"
+  ],
+  "heavyweather": [
+    "狂风暴雨"
+  ],
+  "jumpinjackflash": [
+    "闪灵劫重螺旋",
+    "跳跃闪电杰克"
+  ],
+  "limpbizkit": [
+    "恹软鉼干",
+    "阴魂·冰兹基特"
+  ],
+  "diverdown": [
+    "怒海潜将",
+    "潜行者"
+  ],
+  "survivor": [
+    "生存者"
+  ],
+  "planetwaves": [
+    "行星波动",
+    "流浪之星"
+  ],
+  "dragonsdream": [
+    "龙之梦",
+    "幻梦龙玲"
+  ],
+  "yoyoma": [
+    "马友友"
+  ],
+  "greengreengrassofhome": [
+    "幼苗归乡"
+  ],
+  "jailhouselock": [
+    "监狱枷锁"
+  ],
+  "bohemianrhapsody": [
+    "波西米亚狂想曲"
+  ],
+  "skyhigh": [
+    "骇游天外"
+  ],
+  "underworld": [
+    "地底世界"
+  ],
+  "scan": [
+    "扫描"
+  ],
+  "ballbreaker": [
+    "铁球破坏者"
+  ],
+  "tuskact1": [
+    "獠牙 Act 1"
+  ],
+  "tuskact2": [
+    "獠牙 Act 2"
+  ],
+  "tuskact3": [
+    "獠牙 Act 3"
+  ],
+  "tuskact4": [
+    "獠牙 Act 4"
+  ],
+  "heyya": [
+    "波克洛克"
+  ],
+  "tomboftheboom1": [
+    "繁荣之墓1"
+  ],
+  "tomboftheboom2": [
+    "繁荣之墓2"
+  ],
+  "tomboftheboom3": [
+    "繁荣之墓3"
+  ],
+  "ohlonesomeme": [
+    "喔!寂寞的我"
+  ],
+  "oyecomova": [
+    "聆听我的旋律"
+  ],
+  "wired": [
+    "连线"
+  ],
+  "scarymonster": [
+    "骇人恶兽"
+  ],
+  "creamstarter": [
+    "护霜旅行者"
+  ],
+  "mandom": [
+    "男人领域"
+  ],
+  "catchtherainbow": [
+    "捕捉彩虹",
+    "手握彩虹，彩虹捕手"
+  ],
+  "inasilentway": [
+    "沉默之道"
+  ],
+  "sugarmountain": [
+    "香糖山",
+    "甜糖山"
+  ],
+  "tatooyou": [
+    "为你纹身!"
+  ],
+  "tubularbells": [
+    "管钟"
+  ],
+  "20thcenturyboy": [
+    "20世纪男孩"
+  ],
+  "civilwar": [
+    "南北战争",
+    "内战"
+  ],
+  "chocolatedisco": [
+    "巧克力迪斯可"
+  ],
+  "tickettoride": [
+    "泪之乘车卷"
+  ],
+  "d4clovetrain": [
+    "极易实施的肮脏行径",
+    "爱之列车"
+  ],
+  "softwet": [
+    "软又湿",
+    "柔软且湿润"
+  ],
+  "paisleypark": [
+    "佩斯利公园"
+  ],
+  "nutkingcall": [
+    "纳·京·高"
+  ],
+  "californiakingbed": [
+    "加州大床"
+  ],
+  "bornthisway": [
+    "天生完美"
+  ],
+  "lesfeuilles": [
+    "秋日落叶"
+  ],
+  "papermoonking": [
+    "纸月之王"
+  ],
+  "iamarock": [
+    "我是磐石",
+    "吾为磐岩"
+  ],
+  "kingnothing": [
+    "虚名之王"
+  ],
+  "speedking": [
+    "速率之王",
+    "速度之王"
+  ],
+  "doobiewah": [
+    "杜比华"
+  ],
+  "lovelovedeluxe": [
+    "华丽挚爱"
+  ],
+  "schottkeyno1": [
+    "肖基特一号"
+  ],
+  "schottkeyno2": [
+    "肖基特二号"
+  ],
+  "vitaminc": [
+    "维他命C"
+  ],
+  "walkingheart": [
+    "行走的心",
+    "步行之心"
+  ],
+  "spacetrucking": [
+    "太空运输/空间运输"
+  ],
+  "milagroman": [
+    "奇象之人",
+    "奇迹之人"
+  ],
+  "bluehawaii": [
+    "蓝色夏威夷"
+  ],
+  "doggystyle": [
+    "狗狗风格",
+    "犬式风格"
+  ],
+  "brainstorm": [
+    "头脑风暴"
+  ],
+  "ozonebaby": [
+    "臭氧宝宝"
+  ],
+  "doctorwu": [
+    "羽博士"
+  ],
+  "awakingiiileaves": [
+    "苏醒三叶"
+  ],
+  "wonderofu": [
+    "你的奇迹",
+    "奇迹于你"
+  ],
+  "novemberrain": [
+    "十一月雨",
+    "霜月之雨、十一月的冷雨"
+  ],
+  "smoothoperators": [
+    "调情圣手"
+  ],
+  "thehustle": [
+    "强夺哈娑",
+    "肌情哈娑"
+  ],
+  "themattekudasai": [
+    "片刻静候"
+  ],
+  "catsize": [
+    "尺寸猫",
+    "猫的大小"
+  ],
+  "bigmouthstrikesagain": [
+    "再度失言"
+  ],
+  "bagsgroove": [
+    "袋之律动",
+    "暗袋之舞"
+  ],
+  "glorydays": [
+    "光辉岁月",
+    "峥嵘岁月"
+  ],
+  "lyineyes": [
+    "说谎的眼神"
+  ],
+  "200balloons": [
+    "200个气球"
+  ],
+  "westendgirl": [
+    "西区女孩"
+  ],
+  "eclipse8": [
+    "日蚀8号"
+  ],
+  "pointblank": [
+    "至近距离札",
+    "近距离贴"
+  ],
+  "sataniccoupler": [
+    "凶恶连结器"
+  ],
+  "darkmirage": [
+    "黑暗海市蜃楼"
+  ],
+  "strangerelation": [
+    "奇怪的关系"
+  ],
+  "thebook": [
+    "书本"
+  ],
+  "memoryofjet": [
+    "黑色琥珀的记忆"
+  ],
+  "thecure": [
+    "疗伤灵兔"
+  ],
+  "joydivision": [
+    "欢乐分队"
+  ],
+  "publicimageltd": [
+    "大众偶像公司"
+  ],
+  "allalongthewatchtower": [
+    "永恒的守望塔"
+  ],
+  "starplatinumrequiem": [
+    "白金之星镇魂曲"
+  ],
+  "housesofholy": [
+    "神圣之馆"
+  ],
+  "reference": [
+    "引用者"
+  ],
+  "bottledtime": [
+    "瓶中时光"
+  ],
+  "thehouseofearth": [
+    "地球之家"
+  ],
+  "hopscotch": [
+    "跳房子"
+  ],
+  "lacasaverde": [
+    "绿之家"
+  ],
+  "elaleph": [
+    "无限之王"
+  ]
+}

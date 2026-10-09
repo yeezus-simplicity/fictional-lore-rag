@@ -142,14 +142,18 @@ def main() -> int:
         ("明天会下雨吗", "abstain"),
         ("帮我写一段Python 代码", "abstain"),
         # —— 本库领域内，不能误拒 ——
-        ("黄金体验的能力", "structured|semantic"),
+        ("黄金体验的能力", "structured|semantic|entity_semantic"),
         ("Star Platinum 的破坏力是几级？", "structured"),
-        ("Anubis 的外观形态方面有哪些描述？", "semantic"),
+        # ★ M16：这两句现在走 entity_semantic —— 因为句中已锚定替身实体
+        #   （Anubis / Tusk），按该替身检索比全库 BM25 更准。
+        #   实测：新逻辑下答案分别是 Anubis / Tusk ACT1 的原文，
+        #   比旧的全库检索更贴题（旧的靠 BM25 恰好排第一才答对）。
+        ("Anubis 的外观形态方面有哪些描述？", "semantic|entity_semantic"),
         ("所有替身中破坏力最高的是哪个？", "structured"),
         ("Star Platinum 有哪些形态？", "structured"),
         ("每部有多少替身？", "structured"),
         ("Star Platinum 的使用者是谁？", "structured"),
-        ("Tusk 的形态与外观有哪些描述？", "semantic"),
+        ("Tusk 的形态与外观有哪些描述？", "semantic|entity_semantic"),
     ]
     bad3 = 0
     for q, exp in route_cases:
@@ -161,6 +165,51 @@ def main() -> int:
     if bad3:
         print(f"  ★ {bad3}/{len(route_cases)} 失败")
         return 1
+
+    # ---------------------------------------------------------
+    # ★★★ M16 回归：冷门替身中文名必须锚定到正确实体 ★★★
+    #
+    #   背景：M16 把中文名补到 154/154 后，立刻暴露一个旧 bug ——
+    #   「骇游天外的能力是什么」返回 Strength（Forever 的替身）。
+    #   根因：语义问题直接丢给全库 BM25，而语料（jojowiki 正文）里
+    #         只有 name_en、没有中文 → 冷门中文名匹配不上 → 退化到任意结果。
+    #         （「黄金体验」以前是对的，只是因为它 BM25 排名恰好最高。）
+    #
+    #   这组断言锁死「中文名 → 正确 stand_id」的映射，
+    #   防止以后再加中文名时静默退化。
+    print("\n[5b] M16 冷门替身中文名 → 实体锚定")
+    m16_cases = [
+        ("骇游天外的能力是什么", "sky_high"),
+        ("小面孔的能力", "smallfaces"),
+        ("紫烟破音有什么效果", "purple_haze_distortion"),
+        ("牵线木偶师怎么运作", "fun_fun_fun"),
+        ("巴斯特女神的能力", "bastet"),
+        ("神圣之屋的能力", "house_of_holy"),
+        ("遥远浪漫的能力", "remote_romance"),
+        ("永恒的守望塔是什么", "all_along_watchtower"),
+        # 异译别名也要能命中（同一替身的两种社区叫法）
+        ("小脸的能力", "smallfaces"),
+        ("荷莉之屋的能力", "house_of_holy"),
+    ]
+    bad3b = 0
+    for q, exp in m16_cases:
+        got = match_stand(q, alias2id)
+        ok = got == exp
+        if not ok:
+            bad3b += 1
+        print(f"  {'OK ' if ok else 'XX '}{q:24s} → {str(got):28s}"
+              f"{'' if ok else f'期望 {exp}'}")
+    #覆盖完整度：154 个替身全部有中文名
+    n_zh = sum(1 for v in id2alias.values()
+               if any(re.search(r"[\u4e00-\u9fff]", x) for x in v))
+    print(f"  {'OK ' if n_zh == 154 else 'XX '}带中文名的替身{n_zh} / 154"
+          f"{'' if n_zh == 154 else '（M16 目标 154）'}")
+    if n_zh != 154:
+        bad3b += 1
+    if bad3b:
+        print(f"  ★ {bad3b} 项失败")
+        return 1
+    print("  ✓ 冷门中文名不再检索到别的替身")
 
     # ---------------------------------------------------------
     print("\n[6] Evidence 类型约束（★ 用真实 HTTP 服务验证）")

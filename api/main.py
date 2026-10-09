@@ -538,13 +538,30 @@ def query(
             evidence.extend(ev)
             if result is None:
                 # 路由说是结构化但解析不出意图 → 降级到语义
-                snippets, meta = STATE["semantic"].search(
-                    q, top_k=top_k, boost_stand=_guess_stand(q, STATE))
+                # ★★★ M16：同样必须按实体锚定。
+                #   实测：「小面孔的能力」「紫烟破音有什么效果」
+                #   这两句既不命中 STRUCT_FACT 也不命中 SEMANTIC（「能力」「效果」
+                #   两个词两个正则都没收录）→ 落到默认 structured →
+                #   execute() 解析不出意图 → 降级到这里的语义检索。
+                #   ★ 旧代码只传 boost_stand，BM25 主体仍是全库 →
+                #     又返回Strength/Hermit Purple（完全无关的替身）。
+                _sid = _guess_stand(q, STATE)
+                _pinned = (STATE["semantic"].stand_chunks(_sid, top_k=top_k)
+                           if _sid else [])
+                if _pinned:
+                    snippets, meta = _pinned, {"mode": "entity_pinned",
+                                               "pinned_stand": _sid}
+                else:
+                    snippets, meta = STATE["semantic"].search(
+                        q, top_k=top_k, boost_stand=_sid)
                 if snippets:
                     answer = [s["content"] for s in snippets]
                     answer_type = "snippet"
                     evidence.extend(_to_evidence(snippets))
-                    retrieval_meta = _meta_to_dict(meta)
+                    retrieval_meta = (_meta_to_dict(meta)
+                                      if not isinstance(meta, dict) or
+                                      "mode" not in meta
+                                      else meta)
                 else:
                     answer = {"note": "未能解析该问题"}
                     answer_type = "none"
@@ -570,9 +587,27 @@ def query(
     # ---------- semantic ----------
     else:
         sid = _guess_stand(q, STATE)
-        snippets, meta = STATE["semantic"].search(
-            q, top_k=top_k, boost_stand=sid)
-        retrieval_meta = _meta_to_dict(meta)
+        # ★★★ M16：`entity_semantic` —— 问句已锚定实体时**必须按实体取原文**，
+        #   不能只用 BM25 boost。
+        #   实测：走boost 语义检索时，「骇游天外的能力是什么」
+        #        → BM25 主体仍命中Strength（语料里只有 name_en、无中文）
+        #        → 返回完全无关的替身。
+        #   → 锚定实体的描述类问题，一律先keyword_snippets(sid) 硬过滤；
+        #     不足 top_k 时再补一次全库检索。
+        if route == "entity_semantic" and sid \
+                and STATE["semantic"] is not None:
+            snippets = STATE["semantic"].stand_chunks(sid, top_k=top_k)
+            if snippets:
+                retrieval_meta = {"mode": "entity_pinned",
+                                  "pinned_stand": sid}
+            else:
+                snippets, meta = STATE["semantic"].search(
+                    q, top_k=top_k, boost_stand=sid)
+                retrieval_meta = _meta_to_dict(meta)
+        else:
+            snippets, meta = STATE["semantic"].search(
+                q, top_k=top_k, boost_stand=sid)
+            retrieval_meta = _meta_to_dict(meta)
         if snippets:
             ev_texts = [s["content"] for s in snippets]
             # ★ M11：生成式分支。抽取式保持默认，行为完全不变。

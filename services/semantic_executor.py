@@ -221,3 +221,33 @@ class SemanticExecutor:
             if best:
                 out.append(best.strip()[:400])
         return out
+
+    # ============================================================
+    # M16：实体锚定检索
+    # ============================================================
+    def stand_chunks(self, stand_id: str, top_k: int = 3) -> list[dict]:
+        """取出某个替身自己的正文块（优先 overview / ability）。
+
+        ★ 为什么不能用 keyword_snippets 做这件事：
+          它只用 `[A-Za-z]{3,}` 抽英文词打分 →
+          中文问句（「骇游天外的能力是什么」）抽出 words=[] → 直接返回 []
+          → 又退回全库检索 → 又返回别的替身。
+          而语料（jojowiki 抓的正文）本来就是**英文**的，
+          所以这里不该用问句打分，而该**按 stand_id 直接取**。
+
+        ★ 排序规则（不依赖问句）：
+          1. chunk_type 优先级：ability_overview > appearance > 其他
+          2. 同类型下，内容越长信息越全（合并块更完整）
+        → 对「这个替身是什么」这类问句，返回它自己的描述就对了。
+        """
+        if self._chunks is None and not self.load():
+            return []
+
+        prio = {"ability_overview": 0, "appearance": 1}
+        mine = [c for c in self._chunks
+                if c.get("stand_id") == stand_id and c.get("content")]
+        if not mine:
+            return []
+        mine.sort(key=lambda c: (prio.get(c.get("chunk_type"), 2),
+                                 -len(c["content"])))
+        return mine[:top_k]

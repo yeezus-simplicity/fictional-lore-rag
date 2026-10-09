@@ -403,10 +403,23 @@ class Router:
         r"(是几级|多少级|是多少|能力值|破坏力|速度|射程|持续力|"
         r"精密性|成长性|第几部|使用者是谁|有哪些替身|有几个形态)")
 
-    # 语义描述
+    # ★ 语义描述
     SEMANTIC = re.compile(
         r"(描述|介绍|概述|历史|性格|外观|来源|设定|怎么|如何|"
         r"运作|方面|是什么|招式|appearance|personality|history)", re.I)
+
+    # ★★★ M16：维度词黑名单
+    #   这些词描述的是「问哪个方面」，不是「哪个替身」，
+    #   它们会被抽进 candidates，且也在 known_entities 里
+    #   → 不能拿它们当「已锚定替身」的判据，否则
+    #     「Anubis 的外观形态方面有哪些描述？」会被误判成实体锚定检索。
+    DIMENSION_WORDS = {
+        "外观", "形态", "描述", "介绍", "概述", "历史", "性格",
+        "来源", "设定", "能力", "效果", "作用", "特征", "详情",
+        "资料", "信息", "设定集", "方面", "招式", "来历", "背景",
+        "破坏力", "速度", "射程", "持续力", "精密性", "成长性",
+        "appearance", "personality", "history", "ability", "profile",
+    }
 
     # ★★ M14 新增：**领域相关性**前置判据
     #   实测踩坑（用户报的 bug）：
@@ -562,6 +575,26 @@ class Router:
         signals["candidates"] = candidates[:4]
         signals["unknown_entity"] = unknown_hit
 
+        # ★★★ M16：区分「替身实体」与「维度词」
+        #   实测踩坑：known_entities 里既装了替身名（Anubis、Tusk），
+        #   也装了维度词（外观、形态、描述）。
+        #   → 问句「Anubis 的外观形态方面有哪些描述？」抽出的候选是
+        #     ['描述','形态','外观'] —— 真正的实体 Anubis 没被抽中，
+        #     但因为这三个词都在 known_entities 里，has_entity 为真。
+        #   ★ 若用 has_entity 判断「要不要按实体检索」，这种泛描述问句会被
+        #     误判成 entity_semantic，改判后 T4/T5 评测直接挂 2 条。
+        #   → 必须单独算stand_hit：候选里是否真的有**替身名**。
+        #
+        # ★★判据要同时满足两条：
+        #   1. 在 known_all 里（含中文别名 —— 冷门替身只有中文名能被抽出）
+        #   2. 不在「维度词」黑名单里（外观/形态/描述 是问法，不是实体）
+        stand_hit = next(
+            (c for c in candidates
+             if c.lower() in self.known_all
+             and c.lower() not in self.DIMENSION_WORDS),
+            None)
+        signals["stand_entity"] = stand_hit
+
         # ★★ M14 前置：领域相关性检查（放在所有意图判定之前）
         #   没有领域信号 → 明确拒答，而不是强行匹配某个意图
         has_domain = bool(self.DOMAIN_HINT.search(q))
@@ -609,6 +642,26 @@ class Router:
         if self.STRUCT_FACT.search(q):
             return RouteDecision("structured", "数值/归属类直接查询 → SQL", signals)
         if has_sem:
+            # ★★★ M16 关键修复：语义问题**已锚定替身实体**时，不能丢给全库检索。
+            #   实测（新增中文名后立刻暴露）：
+            #     「骇游天外的能力是什么」→ 旧逻辑走 semantic → BM25 检索全库
+            #     → 返回 Strength（Forever 的替身）——完全答非所问
+            #     「小面孔的能力」        → 同理返回 Strength
+            #   ★ 为什么「黄金体验的能力」以前是对的、这些却错？
+            #     因为黄金体验在语料里高频（BM25 能排到第一），
+            #     骇游天外/小面孔 是新补的冷门名，语料里**只有 name_en、没有中文**
+            #     → BM25 匹配不到中文 → 退化成任意结果。
+            #   → 语义问题一旦锚定了替身，就必须走「实体过滤」而非全库检索。
+            #
+            # ★★ 判据必须是 stand_hit（真替身名），不是 has_entity（含维度词）
+            #   否则「Anubis 的外观形态方面有哪些描述？」这种泛描述问句会被改判，
+            #   T4/T5 评测实测挂 2 条。
+            if stand_hit:
+                return RouteDecision(
+                    "entity_semantic",
+                    f"语义问题但已锚定替身「{stand_hit}」→ 按该替身检索"
+                    "（M16：否则冷门替身的中文名会检索到别的替身）",
+                    signals)
             return RouteDecision("semantic", "描述类问题 → 语义检索", signals)
 
         # 默认：数值类占比更高（评测集 62.5% 期望 structured）

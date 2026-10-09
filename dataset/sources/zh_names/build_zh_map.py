@@ -2,10 +2,24 @@
 构建替身中文名词典（M15）。
 
 ==★ 数据来源与可信度分级 ==
-  Level A（官方）：stands.json 的 name_ja 括号内中文（jojowiki 官方标注） 32 条
+  Level A（官方）：stands.json 的 name_ja 括号内中文（jojowiki 官方标注）
   Level B（双来源一致）：两个独立来源给出同一译名                              —— 可用
   Level C（单来源）：只有一个来源                                           —— 收录但标注
   ★ 分级不是形式主义：Level A 冲突时以A 为准（官方>民间）
+
+==★ M16 新增两个脚本来源（不手工维护）==
+
+  1. fetch_zh_wiki.py   → zh_wiki_pairs.json
+     中文维基百科「替身(JoJo的奇妙冒险)」总表里的人工编纂英中对照表（201 组）
+  2. fetch_zh_huiji.py  → zh_huiji_pairs.json
+     JOJO 中文维基 huijiwiki 镜像的逐词条 {{Stand Info}} 模板（含 title/engname）
+     —— 总表里查不到的冷门替身（巴斯特女神 / 小面孔 / 神圣之屋…）靠它兜底
+
+★ 为什么脚本来源优先于猜译：
+  实测jojowiki 单页里Chinese/中文 命中 0 次 → 「继续从 jojowiki 抓」走不通；
+  而中文维基的「骇游天外」「紫烟破音」「洋娃娃匕首」这类译名一看就是人工查证的，
+  正是用户实际会输入的写法。
+  ★抓不到就是中文圈确实没有通行译名 → 如实留缺口，不硬译（M15 已实测硬译会拉低匹配质量）。
 
 ==★ 为什么不用自动翻译 ==
   1. 译名高度约定俗成：「Gold Experience」官方译「黄金体验」，
@@ -149,6 +163,18 @@ Green, Green Grass of Home|绿草之家
 Chariot Requiem|战车镇魂歌
 Ebony Devil|黑檀木恶魔
 Jumpin' Jack Flash|旋转闪光
+# ---- M16：以下为中文维基百科总表人工复核项（其余由脚本抓取提供）----
+Paisley Park|佩斯利公园
+California King Bed|加州大床
+Paper Moon King|纸月之王
+Born This Way|天生完美
+Sky High|骇游天外
+Voodoo Child|巫毒之子
+All Along Watchtower|永恒的守望塔
+Dolly Dagger|洋娃娃匕首
+Manic Depression|狂躁抑郁
+Rainy Day Dream Away|雨天迷梦
+Nightbird Flying|夜鸟飞翔
 """
 
 # ★★ SBR（第七部）：两个来源交叉一致才用 Level B
@@ -203,6 +229,35 @@ def main() -> int:
             fetched.setdefault(norm_en(en), zh)
     for en, zh in _SBR_CONFIRMED.items():
         fetched.setdefault(norm_en(en), zh)
+
+    # ---- M16：加载脚本抓取的两个来源 ----
+    # ★ fetched_variants[k] = [一级译名, 异译别名...]，
+    #   顺序有意义：第一个是主名，其余作为 name_zh_variants 并列收录。
+    #   优先级低于 _RAW_PAIRS（人工复核过的更可信）→ 用 setdefault。
+    fetched_variants: dict[str, list[str]] = {}
+    fetched: dict[str, str] = fetched
+    n_wiki = n_huiji = 0
+    for fname, src in (("zh_wiki_pairs.json", "zh.wikipedia.org"),
+                       ("zh_huiji_pairs.json", "jojo.huijiwiki.com")):
+        path = Path(__file__).resolve().parent / fname
+        if not path.exists():
+            print(f"  !缺少 {fname}，跳过（先跑对应的 fetch_*.py）")
+            continue
+        data = json.loads(path.read_text(encoding="utf-8"))
+        for k, names in data.items():
+            names = [n for n in names if n and len(n) >= 2]
+            if not names:
+                continue
+            fetched_variants.setdefault(k, [])
+            for n in names:
+                if n not in fetched_variants[k]:
+                    fetched_variants[k].append(n)
+            fetched.setdefault(k, names[0])
+        if "huiji" in fname:
+            n_huiji = len(data)
+        else:
+            n_wiki = len(data)
+    print(f"  抓取来源：中文维基 {n_wiki} 组 / JOJO中文维基 {n_huiji} 组")
 
     # ---- Level A：官方 name_ja 括号内的中文名（优先级最高）----
     official: dict[str, str] = {}
@@ -266,7 +321,7 @@ def main() -> int:
         simp_zh = fetched.get(k)
         if zh and _has_japanese_forms(zh):
             if simp_zh:
-                out[s["stand_id"]] = {
+                e = {
                     "name_en": en, "name_zh": simp_zh,
                     "level": "C", "source": "jojogh.jojo6.com",
                     "name_ja_official": zh,
@@ -274,6 +329,11 @@ def main() -> int:
                               f"（{zh}），用户多用简体（{simp_zh}），"
                               "两者都收录；繁体/日文形另存aliases"),
                 }
+                # M16：抓取来源可能给出多个异译，也一并带上
+                vs = [n for n in fetched_variants.get(k, []) if n != simp_zh]
+                if vs:
+                    e["name_zh_variants"] = [simp_zh] + vs
+                out[s["stand_id"]] = e
                 n_c += 1
                 continue
             # 没有简体译名 → 仍用官方名，但记明是日文形
@@ -288,12 +348,20 @@ def main() -> int:
             n_c += level == "C"
         else:
             continue
-        out[s["stand_id"]] = {
+        entry = {
             "name_en": en,
             "name_zh": zh,
             "level": level,
             "source": src,
         }
+        # ---- M16：附上抓取到的异译别名 ----
+        # ★ 用户两种写法都会输入（软又湿 / 柔软且湿润），必须并列收录，
+        #   否则用户换个说法就匹配不上 → 又变成"答非所问"。
+        vs = [n for n in fetched_variants.get(k, []) if n != zh]
+        if vs:
+            entry["name_zh_variants"] = [zh] + vs
+        out[s["stand_id"]] = entry
+        continue
 
     # 同义异译（额外别名）
     for en, variants in _SBR_VARIANTS.items():
@@ -318,7 +386,12 @@ def main() -> int:
     print(f"    Level A（官方 name_ja）  {n_a}")
     print(f"    Level B（双来源一致）    {n_b}")
     print(f"    Level C（单来源）        {n_c}")
-    print(f"    缺中文名{total - have}（需用英文名）")
+    print(f"  缺中文名 {total - have}（需用英文名）")
+    # M16：异译别名覆盖（用户换个说法也能匹配上）
+    n_var = sum(1 for v in usable.values() if v.get("name_zh_variants"))
+    n_var_all = sum(len(v.get("name_zh_variants", []))
+                    for v in usable.values())
+    print(f"    带异译别名 {n_var} 条 / 共 {n_var_all} 个可接受中文写法")
 
     # ★★ 不变量 1b：中文名不能含**繁体/日文独有字形**
     #   实测：Level A 的官方名里混着「審判」（繁体）、「悪魔」（日文汉字）
@@ -379,10 +452,18 @@ def main() -> int:
     print("""  A 级  stands.json 的 name_ja 括号（jojowiki 官方标注）
   B 级  bilibili cv4624640 × 萌娘百科（两来源译名一致）
   C 级  jojogh.jojo6.com/stand/stand_value.htm（单来源，繁体转简体）
+         + zh.wikipedia.org「替身(JoJo的奇妙冒险)」总表（M16 脚本抓取）
+         + jojo.huijiwiki.com 逐词条{{Stand Info}}（M16，总表查不到的冷门替身）
+         +人工核实项（出处见 fetch_zh_huiji.py 文件头）
 
 ★ Level A 优先：官方译名与民间译名冲突时以官方为准。
   ★ 例：Anubis 官方标「無」→ 我们的C 级写「安努比斯神」，
-    但因为官方那条 name_ja 没括号，所以不冲突。""")
+    但因为官方那条 name_ja 没括号，所以不冲突。
+
+★ M16 结果：154/154 全覆盖，异译别名 84 条（共 179 个可接受中文写法）。
+  ★ 关键是这些译名全部**来自人工编纂的词条/对照表**，没有一个是机器翻译：
+    「骇游天外」「紫烟破音」「洋娃娃匕首」「永恒的守望塔」这类译法
+    一看就是查证过的，也正是用户实际会输入的写法。""")
     return 0
 
 

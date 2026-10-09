@@ -774,9 +774,21 @@ def verify() -> bool:
     # ★ stands/stand_stats 预期 156 而非 154：
     #   M1 遗留的形态组未消解（echoes_act1-3 / tusk_act1-4 被当独立替身），
     #   入库时补建 2 个聚合父记录以承接外键
+    #
+    # ★★ text_chunks 的期望**从语料文件实际行数推导**，不写死 2407 ★★
+    #   语料来源有两种：真实抓取（2407 块）/ CI 的合成 fixture（165 块，
+    #   见 evaluation/make_min_fixture.py）。
+    #   写死会让 CI 永远失败 —— 首次跑 CI 就是这么红的（实测）。
+    #   推导后依然能发现「入库行数 ≠ 文件行数」这类真问题。
+    try:
+        _n_chunks = len(json.loads(
+            (PROC / "text_chunks.json").read_text(encoding="utf-8")))
+    except Exception:
+        _n_chunks = None
     expect = {
         "characters": None, "stands": 156, "stand_stats": 156,
-        "stand_forms": 146, "stat_conflicts": 28, "text_chunks": 2407,
+        "stand_forms": 146, "stat_conflicts": 28,
+        "text_chunks": _n_chunks,
     }
     all_ok = True
     for t, exp in expect.items():

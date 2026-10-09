@@ -59,6 +59,14 @@ jobs:
       - name: 建库并导入数据
         run: python database/load_db.py --all
 
+      # ★ 全新库必须在 load_db 之后跑这一步。
+      #   resolution_log（/conflicts 的「采纳理由 / 置信度 / 敏感性」来源）
+      #   过去**只由这个脚本在运行时创建**、schema 里没有，
+      #   导致全新部署时 /conflicts 直接 500 —— 首次跑 CI 就是这么红的。
+      #   现在表已收进 001_init.sql，这一步负责**填数据**。
+      - name: 应用冲突消解（填充 resolution_log）
+        run: python services/apply_resolutions.py
+
       - name: 静态检查（语法/可达性）
         run: python -m compileall -q api services retrieval dataset evaluation
 

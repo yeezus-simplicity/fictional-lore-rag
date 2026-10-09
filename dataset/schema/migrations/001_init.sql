@@ -306,6 +306,43 @@ COMMENT ON TABLE stat_conflicts IS
     '源间冲突记录。★ 人工消解请写 resolved_by / resolved_at，'
     'load_db.py 用 ON CONFLICT DO NOTHING，不会覆盖人工决策';
 
+-- 2.65 resolution_log —— 冲突消解的操作日志（M4 产出 / M22 界面展示）
+-- ★★ 为什么必须收进 schema（2026-10-10 实测踩坑）★★
+--   这张表原来**只由 services/apply_resolutions.py 在运行时创建**
+--   （CREATE TABLE IF NOT EXISTS），schema 里没有它。
+--   后果：本地因为跑过那个脚本所以有表，而**全新部署**
+--   （CI / 别人 clone）没有 → /conflicts 接口直接 500。
+--   首次跑 CI 八套测试全红，根因就是这里。
+--   → 表结构由 schema 统一负责；apply_resolutions.py 仍保留幂等建表，
+--     两者不冲突（都是 IF NOT EXISTS）。
+CREATE TABLE IF NOT EXISTS resolution_log (
+    log_id      BIGSERIAL PRIMARY KEY,
+    logged_at   TIMESTAMPTZ NOT NULL DEFAULT now(),
+    stand_id    TEXT NOT NULL,
+    stand_name  TEXT,
+    stat_dim    TEXT NOT NULL,
+    strategy    TEXT NOT NULL,
+    prev_resolution    TEXT,
+    new_resolution    TEXT,
+    prev_value        SMALLINT,
+    new_value         SMALLINT,
+    confidence        REAL,
+    sensitivity      TEXT,
+    rationale        TEXT,
+    applied_by       TEXT NOT NULL DEFAULT 'm4_resolver'
+);
+
+CREATE INDEX IF NOT EXISTS idx_reslog_stand ON resolution_log(stand_id);
+CREATE INDEX IF NOT EXISTS idx_reslog_time  ON resolution_log(logged_at DESC);
+
+-- ★ 与 stat_conflicts 是 1:N：同一 (stand_id, stat_dim) 可能有多条
+--   （消解过程的变更记录，实测 44 条日志 vs 28 条冲突）。
+--   /conflicts 必须用 DISTINCT ON 取最新一条，否则冲突行会重复、
+--   理由会串到别的维度。
+COMMENT ON TABLE resolution_log IS
+    '冲突消解操作日志。与 stat_conflicts 为 1:N 关系，'
+    '查询时需按 (stand_id, stat_dim) 取 logged_at 最新一条';
+
 -- 2.7 text_chunks —— 文本块
 -- ★ 与 stand_stats 分离的理由（数据规范 §3.1）：
 --   结构化数据不进向量索引。数值走 SQL，文本才走向量。

@@ -32,7 +32,11 @@ python start.py                        # 或双击 start.bat
 # 3) 可选：起数据库（结构化查询 / 数据浏览 / 冲突记录）
 cd docker && docker compose up -d postgres && cd ..
 python database/load_db.py --all
+python services/apply_resolutions.py
 #  ★ 不起也能跑 —— 会自动降级为「仅语义检索」，语义问答完全可用
+#  ★ 第 2 条别漏：它把冲突消解结果写进 resolution_log，
+#    而 /conflicts 的「采纳理由 / 置信度 / 敏感性」都来自那张表。
+#    只跑 load_db 的话，冲突记录页会缺这三项（接口不会报错，是静默变空）。
 
 # 4) 跑评测
 python evaluation/run_faithfulness_eval.py        # 忠实度四配置对照

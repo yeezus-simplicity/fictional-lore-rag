@@ -107,8 +107,15 @@ def build_chunks() -> list[dict]:
             txt = f"{name_en} stand stats: " + ", ".join(lv) + "."
             chunks.append({
                 "chunk_id": cid, "stand_id": sid, "stand_name": name_en,
-                "part": part, "chunk_type": "stats",
-                "content": txt, "content_len": len(txt), "section": "stats",
+                "part": part,
+                # ★★ chunk_type 必须是 schema 允许的枚举值 ★★
+                #   见 dataset/schema/migrations/001_init.sql 的 chk_chunk_type：
+                #     IN ('ability_overview','move','battle_record','lore','section')
+                #   我第一版写了 'stats' / 'forms' —— 两个都非法，
+                #   CI 上全新库跑 load_db 时直接 CheckViolation 挂掉。
+                #   （本地没发现，是因为本地库早建好了、我跳过了 load_db 这步）
+                "chunk_type": "ability_overview",
+                "content": txt, "content_len": len(txt), "section": "(stats)",
             })
 
         # ---- 块 3：形态（多形态替身才有）----
@@ -121,8 +128,9 @@ def build_chunks() -> list[dict]:
                    + ", ".join(labels) + ".")
             chunks.append({
                 "chunk_id": cid, "stand_id": sid, "stand_name": name_en,
-                "part": part, "chunk_type": "forms",
-                "content": txt, "content_len": len(txt), "section": "forms",
+                "part": part,
+                "chunk_type": "section",          # ★ 同上，必须是合法枚举值
+                "content": txt, "content_len": len(txt), "section": "FORMS",
             })
 
     return chunks

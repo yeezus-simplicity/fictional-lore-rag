@@ -165,6 +165,18 @@ def _init_state(use_vector: bool = True,
     except Exception:
         pass
 
+    # ★★ M21：角色**中文名**也纳入已知实体 ★★
+    #   否则「东方定助的替身是什么」会被判成编造实体而拒答
+    #   （M20 只加了英文角色名，中文名这条路还是断的）。
+    try:
+        from aliases import load_char_zh_map as _lcz
+        for _cid, _names in _lcz().items():
+            for _n in _names:
+                if _n:
+                    known_entities.add(_n)
+    except Exception:
+        pass
+
     # --- 路由器（M4）---
     from conflict_resolver import Router
     STATE["router"] = Router(known_stands=known_stands,

@@ -60,7 +60,10 @@ INTENT_OWNER = re.compile(
 INTENT_STAND_OF = re.compile(
     # ★ 主体要支持**含空格的英文全名**：'Jotaro Kujo的替身是什么'
     #   只写 (.{2,12}?) 会因中间空格匹配失败 → 意图不触发。
-    r"((?:[A-Za-z][A-Za-z0-9.'\-]*\s*){1,4}|[一-鿿]{2,12}?)\s*的\s*"
+    # ★ 中文名要允许**间隔号**（·／・）：'乔鲁诺·乔巴拿'、'迪奥·布兰度'
+    #   只写 [一-鿿] 会把带间隔号的中文名整句漏掉 → 退回 semantic
+    #   又变成一长段原文介绍（M21 实测）。
+    r"((?:[A-Za-z][A-Za-z0-9.'\-]*\s*){1,4}|[一-鿿·・]{2,14}?)\s*的\s*"
     r"(?:替身|STAND|Stand|stand|使的替身|本人|的本体)")
 
 # ★★ M20：这些词出现时，**不能**判成「某人的替身」——
@@ -130,6 +133,26 @@ def detect_intent(question: str) -> str:
         return "fact"
     # ★ 兜底改为「认不出」，而不是篇章统计
     return "unknown"
+
+
+# ★ M21：替身中文名缓存（避免每次查询都读盘）
+_STAND_ZH_CACHE: dict[str, str] = {}
+_STAND_ZH_LOADED = False
+
+
+def _stand_zh(stand_id: str) -> Optional[str]:
+    """取替身中文名（M21）。给「XX 的替身是什么」的答案补上中文，更友好。"""
+    global _STAND_ZH_LOADED
+    if not _STAND_ZH_LOADED:
+        try:
+            from aliases import load_zh_map
+            for sid, rec in load_zh_map().items():
+                if isinstance(rec, dict) and rec.get("name_zh"):
+                    _STAND_ZH_CACHE[sid] = rec["name_zh"]
+        except Exception:  # noqa: BLE001
+            pass
+        _STAND_ZH_LOADED = True
+    return _STAND_ZH_CACHE.get(stand_id)
 
 
 def extract_dim(question: str) -> Optional[str]:
@@ -469,9 +492,37 @@ class StructuredExecutor:
         if not owner:
             return self._unknown(question, name2id)
 
+        # ★★ M21：先看是不是**角色中文名**（如「东方定助」「空条承太郎」）★
+        #   为什么需要（用户报的 bug）：角色表只有英文名，
+        #   中文问句「东方定助的替身是什么」永远查不到。
+        #   → 用 fetch_zh_characters.py 抓到的角色中文名反查 character_id。
         cur = self.conn.cursor()
-        # ★ 角色表只有英文名（实测 144 个角色，中文名 0 个），
-        #   所以先试英文精确匹配 → 再试"名字包含"（处理 YOSHIKAGE KIRA 这类）
+        try:
+            from aliases import build_char_alias_table
+            char_zh = build_char_alias_table()
+        except Exception:  # noqa: BLE001
+            char_zh = {}
+        cid = char_zh.get(owner) or char_zh.get(
+            re.sub(r"[\s·・]", "", owner))
+        if cid:
+            cur.execute("""
+                SELECT s.name_en, s.name_ja, s.part, s.stand_id
+                FROM stands s WHERE s.owner_id = %s
+                ORDER BY s.name_en
+            """, (cid,))
+            rows = cur.fetchall()
+            if rows:
+                return (
+                    {"type": "stand_of", "owner": owner, "count": len(rows),
+                     "stands": [{"name": r[0], "ja": r[1], "part": r[2],
+                                 "zh": _stand_zh(r[3])} for r in rows],
+                     "answer": "、".join(r[0] for r in rows)},
+                    [{"type": "database",
+                      "tables": ["stands", "characters"]}],
+                )
+
+        # ★ 英文名路径：角色表只有英文名（实测 144 个角色，中文名 0 个）
+        #   所以先试英文精确匹配 → 再试"名字包含"
         cur.execute("""
             SELECT s.name_en, s.name_ja, s.part, s.stand_id
             FROM stands s JOIN characters c ON c.character_id = s.owner_id

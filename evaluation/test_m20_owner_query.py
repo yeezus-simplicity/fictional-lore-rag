@@ -92,18 +92,27 @@ def main() -> int:
             return 1
         print(f"服务就绪 :{PORT}\n")
 
-        # ===== A. 不存在的角色必须拒答 =====
-        print("[A] 不存在的角色 → 拒答")
-        for q, bad in (("东方常秀的替身是什么", "Soft"),
-                       ("常秀的替身是什么", "Soft")):
+        # ===== A. ★ M21 修正：「东方常秀」是真角色 =====
+        #   原先这里断言「东方常秀 → abstain」，那是**错的**：
+        #   joshu_higashikata（第8部 JoJolion 东方家次子）
+        #   中文译名就是「东方常秀」，替身是 Nut King Call。
+        #   M20 时角色表没有中文名，导致它被误判为编造实体。
+        #   M21 补上角色中文名后应能正确作答。
+        print("[A] 「东方常秀」应能作答（M21 修正 M20 的误判）")
+        for q, want in (("东方常秀的替身是什么", "Nut King Call"),):
             d = query(q, PORT)
             txt = brief(d)
-            print(f"      {q:22s} {txt}")
-            check(f"{q[:12]} 判为 abstain", d.get("route") == "abstain",
+            print(f"      {q:22s} route={d.get('route')} {txt[:44]}")
+            check(f"{q[:12]} 不拒答", d.get("route") != "abstain", txt)
+            check(f"{q[:12]} 答案含「{want}」", want in txt, txt)
+
+        # 真正的编造名仍须拒答（守住拒答能力）
+        print("      真编造名仍拒答：")
+        for q in ("田所浩二的替身是什么", "王五的替身是什么"):
+            d = query(q, PORT)
+            print(f"      {q:22s} route={d.get('route')}")
+            check(f"{q[:6]} 判为 abstain", d.get("route") == "abstain",
                   f"route={d.get('route')}")
-            # ★ 关键是答案里不能出现别的替身名（Soft & Wet）
-            check(f"{q[:12]} 答案不含 Soft", bad not in txt,
-                  f"泄漏了别的替身：{txt}")
 
         # ===== B. 「XX 的替身」→ 直接给名字 =====
         print("\n[B] 「某人的替身」→ 直接给替身名（不长段介绍）")

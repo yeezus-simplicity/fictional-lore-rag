@@ -783,15 +783,19 @@ function renderStructured(a){
   //   不再糊一整段能力介绍。
   if(t==='stand_of'){
     const st=a.stands||[];
-    const names = st.map(x=>esc(x.name));
+    // ★ M21：有中文名就并列显示（替身英文名 + 中文名）
+    const names = st.map(x=> x.zh
+        ? `${esc(x.name)}<span style="font-size:15px;color:var(--text-dim);
+            margin-left:8px">${esc(x.zh)}</span>`
+        : esc(x.name));
     return `<div style="margin-bottom:10px">
         <div style="font-size:12px;color:var(--text-dim);margin-bottom:6px">
           ${esc(a.owner)} 的替身${a.count>1? `（${a.count} 个）`:''}
         </div>
-        <div style="font-size:22px;font-weight:700;line-height:1.4;
+        <div style="font-size:22px;font-weight:700;line-height:1.5;
                     color:var(--text)">${names.join('、')}</div>
         ${st.some(x=>x.part)? `<div class="meta" style="margin-top:8px">
-          ${st.map(x=>`${esc(x.name)}${x.part?`（${esc(x.part)}）`:''}`).join('　')}
+          ${st.map(x=>`${esc(x.zh||x.name)}${x.part?`（第${esc(x.part)}部）`:''}`).join('　')}
         </div>`:''}
       </div>`;
   }

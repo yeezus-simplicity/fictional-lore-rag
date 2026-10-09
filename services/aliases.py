@@ -179,6 +179,46 @@ def load_zh_map() -> dict[str, dict]:
         return {}
 
 
+# ============================================================
+# ★★ M21：角色（替身使者）中文名
+# ============================================================
+# 与替身中文名分开存：替身名映射到 stand_id，
+# 角色名要映射到 character_id（因为「XX 的替身是什么」问的是角色）。
+CHAR_ZH_PATH = PROC.parent / "sources" / "zh_names" / "zh_char_pairs.json"
+
+
+def load_char_zh_map() -> dict[str, list[str]]:
+    """载入角色中文名：{character_id: [中文名, 异译...]}。
+
+    数据来自 dataset/sources/zh_names/fetch_zh_characters.py
+    （中文维基替身表的本体列 + 各部条目的 nihongo 模板）。
+    """
+    if not CHAR_ZH_PATH.exists():
+        return {}
+    try:
+        d = json.loads(CHAR_ZH_PATH.read_text(encoding="utf-8"))
+        return {k: v for k, v in d.items() if isinstance(v, list) and v}
+    except (json.JSONDecodeError, OSError):
+        return {}
+
+
+def build_char_alias_table() -> dict[str, str]:
+    """构建 (角色中文名 → character_id)。
+
+    ★ 同时收录简体形（用户一般输入简体）。
+    """
+    out: dict[str, str] = {}
+    for cid, names in load_char_zh_map().items():
+        for n in names:
+            if not n:
+                continue
+            for variant in (n, simplify_zh(n)):
+                v = variant.strip()
+                if v:
+                    out.setdefault(v, cid)
+    return out
+
+
 def build_alias_table() -> tuple[dict[str, str], dict[str, list[str]]]:
     """构建 (别名 → stand_id) 与 (stand_id → 别名列表)。
 
@@ -193,6 +233,26 @@ def build_alias_table() -> tuple[dict[str, str], dict[str, list[str]]]:
 
     alias2id: dict[str, str] = {}
     id2alias: dict[str, list[str]] = {}
+
+    def register(sid: str, names: list[str]) -> None:
+        """把一个替身的各种写法登记进别名表。
+
+        ★ 抽成函数是为了让「stand.json 主循环」与
+          「M21 补漏循环」用**同一套规则**，避免两处不一致
+          （例如漏了单字过滤就会让「力」这类单字名抢匹配）。
+        """
+        id2alias[sid] = names
+        for n in names:
+            # ★★ 排除**单字中文别名**
+            #   实测踩坑：Strength 的中文名是单字「力」，
+            #   而「黄金体验的**能力**」里也有「力」
+            #   → 单字别名会抢在「黄金体験」之前命中 → 返回 Strength 的数据。
+            #   ★ 单字中文名信息量太低，误匹配率必然很高，一律不收。
+            if len(n) <= 1 and _CJK.search(n):
+                continue
+            alias2id.setdefault(n, sid)
+            for v in expand_variants(n):
+                alias2id.setdefault(v, sid)
 
     for s in stands:
         sid = s.get("stand_id")
@@ -224,20 +284,27 @@ def build_alias_table() -> tuple[dict[str, str], dict[str, list[str]]]:
                      if not (zh_rec.get("name_zh") == n
                              and zh_rec.get("_excluded_from_matching"))]
 
-        id2alias[sid] = names
-        for n in names:
-            # ★★ 排除**单字中文别名**
-            #   实测踩坑：Strength 的中文名是单字「力」，
-            #   而「黄金体验的**能力**」里也有「力」
-            #   → 单字别名会抢在「黄金体験」之前命中 → 返回 Strength 的数据。
-            #   ★ 单字中文名信息量太低，误匹配率必然很高，一律不收。
-            if len(n) <= 1 and _CJK.search(n):
-                continue
-            # 长名优先匹配（调用方按长度降序遍历，这里只负责登记）
-            alias2id.setdefault(n, sid)
-            # 简繁变体也登记（用户可能输入任一形式）
-            for v in expand_variants(n):
-                alias2id.setdefault(v, sid)
+        register(sid, names)
+
+    # ★★ M21：补上「词典里有、但 stands.json 里没有」的替身 ★★
+    #   实测根因：dataset/processed/stands.json 只有 **154** 条，
+    #   而 DB 有 156 个替身 —— 缺的正是 echoes / tusk 这两个
+    #   「形态组母体」（Aggregate (form group)，派生形态的聚合条目）。
+    #   主循环遍历 stands.json 因此看不到它们 →
+    #   即使 stand_name_zh.json 里有中文名，别名表也登记不进去
+    #   （实测：「獠牙」「回音」查不到）。
+    #   → 这里用词典自身补漏，英文名取词典的 name_en 字段。
+    covered = {s.get("stand_id") for s in stands}
+    for sid, rec in zh_map.items():
+        if sid in covered or not isinstance(rec, dict):
+            continue
+        names = [n for n in (rec.get("name_en"),) if n]
+        names.extend(n for n in (rec.get("name_zh_variants") or [])
+                     if n and n not in names)
+        if rec.get("name_zh") and rec["name_zh"] not in names:
+            names.append(rec["name_zh"])
+        if names:
+            register(sid, names)
 
     return alias2id, id2alias
 

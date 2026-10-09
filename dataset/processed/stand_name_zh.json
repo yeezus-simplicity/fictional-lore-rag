@@ -1304,5 +1304,19 @@
       "小面孔",
       "小脸"
     ]
+  },
+  "echoes": {
+    "name_en": "Echoes",
+    "name_zh": "回音",
+    "level": "D",
+    "source": "由派生形态名反推",
+    "_note": "M21：echoes/tusk 这类「形态组母体」在 stands.json 里缺失（154/156），中文名由派生形态名去后缀反推，非来源直取 → 标 D 级以便审阅"
+  },
+  "tusk": {
+    "name_en": "Tusk",
+    "name_zh": "獠牙",
+    "level": "D",
+    "source": "由派生形态名反推",
+    "_note": "M21：echoes/tusk 这类「形态组母体」在 stands.json 里缺失（154/156），中文名由派生形态名去后缀反推，非来源直取 → 标 D 级以便审阅"
   }
 }

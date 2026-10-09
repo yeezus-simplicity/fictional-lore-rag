@@ -397,6 +397,54 @@ def main() -> int:
     #   实测：Level A 的官方名里混着「審判」（繁体）、「悪魔」（日文汉字）
     #   —— 这些字用户根本不会输入，保留它们只会虚增覆盖率。
     #   → 构建时就降级（优先用简体译名），并在此处复查。
+    # ★★ M21：补齐「形态组母体」的中文名 ★★
+    #   实测问题：DB 有 156 个替身，其中 echoes / tusk 的 stand_type 是
+    #   "Aggregate (form group)"（派生形态的母体），
+    #   但 dataset/processed/stands.json **只有 154 条** —— 母体那两条不在里面，
+    #   于是主循环遍历不到 → 母体中文名永远缺失（154/156）。
+    #   副作用：问「Tusk 的能力」时查不到中文名，只能回退英文名。
+    #   → 从派生形态反推母体名：'回音Act 1' → '回音'、'獠牙 Act 1' → '獠牙'。
+    #
+    #   ★ 必须优先用**维基的派生译名**（实测）：
+    #     项目自带的 tusk_act1 中文名是「牙ACT1」，反推出的「牙」是**单字**，
+    #     会被下面的不变量 1 拒绝；而 M14 实测单字名会**抢匹配**
+    #     （「黄金体验的**能力**」里的「力」曾命中 Strength）。
+    #     维基写「獠牙 Act 1」→ 母体「獠牙」两个字，安全。
+    _ACT = re.compile(r"^(.*?)_?act\s*\d+$", re.I)
+    bases: dict[str, str] = {}
+    for s in stands:
+        m = _ACT.match(s["stand_id"])
+        if m:
+            bases.setdefault(m.group(1), s["stand_id"])
+    n_base = 0
+    for base in sorted(bases):
+        if base in out:
+            continue
+        zh_base = ""
+        for n in range(1, 9):
+            key = norm_en(f"{base} act {n}")
+            cands = fetched_variants.get(key) or (
+                [fetched[key]] if key in fetched else [])
+            for c in cands:
+                z = re.sub(r"\s*[Aa][Cc][Tt]\s*\d+\s*$", "", c).strip()
+                if len(re.sub(r"[\s·、,，/]", "", z)) >= 2:
+                    zh_base = z
+                    break
+            if zh_base:
+                break
+        if zh_base:
+            out[base] = {
+                "name_en": base.replace("_", " ").title(),
+                "name_zh": zh_base, "level": "D",
+                "source": "由派生形态名反推",
+                "_note": ("M21：echoes/tusk 这类「形态组母体」在 stands.json 里"
+                          "缺失（154/156），中文名由派生形态名去后缀反推，"
+                          "非来源直取 → 标 D 级以便审阅"),
+            }
+            n_base += 1
+    if n_base:
+        print(f"  + 补齐形态组母体中文名 {n_base} 条（级别 D，由派生名反推）")
+
     _NON_SIMP_JP = set("審判壓氣車門鬥髮馬鳥魚館裝經驗體験複"
                        "數據點擊網頁實現處於業務")
     non_simp = [(v["name_en"], v["name_zh"]) for v in out.values()
@@ -438,7 +486,10 @@ def main() -> int:
 
     # 不变量 3：每个 stand_id 都能对上stands.json
     ids = {s["stand_id"] for s in stands}
-    bad = set(out) - ids
+    # ★ M21：`bases` 是"形态组母体"（echoes/tusk），它们**本来就不在
+    #   stands.json 里**（那是本题要补的缺口），不是无效 id。
+    #   不排除掉的话这里会误报"无效 2"。
+    bad = set(out) - ids - set(bases)
     print(f"  {'✓' if not bad else '✗'} stand_id 全部有效"
           f"{'' if not bad else f' —— 无效 {len(bad)}'}")
 

@@ -58,3 +58,6 @@ docker/.env
 #   → 会把dataset/sources/images/fetch_stand_images.py 一起忽略掉（实测已中招）。
 /images/
 /.tmp_preview/
+
+# ---- M21：维基抓取的本地缓存（可从维基重新生成，约 650 KB）----
+dataset/sources/zh_names/_cache_*

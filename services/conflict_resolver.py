@@ -403,6 +403,28 @@ class Router:
         r"(是几级|多少级|是多少|能力值|破坏力|速度|射程|持续力|"
         r"精密性|成长性|第几部|使用者是谁|有哪些替身|有几个形态)")
 
+    # ★★ M20：「XX 的替身是什么」→ 结构化反查（直接给替身名）
+    #   实测踩坑：SEMANTIC 里有万能词「是什么」，
+    #   「东方定助的替身是什么」被判成 semantic → 去检索原文 →
+    #   返回**能力介绍长段**，而用户要的是替身名这一个词。
+    #   → 这类问法答案确定（查库即可），不该走语义检索。
+    #   注意：必须排在 SEMANTIC 判定之前。
+    STAND_OF_ASK = re.compile(
+        #★ 必须支持**含空格的英文全名**（实测踩坑）★
+        #   'Jotaro Kujo的替身是什么' —— 若只写 (.{2,12}?) 则中间的空格
+        #   会导致「Jotaro」「Kujo」被拆开、整句匹配不上 →
+        #   路由退回 semantic → 又变成一长段原文介绍。
+        #   → 主体部分允许字母/数字/点/连字符/空格（Toki no Fūwa 这类）。
+        r"((?:[A-Za-z][A-Za-z0-9.'\-]*\s*){1,4}|[一-鿿]{2,12}?)\s*的\s*"
+        r"(?:替身|Stand|STAND|使的替身|本人|的本体)")
+
+    # ★★ M20：出现这些词时**不判** stand_of —— 否则会抢走聚合类问题
+    #   （实测我引入的回归）：「各部的替身数量」里「各部」被当成人名，
+    #   stand_of 抢先触发，而它该走 part_count。
+    AGG_GUARD = re.compile(
+        r"(多少|几个|数量|总数|排名|最高|最强|最弱|最大|最小|"
+        r"各部|每部|这部|哪部|第\s*\d+\s*部|部数|所有|全部)")
+
     # ★ 语义描述
     SEMANTIC = re.compile(
         r"(描述|介绍|概述|历史|性格|外观|来源|设定|怎么|如何|"
@@ -421,7 +443,47 @@ class Router:
         "appearance", "personality", "history", "ability", "profile",
     }
 
+    # ★★ M20新增：**未知中文人名**检测
+    #   实测（用户报的 bug）：「东方常秀的替身是什么」
+    #   → 答成Soft & Wet 的能力长段介绍（那是东方**定助**的替身）
+    #   原因：zh_hits 只收「已知中文别名」，"东方常秀"不在其中
+    #        → candidates=[] → unknown_hit=None
+    #        → 但问句含"替身"（DOMAIN_HINT 命中）→ 不拒答
+    #        → 落到语义兜底，BM25捞回 soft_wet 的原文。
+    #   ★ 「东方常秀」是《东方project》的角色，不是 JOJO 角色。
+    #   → 规则：问句里出现「XXX的替身」，XXX 是 2-4 个汉字、
+    #     且不在已知别名里、也不在维度词/停用词里
+    #     → 判为「编造/未知实体」→ abstain。
+    ZH_PERSON_TMPL = re.compile(r"([一-鿿]{2,4})的替身")
+    # 这些是「的」前常见的非人名前缀，不该当成名字
+    ZH_NAME_STOP = {
+        "这个", "那个", "什么", "哪个", "谁的", "他的", "她的",
+        "我的", "你的", "它的", "他们", "自己", "别人", "大家",
+        "一个", "两个", "三个", "所有", "全部", "每个",
+        "已知", "未", "不", "没", "是", "有", "会", "能",
+        "替身", "使者", "本体", "能力", "形态",
+    }
+
+    def _unknown_zh_person(self, q: str) -> Optional[str]:
+        """问句里「XXX的替身」里的 XXX 不是已知别名 → 返回该名字。
+
+        ★ 为什么要单独做（不能只靠 known_entities 抽实体）：
+          known_entities 里只有**已收录**的替身名/中文别名，
+          "东方常秀"这种未收录的人名压根不会进候选列表，
+          于是 unknown_hit 永远是 None，有问有答但答的是别人。
+        """
+        for m in self.ZH_PERSON_TMPL.finditer(q):
+            name = m.group(1)
+            if name in self.ZH_NAME_STOP:
+                continue
+            if self._is_known(name):
+                continue
+            if name in (self.DIMENSION_WORDS or ()):
+                continue
+            return name
+        return None
     # ★★ M14 新增：**领域相关性**前置判据
+    #   （用户报的 bug）M14 当时写的是「不复用 match_stand」，
     #   实测踩坑（用户报的 bug）：
     #     Q「今天天气怎么样」→ SEMANTIC 里的万能词「怎么」命中
     #                      → 路由到 semantic → 检索返回 Heaven's Door 的介绍
@@ -497,7 +559,14 @@ class Router:
                 if len(suffix) >= 3:
                     return False        # 认定为变体（编造）
                 return True             # 后缀太短，如 "The World" ⊂ "...: The World"
-        return True
+        # ★★ M20 修 bug：这里原本是一个**裸 return True**（无条件返回 True）。
+        #   实测后果：「东方常秀」这个《东方project》角色被判为"已知实体"——
+        #   因为它既不在已知集、也不是任何已知实体的子串，
+        #   却因为走到了函数末尾那个 return True 而被认作已知。
+        #   → 于是 unknown_hit 永远 None，不拒答，
+        #     最后语义兜底答成 Soft & Wet（东方定助的替身）。
+        #   正确语义：所有规则都没命中 → **未知**。
+        return False
 
     def _extract_entities(self, q: str) -> list[str]:
         """从问句里抽取候选实体。
@@ -575,6 +644,15 @@ class Router:
         signals["candidates"] = candidates[:4]
         signals["unknown_entity"] = unknown_hit
 
+        # ★★ M20：中文人名兜底检测
+        #   known_entities 只装「已收录」的别名，未收录的人名抽不出候选，
+        #   unknown_hit 就永远是 None → 不拒答 → 语义兜底答成别人。
+        #   实测：「东方常秀的替身是什么」→ 答成 Soft & Wet（东方定助的替身）
+        if unknown_hit is None:
+            unknown_hit = self._unknown_zh_person(q)
+            if unknown_hit:
+                signals["unknown_entity"] = unknown_hit
+
         # ★★★ M16：区分「替身实体」与「维度词」
         #   实测踩坑：known_entities 里既装了替身名（Anubis、Tusk），
         #   也装了维度词（外观、形态、描述）。
@@ -637,6 +715,32 @@ class Router:
                 signals)
 
         # ---------- 3. 单一意图 ----------
+        # ★★ M20：「XX 的替身是什么」→ 结构化（优先于 SEMANTIC）
+        #   必须在 EXTREME / STRUCT_FACT / SEMANTIC 之前判，
+        #   否则被 SEMANTIC 的「是什么」抢走 → 返回长段原文介绍。
+        if self.STAND_OF_ASK.search(q) and not self.EXTREME.search(q) \
+                and not self.AGG_GUARD.search(q):
+            # ★★ 关键：分清「XX」是**人**还是**替身本身**——
+            #   「软又湿的替身是什么」XX=软又湿 → **替身名**，
+            #     该走原本的实体语义路径；
+            #   「Jotaro Kujo 的替身是什么」XX=Jotaro Kujo → **角色名**，
+            #     该走反查给替身名。
+            #
+            #   ★★ 判据不能用 _is_known（实测踩坑）：
+            #     _is_known 覆盖 known_entities，而 M20 把**角色名**
+            #     也加进了 known_entities（否则「Jotaro Kujo 的替身」
+            #     会被判成编造实体而拒答）→ 于是 _is_known("Jotaro Kujo")
+            #     为 True → 走进 entity_semantic → 又是一长段介绍。
+            #   → 必须判「是否是**替身名**」：self.known 才是替身名集合。
+            m_ask = self.STAND_OF_ASK.search(q)
+            subject = (m_ask.group(1) if m_ask else "").strip()
+            is_stand_name = subject.lower() in self.known
+            if not is_stand_name:
+                return RouteDecision(
+                    "structured",
+                    "问「某人的替身是哪个」→ 直接查库给替身名"
+                    "（M20：不再走语义检索返回长段介绍）",
+                    signals)
         if self.EXTREME.search(q):
             return RouteDecision("structured", "极值/聚合类问题 → SQL", signals)
         if self.STRUCT_FACT.search(q):

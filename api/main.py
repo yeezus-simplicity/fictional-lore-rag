@@ -150,6 +150,21 @@ def _init_state(use_vector: bool = True,
     known_entities.discard(None)
     known_entities.discard("")
 
+    # ★★ M20：把**角色名**也纳入已知实体 ★★
+    #   用户问「东方定助的替身是什么」，若路由器不认角色名
+    #   → 判成编造实体 → 拒答；而「Jotaro Kujo 的替身」同样会被拒。
+    #   实测 characters 表有 144 个角色，但**只有英文名**（中文名 0 个），
+    #   而别名词典里只有替身名 —— 角色名两边都没有，必须从DB 补。
+    try:
+        _c = STATE["conn"].cursor()
+        _c.execute("SELECT name_en FROM characters")
+        for (_n,) in _c.fetchall():
+            if _n:
+                known_entities.add(_n)
+        _c.close()
+    except Exception:
+        pass
+
     # --- 路由器（M4）---
     from conflict_resolver import Router
     STATE["router"] = Router(known_stands=known_stands,

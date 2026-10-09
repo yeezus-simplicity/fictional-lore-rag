@@ -49,6 +49,27 @@ INTENT_OWNER = re.compile(
     r"(使用者是谁|谁使用|持有者|是谁的)|"          # 正查：某替身的使用者
     r"(?:使用者|持有者)\s*.{2,30}?(?:有哪些|拥有|的替身)"  # 反查：某使用者有哪些替身
 )
+# ★★ M20 新增：「XX 的替身是什么」→ 反查（某使者有哪些替身）
+#   实测用户反馈：「东方常秀的替身是什么」→ 答成一段 Soft & Wet 的
+#   能力介绍（那是东方定助的替身）。两个问题：
+#     1) 认不出人名 → 应拒答（已修 _is_known的裸 return True）
+#     2) 认出人名时也不该走语义检索拿长段原文，
+#        问的是「哪个替身」→ 应直接 SQL 查库给名字。
+#   → 这个正则同时支持中文与英文写法：
+#     「东方定助的替身」「承太郎的替身」「吉良吉影的 Stand」
+INTENT_STAND_OF = re.compile(
+    # ★ 主体要支持**含空格的英文全名**：'Jotaro Kujo的替身是什么'
+    #   只写 (.{2,12}?) 会因中间空格匹配失败 → 意图不触发。
+    r"((?:[A-Za-z][A-Za-z0-9.'\-]*\s*){1,4}|[一-鿿]{2,12}?)\s*的\s*"
+    r"(?:替身|STAND|Stand|stand|使的替身|本人|的本体)")
+
+# ★★ M20：这些词出现时，**不能**判成「某人的替身」——
+#   实测我引入的回归：「各部的替身数量」被 stand_of 抢走
+#   （"各部"被当成人名），而它该走 part_count。
+#   判据：出现聚合/章节/疑问词，说明问的不是「某个人的替身」。
+INTENT_AGG_GUARD = re.compile(
+    r"(多少|几个|数量|总数|排名|最高|最强|最弱|最大|最小|"
+    r"各部|每部|这部|哪部|第\s*\d+\s*部|部数)")
 INTENT_FORMS = re.compile(r"(几个形态|有哪些形态|形态链)")
 INTENT_EXTREME = re.compile(
     r"(最高|最大|最强|最低|最小|最弱|多少个|几个|排名|综合|总分|"
@@ -90,6 +111,14 @@ def detect_intent(question: str) -> str:
     """
     if INTENT_FORMS.search(question):
         return "forms"
+    # ★ M20：「XX 的替身是什么」优先于 owner —— 
+    #   问的是「哪个替身」(stand_of)，不是「替身的使用者」(owner)。
+    #   两者都含「的替身」，必须先判 stand_of，
+    #   否则会把「东方定助的替身」答成「Soft & Wet 的使用者是东方定助」。
+    if INTENT_STAND_OF.search(question) \
+            and not INTENT_OWNER.search(question) \
+            and not INTENT_AGG_GUARD.search(question):
+        return "stand_of"
     if INTENT_OWNER.search(question):
         return "owner"
     if INTENT_PART_COUNT.search(question):
@@ -160,6 +189,8 @@ class StructuredExecutor:
             "owner": self._owner,
             "forms": self._forms,
             "part_count": self._part_count,
+            # ★ M20
+            "stand_of": self._stand_of,
         }.get(intent)
         # ★ M14：认不出意图时**明确说不知道**，不给无关答案
         if fn is None:
@@ -412,6 +443,59 @@ class StructuredExecutor:
         return (
             {"type": "stands_of_owner", "owner": owner, "count": len(rows),
              "stands": [{"name": r[0], "part": r[1]} for r in rows]},
+            [{"type": "database", "tables": ["stands", "characters"]}],
+        )
+
+    # ---------------------------------------------------------
+    def _stand_of(self, question: str, name2id: dict[str, str]):
+        """★★ M20：「XX 的替身是什么」→ 直接给**替身名**。
+
+        ★ 为什么单独加这个意图（用户报的 bug）★
+          用户问「东方常秀的替身是什么」，期望答案是「Soft & Wet」一个名字，
+          但系统返回了 Soft & Wet 的**能力介绍长段原文**——
+          既是别的角色（东方定助），又答非所问。
+        → 问「哪个替身」就该走 SQL 直接给名字，不该走语义检索。
+
+        角色名查得到就答；查不到返回 unknown，让上层拒答/给候选
+        （而不是拿别的替身的长段介绍凑答案）。
+        """
+        m = INTENT_STAND_OF.search(question)
+        owner = (m.group(1) if m else "").strip()
+        # ★ 主体可能含**内部空格**（'Jotaro Kujo'），
+        #   之前用 re.split(r"[是谁的\s]") 会在第一个空格处截断
+        #   → owner 变成 "Jotaro"，显示时不完整。
+        #   → 只在「已知噪声词」处截断，空格保留。
+        owner = re.split(r"[是谁的]", owner)[0].strip()
+        if not owner:
+            return self._unknown(question, name2id)
+
+        cur = self.conn.cursor()
+        # ★ 角色表只有英文名（实测 144 个角色，中文名 0 个），
+        #   所以先试英文精确匹配 → 再试"名字包含"（处理 YOSHIKAGE KIRA 这类）
+        cur.execute("""
+            SELECT s.name_en, s.name_ja, s.part, s.stand_id
+            FROM stands s JOIN characters c ON c.character_id = s.owner_id
+            WHERE lower(c.name_en) = lower(%s)
+            ORDER BY s.name_en
+        """, (owner,))
+        rows = cur.fetchall()
+        if not rows:
+            cur.execute("""
+                SELECT s.name_en, s.name_ja, s.part, s.stand_id
+                FROM stands s JOIN characters c ON c.character_id = s.owner_id
+                WHERE lower(c.name_en) LIKE lower(%s)
+                ORDER BY s.name_en LIMIT 8
+            """, (f"%{owner}%",))
+            rows = cur.fetchall()
+        if not rows:
+            return self._unknown(question, name2id)
+
+        return (
+            {"type": "stand_of", "owner": owner, "count": len(rows),
+             # ★ 只要名字，不要长段介绍 —— 这是用户明确要的
+             "stands": [{"name": r[0], "ja": r[1], "part": r[2]}
+                        for r in rows],
+             "answer": "、".join(r[0] for r in rows)},
             [{"type": "database", "tables": ["stands", "characters"]}],
         )
 

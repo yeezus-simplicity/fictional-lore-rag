@@ -778,6 +778,23 @@ function renderStructured(a){
     return `<div style="margin-bottom:8px">${esc(a.owner)} 的替身（${a.count} 个）</div>
       <div>${(a.stands||[]).map(x=>`<span class="tag">${esc(x.name)}</span>`).join('')}</div>`;
   }
+  // ★★ M20：「XX 的替身是什么」→ 直接给替身名。
+  //   用户要的就是这一个词，所以放最上面、加粗放大，
+  //   不再糊一整段能力介绍。
+  if(t==='stand_of'){
+    const st=a.stands||[];
+    const names = st.map(x=>esc(x.name));
+    return `<div style="margin-bottom:10px">
+        <div style="font-size:12px;color:var(--text-dim);margin-bottom:6px">
+          ${esc(a.owner)} 的替身${a.count>1? `（${a.count} 个）`:''}
+        </div>
+        <div style="font-size:22px;font-weight:700;line-height:1.4;
+                    color:var(--text)">${names.join('、')}</div>
+        ${st.some(x=>x.part)? `<div class="meta" style="margin-top:8px">
+          ${st.map(x=>`${esc(x.name)}${x.part?`（${esc(x.part)}）`:''}`).join('　')}
+        </div>`:''}
+      </div>`;
+  }
   if(t==='forms'){
     return `<div>${esc(a.stand_name)} 共 <b>${a.count}</b> 个形态</div>
       <div>${(a.items||[]).map(x=>`<span class="tag">${esc(x.form_id||x)}</span>`).join('')}</div>`;

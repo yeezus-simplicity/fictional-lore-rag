@@ -943,7 +943,24 @@ def get_conflicts(
     status: str = Query("all", pattern="^(all|pending|resolved)$"),
     limit: int = Query(50, ge=1, le=500),
 ):
-    """返回冲突记录。pending = 未定值（含刻意的 keep_unknown）。"""
+    """返回冲突记录。pending = 未定值（含刻意的 keep_unknown）。
+
+    ★★ M22：补上「消解理由 / 置信度 / 敏感性」★★
+      rationale / confidence / sensitivity 来自 resolution_log，
+      之前只在库里躺着、界面上完全没出现 —— 而这三样正是
+      「多源交叉验证」最有说服力的证据。
+
+    ★★ JOIN 必须按 (stand_id, stat_dim) 取**最新一条**日志 ★★
+      实测 resolution_log 有 44 条，而 stat_conflicts 只有 28 条：
+      同一个 (替身, 维度) 可能有多条日志（消解过程的变更记录，
+      如 boy_ii_man/RNG 有 2 条）。
+      直接 JOIN 会让冲突行**重复**、理由**串到别的维度**。
+      → 用 DISTINCT ON 先取每个组合的最新一条。
+
+    ★ 字段名保持向后兼容（仍返回 dim / value_a / value_b / type），
+      新增字段一律追加，避免破坏既有调用方。
+      另补 dim_cn（维度中文名），省得前端再维护一份映射。
+    """
     if not STATE.get("db_ok"):
         return {"count": 0, "conflicts": [],
                 "error": "数据库不可用",
@@ -953,8 +970,17 @@ def get_conflicts(
     sql = """
         SELECT c.stand_id, s.name_en, s.part, c.stat_dim,
                c.value_a, c.source_a, c.value_b, c.source_b,
-               c.conflict_type, c.resolution, c.resolved_value, c.note
-        FROM stat_conflicts c JOIN stands s ON s.stand_id = c.stand_id
+               c.conflict_type, c.resolution, c.resolved_value, c.note,
+               r.rationale, r.confidence, r.sensitivity, r.strategy
+        FROM stat_conflicts c
+        JOIN stands s ON s.stand_id = c.stand_id
+        LEFT JOIN (
+            SELECT DISTINCT ON (stand_id, stat_dim)
+                   stand_id, stat_dim, rationale, confidence,
+                   sensitivity, strategy, logged_at
+            FROM resolution_log
+            ORDER BY stand_id, stat_dim, logged_at DESC NULLS LAST
+        ) r ON r.stand_id = c.stand_id AND r.stat_dim = c.stat_dim
         WHERE 1=1
     """
     params: list = []
@@ -967,9 +993,28 @@ def get_conflicts(
     cur.execute(sql, params)
     cols = ["stand_id", "stand_name", "part", "dim", "value_a", "source_a",
             "value_b", "source_b", "type", "resolution", "resolved_value",
-            "note"]
+            "note",
+            # M22
+            "rationale", "confidence", "sensitivity", "logged_strategy"]
     rows = [dict(zip(cols, r)) for r in cur.fetchall()]
     cur.close()
+    # 维度中文名（复用执行器的映射，避免前端再维护一份）
+    try:
+        from executor import DIM_CN, LEVEL_CN
+    except Exception:  # noqa: BLE001
+        DIM_CN, LEVEL_CN = {}, {}
+    for r in rows:
+        r["dim_cn"] = DIM_CN.get(r.get("dim") or "", r.get("dim") or "")
+        # 有理由 = 该条在 resolution_log 里有记录
+        r["has_rationale"] = bool(r.get("rationale"))
+        # ★ M22：resolved_value 是**数字等级**（1..5），而 value_a/value_b 是
+        #   **字母**（E/D/C/B/A）→ 同一张卡左右不一致，用户看不懂「采纳 3」。
+        #   → 补一个字母形态给前端用（非 1..5 的值原样返回，不硬转）。
+        rv = r.get("resolved_value")
+        if isinstance(rv, int) and rv in LEVEL_CN:
+            r["resolved_label"] = LEVEL_CN[rv]
+        else:
+            r["resolved_label"] = rv
     return {"count": len(rows), "status": status, "conflicts": rows}
 
 

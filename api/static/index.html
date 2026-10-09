@@ -299,6 +299,93 @@ td.num { font-family: var(--mono); font-size: 12px; text-align: right; }
 .c-cat.RANKED { color: var(--ok); }
 .c-cat.EMPTYSLOT { color: var(--text-faint); }
 .c-cat.UNCATEGORIZED { color: var(--text-dim); }
+
+/* ---- M22：冲突消解对照卡 ---- */
+/* 深色主题（--bg #14161a），沿用同一套变量 */
+.cf-sum {
+  font-size: 13px; color: var(--text-dim); margin-bottom: 14px;
+  padding: 10px 14px; background: var(--bg-panel);
+  border: 1px solid var(--border); border-radius: 8px;
+}
+.cf-sum b { color: var(--text); }
+.cf-card {
+  background: var(--bg-panel); border: 1px solid var(--border);
+  border-radius: 10px; margin-bottom: 14px; overflow: hidden;
+}
+/* 保留未知的卡片弱化显示 —— 它是**刻意的决策**，不是失败 */
+.cf-card.is-pending { border-color: var(--border); opacity: .82; }
+.cf-card.is-pending .cf-head { border-left: 3px solid var(--text-faint); }
+.cf-card:not(.is-pending) .cf-head { border-left: 3px solid var(--ok); }
+
+.cf-head {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  padding: 10px 14px; border-bottom: 1px solid var(--border);
+  background: var(--bg-hover);
+}
+.cf-stand { font-weight: 600; font-size: 15px; color: var(--text); }
+.cf-dim {
+  font-size: 12px; color: var(--accent);
+  border: 1px solid var(--accent-dim); border-radius: 4px;
+  padding: 1px 7px;
+}
+.cf-part { font-size: 11px; color: var(--text-faint); }
+.cf-state {
+  margin-left: auto; font-size: 11px; padding: 2px 9px;
+  border-radius: 10px; white-space: nowrap;
+}
+.cf-state.p { color: var(--text-faint); border: 1px solid var(--border-strong); }
+.cf-state.r { color: var(--ok); border: 1px solid var(--ok); }
+
+.cf-srcs { width: 100%; border-collapse: collapse; }
+.cf-srcs td {
+  padding: 7px 14px; font-size: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.cf-src { color: var(--text-dim); font-family: var(--mono); font-size: 11px; }
+.cf-vs { color: var(--text-faint); text-align: center; width: 34px; font-size: 11px; }
+.cf-v { font-family: var(--mono); }
+/* 纯等级：大号醒目 */
+.cf-v.cf-grade { font-size: 16px; font-weight: 700; color: var(--text); }
+.cf-v.cf-grade.is-pick { color: var(--accent); }
+/* 说明性文本（源A 常见 36 字符的 ?※… 说明）：小字压灰，避免撑破布局 */
+.cf-v.cf-text {
+  font-size: 11px; color: var(--text-faint);
+  display: inline-block; max-width: 260px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  vertical-align: bottom;
+}
+.cf-v.cf-none { color: var(--text-faint); }
+
+.cf-foot { padding: 10px 14px; }
+.cf-line {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  font-size: 12px; margin-bottom: 6px;
+}
+.cf-line:last-child { margin-bottom: 0; }
+.cf-k { color: var(--text-faint); font-size: 11px; }
+.cf-tag {
+  font-family: var(--mono); font-size: 11px;
+  border: 1px solid var(--border-strong); border-radius: 4px;
+  padding: 1px 7px; color: var(--text-dim);
+}
+.cf-reason { color: var(--text-dim); }
+.cf-reason span:last-child { flex: 1; min-width: 200px; }
+.cf-noreason { color: var(--text-faint); font-style: italic; }
+
+/* 置信度小进度条 */
+.cf-conf { display: inline-flex; align-items: center; gap: 6px; }
+.cf-conf-bar {
+  display: inline-block; width: 66px; height: 5px;
+  background: var(--border-strong); border-radius: 3px; overflow: hidden;
+}
+.cf-conf-bar i { display: block; height: 100%; }
+.cf-conf b { font-family: var(--mono); font-size: 11px; color: var(--text-dim); }
+
+/* 敏感性：脆弱 → 警示色；稳健 → 中性 */
+.cf-sens { font-size: 11px; }
+.cf-sens.ok { color: var(--text-faint); }
+.cf-sens.bad { color: var(--warn); }
+
 .ok { color: var(--ok); } .bad { color: var(--err); }
 .empty { color: var(--text-faint); font-size: 13px; padding: 22px; text-align: center; }
 .loading { color: var(--text-dim); font-size: 13px; padding: 18px; }
@@ -400,6 +487,18 @@ $('.samples').insertAdjacentHTML('beforeend',
 $('#bSamples').insertAdjacentHTML('beforeend',
   ['Star Platinum','The World','Made in Heaven','Tusk','Anubis']
     .map(n=>`<span class="chip" onclick="askB('${esc(n)}')">${esc(n)}</span>`).join(''));
+
+// ★★ M22 修 bug：数据浏览的「查询」按钮**从未绑定任何事件** ★★
+//   askB() 本身是支持读输入框的（n 缺省时取 $('#bi').value），
+//   但 #bb 上没有 onclick / addEventListener →
+//   用户手动输入替身名后点「查询」**毫无反应**，
+//   只有点下面那几个示例 chip 才能查。
+//   ★ 这是「接口全绿但前端不能用」的典型：脚本一测就发现，
+//     纯接口测试永远发现不了。
+$('#bb').onclick = () => askB();
+$('#bi').addEventListener('keydown', e => {
+  if(e.key === 'Enter') askB();
+});
 
 // ---------- 模式切换（M11）----------
 let MODE = 'extract';
@@ -954,25 +1053,114 @@ function renderStand(d){
 async function loadC(status){
   $('#cans').innerHTML = '<div class="loading">加载中…</div>';
   try{
-    const r = await fetch(`${API}/conflicts?status=${status}&limit=40`);
+    const r = await fetch(`${API}/conflicts?status=${status}&limit=200`);
     const d = await r.json();
     const list = d.conflicts || d.items || [];
     if(!list.length){ $('#cans').innerHTML='<div class="empty">没有符合条件的记录</div>'; return; }
-    const CN = {RANKED:'正常',UNKNOWN:'未知',INFINITE:'无限',
-                EMPTYSLOT:'空缺',UNCATEGORIZED:'未分类'};
-    $('#cans').innerHTML = `<div class="card">
-      <h3>冲突记录（${d.count ?? list.length} 条）</h3>
-      <table><thead><tr><th>替身</th><th>维度</th><th>主源</th><th>镜像源</th>
-        <th>消解值</th><th>类别</th><th>策略</th></tr></thead><tbody>
-      ${list.map(c=>`<tr>
-        <td>${esc(c.stand_name||c.stand_id)}</td>
-        <td>${esc(c.dimension||'')}</td>
-        <td class="num">${esc(c.primary_value??c.primary_raw??'—')}</td>
-        <td class="num">${esc(c.mirror_value??c.mirror_raw??'—')}</td>
-        <td class="num">${esc(c.resolved_value??'—')}</td>
-        <td class="c-cat ${esc(c.category||'')}">${esc(CN[c.category]||c.category||'—')}</td>
-        <td>${esc(c.resolution||'—')}</td></tr>`).join('')}
-      </tbody></table></div>`;
+
+    // ★★ M22：按 (替身, 维度) **分组** ★★
+    //   实测一个 (替身,维度) 可能有多条冲突记录——
+    //   那是**同一主源对比了多个镜像源**（如 tusk_act3/RNG 同时对比
+    //   csv_topology 和 csv_bogdan），不是重复数据。
+    //   → 一张卡片 = 一个 (替身,维度)，内部列出全部源对比行。
+    const groups = new Map();
+    list.forEach(c=>{
+      const k = `${c.stand_id}|${c.dim||c.stat_dim}`;
+      if(!groups.has(k)) groups.set(k, []);
+      groups.get(k).push(c);
+    });
+
+    // 字段名以**后端为准**：dim / value_a / source_a / value_b / type
+    // ★ M22 修 bug：原先读 c.dimension / c.primary_value / c.category
+    //   与后端字段对不上 → 维度、主源、镜像源、类别四列**恒为空**。
+    const isGrade = v => /^[A-E]$/.test(String(v??'').trim());
+
+    // 一个「值」的渲染：纯等级用大号等宽；说明性文本用小字灰色
+    //   （源A jojowiki 常有 '?※Power: Likely A (JoJoveller p.245)' 这类
+    //    36 字符的说明，直接大号显示会撑破布局）
+    const valCell = (v, cls) => {
+      if(v===null || v===undefined || v==='')
+        return `<span class="cf-v cf-none">—</span>`;
+      const s = String(v);
+      if(isGrade(s)) return `<span class="cf-v cf-grade ${cls||''}">${esc(s)}</span>`;
+      return `<span class="cf-v cf-text ${cls||''}" title="${esc(s)}">${esc(s)}</span>`;
+    };
+
+    // 置信度小进度条
+    const confBar = c => {
+      if(c===null || c===undefined) return '';
+      const pct = Math.round(Number(c)*100);
+      const col = pct>=80 ? 'var(--ok)' : pct>=60 ? 'var(--warn)' : 'var(--err)';
+      return `<span class="cf-conf"><span class="cf-conf-bar">
+        <i style="width:${pct}%;background:${col}"></i></span>
+        <b>${pct}%</b></span>`;
+    };
+
+    // 敏感性：维基/库里用 **脆弱** 标记（Markdown 粗体），转成警示色
+    const sens = s => {
+      if(!s) return '';
+      const frag = /脆弱/.test(s);
+      const txt = esc(String(s).replace(/\*\*/g,''));
+      return `<span class="cf-sens ${frag?'bad':'ok'}">
+        ${frag?'⚠':'✓'} ${txt}</span>`;
+    };
+
+    const STRAT = {prefer_primary:'采主源', keep_unknown:'保留未知',
+                   split_by_form:'按形态拆分'};
+
+    const cards = [...groups.values()].map(rows=>{
+      const h = rows[0];
+      const dim = h.dim || h.stat_dim || '';
+      const dimCn = h.dim_cn || dim;
+      const resolved = h.resolved_value;
+      const pending = (resolved===null || resolved===undefined);
+      // 源对比行：第一行是主源参考，其余行交替展示 主源 vs 该镜像源
+      const srcRows = rows.map(x=>`
+        <tr>
+          <td class="cf-src">${esc(x.source_a||'—')}</td>
+          <td>${valCell(x.value_a)}</td>
+          <td class="cf-vs">vs</td>
+          <td class="cf-src">${esc(x.source_b||'—')}</td>
+          <td>${valCell(x.value_b)}</td>
+        </tr>`).join('');
+      return `<div class="cf-card ${pending?'is-pending':''}">
+        <div class="cf-head">
+          <span class="cf-stand">${esc(h.stand_name||h.stand_id)}</span>
+          <span class="cf-dim">${esc(dimCn)}</span>
+          ${h.part?`<span class="cf-part">第${esc(h.part)}部</span>`:''}
+          <span class="cf-state ${pending?'p':'r'}">${pending?'保留未知':'已消解'}</span>
+        </div>
+        <table class="cf-srcs"><tbody>${srcRows}</tbody></table>
+        <div class="cf-foot">
+          <div class="cf-line">
+            <span class="cf-k">采纳</span>
+            ${pending
+              ? `<span class="cf-v cf-none" title="刻意的保留未知，不是失败">保留未知</span>`
+              : valCell(h.resolved_label ?? resolved, 'is-pick')}
+            <span class="cf-k">策略</span>
+            <span class="cf-tag">${esc(STRAT[h.resolution]||h.resolution||'—')}</span>
+            ${confBar(h.confidence)}
+          </div>
+          ${h.rationale
+            ? `<div class="cf-line cf-reason">
+                 <span class="cf-k">理由</span>
+                 <span>${esc(String(h.rationale).replace(/\*\*/g,''))}</span></div>`
+            : `<div class="cf-line cf-reason cf-noreason">
+                 <span class="cf-k">理由</span>
+                 <span>该条无消解日志（初始状态）</span></div>`}
+          ${h.sensitivity?`<div class="cf-line">${sens(h.sensitivity)}</div>`:''}
+        </div>
+      </div>`;
+    }).join('');
+
+    // 顶部：总数 + 状态分布（未消解 = 刻意的保留未知，值得标出来）
+    const nPend = list.filter(c=>c.resolved_value===null
+                          || c.resolved_value===undefined).length;
+    $('#cans').innerHTML = `<div class="cf-sum">
+        <b>${groups.size}</b> 组冲突 · 共 ${list.length} 条源对比 ·
+        <span class="cf-state p">保留未知 ${nPend}</span>
+        <span class="cf-state r">已消解 ${list.length-nPend}</span>
+      </div>${cards}`;
   }catch(e){
     $('#cans').innerHTML = `<div class="card"><div class="alert err">${esc(e.message)}</div></div>`;
   }

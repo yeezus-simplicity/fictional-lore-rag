@@ -515,7 +515,8 @@ class StructuredExecutor:
                 return (
                     {"type": "stand_of", "owner": owner, "count": len(rows),
                      "stands": [{"name": r[0], "ja": r[1], "part": r[2],
-                                 "zh": _stand_zh(r[3])} for r in rows],
+                                 "stand_id": r[3], "zh": _stand_zh(r[3])}
+                                for r in rows],
                      "answer": "、".join(r[0] for r in rows)},
                     [{"type": "database",
                       "tables": ["stands", "characters"]}],
@@ -544,7 +545,10 @@ class StructuredExecutor:
         return (
             {"type": "stand_of", "owner": owner, "count": len(rows),
              # ★ 只要名字，不要长段介绍 —— 这是用户明确要的
-             "stands": [{"name": r[0], "ja": r[1], "part": r[2]}
+             # ★ M25：带上 stand_id/zh —— 多轮追问要据此建立上下文
+             #   （不带的话「那它的速度呢」只能拿到角色名，代词会指错）
+             "stands": [{"name": r[0], "ja": r[1], "part": r[2],
+                         "stand_id": r[3], "zh": _stand_zh(r[3])}
                         for r in rows],
              "answer": "、".join(r[0] for r in rows)},
             [{"type": "database", "tables": ["stands", "characters"]}],

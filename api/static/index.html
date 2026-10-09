@@ -386,6 +386,24 @@ td.num { font-family: var(--mono); font-size: 12px; text-align: right; }
 .cf-sens.ok { color: var(--text-faint); }
 .cf-sens.bad { color: var(--warn); }
 
+/* ---- M25：多轮追问（指代消解）提示 ---- */
+.coref {
+  margin-top: 10px; padding-top: 9px;
+  border-top: 1px dashed var(--border-strong);
+  font-size: 12px; display: flex; align-items: center;
+  gap: 7px; flex-wrap: wrap;
+}
+.cf-pron { color: var(--warn); font-family: var(--mono); }
+.cf-arrow { color: var(--text-faint); }
+.cf-target { color: var(--accent); font-weight: 600; }
+.cf-from { color: var(--text-faint); font-size: 11px; }
+#newChat {
+  border: 1px solid var(--border-strong); background: transparent;
+  color: var(--text-dim); border-radius: 6px; padding: 6px 12px;
+  font-size: 12px; cursor: pointer;
+}
+#newChat:hover { background: var(--bg-hover); color: var(--text); }
+
 .ok { color: var(--ok); } .bad { color: var(--err); }
 .empty { color: var(--text-faint); font-size: 13px; padding: 22px; text-align: center; }
 .loading { color: var(--text-dim); font-size: 13px; padding: 18px; }
@@ -413,6 +431,7 @@ td.num { font-family: var(--mono); font-size: 12px; text-align: right; }
     <input type="text" id="qi" placeholder="问一个问题，例如：Star Platinum 的破坏力是几级？"
            autocomplete="off">
     <button class="go" id="qb">查询</button>
+    <button id="newChat" title="清空上下文，下次追问不再引用上一轮对象">新对话</button>
   </div>
   <!-- ★ M11：抽取式 / 生成式 对比 -->
   <div class="modes">
@@ -500,6 +519,12 @@ $('#bi').addEventListener('keydown', e => {
   if(e.key === 'Enter') askB();
 });
 
+// ★ M25：同一个教训 —— 新加的按钮必须绑事件
+$('#newChat').onclick = () => resetSession();
+$('#qi').addEventListener('keydown', e => {
+  if(e.key === 'Enter') ask();
+});
+
 // ---------- 模式切换（M11）----------
 let MODE = 'extract';
 const HINTS = {
@@ -572,6 +597,24 @@ $('#qi').onkeydown = e => { if(e.key==='Enter') ask(); };
 $('#bi').onkeydown = e => { if(e.key==='Enter') askB(); };
 
 // ---------- 问答 ----------
+// ---------- M25：多轮会话 ----------
+// ★ 会话 id 存 localStorage：刷新页面后上下文还在（符合用户直觉）。
+//   点「新对话」换一个 id，等价于清空上下文。
+function newSessionId(){
+  return 's-' + Date.now().toString(36) + '-' +
+         Math.random().toString(36).slice(2, 8);
+}
+let SID = localStorage.getItem('ragkb_sid');
+if(!SID){ SID = newSessionId(); localStorage.setItem('ragkb_sid', SID); }
+
+function resetSession(){
+  SID = newSessionId();
+  localStorage.setItem('ragkb_sid', SID);
+  $('#ans').innerHTML = '';
+  $('#rout').innerHTML = '<div class="card"><div class="meta">' +
+    '已开启新对话 —— 上下文已清空（下次追问不再引用上一轮对象）</div></div>';
+}
+
 async function ask(q){
   q = (q!==undefined? q : $('#qi').value).trim();
   if(!q) return;
@@ -583,7 +626,8 @@ async function ask(q){
     // ★ /query 的参数是 **query string**（q / top_k），不是 JSON body
     //   实测踩坑：按 body 传 {question:...} → 422 Unprocessable Content
     const r = await fetch(`${API}/query?` +
-      new URLSearchParams({q:q, top_k:'3', mode:MODE}), {method:'POST'});
+      new URLSearchParams({q:q, top_k:'3', mode:MODE, session_id:SID}),
+      {method:'POST'});
     if(!r.ok) throw new Error('HTTP '+r.status);
     render(await r.json());
     ping();                    // 顺带刷新状态灯
@@ -617,12 +661,23 @@ async function ask(q){
 
 function render(d){
   // 路由卡
+  // ★ M25：指代消解提示 —— 只有在**真的发生了替换**时才显示，
+  //   让用户看得见系统把「它」理解成了谁（不然追问出错时无从判断）
+  const cf = d.coref;
+  const cfHtml = cf ? `
+      <div class="coref">
+        <span class="cf-pron">「${esc(cf.pronoun)}」</span>
+        <span class="cf-arrow">→</span>
+        <span class="cf-target">${esc(cf.resolved_to)}</span>
+        <span class="cf-from">承接上一轮「${esc(cf.from_question||'')}」</span>
+      </div>` : '';
   $('#rout').innerHTML = `
     <div class="card">
       <span class="route ${esc(d.route)}">${esc(d.route)}</span>
       <span class="meta" style="display:inline">${esc(d.route_reason)}</span>
       <div class="meta">${d.elapsed_ms.toFixed(0)} ms · 答案类型 ${esc(d.answer_type)}
         ${d.confidence!=null? ' · 置信度 '+d.confidence : ''}</div>
+      ${cfHtml}
     </div>`;
   renderProcess(d);
   renderAnswer(d);
@@ -632,6 +687,13 @@ function renderProcess(d){
   const steps = [];
   steps.push({cls:'', t:'路由判定',
     d:`识别为 <b>${esc(d.route)}</b> —— ${esc(d.route_reason)}`});
+  // ★ M25：把消解过程也放进「处理过程」，可追溯
+  if(d.coref){
+    steps.push({cls:'hit', t:'指代消解',
+      d:`「${esc(d.coref.pronoun)}」→ <b>${esc(d.coref.resolved_to)}</b>`
+        + (d.coref.from_question
+           ? `（来自上一轮「${esc(d.coref.from_question)}」）` : '')});
+  }
   const ev = d.evidence||[];
   if(d.retrieval_meta){
     const rm = d.retrieval_meta;

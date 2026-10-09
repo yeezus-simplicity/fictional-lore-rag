@@ -215,6 +215,34 @@ def _init_state(use_vector: bool = True,
               f"退回仅英文名：中文名提问会识别不了")
     STATE["name2id"] = name2id
 
+    # --- M25：会话存储（多轮追问）---
+    #   ★ 进程内存 + TTL，不引入外部依赖（单机演示服务够用）
+    try:
+        from coref import SessionStore
+        STATE["sessions"] = SessionStore(ttl_sec=1800, max_sessions=500)
+        print("[api] 多轮追问：已启用（会话 TTL 30 分钟）")
+    except Exception as e:  # noqa: BLE001
+        STATE["sessions"] = None
+        print(f"[api] ⚠ 多轮追问不可用：{type(e).__name__}")
+
+    # --- M25：角色名索引（指代消解要判断「他」指哪个角色）---
+    STATE["char2id"] = {}
+    if db_ok:
+        try:
+            from aliases import build_char_alias_table
+            STATE["char2id"] = dict(build_char_alias_table())
+            # ★ 再补英文名：build_char_alias_table 只给中文名，
+            #   而用户也可能用英文名追问（"what about his other stands"）
+            _cc = STATE["conn"].cursor()
+            _cc.execute("SELECT character_id, name_en FROM characters")
+            for _cid, _en in _cc.fetchall():
+                if _en:
+                    STATE["char2id"].setdefault(_en, _cid)
+            _cc.close()
+            print(f"[api] 角色名索引：{len(STATE['char2id'])} 个写法")
+        except Exception:  # noqa: BLE001
+            STATE["char2id"] = {}
+
     # --- 结构化执行器（★ 需要 DB）---
     STATE["structured"] = None
     if db_ok:
@@ -353,6 +381,11 @@ class QueryResponse(BaseModel):
     # ★★ M17：可视化（缺失维度在 radar_svg 里已标注「无数据」，不填 0）
     radar_svg: Optional[str] = Field(
         None, description="六维雷达图 SVG（问属性/替身时返回）")
+    # ★★ M25：多轮追问的指代消解信息 ★★
+    #   发生了替换时才有值 —— 前端据此显示
+    #   「「它」→ Star Platinum」，让用户看见系统怎么理解代词的。
+    coref: Optional[dict] = Field(
+        None, description="指代消解：{pronoun, resolved_to, from_question}")
     stand_images: Optional[dict] = Field(
         None, description="替身图片：{stand,user,manga,anime} 分组 + URL")
 
@@ -531,8 +564,17 @@ def query(
     mode: str = Query("extract", pattern="^(extract|generate)$",
                       description=("extract=抽取式（默认，零生成零幻觉）/ "
                                   "generate=生成式（Qwen2.5-1.5B，忠实度约束）")),
+    session_id: Optional[str] = Query(
+        None, max_length=64,
+        description="★ M25：多轮会话标识。带上它才能解析「那它的速度呢」这类追问"),
 ):
-    """统一查询入口。内部按路由分流。"""
+    """统一查询入口。内部按路由分流。
+
+    ★★ M25：多轮追问（指代消解）★★
+      在路由**之前**把「它/这个替身/他」换成上一轮实体，
+      得到 resolved_q 往下走 —— 对下游执行器完全透明。
+      替换信息放在响应的 `coref` 字段里返回，让用户看得见。
+    """
     t0 = time.time()
     # ★ DB 不可用时的降级标记（必须在函数体里，
     #   放进 Pydantic 模型会报「需要类型注解」——实测踩过）
@@ -543,8 +585,27 @@ def query(
     # ★★ M17：雷达图与图片（认得出替身时才填）
     radar_svg_out: Optional[str] = None
     stand_imgs: Optional[dict] = None
+
+    # ---------- M25：指代消解（必须最早做）----------
+    # ★ 时机很关键：必须在 router.route() 之前。
+    #   放后面的话，路由已经按「它」这个含糊问句判过意图了。
+    coref_info: Optional[dict] = None
+    resolved_q = q
+    _prev_ctx = None
+    _store = STATE.get("sessions")
+    if _store is not None:
+        try:
+            from coref import resolve as _resolve
+            resolved_q, coref_info, _prev_ctx = _resolve(
+                q, session_id, _store,
+                guess_stand=lambda s: _guess_stand(s, STATE),
+                guess_char=lambda s: _guess_char(s, STATE),
+            )
+        except Exception:  # noqa: BLE001
+            resolved_q, coref_info = q, None
+
     router = STATE["router"]
-    decision = router.route(q)
+    decision = router.route(resolved_q)
     route = decision.route
 
     evidence: list[dict] = []
@@ -561,10 +622,10 @@ def query(
     #   → 任何阈值都做不到「既好用又安全」
     #   → 所以**不让它决定答案**，只提示「你是不是想问 X」
     fuzzy_suggestions: list[dict] = []
-    if STATE.get("id2alias") and _guess_stand(q, STATE) is None:
+    if STATE.get("id2alias") and _guess_stand(resolved_q, STATE) is None:
         try:
             from aliases import suggest_stands
-            fuzzy_suggestions = suggest_stands(q, STATE["id2alias"])
+            fuzzy_suggestions = suggest_stands(resolved_q, STATE["id2alias"])
         except Exception:
             fuzzy_suggestions = []
 
@@ -597,7 +658,7 @@ def query(
             #   正确做法：加一个单独的降级说明字段。
             db_unavailable = True
         else:
-            result, ev = STATE["structured"].execute(q, STATE["name2id"])
+            result, ev = STATE["structured"].execute(resolved_q, STATE["name2id"])
             evidence.extend(ev)
             if result is None:
                 # 路由说是结构化但解析不出意图 → 降级到语义
@@ -608,7 +669,7 @@ def query(
                 #   execute() 解析不出意图 → 降级到这里的语义检索。
                 #   ★ 旧代码只传 boost_stand，BM25 主体仍是全库 →
                 #     又返回Strength/Hermit Purple（完全无关的替身）。
-                _sid = _guess_stand(q, STATE)
+                _sid = _guess_stand(resolved_q, STATE)
                 _pinned = (STATE["semantic"].stand_chunks(_sid, top_k=top_k)
                            if _sid else [])
                 if _pinned:
@@ -616,7 +677,7 @@ def query(
                                                "pinned_stand": _sid}
                 else:
                     snippets, meta = STATE["semantic"].search(
-                        q, top_k=top_k, boost_stand=_sid)
+                        resolved_q, top_k=top_k, boost_stand=_sid)
                 if snippets:
                     answer = [s["content"] for s in snippets]
                     answer_type = "snippet"
@@ -636,8 +697,8 @@ def query(
 
                 # hybrid：补语义描述
                 if route == "hybrid":
-                    sid = result.get("stand_id") or _guess_stand(q, STATE)
-                    extra = STATE["semantic"].keyword_snippets(q, sid) \
+                    sid = result.get("stand_id") or _guess_stand(resolved_q, STATE)
+                    extra = STATE["semantic"].keyword_snippets(resolved_q, sid) \
                         if sid else []
                     if extra:
                         answer = {**result, "description_snippets": extra}
@@ -649,7 +710,7 @@ def query(
 
     # ---------- semantic ----------
     else:
-        sid = _guess_stand(q, STATE)
+        sid = _guess_stand(resolved_q, STATE)
         # ★★★ M16：`entity_semantic` —— 问句已锚定实体时**必须按实体取原文**，
         #   不能只用 BM25 boost。
         #   实测：走boost 语义检索时，「骇游天外的能力是什么」
@@ -665,11 +726,11 @@ def query(
                                   "pinned_stand": sid}
             else:
                 snippets, meta = STATE["semantic"].search(
-                    q, top_k=top_k, boost_stand=sid)
+                    resolved_q, top_k=top_k, boost_stand=sid)
                 retrieval_meta = _meta_to_dict(meta)
         else:
             snippets, meta = STATE["semantic"].search(
-                q, top_k=top_k, boost_stand=sid)
+                resolved_q, top_k=top_k, boost_stand=sid)
             retrieval_meta = _meta_to_dict(meta)
         if snippets:
             ev_texts = [s["content"] for s in snippets]
@@ -696,7 +757,7 @@ def query(
                         warning = ((warning or "")
                                    + "；生成模型加载失败，已回退抽取式")
                     else:
-                        res = gen.generate(q, ev_texts)
+                        res = gen.generate(resolved_q, ev_texts)
                         answer = res.text
                         answer_type = "generated"
                         generation = {
@@ -730,7 +791,7 @@ def query(
         if isinstance(answer, dict):
             sid = answer.get("stand_id")
         if not sid:
-            sid = _guess_stand(q, STATE)
+            sid = _guess_stand(resolved_q, STATE)
         if sid and STATE.get("conn"):
             try:
                 c2 = STATE["conn"].cursor()
@@ -758,6 +819,55 @@ def query(
                 # ★ 图片/雷达图是增强项，出错绝不能影响主答案
                 radar_svg_out = radar_svg_out or None
 
+    # ---------- M25：把本轮的实体记进会话（供下一轮指代消解）----------
+    # ★ 必须放在所有 exit 路径之前，否则「回答失败的那一轮」不留上下文，
+    #   用户紧接着追问就断链了。
+    #
+    # ★★ 实体来源的优先级（M25 实测踩坑）★★
+    #   第 1 轮「空条承太郎的替身是什么」的问句里**没有替身名**
+    #   （只有角色名），所以只从问句抽取会得到 stand_name=None →
+    #   下一轮「那它的速度呢」的「它」只能退到角色名，答成
+    #   「空条承太郎的速度」→ 检索到无关内容（实测就是这个 bug）。
+    #   → 必须**先看答案**：stand_of 的替身名在 answer["stands"] 里。
+    if _store is not None and session_id:
+        try:
+            from coref import build_context
+            _sid_new = _sname_new = None
+            _cid_new = _cname_new = None
+            if isinstance(answer, dict):
+                _sid_new = answer.get("stand_id")
+                _sname_new = answer.get("stand_name")
+                # stand_of / stands_of_owner：替身在 stands 列表里
+                _st = answer.get("stands")
+                if isinstance(_st, list) and _st and isinstance(_st[0], dict):
+                    _f = _st[0]
+                    _sid_new = _sid_new or _f.get("stand_id")
+                    # ★ 优先中文名（用户问的是中文，回填中文更连贯）
+                    _sname_new = (_sname_new or _f.get("zh")
+                                  or _f.get("name"))
+                _sname_new = _sname_new or answer.get("zh")
+                # 角色：stand_of 的 owner 字段
+                if answer.get("type") in ("stand_of", "stands_of_owner"):
+                    _cname_new = answer.get("owner")
+            # 问句兜底（答案给不出时）
+            if not _sid_new:
+                _sid_new = _guess_stand(resolved_q, STATE)
+            if not _sname_new:
+                _sname_new = _display_name_of(resolved_q, STATE) or _sid_new
+            if not _cid_new:
+                _cid_new = _guess_char(resolved_q, STATE)
+            if not _cname_new:
+                _cname_new = _display_char_name(resolved_q, STATE) or _cid_new
+            _store.put(session_id, build_context(
+                # ★ 存**用户原话**（不是 resolved_q）—— 它要回显给用户看
+                question=q,
+                stand_id=_sid_new, stand_name=_sname_new,
+                char_id=_cid_new, char_name=_cname_new,
+                prev=_prev_ctx,
+            ))
+        except Exception:  # noqa: BLE001
+            pass
+
     return {
         "question": q,
         "route": route,
@@ -779,6 +889,8 @@ def query(
         # ★★ M17：六维雷达图 + 替身图片
         "radar_svg": radar_svg_out,
         "stand_images": stand_imgs,
+        # ★★ M25：指代消解信息（发生替换时才有）
+        "coref": coref_info,
     }
 
 
@@ -1057,6 +1169,46 @@ def get_stats():
 # ------------------------------------------------------------------
 # 辅助
 # ------------------------------------------------------------------
+
+def _display_name_of(q: str, state: dict) -> Optional[str]:
+    """返回问句里出现的**替身写法本身**（不是 id）。
+
+    ★ 为什么要它：回填时代词应换成用户原本的写法 ——
+      用户打「白金之星」，下一轮显示「白金之星的速度」比
+      「Star Platinum 的速度」自然得多。
+    """
+    name2id = state.get("name2id", {})
+    for name in sorted(name2id, key=len, reverse=True):
+        if name and name.lower() in q.lower():
+            return name
+    return None
+
+
+def _display_char_name(q: str, state: dict) -> Optional[str]:
+    """返回问句里出现的**角色写法本身**。"""
+    c2i = state.get("char2id") or {}
+    ql = q.lower()
+    for name in sorted(c2i, key=len, reverse=True):
+        if name and name.lower() in ql:
+            return name
+    return None
+
+
+def _guess_char(q: str, state: dict) -> Optional[str]:
+    """猜问句里的**角色** id（M25，用于指代消解）。
+
+    ★ 与 _guess_stand 同理：长名优先，否则「常秀」会抢在「东方常秀」前面命中。
+    ★ 中文名与英文名都在同一张表里（初始化时已合并）。
+    """
+    c2i = state.get("char2id") or {}
+    if not c2i:
+        return None
+    ql = q.lower()
+    for name in sorted(c2i, key=len, reverse=True):
+        if name and name.lower() in ql:
+            return c2i[name]
+    return None
+
 
 def _guess_stand(q: str, state: dict) -> Optional[str]:
     """猜问句里的替身 id（★ M14：走全量别名表）。

@@ -80,6 +80,10 @@ python dataset/pipeline/run_pipeline.py
 ```
 问句
  │
+ ├─► M25 指代消解（多轮）★ 在路由之前
+ │     带 session_id 时，把「它 / 这个替身 / 他」换成上一轮实体
+ │     —— 下游完全无感知
+ │
  ├─► M4 意图路由（4 类，可解释）
  │     structured ─► SQL 执行器（M5 抽取式，零生成）
  │     semantic   ─► M3 混合检索（BM25 + bge-m3 + RRF k=30）
@@ -91,6 +95,23 @@ python dataset/pipeline/run_pipeline.py
 M6 生成层：Qwen2.5-1.5B + 忠实度约束的 system prompt
 M4 消解层：28 条源间冲突落表，4 种策略 + 敏感性分析
 ```
+
+### 多轮追问（M25）
+
+```bash
+# 同一个 session_id 串起一轮对话
+curl -X POST "localhost:8765/query?q=空条承太郎的替身是什么&session_id=demo"
+curl -X POST "localhost:8765/query?q=那它的速度呢&session_id=demo"
+#   ↑ 响应里的 coref 字段会告诉你：{"pronoun":"它","resolved_to":"白金之星"}
+```
+
+界面上的「新对话」按钮 = 换一个 session_id = 清空上下文。
+
+★ 两个容易做错的地方（都实测踩过）：
+1. **中文代词要排除伪代词** —— `其他`/`其中`/`尤其` 含 `他`/`其`，
+   不排除会把「其他替身有哪些」替换成病句。
+2. **本轮自带实体时不能替换** —— 「白金之星的射程呢」自己说了实体，
+   被上一轮覆盖就答错了。
 
 ---
 

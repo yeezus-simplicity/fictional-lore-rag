@@ -653,6 +653,10 @@ function renderStand(d){
     <div class="card">
       <h3>${esc(d.name_en||d.stand_id)}</h3>
       <dl class="kv">
+        ${d.name_zh?`<dt>中文名</dt><dd>${esc(d.name_zh)}${
+            (d.name_zh_variants&&d.name_zh_variants.length)
+              ?` <span style="opacity:.7">（异译：${esc(d.name_zh_variants.join('、'))}）</span>`
+              :''}</dd>`:''}
         <dt>stand_id</dt><dd>${esc(d.stand_id)}</dd>
         <dt>所属部</dt><dd>${d.part==null?'—':esc(d.part)+' · '+esc(d.part_name||'')}</dd>
         <dt>使用者</dt><dd>${esc(d.owner||'—')}</dd>

@@ -156,6 +156,13 @@ def _init_state(use_vector: bool = True,
             # ★ 合并（别名表里也有英文名，这里以别名表为准更全）
             name2id = {**name2id, **alias2id}
             STATE["id2alias"] = id2alias
+            # ★★ M16：留一份「stand_id → 中文名记录」，供 /stands/{id} 返回 name_zh
+            #   （DB 的 stands 表没有中文名列，中文名只在词典里）
+            try:
+                from aliases import load_zh_map
+                STATE["zh_map"] = load_zh_map()
+            except Exception:
+                STATE["zh_map"] = {}
             n_zh = sum(1 for v in id2alias.values()
                        if any(re.search(r"[\u4e00-\u9fff]", x) for x in v))
             print(f"[api] 别名表：{len(name2id)} 个名字 → "
@@ -713,8 +720,20 @@ def get_stand(stand_id: str):
     n_chunks = cur.fetchone()[0]
     cur.close()
 
+    # ★★ M16：把中文名挂到接口上
+    #   DB 的 stands 表没有中文名列（中文名在 aliases 的词典里），
+    #   → 在这里查一次词典补上，GUI 才能显示「骇游天外 / Sky High」。
+    #   同时带出异译别名（软又湿 / 柔软且湿润），便于核对。
+    zh_rec = (STATE.get("zh_map") or {}).get(stand_id) or {}
+    name_zh = zh_rec.get("name_zh")
+    zh_variants = [v for v in (zh_rec.get("name_zh_variants") or [])
+                   if v and v != name_zh]
+
     return {
         "stand_id": r[0], "name_en": r[1], "name_ja": r[2],
+        # ---- M16 新增：中文名与异译 ----
+        "name_zh": name_zh,
+        "name_zh_variants": zh_variants,
         "part": r[3], "part_name": r[4],
         "owner_raw": r[5], "stand_type": r[6], "reference": r[7],
         "form_count": r[8],

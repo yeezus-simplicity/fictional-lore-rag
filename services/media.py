@@ -1,48 +1,57 @@
-"""替身图片与雷达图服务（M17）。
+"""替身图片的后台抓取任务（M18，替代 M17 的同步方案）。
 
-==★ 设计要点 ==
+==★ 为什么必须改成后台异步 ★★
 
-1. **懒加载**：首次问某替身时才抓图（约 5-15 秒），之后走本地缓存。
-   实测每个替身约 10 张、每张 3-5 秒 → 全量预抓 154 个要 1小时以上，
-   而用户通常只关心少数几个 → 按需抓取是对的。
+M17 把图片抓取做成了**同步阻塞**在 /query 里，结果实测：
+    已缓存的替身      0.06 秒  ✓
+    没缓存的替身    87.48 秒  ✗← 前端一直转圈
+用户反馈「等很长一段时间还在检索，重新点一下就出答案了」——
+原因就在这里：第一次请求花 87 秒把图抓完并写进本地，
+第二次走缓存就秒回。体验上就是「卡死 → 再点一下好了」。
 
-2. **抓取进程隔离**：抓图要走代理且可能卡 20 秒，
-   ★ 绝不能阻塞 FastAPI 的事件循环 → 放线程池（run_in_executor）。
+★ 更糟的是：图片是**增强项**，却成了回答的最大延迟来源。
+  → 正确架构（业界通用做法）：
+    回答**立即返回**，图片走**后台任务**，
+    前端拿到答案后单独轮询图片状态，图就绪后渲染出来。
 
-3. **降级链**：
-   有本地缓存 → 用缓存
-   没缓存 → 尝试抓取（限时）→ 成功则用，失败/超时 → 返回空列表 + 说明
-   ★ 绝不因为图片抓不到就让整个查询失败（图片是增强，不是主功能）。
+本模块提供：
+  start_task(stand_en, stand_id, owner)  —— 后台起抓取（不阻塞）
+  status(stand_id)                       —— 查状态 idle/pending/running/done/failed
+  ensure_async(...)                     —— 有缓存给清单，没有就起后台任务
+  image_payload(...)                     —— 给 API 的便捷入口
 
-4. **雷达图缺失维度不填 0**：见 radar_chart.py 的说明。
+==★ M18 顺带修的并行化 ★★
+实测单张 400px thumb 经代理要 2.8 秒 → 串行 10 张 = 28 秒，
+叠加角色页与失败重试后整体 87 秒。
+→ fetch_stand_images.save 已改为 4 线程并行，同批约 7-8 秒。
 """
 from __future__ import annotations
 
-import concurrent.futures as _futures
+import concurrent.futures
 import json
 import sys
+import threading
+import time
 from pathlib import Path
-from typing import Optional
+from typing import Any, Optional
 
 ROOT = Path(__file__).resolve().parents[1]
 IMG_DIR = ROOT / "images"
 SRC_DIR = ROOT / "dataset" / "sources" / "images"
 
-# ★ images/ 在 .gitignore 里（体积大 + 有版权，靠 fetch_stand_images.py 重抓），
-#   但服务启动后前端会请求 /images/... → 目录不存在会404。
-#   → 这里兜底创建，避免"必须先手动跑一次抓图"才能看页面。
+# ★ images/ 在 .gitignore 里（体积大 + 有版权），但前端会请求 /images/...
+#   → 兜底创建，避免"必须先手动跑一次抓图"才能看页面。
 try:
     IMG_DIR.mkdir(parents=True, exist_ok=True)
 except OSError:
     pass
 
-# 抓取超时（秒）。实测单张3-5 秒、单个替身 10 张 → 给 90 秒够用
-FETCH_TIMEOUT = 90
+# 同一个替身只允许一个抓取任务在跑（避免重复点击起多个）
+_TASKS: dict[str, dict] = {}
+_LOCK = threading.Lock()
 
-
-def _ensure_src_on_path() -> None:
-    if str(SRC_DIR) not in sys.path:
-        sys.path.insert(0, str(SRC_DIR))
+# 兜底池：8 个线程够用（并发抓多个替身时不会把代理压垮）
+_POOL = concurrent.futures.ThreadPoolExecutor(max_workers=8)
 
 
 def manifest_path(stand_id: str) -> Path:
@@ -53,68 +62,89 @@ def has_cache(stand_id: str) -> bool:
     return manifest_path(stand_id).exists()
 
 
-def _fetch_sync(stand_en: str, stand_id: str, owner: str) -> bool:
-    """同步抓取（跑在线程池里）。返回是否成功。
+def _ensure_src_on_path() -> None:
+    if str(SRC_DIR) not in sys.path:
+        sys.path.insert(0, str(SRC_DIR))
 
-    ★ 走 page_images_by_kind：替身页取本体图+ **角色页取使者立绘**
-      （实测替身条目页里通常没有使者图 —— Star_Platinum 页 52 张图
-      含 Jotaro 的是 0 张，立绘都在角色页 /Jotaro_Kujo）。
-    """
+
+def read_manifest(stand_id: str) -> Optional[dict]:
+    if not has_cache(stand_id):
+        return None
+    try:
+        return json.loads(manifest_path(stand_id).read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+
+
+def _run(stand_en: str, stand_id: str, owner: str) -> None:
+    """真正执行抓取（跑在后台线程里，不阻塞任何 HTTP 请求）。"""
     _ensure_src_on_path()
+    with _LOCK:
+        if stand_id in _TASKS:
+            _TASKS[stand_id]["state"] = "running"
+    t0 = time.time()
     try:
         import fetch_stand_images as F
-    except Exception:
-        return False
-    try:
+        # 双来源：替身页取本体/漫画图，角色页取使者立绘
         stand_pairs, user_pairs = F.page_images_by_kind(stand_en, owner)
         items = [(F.classify(f, stand_en, owner), f, u)
                  for f, u in stand_pairs]
         items += [("user", f, u) for f, u in user_pairs]
         items = [x for x in items if x[0] != "noise"]
         if not items:
-            return False
+            with _LOCK:
+                _TASKS[stand_id].update(
+                    state="failed", error="无可用图片",
+                    elapsed=round(time.time() - t0, 1))
+            return
         F.save(stand_id, items)
-        return True
-    except Exception:
-        return False
-
-
-def ensure_images(stand_en: str, stand_id: str, owner: str = "",
-                  timeout: int = FETCH_TIMEOUT) -> dict:
-    """确保某替身有图，返回清单 dict。
-
-    ★ 这是给 API 调的入口：内部处理缓存命中 / 懒抓取 / 降级。
-    """
-    if has_cache(stand_id):
-        try:
-            return json.loads(manifest_path(stand_id).read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError):
-            pass
-
-    # 懒抓取：线程池 + 限时
-    try:
-        with _futures.ThreadPoolExecutor(max_workers=1) as ex:
-            ex.submit(_fetch_sync, stand_en, stand_id, owner).result(timeout)
-    except _futures.TimeoutError:
-        return {"stand_id": stand_id, "images": [], "error": "抓取超时"}
+        with _LOCK:
+            _TASKS[stand_id].update(
+                state="done", elapsed=round(time.time() - t0, 1))
     except Exception as e:  # noqa: BLE001
-        return {"stand_id": stand_id, "images": [],
-                "error": f"{type(e).__name__}: {e}"}
-
-    if not has_cache(stand_id):
-        return {"stand_id": stand_id, "images": [], "error": "无可用图片"}
-    try:
-        return json.loads(manifest_path(stand_id).read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
-        return {"stand_id": stand_id, "images": [], "error": "清单读取失败"}
+        with _LOCK:
+            _TASKS[stand_id].update(
+                state="failed", error=f"{type(e).__name__}: {e}",
+                elapsed=round(time.time() - t0, 1))
 
 
-def image_url(stand_id: str, file: str) -> str:
-    return f"/images/{stand_id}/{file}"
+def start_task(stand_en: str, stand_id: str, owner: str = "") -> dict:
+    """起一个后台抓取任务，**立即返回**（不阻塞调用方）。"""
+    with _LOCK:
+        cur = _TASKS.get(stand_id)
+        if cur and cur["state"] in ("pending", "running"):
+            return {"state": cur["state"], "started": False}
+        _TASKS[stand_id] = {
+            "state": "pending", "stand_en": stand_en, "owner": owner,
+            "started": time.time(),
+        }
+    _POOL.submit(_run, stand_en, stand_id, owner)
+    return {"state": "pending", "started": True}
+
+
+def status(stand_id: str) -> dict:
+    """查抓取状态。完成时带清单。"""
+    mf = read_manifest(stand_id)
+    if mf is not None:
+        return {"state": "done", "manifest": mf}
+    with _LOCK:
+        task = dict(_TASKS.get(stand_id) or {})
+    if not task:
+        return {"state": "idle"}
+    return task
+
+
+def ensure_async(stand_en: str, stand_id: str, owner: str = "") -> dict:
+    """有缓存直接给清单；没有就起后台任务并立刻返回 pending。"""
+    mf = read_manifest(stand_id)
+    if mf is not None:
+        return {"state": "done", "manifest": mf}
+    start_task(stand_en, stand_id, owner)
+    return {"state": "pending"}
 
 
 def public_images(manifest: dict) -> dict:
-    """把内部清单转成可直接给前端的结构（含 URL）。"""
+    """把内部清单转成前端结构（含 URL）。"""
     sid = manifest.get("stand_id", "")
     out: dict[str, list[dict]] = {}
     for item in manifest.get("images", []):
@@ -123,15 +153,27 @@ def public_images(manifest: dict) -> dict:
             continue
         out.setdefault(item.get("kind", "misc"), []).append({
             "file": f,
-            "url": image_url(sid, f),
+            "url": f"/images/{sid}/{f}",
             "bytes": item.get("bytes"),
             "caption": item.get("source_name", ""),
         })
-    res: dict = {"stand_id": sid, "total": sum(len(v) for v in out.values())}
+    res: dict[str, Any] = {
+        "stand_id": sid, "total": sum(len(v) for v in out.values())}
     res.update(out)
     if manifest.get("error"):
         res["error"] = manifest["error"]
     return res
+
+
+def image_payload(stand_en: str, stand_id: str, owner: str = "") -> dict:
+    """给 API 的便捷入口：能立刻给图就给图，否则返回 pending 让前端轮询。"""
+    st = ensure_async(stand_en, stand_id, owner)
+    if st["state"] == "done":
+        out = public_images(st["manifest"])
+        out["state"] = "done"
+        return out
+    return {"stand_id": stand_id, "total": 0, "state": "pending",
+            "note": "图片正在后台抓取（约 10-30 秒），稍后自动出现"}
 
 
 # ------------------------------------------------------------
@@ -143,10 +185,10 @@ DIM_KEYS = ("pwr", "spd", "rng", "sta", "prc", "dev")
 def radar_payload(row: dict, missing_count: int = 0) -> dict:
     """从 stand_stats 行算出 {stats, missing, values}。
 
-    ★★★实测结论（evaluation/_probe_zero.py，勿再臆测）★★★
-      stand_stats 里**没有任何0 值**：pwr/spd/rng/sta/prc/dev 六列
+    ★★★ 实测结论（勿再臆测）★★★
+      stand_stats 里**没有任何 0 值**：pwr/spd/rng/sta/prc/dev 六列
       为 0 的行数都是 0，非空行有 135~149 条。
-      有效等级区间是 **1..5**（1=E2=D 3=C 4=B 5=A），
+      有效等级区间是 **1..5**（1=E 2=D 3=C 4=B 5=A），
       缺失以**SQL NULL** 表达（对应 jojowiki 原文的 "?"/Unknown）。
 
       → 所以缺失判定**只看 IS NULL**，

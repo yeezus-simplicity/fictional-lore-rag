@@ -36,6 +36,7 @@ jojowiki 的文件名是有规律的（实测 Achtung Baby 页58 张图）：
 """
 from __future__ import annotations
 
+import concurrent.futures
 import json
 import os
 import re
@@ -80,7 +81,14 @@ def build_opener() -> urllib.request.OpenerDirector:
 _OPENER = None
 
 
-def fetch(url: str, tries: int = 2, timeout: int = 25) -> bytes:
+def fetch(url: str, tries: int = 2, timeout: int = 20) -> bytes:
+    """下载字节。★ 必须显式走代理（见文件头说明）。
+
+    ★ M18：退避从1.5/3.0 秒压到 0.4/0.9 秒。
+      原本 tries=2 + 退避 1.5s，在并行度不足时会把整体耗时拉长
+      （实测单替身 87 秒里有一大块是这个）。
+      首次失败多为代理抖动，立刻重试的成功率不低，等太久不划算。
+    """
     global _OPENER
     if _OPENER is None:
         _OPENER = build_opener()
@@ -90,7 +98,8 @@ def fetch(url: str, tries: int = 2, timeout: int = 25) -> bytes:
             return _OPENER.open(url, timeout=timeout).read()
         except Exception as e:  # noqa: BLE001
             last = e
-            time.sleep(1.5 * (i + 1))
+            if i + 1 < tries:
+                time.sleep(0.4 * (i + 1))
     raise RuntimeError(f"下载失败 {url[-70:]}: {last}")
 
 
@@ -350,31 +359,47 @@ def save(stand_id: str, items: list[tuple[str, str, str]]) -> dict:
         "source": "jojowiki.com",
         "note": "图片版权归荒木飞吕彦 / 集英社所有，此处仅作技术演示",
     }
+
+    # ★★★ 并行下载（M18关键修复）★★★
+    #   实测单张 400px thumb 经代理要 **2.8 秒** → 串行 10 张 = 28 秒，
+    #   再叠加角色页+ 失败重试退避，实际测到 **87 秒**的请求耗时。
+    #   → 改为 4 线程并行，同一批 10 张约 7-8 秒。
+    #   （瓶颈是网络往返而非 CPU，线程池足够；asyncio 反而更复杂。）
     counters: dict[str, int] = {}
+    jobs: list[tuple[str, str, str, str, str]] = []   # kind,fname,url,local,ext
     for kind, fname, url in kept:
         counters[kind] = counters.get(kind, 0) + 1
         ext = ".jpg" if fname.lower().endswith((".jpg", ".jpeg")) else ".png"
-        local = f"{kind}_{counters[kind]}{ext}"
+        jobs.append((kind, fname, url, f"{kind}_{counters[kind]}{ext}", ext))
+
+    def _dl(job):
+        kind, fname, url, local, ext = job
         try:
-            data = fetch(url)
+            return job, fetch(url), None
         except Exception as e:  # noqa: BLE001
-            print(f"      跳过 {fname[:40]}：{str(e)[:44]}")
-            continue
-        # ★ 体积保险：超过 1.5 MB 一律不存。
-        #   400px thumb 正常是 100-600 KB；
-        #   实测偶有 3 MB 的（多帧 GIF / 未缩放大图），
-        #   塞进 GUI 会明显拖慢首屏。
-        if len(data) > 1_500_000:
-            print(f"      跳过 {fname[:40]}：{len(data)//1024} KB 过大")
-            continue
-        (d / local).write_bytes(data)
-        manifest["images"].append({
-            "kind": kind, "file": local, "bytes": len(data),
-            "source_name": fname,
-            "source_page": f"https://jojowiki.com/{stand_id.replace('_', ' ')}",
-        })
-        print(f"      [{kind:5s}] {local:12s} {len(data)//1024:>5d} KB  "
-              f"{fname[:46]}")
+            return job, None, f"{str(e)[:44]}"
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=4) as ex:
+        for job, data, err in ex.map(_dl, jobs):
+            kind, fname, url, local, ext = job
+            if err:
+                print(f"      跳过 {fname[:40]}：{err}")
+                continue
+            # ★ 体积保险：超过 1.5 MB 一律不存。
+            #   400px thumb 正常是 100-600 KB；
+            #   实测偶有 3 MB 的（多帧 GIF / 未缩放大图），
+            #   塞进 GUI 会明显拖慢首屏。
+            if len(data) > 1_500_000:
+                print(f"      跳过 {fname[:40]}：{len(data)//1024} KB 过大")
+                continue
+            (d / local).write_bytes(data)
+            manifest["images"].append({
+                "kind": kind, "file": local, "bytes": len(data),
+                "source_name": fname,
+                "source_page": f"https://jojowiki.com/{stand_id.replace('_', ' ')}",
+            })
+            print(f"      [{kind:5s}] {local:12s} {len(data)//1024:>5d} KB  "
+                  f"{fname[:46]}")
     (d / "_images.json").write_text(
         json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
     return manifest

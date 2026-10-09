@@ -47,7 +47,12 @@ import psycopg2.extras  # noqa: E402
 
 from load_db import PG  # noqa: E402
 # ★★ M17：雷达图 + 图片服务
-from media import (ensure_images, public_images, radar_payload)  # noqa: E402
+#   ★★ M18：ensure_images 改异步（image_payload）——
+#      原ensure_images 会阻塞等抓取完成，实测没缓存的替身要 87 秒，
+#      用户反馈「等很久还在检索、再点一下就出答案」。
+#      现在回答立即返回，图片走后台任务，前端轮询 /images/status/{id}。
+from media import (image_payload, public_images, radar_payload,  # noqa: E402
+                   status as image_status)
 from radar_chart import radar_svg  # noqa: E402
 
 IMG_DIR = ROOT / "images"
@@ -719,9 +724,9 @@ def query(
                     radar_svg_out = radar_svg(
                         rp["stats"], missing=rp["missing"],
                         title=f"{zh_rec.get('name_zh') or row[0]} 六维能力")
-                    mf = ensure_images(row[0], sid,
-                                       (row[1] or "").split(",")[0].strip())
-                    stand_imgs = public_images(mf)
+                    # ★ M18：异步取图 —— 没缓存就起后台任务、立即返回 pending
+                    stand_imgs = image_payload(
+                        row[0], sid, (row[1] or "").split(",")[0].strip())
             except Exception:
                 # ★ 图片/雷达图是增强项，出错绝不能影响主答案
                 radar_svg_out = radar_svg_out or None
@@ -804,15 +809,13 @@ def get_stand(stand_id: str):
         rp["stats"], missing=rp["missing"],
         title=f"{name_zh or r[1]} 六维能力")
 
-    # ★★★ M17：图片（懒加载；首次约5-15 秒，之后走本地缓存）
+    # ★★★ M17/M18：图片（**异步**，不阻塞响应）
+    #   没缓存时只起后台任务就返回 pending，前端轮询 /images/status/{id}。
+    #   绝不阻塞等抓取完成 —— 实测阻塞会让请求变成 87 秒。
     imgs: dict[str, Any] = {}
     if _images_enabled():
         owner = (r[5] or "").split(",")[0].strip()
-        mf = ensure_images(r[1], stand_id, owner)
-        imgs = public_images(mf)
-        if not imgs.get("total"):
-            imgs = {"stand_id": stand_id, "total": 0,
-                    "note": "暂无本地图片（可运行 fetch_stand_images.py 抓取）"}
+        imgs = image_payload(r[1], stand_id, owner)
 
     return {
         "stand_id": r[0], "name_en": r[1], "name_ja": r[2],
@@ -849,6 +852,35 @@ def _images_enabled() -> bool:
     if "images_enabled" in STATE:
         return bool(STATE["images_enabled"])
     return bool(getattr(app.state, "images_enabled", True))
+
+
+@app.get("/images/status/{stand_id}",
+         summary="M18：查图片抓取状态（前端轮询用）")
+def images_status(stand_id: str):
+    """返回图片抓取状态：idle / pending / running / done / failed。
+
+    ★ 为什么需要这个端点 ★★
+    M18 之前图片抓取是同步阻塞在 /query 里，实测没缓存的替身要 **87 秒**，
+    用户看到的是「一直转圈，再点一下就出答案」。
+    现在 /query 立即返回，前端拿 answer，再轮询本端点，
+    图就绪后渲染 —— 回答不再被图片拖住。
+
+    ★★★ 路由顺序坑（M18 实测踩到）★★★
+      这个端点**必须定义在 `/images/{stand_id}/{filename}` 之前**。
+      FastAPI 按**定义顺序**匹配、先定义者先赢：
+      状态端点写在后面时，`/images/status/c_moon` 会命中图片路由，
+      被解析成 stand_id="status"、filename="c_moon" → 400，
+      前端轮询永远拿不到状态（实测 state 一直返回 None）。
+    """
+    st = image_status(stand_id)
+    if st.get("state") == "done":
+        out = public_images(st["manifest"])
+        out["state"] = "done"
+        return out
+    return {"stand_id": stand_id, "state": st.get("state", "idle"),
+            "total": 0,
+            "error": st.get("error"),
+            "elapsed": st.get("elapsed")}
 
 
 @app.get("/images/{stand_id}/{filename}",

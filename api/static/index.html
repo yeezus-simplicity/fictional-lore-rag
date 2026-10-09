@@ -175,6 +175,21 @@ button.go:disabled { opacity: .5; cursor: wait; }
 .img-note {
   margin-top: 8px; font-size: 10px; color: var(--text-dim); opacity: .8;
 }
+/* ★ M18：图片后台抓取中的占位 */
+.img-wait {
+  display: flex; align-items: center; gap: 10px;
+  padding: 14px; border: 1px dashed var(--border); border-radius: 4px;
+  font-size: 12px; color: var(--text-dim);
+}
+.spin {
+  width: 13px; height: 13px; flex: 0 0 13px;
+  border: 2px solid var(--border); border-top-color: var(--accent);
+  border-radius: 50%; animation: spin .8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .spin { animation: none; }
+}
 /* 点击放大的浮层 */
 .zoom {
   position: fixed; inset: 0; z-index: 9999;
@@ -383,6 +398,17 @@ const HINTS = {
 };
 $('#mExtract').onclick = () => setMode('extract');
 $('#mGenerate').onclick = () => setMode('generate');
+
+// ★★★ M18修一个静默失效的 bug ★★★
+//   查询按钮 #qb 与输入框回车**从未绑定事件** —— 只有下面的示例 chip
+//   用了 inline onclick="ask(...)"，所以点示例能查、手打输入却毫无反应
+//   （实测：填好问句点「查询」，页面连"检索中…"都不显示，
+//     因为根本没发请求。用户会以为服务挂了。）
+$('#qb').onclick = () => ask();
+$('#qi').addEventListener('keydown', e => {
+  if(e.key === 'Enter'){ e.preventDefault(); ask(); }
+});
+
 function setMode(m){
   MODE = m;
   $('#mExtract').classList.toggle('on', m==='extract');
@@ -570,39 +596,89 @@ function renderMedia(d){
       <div class="radar-wrap">${d.radar_svg}</div>
     </div>`;
   }
-  // ---- 图片网格 ----
+  // ---- 图片：已就绪直接渲染；未就绪显示进度并轮询（M18）----
   const im = d.stand_images || {};
   const groups = ['stand','user','manga','anime','misc'];
   const has = groups.some(k => (im[k]||[]).length);
   if(has){
-    const secs = groups.map(k=>{
-      const arr = im[k]||[];
-      if(!arr.length) return '';
-      const cells = arr.map(x=>
-        `<figure class="shot">
-           <img src="${esc(x.url)}" alt="${esc(IMG_KIND_CN[k]||k)}"
-                loading="lazy" onclick="zoomImg('${esc(x.url)}')">
-           <figcaption title="${esc(x.caption||'')}">${esc(IMG_KIND_CN[k]||k)}</figcaption>
-         </figure>`).join('');
-      return `<div class="img-group">
-          <div class="img-group-t">${esc(IMG_KIND_CN[k]||k)}
-            <span class="cnt">${arr.length}</span></div>
-          <div class="img-grid">${cells}</div>
-        </div>`;
-    }).join('');
-    const note = im.note ? `<div class="img-note">${esc(im.note)}</div>` : '';
-    out += `<div class="media-block">
-      <div class="media-title">相关图片 <span class="cnt">${im.total||0}</span></div>
-      ${secs}${note}
-      <div class="img-note">分类按 jojowiki 源文件名推断（悬停缩略图可看原名）；
-        版权归荒木飞吕彦 / 集英社所有，来源 jojowiki.com</div>
+    out += imgSectionHTML(im);
+  }else if(im.state === 'pending'){
+    // ★ 后台抓图中 —— 给占位 + 启动轮询，不再让用户干等
+    out += `<div class="media-block" id="imgPending">
+      <div class="media-title">相关图片</div>
+      <div class="img-wait">
+        <span class="spin"></span>图片正在后台抓取（约 10-30 秒），
+        抓完会自动出现在这里，不必重复提问
+      </div>
     </div>`;
-  }else if(im && im.error){
+    pollImages(im.stand_id);
+  }else if(im.error){
     out += `<div class="media-block">
       <div class="media-title">相关图片</div>
       <div class="img-note">未能获取：${esc(im.error)}</div></div>`;
   }
   return out;
+}
+
+/* 图片区块 HTML（已就绪时） */
+function imgSectionHTML(im){
+  const groups = ['stand','user','manga','anime','misc'];
+  const secs = groups.map(k=>{
+    const arr = im[k]||[];
+    if(!arr.length) return '';
+    const cells = arr.map(x=>
+      `<figure class="shot">
+         <img src="${esc(x.url)}" alt="${esc(IMG_KIND_CN[k]||k)}"
+              loading="lazy" onclick="zoomImg('${esc(x.url)}')">
+         <figcaption title="${esc(x.caption||'')}">${esc(IMG_KIND_CN[k]||k)}</figcaption>
+       </figure>`).join('');
+    return `<div class="img-group">
+        <div class="img-group-t">${esc(IMG_KIND_CN[k]||k)}
+          <span class="cnt">${arr.length}</span></div>
+        <div class="img-grid">${cells}</div>
+      </div>`;
+  }).join('');
+  return `<div class="media-block" id="imgDone">
+    <div class="media-title">相关图片 <span class="cnt">${im.total||0}</span></div>
+    ${secs}
+    <div class="img-note">分类按 jojowiki 源文件名推断（悬停缩略图可看原名）；
+      版权归荒木飞吕彦 / 集英社所有，来源 jojowiki.com</div>
+  </div>`;
+}
+
+/* ★ M18：轮询图片抓取状态（最多约 60 秒，1.5 秒一次） */
+let _imgPollTimer = null;
+function pollImages(standId){
+  if(!standId) return;
+  if(_imgPollTimer) clearTimeout(_imgPollTimer);
+  let tries = 0;
+  const tick = async ()=>{
+    tries++;
+    if(tries > 40){                       // 60 秒还没好就放弃，不打扰用户
+      const el = document.getElementById('imgPending');
+      if(el) el.innerHTML = '<div class="img-note">图片抓取超时，'
+        + '可稍后重新提问，或运行 fetch_stand_images.py 手动抓取</div>';
+      return;
+    }
+    try{
+      const r = await fetch(`/images/status/${encodeURIComponent(standId)}`);
+      if(!r.ok) throw new Error('HTTP '+r.status);
+      const im = await r.json();
+      if(im.state === 'done' && im.total > 0){
+        const el = document.getElementById('imgPending');
+        if(el){ el.outerHTML = imgSectionHTML(im); }
+        return;                            // 完成，停止轮询
+      }
+      if(im.state === 'failed'){
+        const el = document.getElementById('imgPending');
+        if(el) el.innerHTML = '<div class="img-note">图片抓取失败：'
+          + esc(im.error||'未知原因') + '</div>';
+        return;
+      }
+    }catch(e){ /* 网络抖动就继续轮询 */ }
+    _imgPollTimer = setTimeout(tick, 1500);
+  };
+  _imgPollTimer = setTimeout(tick, 1200);
 }
 
 function zoomImg(url){

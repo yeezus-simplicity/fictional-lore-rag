@@ -53,6 +53,13 @@ jobs:
       # 真实语料（2407 块描述原文）不入库（第三方版权，见 LICENSE）。
       # 这里从仓库已有的结构化数据现合成一份最小语料，
       # 足够让服务启动并支撑流程类测试。
+      # ★ 放最前面：秒级失败。它检查「代码 FROM/JOIN 引用的表
+      #   是否都在 schema 里有定义」—— M29 那次全红的根因 3
+      #   （resolution_log 只由脚本运行时创建、schema 里没有）
+      #   就是靠这条能提前抓到的。
+      - name: 全新部署自检（静态：引用的表都在 schema 里）
+        run: python evaluation/check_fresh_deploy.py --static
+
       - name: 合成最小语料
         run: python evaluation/make_min_fixture.py
 

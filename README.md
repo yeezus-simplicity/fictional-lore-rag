@@ -109,6 +109,29 @@ python evaluation/test_m25_multiturn.py   # 任选一个测试
 > ★ 合成语料**只能验证流程**，不能用于评测检索质量
 > （它不含描述原文）。真实评测请先按上文重建语料。
 
+### 改 schema 后请跑这个
+
+```bash
+python evaluation/check_fresh_deploy.py            # 完整自检
+python evaluation/check_fresh_deploy.py --static   # 只做静态检查（秒级）
+```
+
+它回答的问题是「**别人 clone 后能不能跑起来**」——
+而不是「我这台机器上能不能跑」（后者容易得多，也骗过我好几次）：
+
+| 步骤 | 查什么 |
+|---|---|
+| 静态检查 | 代码里 `FROM/JOIN` 引用的表，是否都在 schema 中有定义 |
+| 建空库 | 从 `DROP/CREATE DATABASE` 开始，绝不复用已有库 |
+| 加载链 | `load_db --all` → `apply_resolutions`，全连这个空库 |
+| 接口探测 | 起服务连空库，确认 `/conflicts` 等**真的有数据**（不只是 200） |
+
+★ 为什么需要它：项目里曾经有三处缺陷**只在全新环境暴露** ——
+合成语料用了 schema 不允许的枚举值、`load_db` 把语料行数写死、
+以及 `resolution_log` 表**只由脚本运行时创建、schema 里根本没有**
+（导致 `/conflicts` 在全新部署时直接 500）。
+它们在本机全都跑得好好的。这个脚本就是把那次排查固化下来。
+
 **完整环境说明见 [docs/数据准备.md](docs/数据准备.md)** ——
 含「仓库里有什么/没有什么」「已知会踩的坑」「完整验证清单」。
 

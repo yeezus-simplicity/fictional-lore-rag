@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-一键启动 rag-kb 服务。
+一键启动 fictional-lore-rag 服务。
 
 为什么需要这个：
   之前用 `nohup ... &` 启动，进程常在会话结束后被杀，
@@ -51,7 +51,7 @@ def db_ready() -> bool:
 def banner(port: int, with_vector: bool,
            chunk_merge: Optional[int] = None) -> None:
     print("=" * 64)
-    print("  rag-kb 混合检索服务")
+    print("  fictional-lore-rag 混合检索服务")
     print("=" * 64)
     print()
     print(f"  网页界面   http://127.0.0.1:{port}")
@@ -98,7 +98,7 @@ def open_browser_later(port: int, delay: float = 18.0) -> None:
 
 def main() -> int:
     ap = argparse.ArgumentParser(
-        description="启动 rag-kb 服务",
+        description="启动 fictional-lore-rag 服务",
         formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--port", type=int, default=DEFAULT_PORT,
                     help=f"端口（默认 {DEFAULT_PORT}，避免被代理劫持的端口）")

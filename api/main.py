@@ -1,5 +1,5 @@
 """
-rag-kb API 服务（M5）。
+fictional-lore-rag API 服务（M5）。
 
 把 M1-M4 的四层串成可调用的系统：
     M4 路由 → M3 检索 / SQL 执行 → M4 消解信息 → 证据返回
@@ -407,7 +407,7 @@ class HealthResponse(BaseModel):
 # ==================================================================
 
 app = FastAPI(
-    title="rag-kb 混合检索 API",
+    title="fictional-lore-rag 混合检索 API",
     version="0.6.0",
     description=(
         "基于 jojowiki 替身数据的混合检索系统。\n\n"
@@ -436,7 +436,7 @@ def root():
     if html.exists():
         return FileResponse(html)
     return {
-        "service": "rag-kb 混合检索 API",
+        "service": "fictional-lore-rag 混合检索 API",
         "version": "0.6.0",
         "docs": "/docs",
         "health": "/health",
@@ -1318,7 +1318,7 @@ def _extract_warning(result: dict) -> tuple[Optional[str], Optional[float]]:
 
 # ------------------------------------------------------------------
 def main() -> int:
-    ap = argparse.ArgumentParser(description="rag-kb API 服务")
+    ap = argparse.ArgumentParser(description="fictional-lore-rag API 服务")
     ap.add_argument("--host", default="127.0.0.1")
     ap.add_argument("--port", type=int, default=8000)
     ap.add_argument("--reload", action="store_true", help="开发模式热重载")
@@ -1342,7 +1342,7 @@ def main() -> int:
     app.state.images_enabled = not args.no_images
 
     print("=" * 62)
-    print("rag-kb 混合检索 API")
+    print("fictional-lore-rag 混合检索 API")
     print("=" * 62)
     print(f"  模式: {'BM25 + bge-m3' if not args.no_vector else '仅 BM25'}")
     print(f"  索引: {f'语义块合并到 {args.chunk_merge} 字符' if args.chunk_merge else '原始语义块（2407）'}")

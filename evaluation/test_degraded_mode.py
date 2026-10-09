@@ -111,7 +111,11 @@ def main() -> int:
         try:
             r = urllib.request.urlopen(base + "/", timeout=20)
             html = r.read().decode("utf-8")
-            ok = "<title>" in html and "rag-kb" in html
+            # ★ 原来断言 "rag-kb" in html —— 但本测试要验证的是
+            #   「DB 挂了首页仍能打开」，**不该绑定项目名**
+            #   （M23 改项目名时就把它弄挂了一次）。
+            #   → 改断言「是个像样的 HTML 页面」。
+            ok = "<title>" in html and len(html) > 1000
             print(f"  {'✓' if ok else '✗'} 首页 {len(html)} 字节")
             fails += 0 if ok else 1
         except Exception as e:
@@ -120,8 +124,11 @@ def main() -> int:
 
         print("\n[3] 各路由的降级行为")
         cases = [
-            ("Anubis 的外观形态方面有哪些描述？", "semantic", "snippet",
-             "语义检索应正常"),
+            # ★ 修遗留失败：M4 把「外观/描述类」问句细分成了 entity_semantic，
+            #   而这里一直只认 semantic → 这条**长期红着**。
+            #   两者都属「语义路径」，都应接受。
+            ("Anubis 的外观形态方面有哪些描述？",
+             ("semantic", "entity_semantic"), "snippet", "语义检索应正常"),
             ("Star Platinum 的破坏力是几级？", "structured", "none",
              "结构化降级为 none + 提示"),
             ("Star Platinum 的破坏力是几级？同时说明能力描述。", "hybrid",
@@ -135,11 +142,13 @@ def main() -> int:
         for q, want_route, want_type, note in cases:
             try:
                 r = _post(base, q, top_k=2)
-                good = (r["route"] == want_route
-                        and r["answer_type"] == want_type)
+                want_ok = (r["route"] in want_route
+                           if isinstance(want_route, (list, tuple))
+                           else r["route"] == want_route)
+                good = want_ok and r["answer_type"] == want_type
                 ok += 1 if good else 0
                 print(f"  {'✓' if good else '✗'} "
-                      f"[{r['route']:10s}|{r['answer_type']:8s}] {note}")
+                      f"[{r['route']:15s}|{r['answer_type']:8s}] {note}")
             except Exception as e:
                 print(f"  ✗ {type(e).__name__}: {q[:24]}")
         print(f"  → {ok}/{len(cases)} 通过")

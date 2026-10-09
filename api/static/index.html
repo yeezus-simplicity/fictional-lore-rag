@@ -158,10 +158,21 @@ button.go:disabled { opacity: .5; cursor: wait; }
 .img-grid {
   display: grid; gap: 10px;
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  align-items: start;
 }
 .shot { margin: 0; }
 .shot img {
-  width: 100%; aspect-ratio: 1/1; object-fit: cover;
+  /* ★ M19：完整显示，绝不裁切 ★
+     之前是 `aspect-ratio:1/1 + object-fit:cover` —— cover 为了填满正方形
+     会**裁掉**图片边缘。实测本地 74 张图里 **51 张是竖图**
+     （宽高比中位 0.83，最窄 0.37，即 400x1068 的长立绘），
+     所以正方形裁切必然把头尾切掉—— 用户反馈"大多图片显示不全"。
+     → object-fit: contain（完整显示，留白用面板底色填充）
+     → 高度由 JS 按图片真实宽高比设置（见 applyShotHeights），
+        这样竖图自然更高、横图更矮，排列整齐又不裁内容。 */
+  width: 100%;
+  height: 170px;                /* 兜底高度，JS 会按真实比例覆盖 */
+  object-fit: contain;
   border: 1px solid var(--border); border-radius: 4px;
   background: var(--bg-page); cursor: zoom-in; display: block;
   transition: border-color .15s ease;
@@ -577,6 +588,8 @@ function renderAnswer(d){
   html += renderEvidence(d.evidence);
   html += '</div>';
   $('#ans').innerHTML = html;
+  // ★ M19：图片渲染完按真实宽高比调整卡片高度（否则竖图留大片空白）
+  applyShotHeights($('#ans'));
 }
 
 /* ================================================================
@@ -646,6 +659,32 @@ function imgSectionHTML(im){
   </div>`;
 }
 
+/* ★ M19：按图片真实宽高比设高度，让竖图不被压扁、也不留大片空白。
+   实测本地 74 张图里 **51 张是竖图**（宽高比中位 0.83、最窄 0.37，
+   即 400x1068 的长立绘），另有 20 张横图（最宽 4.76:1）。
+   → 固定高度 + cover：竖图被裁头尾（用户反馈"显示不全"）
+   → 固定高度 + contain：横图被撑高、下方大片空白
+   → 所以按真实比例算高度：卡片高度 = 宽度 × (h/w)，
+     下限 96px（横图最扁时也够看）、上限 420px（超长立绘不再更高）。 */
+function applyShotHeights(root){
+  if(!root) return;
+  root.querySelectorAll('.shot img').forEach(img=>{
+    const fit = () => {
+      const w = img.naturalWidth, h = img.naturalHeight;
+      if(!w || !h) return;              // 还没加载完，load 事件会再调一次
+      const boxW = img.clientWidth || (img.parentElement?.clientWidth) || 160;
+      let target = Math.round(boxW * (h / w));   // 按真实比例算高度
+      target = Math.max(96, Math.min(420, target));
+      img.style.height = target + 'px';
+    };
+    if(img.complete && img.naturalWidth) fit();
+    else img.addEventListener('load', fit, {once:true});
+  });
+  // 列数随窗口宽度变，尺寸变了要重算高度
+  clearTimeout(window._shotRz);
+  window._shotRz = setTimeout(()=>applyShotHeights(root), 200);
+}
+
 /* ★ M18：轮询图片抓取状态（最多约 60 秒，1.5 秒一次） */
 let _imgPollTimer = null;
 function pollImages(standId){
@@ -666,7 +705,14 @@ function pollImages(standId){
       const im = await r.json();
       if(im.state === 'done' && im.total > 0){
         const el = document.getElementById('imgPending');
-        if(el){ el.outerHTML = imgSectionHTML(im); }
+        if(el){
+          const tmp = document.createElement('div');
+          tmp.innerHTML = imgSectionHTML(im);
+          const newEl = tmp.firstElementChild;
+          el.replaceWith(newEl);
+          // ★ M19：异步插入的图也要按真实比例调高度
+          applyShotHeights(newEl);
+        }
         return;                            // 完成，停止轮询
       }
       if(im.state === 'failed'){

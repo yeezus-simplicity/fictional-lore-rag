@@ -80,13 +80,37 @@ def _run(stand_en: str, stand_id: str, owner: str) -> None:
     """真正执行抓取（跑在后台线程里，不阻塞任何 HTTP 请求）。"""
     _ensure_src_on_path()
     with _LOCK:
-        if stand_id in _TASKS:
-            _TASKS[stand_id]["state"] = "running"
+        # ★ 用 setdefault 而不是「if in」+ 赋值：
+        #   之前是 `if stand_id in _TASKS: _TASKS[...]["state"]=...`，
+        #   任务若没预置（直接调 _run）会在后面的 .update() 抛
+        #   KeyError → 整段异常。setdefault 天然兜住。
+        _TASKS.setdefault(stand_id, {
+            "state": "pending", "stand_en": stand_en, "owner": owner,
+            "started": time.time(),
+        })["state"] = "running"
     t0 = time.time()
     try:
         import fetch_stand_images as F
-        # 双来源：替身页取本体/漫画图，角色页取使者立绘
-        stand_pairs, user_pairs = F.page_images_by_kind(stand_en, owner)
+        #★★ 双来源要各自兜底，不能一失败就全丢 ★★
+        #   实测踩到：c_moon 的使者是 "F.F."，角色页 /F.F. 抓取会超时
+        #   （外部网络偶发），旧写法 page_images_by_kind 直接抛异常 →
+        #   连**替身本体的图也一起丢了**，整个 state=failed。
+        #   → 改成：替身页失败才放弃；角色页失败只缺使者图，不影响本体。
+        stand_pairs: list = []
+        user_pairs: list = []
+        err_parts: list[str] = []
+        try:
+            stand_pairs = F.page_images(stand_en, owner)
+        except Exception as e:  # noqa: BLE001
+            err_parts.append(f"替身页失败 {type(e).__name__}")
+            stand_pairs = []
+        try:
+            # 只补角色页的使者图（复用上面已抓的替身页结果，不重复请求）
+            user_pairs = F.owner_page_images(stand_en, owner)
+        except Exception as e:  # noqa: BLE001
+            err_parts.append(f"角色页失败 {type(e).__name__}")
+            user_pairs = []
+
         items = [(F.classify(f, stand_en, owner), f, u)
                  for f, u in stand_pairs]
         items += [("user", f, u) for f, u in user_pairs]
@@ -94,7 +118,9 @@ def _run(stand_en: str, stand_id: str, owner: str) -> None:
         if not items:
             with _LOCK:
                 _TASKS[stand_id].update(
-                    state="failed", error="无可用图片",
+                    state="failed",
+                    error="无可用图片" + ("（" + "；".join(err_parts) + "）"
+                                          if err_parts else ""),
                     elapsed=round(time.time() - t0, 1))
             return
         F.save(stand_id, items)

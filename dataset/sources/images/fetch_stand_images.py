@@ -228,14 +228,16 @@ _USER_PAT = re.compile(
     r"(?<!powa)(?<!Star)",re.I)
 
 
-def page_images_by_kind(stand: str, owner_hint: str = ""
-                        ) -> tuple[list[tuple[str, str]], list[tuple[str, str]]]:
-    """抓替身页，返回 (stand_or_manga 图, 使者图)。
+def owner_page_images(stand: str, owner_hint: str = ""
+                      ) -> list[tuple[str, str]]:
+    """只抓**角色页**的使者立绘（复用 page_images_by_kind 的逻辑）。
 
-    ★ 使者图从**角色页**抓（见 owner_page_candidates 的说明）。
+    ★ M19 拆出这个函数的原因 ★★
+      原本 page_images_by_kind 会把「替身页+ 角色页」一起抓，
+      于是调用方想「两个来源各自兜底」时无法复用替身页结果 ——
+      要么重复请求（浪费），要么一失败就两边全丢
+      （实测 c_moon 的角色页 /F.F. 超时 → 连本体图也没了）。
     """
-    stand_imgs = page_images(stand, owner_hint)
-
     user_imgs: list[tuple[str, str]] = []
     for cand in owner_page_candidates(owner_hint):
         try:
@@ -256,7 +258,17 @@ def page_images_by_kind(stand: str, owner_hint: str = ""
                 break
         except Exception:
             continue
-    return stand_imgs, user_imgs
+    return user_imgs
+
+
+def page_images_by_kind(stand: str, owner_hint: str = ""
+                        ) -> tuple[list[tuple[str, str]], list[tuple[str, str]]]:
+    """抓替身页 + 角色页，返回 (替身页图, 使者图)。
+
+    ★ 使者图从**角色页**抓（见 owner_page_candidates 的说明）。
+    """
+    stand_imgs = page_images(stand, owner_hint)
+    return stand_imgs, owner_page_images(stand, owner_hint)
 
 
 def page_images(stand: str, owner_hint: str = "") -> list[tuple[str, str]]:

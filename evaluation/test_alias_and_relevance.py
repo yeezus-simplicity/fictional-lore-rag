@@ -199,12 +199,19 @@ def main() -> int:
             bad3b += 1
         print(f"  {'OK ' if ok else 'XX '}{q:24s} → {str(got):28s}"
               f"{'' if ok else f'期望 {exp}'}")
-    #覆盖完整度：154 个替身全部有中文名
+    # 覆盖完整度：**每个替身**都要有中文名
+    # ★ 原来硬编码 `== 154`（M16 时的目标）。M21 补上母体名
+    #   （echoes / tusk）后变成 156 → 这条一直红着。
+    #   → 改成与「替身总数」比较，这样以后补名字不会再误报，
+    #     而真出现漏网替身时仍会报警。
     n_zh = sum(1 for v in id2alias.values()
                if any(re.search(r"[\u4e00-\u9fff]", x) for x in v))
-    print(f"  {'OK ' if n_zh == 154 else 'XX '}带中文名的替身{n_zh} / 154"
-          f"{'' if n_zh == 154 else '（M16 目标 154）'}")
-    if n_zh != 154:
+    # ★ id2alias 是 {stand_id: [别名列表]}，所以替身总数 = len(id2alias)
+    n_total = len(id2alias)
+    ok_zh = (n_zh == n_total)
+    print(f"  {'OK ' if ok_zh else 'XX '}带中文名的替身{n_zh} / {n_total}"
+          f"{'' if ok_zh else '（应全覆盖）'}")
+    if not ok_zh:
         bad3b += 1
     if bad3b:
         print(f"  ★ {bad3b} 项失败")

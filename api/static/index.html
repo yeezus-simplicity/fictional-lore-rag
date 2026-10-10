@@ -404,12 +404,12 @@ td.num { font-family: var(--mono); font-size: 12px; text-align: right; }
 }
 #newChat:hover { background: var(--bg-hover); color: var(--text); }
 
-/* ---- M32：中文摘要卡（替身档案） ---- */
-.zh-card {
-  border: 1px solid var(--border-strong); border-left: 3px solid var(--accent);
-  border-radius: 8px; padding: 14px 16px; margin-bottom: 14px;
-  background: var(--bg-panel);
-}
+/* ---- M32/M36：替身档案卡（与六维雷达并排） ---- */
+.stand-panel { display: flex; gap: 22px; align-items: flex-start;
+  margin-bottom: 14px; }
+.sp-info { flex: 1 1 auto; min-width: 0; }
+.sp-radar { flex: 0 0 auto; width: 300px; }
+.zh-card-inner { border-left: 3px solid var(--accent); padding-left: 12px; }
 .zc-title { font-size: 13px; font-weight: 500; margin-bottom: 10px; }
 .zc-title span { font-weight: 400; font-size: 11px; color: var(--text-faint); }
 .zc-row { display: flex; gap: 12px; padding: 4px 0; font-size: 13px; }
@@ -420,6 +420,12 @@ td.num { font-family: var(--mono); font-size: 12px; text-align: right; }
 .zc-dim { font-size: 12px; color: var(--text-dim); }
 .zc-dim b { color: var(--accent); font-weight: 600; margin-left: 3px; }
 .zc-dim b.zc-na { color: var(--text-faint); font-weight: 400; font-size: 11px; }
+
+/* 窄屏：档案与雷达改为上下堆叠（挤在一起会很难看） */
+@media (max-width: 860px) {
+  .stand-panel { flex-direction: column; gap: 14px; }
+  .sp-radar { width: 100%; }
+}
 
 /* ---- M32：英文原文折叠 ---- */
 .en-fold { border: 1px dashed var(--border-strong); border-radius: 6px; padding: 8px 12px; }
@@ -784,11 +790,31 @@ function renderZhCard(zc){
     rows.push(`<div class="zc-row"><span class="zc-k">六维</span>
       <span class="zc-v zc-dims">${s}</span></div>`);
   }
-  return `<div class="zh-card">
+  return `<div class="zh-card-inner">
     <div class="zc-title">替身档案
       <span>（中文信息，来自结构化数据 · 也可直接用日文名或英文名提问）</span>
     </div>
     ${rows.join('')}
+  </div>`;
+}
+
+// ★★ M36：替身档案 + 六维雷达合并成一张卡 ★★
+//   之前是三张独立卡片（档案 / 答案 / 雷达），六维明明是档案的一部分，
+//   却夹在答案和图片中间，读起来割裂。
+//   → 档案与雷达并排放在**上方一张卡**，答案另起一张卡在下方。
+//   → 窄屏（< 860px）自动改为上下堆叠，避免被挤压。
+function renderStandPanel(d){
+  const zc = d.zh_card;
+  const radar = (d.radar_svg && d.radar_svg.includes('<svg'))
+    ? `<div class="sp-radar">
+         <div class="media-title">六维能力</div>
+         <div class="radar-wrap">${d.radar_svg}</div>
+       </div>`
+    : '';
+  if(!zc && !radar) return '';
+  const info = zc ? renderZhCard(zc) : '';
+  return `<div class="card stand-panel">
+    <div class="sp-info">${info}</div>${radar}
   </div>`;
 }
 
@@ -817,7 +843,11 @@ function renderAnswer(d){
   }
   else body = esc(String(a ?? '（无内容）'));
 
-  let html = `${renderZhCard(d.zh_card)}<div class="card">
+  // ★★ M36：替身档案 + 六维雷达**合并为一张卡**，答案另起一张卡 ★★
+  //   用户原话：「界面上的替身档案和六维放在一起吗 答案单独放在下方」。
+  //   之前档案、答案、雷达图是三张独立卡片，读起来割裂
+  //   （六维是档案的一部分，却夹在答案和图片中间）。
+  let html = `${renderStandPanel(d)}<div class="card">
     <h3>答案${d.mode==='generate'?' <span style="color:var(--warn);font-weight:400">（生成式）</span>':''}</h3>
     <div class="answer ${refused?'answer-refused':''}">${body}</div>`;
   if(d.warning) html += `<div class="alert">⚠ ${esc(d.warning)}</div>`;
@@ -881,13 +911,7 @@ const IMG_KIND_CN = {
 
 function renderMedia(d){
   let out = '';
-  // ---- 雷达图（接口返回的是内联 SVG 字符串）----
-  if(d.radar_svg && d.radar_svg.includes('<svg')){
-    out += `<div class="media-block">
-      <div class="media-title">六维能力</div>
-      <div class="radar-wrap">${d.radar_svg}</div>
-    </div>`;
-  }
+  // ★ M36：雷达图已移入「替身档案」卡（renderStandPanel），此处不再重复
   // ---- 图片：已就绪直接渲染；未就绪显示进度并轮询（M18）----
   const im = d.stand_images || {};
   const groups = ['stand','user','manga','anime','misc'];

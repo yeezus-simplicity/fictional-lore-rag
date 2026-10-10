@@ -67,11 +67,12 @@ def main() -> int:
             pg.click("#qb")
             pg.wait_for_selector("#ans .card", timeout=40000)
             pg.wait_for_timeout(3000)
-            n_card = pg.eval_on_selector_all(".zh-card", "els=>els.length")
-            check("出现中文摘要卡", n_card > 0, f"{n_card}")
+            n_card = pg.eval_on_selector_all(
+                ".zh-card-inner", "els=>els.length")
+            check("出现中文档案卡", n_card > 0, f"{n_card}")
             if n_card:
                 txt = pg.eval_on_selector_all(
-                    ".zh-card", "els=>els.map(e=>e.textContent).join('')")
+                    ".zh-card-inner", "els=>els.map(e=>e.textContent).join('')")
                 print(f"      卡片内容: {txt[:110].strip()}")
                 check("卡片含中文名「白金之星」", "白金之星" in txt, txt[:60])
                 check("卡片含日文原名", "スタープラチナ" in txt, txt[:60])
@@ -79,6 +80,33 @@ def main() -> int:
                       "破坏力" in txt and "速度" in txt, txt[:60])
                 check("卡片含使用者", "Jotaro" in txt or "承太郎" in txt,
                       txt[:60])
+
+            print("\n[1b] 布局：档案与六维同卡、答案在其下（M36）")
+            n_panel = pg.eval_on_selector_all(
+                ".stand-panel", "els=>els.length")
+            check("存在「档案+雷达」合并卡", n_panel > 0, f"{n_panel}")
+            if n_panel:
+                same = pg.evaluate("""() => {
+                    const p = document.querySelector('.stand-panel');
+                    if(!p) return false;
+                    return !!(p.querySelector('.zh-card-inner')
+                              && p.querySelector('.radar-wrap'));
+                }""")
+                check("六维雷达在档案卡内部", same, "雷达不在合并卡内")
+                order = pg.evaluate("""() => {
+                    const kids = [...document.querySelectorAll('#ans > *')];
+                    const iPanel = kids.findIndex(
+                        e => e.classList.contains('stand-panel'));
+                    const iAns = kids.findIndex((e, i) => i > 0
+                        && e.querySelector('h3')
+                        && e.querySelector('h3').textContent.includes('答案'));
+                    return {iPanel, iAns};
+                }""")
+                check("答案卡排在档案卡之后",
+                      order["iPanel"] >= 0 and order["iAns"] > order["iPanel"],
+                      str(order))
+            n_old = pg.eval_on_selector_all(".zh-card", "els=>els.length")
+            check("旧类名 .zh-card 已不再使用", n_old == 0, f"仍有 {n_old}")
 
             print("\n[2] 英文原文折叠（默认展开但可收起）")
             n_fold = pg.eval_on_selector_all(".en-fold", "els=>els.length")

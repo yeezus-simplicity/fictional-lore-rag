@@ -771,7 +771,8 @@ function renderZhCard(zc){
     <span class="zc-v"><b>${esc(zc.name_zh||zc.name_en||'—')}</b>
     ${names.length? `<span class="zc-sub">${esc(names.join(' · '))}</span>`:''}</span></div>`);
   if(zc.owner) rows.push(`<div class="zc-row"><span class="zc-k">使用者</span>
-    <span class="zc-v">${esc(zc.owner)}</span></div>`);
+    <span class="zc-v">${esc(zc.owner)}
+    ${zc.owner_en? `<span class="zc-sub">${esc(zc.owner_en)}</span>`:''}</span></div>`);
   if(zc.part) rows.push(`<div class="zc-row"><span class="zc-k">登场</span>
     <span class="zc-v">第 ${esc(String(zc.part))} 部</span></div>`);
   if(zc.type) rows.push(`<div class="zc-row"><span class="zc-k">类型</span>
@@ -857,8 +858,9 @@ function loadSimilar(sid){
           .map(([k,v])=>`<span class="sd">${esc(k)} ${v>0?'+':''}${v}</span>`)
           .join('');
         return `<div class="sim-item" role="button" tabindex="0"
-             onclick='ask(${JSON.stringify(x.name + ' 的六维能力')})'>
-          <div class="sim-name">${esc(x.name)}</div>
+             onclick='ask(${JSON.stringify((x.name_zh || x.name) + ' 的六维能力')})'>
+          <div class="sim-name">${esc(x.name_zh || x.name)}
+            ${x.name_zh? `<span class="zc-sub">${esc(x.name)}</span>`:''}</div>
           <div class="sim-meta">距离 ${x.distance} · 共同维度 ${x.common_dims}</div>
           <div class="sim-diff">${diffs}</div>
         </div>`;

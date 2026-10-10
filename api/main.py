@@ -227,10 +227,14 @@ def _init_state(use_vector: bool = True,
 
     # --- M25：角色名索引（指代消解要判断「他」指哪个角色）---
     STATE["char2id"] = {}
+    # ★ M33：同时保留**反向**映射（character_id → 中文名），
+    #   中文摘要卡要拿它把使用者的英文名换成中文名。
+    STATE["char_zh_map"] = {}
     if db_ok:
         try:
-            from aliases import build_char_alias_table
+            from aliases import build_char_alias_table, load_char_zh_map
             STATE["char2id"] = dict(build_char_alias_table())
+            STATE["char_zh_map"] = dict(load_char_zh_map())
             # ★ 再补英文名：build_char_alias_table 只给中文名，
             #   而用户也可能用英文名追问（"what about his other stands"）
             _cc = STATE["conn"].cursor()
@@ -805,7 +809,8 @@ def query(
                 c2 = STATE["conn"].cursor()
                 c2.execute("""SELECT s.name_en, s.owner_name_raw,
                                   st.pwr,st.spd,st.rng,st.sta,st.prc,st.dev,
-                                  st.missing_count, s.part, s.stand_type
+                                  st.missing_count, s.part, s.stand_type,
+                                  s.owner_id
                            FROM stands s
                            LEFT JOIN stand_stats st ON st.stand_id=s.stand_id
                            WHERE s.stand_id=%s""", (sid,))
@@ -844,12 +849,19 @@ def query(
                         _alias = (STATE.get("id2alias") or {}).get(sid) or []
                         _ja = next((a for a in _alias
                                     if re.search(r"[\u3040-\u30ff]", a)), None)
+                        # ★ M33：使用者也要中文名 —— 原来只转了替身名，
+                        #   卡片上还挂着 "Jotaro Kujo"（用户当场指出）。
+                        #   角色中文名来自 load_char_zh_map（130 个角色）。
+                        _own_en = (row[1] or "").split(",")[0].strip()
+                        _own_list = (STATE.get("char_zh_map") or {}).get(row[11])
+                        _own_zh = (_own_list or [None])[0] if _own_list else None
                         zh_card = {
                             "stand_id": sid,
                             "name_zh": zh_rec.get("name_zh"),
                             "name_en": row[0],
                             "name_ja": _ja,
-                            "owner": (row[1] or "").split(",")[0].strip() or None,
+                            "owner": _own_zh or _own_en or None,
+                            "owner_en": _own_en if _own_zh else None,
                             "part": row[9],
                             "stats_cn": _lv,
                             "missing": rp["missing"],

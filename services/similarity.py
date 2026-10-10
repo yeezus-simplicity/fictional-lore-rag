@@ -130,6 +130,17 @@ def similar_stands(conn, stand_id: str, k: int = 5,
     table = _stats_of(all_rows)
     names = {r["stand_id"]: r["name_en"] for r in all_rows}
 
+    # ★ M33：带上中文名 —— 原来列表里全是英文名
+    #   （"Dirty Deeds Done Dirt Cheap"），中文界面里很突兀。
+    zh = {}
+    try:
+        from aliases import load_zh_map
+        for _sid, _rec in load_zh_map().items():
+            if isinstance(_rec, dict) and _rec.get("name_zh"):
+                zh[_sid] = _rec["name_zh"]
+    except Exception:  # noqa: BLE001
+        zh = {}
+
     scored = []
     for sid, vals in table.items():
         if sid == stand_id:
@@ -143,6 +154,7 @@ def similar_stands(conn, stand_id: str, k: int = 5,
         scored.append({
             "stand_id": sid,
             "name": names.get(sid) or sid,
+            "name_zh": zh.get(sid),
             # 距离按共同维度数归一，避免「比得少的反而分低」
             "distance": round(dist, 2),
             "normalized": round(dist / (len(common) ** 0.5), 2),

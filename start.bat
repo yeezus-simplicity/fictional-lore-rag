@@ -10,7 +10,7 @@ cd /d "%~dp0"
 
 echo.
 echo  ============================================
-echo   rag-kb Search Service
+echo   fictional-lore-rag  Search Service
 echo  ============================================
 echo.
 
@@ -38,12 +38,44 @@ if not defined PY (
     )
 )
 
+REM ------------------------------------------------------------
+REM  NOTE: This file is intentionally **English-only**.
+REM  A .bat is parsed by cmd.exe byte-by-byte; non-ASCII text can be
+REM  mangled by the console code page and — worse — a stray character
+REM  can be parsed as a *command*, breaking the script.
+REM  Measured: Chinese text here produced mojibake plus
+REM  "'xxx' is not recognized as an internal or external command".
+REM  => Keep .bat ASCII. Put Chinese docs in README instead.
+REM ------------------------------------------------------------
+
 if not defined PY (
     echo  [ERROR] No Python with the required packages was found.
     echo.
-    echo  Required: fastapi, uvicorn, psycopg2-binary, torch, transformers
+    echo  Candidates actually probed, and why each failed:
     echo.
-    echo  Fix with:  pip install -r requirements.txt
+    for %%P in (".venv\Scripts\python.exe" python.exe py.exe) do (
+        echo    %%~P
+        %%~P -c "import sys;print('        interpreter:',sys.executable)" 2>nul
+        %%~P -c "import fastapi" >nul 2>&1
+        if errorlevel 1 (echo         MISSING fastapi  ^<- reason) else (echo         fastapi OK)
+    )
+    echo.
+    echo  ------------------------------------------------------------
+    echo  Pick one fix:
+    echo.
+    echo  [A] Run without the vector model  (recommended, much smaller)
+    echo      python -m pip install fastapi uvicorn psycopg2-binary
+    echo      python start.py --no-vector
+    echo.
+    echo  [B] Install everything  (includes the ~7GB embedding model)
+    echo      python -m pip install -i https://pypi.org/simple -r requirements.txt
+    echo.
+    echo  [C] Already have a Python that has the deps? Run it directly:
+    echo      "path\to\python.exe" start.py --no-vector
+    echo.
+    echo  TIP: install with "python -m pip", NOT bare "pip" - otherwise
+    echo  the packages land in a different interpreter and this script
+    echo  still cannot find them.
     echo.
     pause
     exit /b 1

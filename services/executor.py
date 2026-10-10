@@ -187,6 +187,125 @@ def extract_dim(question: str) -> Optional[str]:
     return None
 
 
+# ---------------------------------------------------------------------------
+# ★★ M38：条件值（stand_stat_conditional）的中文说明 ★★
+# ---------------------------------------------------------------------------
+# 背景：23 条六维带**条件限定**，例如
+#     black_sabbath  PWR  base=1(E)  ← "Restraining Power: A"
+#     whitesnake     PWR  base=NULL  ← "Power: Likely A (JoJoveller p.245)"
+#     baby_face      PRC  base=NULL  ← "Depending on Education"
+# 这些限定语一直存在 `*_raw` 里，但**只被当作杂讯丢掉** ——
+# 用户问「黑安息日的破坏力」得到 E，永远不知道「束缚时是 A」。
+# ★ 这不是缺功能，是**答案残缺但看起来完整**，比答错更难发现。
+#
+# ★ 设计原则（沿用本项目的可追溯原则）：
+#   英文原文**一定保留**并展示 —— 它是源数据，是证据；
+#   中文只是**辅助理解**（人工整理的 gloss，不是机翻）。
+#   所以是「原文 + 中文说明」并列，不是替换。
+_CONDITION_CN: dict[str, str] = {
+    "Restraining Power: A": "束缚敌人时破坏力为 A（常态为 E）",
+    "Depending on Education": "取决于「教育」程度，不是固定等级",
+    "Only during replays": "仅在「回放」状态下成立",
+    "Line of Sight": "射程取决于视线范围",
+    "The length of the string": "射程取决于线的长度",
+    "Range of a bullet": "射程约等于子弹射程",
+    "Speed of Rain": "速度等同于雨下落的速度",
+    "Extends to an entire train": "可延伸至整列火车",
+    "Walls of G.D. St. Prison": "可覆盖绿海豚街监狱的全部墙壁",
+    "About 3km in all directions": "约 3 公里，全方向",
+    "100s of meters in mirror world": "镜中世界内数百米",
+    "Approximately entire Orlando, Florida":
+        "约覆盖整个佛罗里达州奥兰多市",
+    "Tens of meters": "数十米",
+    "20-30 meters": "20–30 米",
+    "1-2 meters": "1–2 米",
+}
+
+# 前缀式限定语（"Speed: xxx" / "Power: xxx" / "Range: xxx"）
+_COND_PREFIX_CN = {
+    "power": "破坏力", "speed": "速度", "range": "射程",
+    "stamina": "持续力", "precision": "精密性", "development": "成长性",
+}
+
+# ★★ 括号里的内容有两种，必须区分 ★★
+#     "Range: 2 m (6.6 ft)"                    → 括号是**单位换算**，不是出处
+#     "Power: Likely A (JoJoveller p.245)"     → 括号是**出处**
+#   一律当出处会把「6.6 ft」写成「出处：6.6 ft」——
+#   那是把换算关系说成了引用来源，属于**编造证据**。
+#   → 只有命中「像出处的特征」才当出处。
+_SRC_HINT_RE = re.compile(
+    r"\bp\.\s*\d|\bvol\.|\bch\.|chapter|JOJOVELLER|artbook|guidebook"
+    r"|databook|interview|\d{4}", re.I)
+
+
+def _split_paren(body: str) -> tuple[str, Optional[str]]:
+    """把 "... (xxx)" 拆成 (主体, 括号内容)。没有括号则返回 (body, None)。"""
+    m = re.search(r"\(([^()]*)\)\s*$", body)
+    if not m:
+        return body.strip(), None
+    return body[:m.start()].strip(), m.group(1).strip()
+
+
+def explain_condition(note: Optional[str], dim: Optional[str] = None
+                      ) -> Optional[str]:
+    """把条件值原串整理成一句中文说明。识别不出返回 None。
+
+    ★ 返回 None 时**不要编** —— 上层会只显示英文原文。
+    """
+    if not note:
+        return None
+    # 原文里有不换行空格（\xa0），先归一化，否则中文里会夹怪空格
+    s = re.sub(r"\s+", " ", note.replace("\xa0", " ")).strip()
+    if s in _CONDITION_CN:
+        return _CONDITION_CN[s]
+
+    # "Power: Likely A (JoJoveller p.245)" → 破坏力：Likely A（出处：…）
+    m = re.match(r"^([A-Za-z]+)\s*:\s*(.+)$", s)
+    if m:
+        head = _COND_PREFIX_CN.get(m.group(1).lower())
+        body, paren = _split_paren(m.group(2))
+        if head:
+            out = f"{head}：{body}"
+            if paren:
+                # ★ 只有确实像「出处」才标出处；否则当补充说明
+                if _SRC_HINT_RE.search(paren):
+                    out += f"（出处：{paren}）"
+                else:
+                    out += f"（{paren}）"
+            return out
+
+    # "Range: 2 m (6.6 ft)" 这类没走到上面（head 命中时会走），
+    # 兜底：纯数值/量值
+    body, paren = _split_paren(s)
+    if re.search(r"\d", body) and re.search(
+            r"met(er|re)s?|\bkm\b|\bm\b|\bft\b", body, re.I):
+        return f"具体量值：{body}" + (f"（{paren}）" if paren else "")
+    return None
+
+
+def condition_caveat(cond: dict, dim: str, value: Optional[int]
+                     ) -> str:
+    """生成给用户看的提醒句。
+
+    ★ 分两种情况，措辞必须不同：
+      · value 有值 → 「常态是 X，但有限定」——用户已经看到 X 了
+      · value 为 None → 「没有固定等级，源里给的是条件/推测值」
+        这两种若用同一句话，前者会显得多余、后者会误导。
+    """
+    note = cond.get("note")
+    cn = explain_condition(note, dim)
+    dim_cn = DIM_CN.get(dim, dim)
+    gloss = f"（{cn}）" if cn else ""
+
+    if value is None:
+        return (f"{dim_cn}没有固定的等级 —— 源数据给的是条件/推测值："
+                f"「{note}」{gloss}。这不是「无数据」，"
+                f"而是「该项能力取决于条件」。")
+    base = LEVEL_CN.get(value, str(value))
+    return (f"{dim_cn}的 {base} 是常态值，但该项带条件限定："
+            f"「{note}」{gloss}。")
+
+
 def extract_level(question: str) -> Optional[int]:
     """从问句里抽等级（A/B/C/D/E 或 5-1）。"""
     m = re.search(r"\b([A-E])\s*级?\b", question)
@@ -314,8 +433,19 @@ class StructuredExecutor:
             i = off + DIMS.index(d) * 3
             vals[d] = {"value": row[i], "raw": row[i + 1], "cat": row[i + 2]}
 
+        # ★★ M38：取该替身的条件值（23 条里可能命中该替身的某一维）★
+        #   之前完全没查这张表 —— 于是「黑安息日的破坏力」只答 E，
+        #   永远不提「束缚时是 A」。
+        cur.execute("""
+            SELECT stat_dim, base_value, raw_value, condition_note
+            FROM stand_stat_conditional WHERE stand_id = %s
+        """, (sid,))
+        conds = {r[0]: {"base_value": r[1], "raw": r[2], "note": r[3]}
+                 for r in cur.fetchall()}
+
         v = vals[dim]
         cat = v["cat"] or "UNKNOWN"
+        cond = conds.get(dim)
         result = {
             "type": "fact",
             "stand_id": sid,
@@ -334,8 +464,40 @@ class StructuredExecutor:
                         if vals[d]["value"] is not None else None,
                 "raw": vals[d]["raw"],
                 "category": vals[d]["cat"],
+                # ★ M38：连同中文一起给 —— 前端就不必再抄一份映射
+                #   （抄两份迟早漂移，实测前端那套已经缺了 5 个类别）
+                "category_cn": CAT_CN.get(vals[d]["cat"] or "", None),
+                # ★ 每一维也带上自己的条件（雷达卡/前端可逐格提示）
+                "conditional": ({**conds[d],
+                                 "cn": explain_condition(conds[d]["note"], d)}
+                                if d in conds else None),
             } for d in DIMS},
         }
+
+        # ★ 被问的那一维有条件是重点：单独给 caveat，前端要显式展示
+        if cond:
+            result["conditional"] = {
+                "note": cond["note"],
+                "note_cn": explain_condition(cond["note"], dim),
+                "base_value": cond["base_value"],
+            }
+            result["caveat"] = condition_caveat(cond, dim, v["value"])
+
+        # ★ 该替身**其他**维度有条件时也提一句：用户可能没问那一维，
+        #   但「A·A·C·A·A·A」这种六个字母并排展示时，
+        #   若其中一格其实带条件，整体印象就被误导了。
+        others = [d for d in DIMS if d in conds and d != dim]
+        if others:
+            result["other_conditions"] = [
+                {"dimension": d, "dimension_cn": DIM_CN[d],
+                 "note": conds[d]["note"],
+                 "note_cn": explain_condition(conds[d]["note"], d),
+                 "value": vals[d]["value"],
+                 "value_label": LEVEL_CN.get(vals[d]["value"])
+                 if vals[d]["value"] is not None else None}
+                for d in others
+            ]
+
         evidence = [{
             "type": "database",
             "table": "stand_stats",
@@ -343,6 +505,16 @@ class StructuredExecutor:
             "stand_id": sid,
             "note": "数值来自消解后的 stand_stats 表",
         }]
+        if cond:
+            # ★ 条件值也算一条证据来源 —— 不能让用户以为
+            #   「有限定语」是模型自己加的
+            evidence.append({
+                "type": "database",
+                "table": "stand_stat_conditional",
+                "field": f"stat_dim='{dim}', condition_note",
+                "stand_id": sid,
+                "note": f"条件限定来自源数据原文：「{cond['note']}」",
+            })
         return result, evidence
 
     # ---------------------------------------------------------
@@ -358,32 +530,57 @@ class StructuredExecutor:
         if m or "最强" in question or "最高" in question:
             n = int(m.group(1)) if m else 5
             dim = dim or "PWR"
+            # ★★ M38：LEFT JOIN 条件值表 ★★
+            #   排名里若混进「带条件限定」的项，用户会当成硬实力。
+            #   实测：「射程最高」的榜单里有 Moody Blues(RNG=5)，
+            #   但它那条是「Only during replays」—— 只在回放时成立。
+            #   不标出来，这个第一名就是误导。
             sql = """
-                SELECT name_en, part, {d}, name_ja
-                FROM v_stand_overview
-                WHERE composite IS NOT NULL AND {d} IS NOT NULL
+                SELECT o.name_en, o.part, o.{d}, o.name_ja, c.condition_note
+                FROM v_stand_overview o
+                LEFT JOIN stand_stat_conditional c
+                       ON c.stand_id = o.stand_id AND c.stat_dim = %s
+                WHERE o.composite IS NOT NULL AND o.{d} IS NOT NULL
                 {part_filter}
-                ORDER BY {d} DESC, name_en
+                ORDER BY o.{d} DESC, o.name_en
                 LIMIT %s
             """
             # ★ psycopg2 的 execute() 返回 None，结果要用 cur.fetchall() 取
-            cur.execute(
-                sql.format(d=dim.lower(),
-                           part_filter="AND part = %s" if part else ""),
-                ((part,) if part else ()) + (n,))
+            params: tuple = (dim.upper(),)
+            if part:
+                params += (part,)
+            params += (n,)
+            cur.execute(sql.format(d=dim.lower(),
+                                   part_filter="AND o.part = %s" if part else ""),
+                        params)
             rows = cur.fetchall()
+            items = []
+            for r in rows:
+                it = {"name": r[0], "part": r[1], "value": r[2],
+                      "label": LEVEL_CN.get(r[2]), "name_ja": r[3]}
+                if r[4]:
+                    it["conditional_note"] = r[4]
+                    it["conditional_note_cn"] = explain_condition(r[4], dim)
+                items.append(it)
+            n_cond = sum(1 for it in items if it.get("conditional_note"))
+            result = {
+                "type": "extreme_top",
+                "dimension": dim, "dimension_cn": DIM_CN[dim],
+                "part": part, "limit": n,
+                "items": items,
+            }
+            if n_cond:
+                # ★ 明说有几个带条件 —— 不加这句，榜单看起来全是硬实力
+                result["caveat"] = (
+                    f"该榜单有 {n_cond} 项带条件限定（已在条目上标注）："
+                    f"这些值只在特定条件下成立，不代表无条件时的水平。")
             return (
-                {
-                    "type": "extreme_top",
-                    "dimension": dim, "dimension_cn": DIM_CN[dim],
-                    "part": part, "limit": n,
-                    "items": [{"name": r[0], "part": r[1],
-                               "value": r[2],
-                               "label": LEVEL_CN.get(r[2])}
-                              for r in rows],
-                },
+                result,
                 [{"type": "database", "table": "v_stand_overview",
-                  "note": f"按 {dim} 降序，已过滤 composite IS NOT NULL"}],
+                  "note": f"按 {dim} 降序，已过滤 composite IS NOT NULL"}
+                 ] + ([{"type": "database", "table": "stand_stat_conditional",
+                        "note": f"{n_cond} 项带条件限定（来自源数据 condition_note）"}]
+                      if n_cond else []),
             )
 
         # count 形式

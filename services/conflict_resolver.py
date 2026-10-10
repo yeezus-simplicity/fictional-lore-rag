@@ -452,7 +452,13 @@ class Router:
     #        → candidates=[] → unknown_hit=None
     #        → 但问句含"替身"（DOMAIN_HINT 命中）→ 不拒答
     #        → 落到语义兜底，BM25捞回 soft_wet 的原文。
-    #   ★ 「东方常秀」是《东方project》的角色，不是 JOJO 角色。
+    #   ★★ 更正（M38）：「东方常秀」**不是**《东方project》角色 ★★
+    #     M20 当时把它记成外来角色，是**判断错了**。
+    #     东方常秀 = Higashikata Joshu，JoJOLion 角色，替身 Nut King Call。
+    #     M21 补齐角色中文别名后，这条能正确解析了（实测返回 Nut King Call）。
+    #     → 这段逻辑真正要挡的是**真正不存在的人名**，
+    #       例如「甘道夫的替身是什么」（指环王角色）→ 应 abstain。
+    #       回归用例见 evaluation/test_m38_conditional.py。
     #   → 规则：问句里出现「XXX的替身」，XXX 是 2-4 个汉字、
     #     且不在已知别名里、也不在维度词/停用词里
     #     → 判为「编造/未知实体」→ abstain。
@@ -466,6 +472,32 @@ class Router:
         "替身", "使者", "本体", "能力", "形态",
     }
 
+    # ★★ M38 修：「XXX的替身」模板会从中间截出**假名字** ★★
+    #   实测（既有 bug，非本轮引入 —— git stash 后复跑同样复现）：
+    #     「破坏力最高的替身」  → 模板从位置 1 起匹配到「坏力最高」
+    #     「射程最高的替身前40」→ 匹配到「射程最高」
+    #   → 被当成「编造实体」直接 abstain 拒答。
+    #   ★ 讽刺的是「破坏力最高的替身」正是路由自己列的示例问句。
+    #
+    #   根因：模板只看「2-4 个汉字 + 的替身」，不判断这 4 个字**是不是名字**。
+    #   → 补一道「整串形状」判据：若「的替身」前的中文串含
+    #     维度词 / 极值词 / 疑问词，整句是**描述性短语**，不是人名句式。
+    #   ★ 关键：判的是**整串**而不是模板截出的片段 ——
+    #     截出来的「坏力最高」已经丢了上下文，判不准。
+    _DESCRIPTIVE_RE = re.compile(
+        # 维度词（取词口径与 DOMAIN_HINT 对齐）
+        r"破坏力|破壞力|破壊力|速度|射程|持续力|持續力|持続力|精密性"
+        r"|成长性|成長性|能力|能力值|形态|形態|类型|類型"
+        # 极值 / 排行
+        r"|最高|最强|最低|最弱|最大|最小|排名|排行|前几|第几"
+        # 疑问 / 量词
+        r"|多少|几个|几级|哪个|哪些|什么|怎么|如何"
+        # 数据集专有
+        r"|替身|使者|本体",
+    )
+    # 取「的替身」前的整串中文（用于形状判定，不用于取名）
+    ZH_PERSON_CTX = re.compile(r"([一-鿿]{2,12})的替身")
+
     def _unknown_zh_person(self, q: str) -> Optional[str]:
         """问句里「XXX的替身」里的 XXX 不是已知别名 → 返回该名字。
 
@@ -474,6 +506,12 @@ class Router:
           "东方常秀"这种未收录的人名压根不会进候选列表，
           于是 unknown_hit 永远是 None，有问有答但答的是别人。
         """
+        # ★ M38：先判「整句形状」。含维度/极值/疑问词的是描述性短语，
+        #   不是「XXX的替身」句式 —— 直接放行，不判编造。
+        ctx = self.ZH_PERSON_CTX.search(q)
+        if ctx and self._DESCRIPTIVE_RE.search(ctx.group(1)):
+            return None
+
         for m in self.ZH_PERSON_TMPL.finditer(q):
             name = m.group(1)
             if name in self.ZH_NAME_STOP:

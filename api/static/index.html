@@ -447,6 +447,32 @@ td.num { font-family: var(--mono); font-size: 12px; text-align: right; }
 .sim-note { margin-top: 10px; padding-top: 8px;
   border-top: 1px dashed var(--border-strong); font-size: 11px; }
 
+/* ---- M38：条件值提示 ---- */
+.caveat {
+  margin-top: 12px; padding: 10px 12px; border-radius: 8px;
+  background: var(--bg-panel); border-left: 3px solid var(--warn);
+  font-size: 12px; line-height: 1.7; color: var(--text);
+}
+.caveat b { font-weight: 500; color: var(--warn); }
+.cv-body { margin-top: 2px; }
+.caveat b + .cv-body { margin-top: 4px; }
+.cv-src { margin-top: 6px; font-size: 11px; color: var(--text-faint); }
+.cv-src code {
+  font-family: var(--mono); font-size: 11px; color: var(--text-dim);
+  background: var(--bg); padding: 1px 5px; border-radius: 3px;
+}
+.cv-others {
+  margin-top: 10px; padding-top: 8px; font-size: 11px;
+  color: var(--text-faint); border-top: 1px dashed var(--border-strong);
+}
+.cv-other { margin-top: 4px; color: var(--text-dim); }
+.cv-other b { color: var(--warn); font-weight: 500; }
+.cv-src-inline {
+  font-family: var(--mono); font-size: 10px; color: var(--text-faint);
+  margin-left: 6px;
+}
+.tag.c-cond { border-color: var(--warn); color: var(--warn); cursor: help; }
+
 .ok { color: var(--ok); } .bad { color: var(--err); }
 .empty { color: var(--text-faint); font-size: 13px; padding: 22px; text-align: center; }
 .loading { color: var(--text-dim); font-size: 13px; padding: 18px; }
@@ -1042,8 +1068,21 @@ function zoomImg(url){
   z.style.display = 'flex';
 }
 
-const CAT_CN = {RANKED:'正常等级',UNKNOWN:'未知（存在争议）',
-  INFINITE:'无限',EMPTYSLOT:'空缺',UNCATEGORIZED:'未分类'};
+// ★★ M38：类别中文映射 ★★
+//   ★ 之前这里是**一套与后端重复且已经漂移**的映射：
+//     缺 CONDITIONAL / CONDITIONAL_NO_BASE / NOT_APPLICABLE / UNPARSED / NONE，
+//     而键名还把 EMPTY_SLOT 写成了 EMPTYSLOT ——
+//     于是 53 行 EMPTY_SLOT + 20 行 CONDITIONAL 在界面上显示英文。
+//   → 优先用后端返回的 `category_cn`（后端 CAT_CN 是权威、且已覆盖全部 9 类），
+//     这份只作兜底，键名与后端保持逐字一致。
+//   ★ 教训：同一份映射写在两处，早晚会漂移 —— 能由后端给就别在前端再抄一遍。
+const CAT_CN = {
+  RANKED:'正常等级', NONE:'明确无此能力', EMPTY_SLOT:'数据缺失（空位）',
+  UNKNOWN:'未知（存在争议）', INFINITE:'无限',
+  CONDITIONAL:'条件值（附条件说明）',
+  CONDITIONAL_NO_BASE:'条件值（无基础等级）',
+  NOT_APPLICABLE:'该源未提供', UNPARSED:'未解析',
+};
 
 function renderStructured(a){
   const t = a.type;
@@ -1054,20 +1093,54 @@ function renderStructured(a){
              esc(a.hint)}</div>` : '');
   }
   if(t==='fact'){
+    // ★★ M38：条件值提示 ★★
+    //   像「黑色安息日的破坏力」这类，值本身是 E，
+    //   但源数据注明「束缚敌人时是 A」。以前只答 E ——
+    //   答案**看起来完整**，用户不会追问，比答错更难发现。
+    let cond = '';
+    if(a.conditional){
+      cond = `<div class="caveat"><b>条件限定</b>
+        <div class="cv-body">${esc(a.caveat || '')}</div>
+        <div class="cv-src">源数据原文：<code>${esc(a.conditional.note)}</code></div>
+      </div>`;
+    }else if(a.caveat){
+      cond = `<div class="caveat"><div class="cv-body">${esc(a.caveat)}</div></div>`;
+    }
+    // 同替身其他维度也带条件时提示 —— 六维并排展示时
+    // 某格其实有条件，整体印象会被误导
+    let others = '';
+    if((a.other_conditions||[]).length){
+      others = `<div class="cv-others">该替身另有维度带条件限定：
+        ${a.other_conditions.map(o=>
+          `<div class="cv-other">· ${esc(o.dimension_cn)}
+            <b>${esc(o.value_label ?? '无固定等级')}</b>
+            <span class="cv-src-inline">${esc(o.note)}</span></div>`).join('')}
+      </div>`;
+    }
     return `<dl class="kv">
       <dt>替身</dt><dd>${esc(a.stand_name)}</dd>
       <dt>维度</dt><dd>${esc(a.dimension_cn)}（${esc(a.dimension)}）</dd>
       <dt>数值</dt><dd>${esc(a.value_label ?? '—')}</dd>
       <dt>原始值</dt><dd>${esc(a.raw ?? '—')}</dd>
-      <dt>类别</dt><dd>${esc(CAT_CN[a.category]||a.category)}
-        <span class="c-cat ${esc(a.category)}">${esc(a.category)}</span></dd>
-    </dl>`;
+      <dt>类别</dt><dd>
+        <span class="c-cat ${esc(a.category)}"
+              title="数据里的原始类别：${esc(a.category||'')}"
+          >${esc(a.category_cn || CAT_CN[a.category] || a.category || '—')}</span></dd>
+    </dl>${cond}${others}`;
   }
   if(t==='extreme' || t==='extreme_top'){
     const items = a.winners || a.items || [];
+    // ★ M38：带条件限定的条目要逐条标出。否则「射程最高」的
+    //   榜首可能是 Moody Blues（仅回放时成立），看着像硬实力。
+    const caveat = a.caveat
+      ? `<div class="caveat"><div class="cv-body">${esc(a.caveat)}</div></div>`
+      : '';
     return `<div style="margin-bottom:8px">${esc(a.dimension_cn)} ${esc(a.direction||'最高')}
       = <b>${esc(a.value_label ?? (items[0]&&items[0].label) ?? '—')}</b></div>
-      <div>${items.map(x=>`<span class="tag">${esc(x.name)}</span>`).join('')}</div>`;
+      <div>${items.map(x=>`<span class="tag${x.conditional_note?' c-cond':''}"
+        title="${x.conditional_note? esc(x.conditional_note):''}"
+        >${esc(x.name)}${x.conditional_note?' ※':''}</span>`).join('')}</div>
+      ${caveat}`;
   }
   if(t==='count' || t==='count_by_level'){
     return `<dl class="kv"><dt>范围</dt><dd>${esc(a.scope||a.dimension_cn)}</dd>

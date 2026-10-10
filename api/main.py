@@ -979,6 +979,217 @@ def get_similar(stand_id: str,
         return {"error": f"{type(e).__name__}: {e}"}
 
 
+# ===================================================================
+# M37：出场记录 / 必杀技 / 替身来源
+# ===================================================================
+# ★ 这三块数据本来就在磁盘上，只是没建表。现在落库了。
+# ★ 每个接口都在返回值里**明写覆盖率** ——
+#   必杀技只有 10 个替身有数据，不说清楚会被当成全库都有。
+
+
+@app.get("/appearances/{stand_id}", summary="查替身出场记录（M37）")
+def get_appearances(
+        stand_id: str,
+        kind: str = Query("manga",
+                          pattern="^(manga|anime|cover|all)$"),
+        limit: int = Query(60, ge=1, le=500)):
+    """出场章节 / 动画集数。
+
+    ★ **kind 必须分清**，这直接决定「第一次出场是第几话」是否可信：
+        manga = 漫画里实际有戏份的章节
+        anime = 动画集数
+        cover = 出现在封面 / 仅被提及 —— **不等于有戏份**
+      混在一起的话，白金之星的「首次出场」会答成第 1 话（那是封面）。
+
+    ★ chapter_no 解析不出的行是 NULL（按「无数据」处理，不是 0）。
+    """
+    if not STATE.get("db_ok"):
+        return {"error": "数据库不可用"}
+    cur = STATE["conn"].cursor()
+    try:
+        cur.execute("SELECT name_en FROM stands WHERE stand_id=%s", (stand_id,))
+        row = cur.fetchone()
+        if not row:
+            return {"error": f"库里没有替身 {stand_id}"}
+
+        sql = """
+            SELECT kind, chapter_no, episode_no, chapter_title, raw_text
+            FROM stand_appearances WHERE stand_id=%s
+        """
+        params: list = [stand_id]
+        if kind != "all":
+            sql += " AND kind=%s"
+            params.append(kind)
+        # 排序：先按编号，NULL 排最后（而不是当 0 排最前）
+        sql += (" ORDER BY (chapter_no IS NULL), chapter_no NULLS LAST,"
+                "         episode_no NULLS LAST, raw_text LIMIT %s")
+        params.append(limit)
+        cur.execute(sql, params)
+        rows = cur.fetchall()
+
+        # 各 kind 的计数（即使 kind 过滤了也给全量计数，便于前端提示）
+        cur.execute("""
+            SELECT kind, count(*), min(chapter_no)
+            FROM stand_appearances WHERE stand_id=%s GROUP BY kind
+        """, (stand_id,))
+        summary = {k: {"n": n, "first_chapter": first}
+                   for k, n, first in cur.fetchall()}
+
+        # ★ 首次出场**只认 manga**：封面不是出场
+        first_manga = summary.get("manga", {}).get("first_chapter")
+        cover_ch = summary.get("cover", {}).get("first_chapter")
+        note = None
+        if cover_ch and first_manga and cover_ch < first_manga:
+            note = (f"注意：该替身在第 {cover_ch} 话的封面/提及中出现过，"
+                    f"但那是 cover 类，不代表有戏份。"
+                    f"实际首次出场是第 {first_manga} 话")
+
+        return {
+            "stand_id": stand_id, "name": row[0],
+            "kind_filtered": kind,
+            "count": len(rows),
+            "summary_by_kind": summary,
+            "first_real_appearance": (
+                {"chapter": first_manga, "source": "manga"}
+                if first_manga is not None else None),
+            "note": note,
+            "appearances": [
+                {"kind": k, "chapter": ch, "episode": ep,
+                 "title": ti, "raw": raw}
+                for k, ch, ep, ti, raw in rows],
+        }
+    finally:
+        cur.close()
+
+
+@app.get("/moves/{stand_id}", summary="查替身必杀技（M37）")
+def get_moves(stand_id: str):
+    """必杀技列表。
+
+    ★★ 覆盖极低：全库 19 条、只覆盖 10 个替身。★★
+      返回里带 `coverage_note`，前端要显示出来 ——
+      否则用户会以为「只有白金之星有必杀技」。
+    """
+    if not STATE.get("db_ok"):
+        return {"error": "数据库不可用"}
+    cur = STATE["conn"].cursor()
+    try:
+        cur.execute("SELECT name_en FROM stands WHERE stand_id=%s", (stand_id,))
+        row = cur.fetchone()
+        if not row:
+            return {"error": f"库里没有替身 {stand_id}"}
+        cur.execute("""
+            SELECT name, phonetic, alias, debut_chapter, debut_raw
+            FROM stand_moves WHERE stand_id=%s
+            ORDER BY (debut_chapter IS NULL), debut_chapter, name
+        """, (stand_id,))
+        rows = cur.fetchall()
+        cur.execute("SELECT count(DISTINCT stand_id) FROM stand_moves")
+        n_with = cur.fetchone()[0]
+        cur.execute("SELECT count(*) FROM stands")
+        n_all = cur.fetchone()[0]
+        return {
+            "stand_id": stand_id, "name": row[0], "count": len(rows),
+            "moves": [
+                {"name": n, "phonetic": ph, "alias": al,
+                 "debut_chapter": dc, "debut_raw": dr}
+                for n, ph, al, dc, dr in rows],
+            "coverage_note": (
+                f"★ 数据覆盖有限：全库 {n_all} 个替身里只有 {n_with} 个"
+                f"有必杀技记录。没有列出不代表该替身没有必杀技。"),
+        }
+    finally:
+        cur.close()
+
+
+@app.get("/origins", summary="查替身来源 / 血缘（M37）")
+def get_origins(
+        kind: str = Query("all",
+                          pattern="^(all|arrow|exposure|natural|bloodline"
+                                  "|saint_corpse|merge|technique|unknown)$"),
+        has_note: bool = Query(False,
+                               description="只看带来源人名的（如「箭的来源: DIO」）")):
+    """替身来源。
+
+    ★ 填充 44%（65/148）。`kind=unknown` 的行是
+      **「有原始串但没归类出来」，不是「无来源」** —— 二者不可混同。
+    """
+    if not STATE.get("db_ok"):
+        return {"error": "数据库不可用"}
+    cur = STATE["conn"].cursor()
+    try:
+        sql = """
+            SELECT o.stand_id, s.name_en, s.name_ja, o.origin_kind,
+                   o.origin_raw, o.origin_note
+            FROM stand_origins o JOIN stands s USING(stand_id)
+        """
+        where: list[str] = []
+        params: list = []
+        if kind != "all":
+            where.append("o.origin_kind=%s")
+            params.append(kind)
+        if has_note:
+            where.append("o.origin_note IS NOT NULL")
+        if where:
+            sql += " WHERE " + " AND ".join(where)
+        sql += " ORDER BY o.origin_kind, s.name_en"
+        cur.execute(sql, params)
+        rows = cur.fetchall()
+        cur.execute("SELECT origin_kind, n_stands FROM v_origin_summary")
+        dist = {k: n for k, n in cur.fetchall()}
+        cur.execute("SELECT count(*) FROM stands")
+        n_all = cur.fetchone()[0]
+        return {
+            "kind_filtered": kind,
+            "count": len(rows),
+            "distribution": dist,
+            "coverage_note": (
+                f"★ 仅 {sum(dist.values())}/{n_all} 个替身有来源数据。"
+                f"未出现在这里的是「源数据没有 origin 字段」，不是「无来源」。"),
+            "origins": [
+                {"stand_id": sid, "name": nm, "name_ja": ja,
+                 "kind": k, "raw": raw, "note": note}
+                for sid, nm, ja, k, raw, note in rows],
+        }
+    finally:
+        cur.close()
+
+
+@app.get("/chapters/{n}", summary="查某话出现了哪些替身（M37）")
+def get_chapter(n: int, limit: int = Query(40, ge=1, le=200)):
+    """反向查询：第 N 话里出现了哪些替身。
+
+    ★ 只统计 kind='manga'（实际出场），cover/提及不算。
+    """
+    if not STATE.get("db_ok"):
+        return {"error": "数据库不可用"}
+    cur = STATE["conn"].cursor()
+    try:
+        cur.execute("""
+            SELECT s.stand_id, s.name_en, s.name_ja, s.part, a.chapter_title
+            FROM stand_appearances a JOIN stands s USING(stand_id)
+            WHERE a.chapter_no=%s AND a.kind='manga'
+            ORDER BY s.name_en LIMIT %s
+        """, (n, limit))
+        rows = cur.fetchall()
+        cur.execute("""
+            SELECT count(*) FROM stand_appearances
+            WHERE chapter_no=%s AND kind='manga'
+        """, (n,))
+        total = cur.fetchone()[0]
+        return {
+            "chapter": n, "count": total,
+            "returned": len(rows),
+            "note": None if total <= limit
+                    else f"共 {total} 个，此处只返回前 {limit} 个",
+            "stands": [
+                {"stand_id": r[0], "name": r[1], "name_ja": r[2],
+                 "part": r[3], "title": r[4]} for r in rows],
+        }
+    finally:
+        cur.close()
+
+
 @app.get("/stands/{stand_id}", summary="查单个替身的完整信息")
 def get_stand(stand_id: str):
     """返回替身的全部结构化信息 + 冲突状态 + 文本块数。"""

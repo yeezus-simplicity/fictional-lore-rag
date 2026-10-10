@@ -650,6 +650,72 @@ def load_data() -> bool:
         conn.commit()
         print(f"  {i + len(batch)}/{len(chunk_rows)}")
 
+    # ---------- M37：出场记录 / 必杀技 / 替身来源 ----------
+    #   ★ 这三块数据本来就在磁盘上（dataset/sources/），
+    #     只是之前没建表。现在解析后落库。
+    print("\n[8/9] 出场记录 / 必杀技 / 替身来源")
+    try:
+        from collect_extras import collect as _collect_extras
+        extra = _collect_extras()
+    except Exception as e:  # noqa: BLE001
+        print(f"  [WARN] 附加数据解析失败，跳过：{type(e).__name__}: {e}")
+        extra = {"appearances": [], "moves": [], "origins": []}
+
+    # 只保留 stands 表里确实存在的 stand_id（11 个形态替身
+    # 如 echoes_act1 / tusk_act1 在 rendered 里没有快照，
+    # 硬插会撞外键）。
+    cur2 = conn.cursor()
+    cur2.execute("SELECT stand_id FROM stands")
+    valid_ids = {r[0] for r in cur2.fetchall()}
+
+    apps = [a for a in extra["appearances"] if a["stand_id"] in valid_ids]
+    cur2.executemany("""
+        INSERT INTO stand_appearances
+            (stand_id, kind, chapter_no, episode_no, chapter_title, raw_text)
+        VALUES (%s,%s,%s,%s,%s,%s)
+        ON CONFLICT (stand_id, kind, raw_text) DO UPDATE SET
+            chapter_no=EXCLUDED.chapter_no, episode_no=EXCLUDED.episode_no,
+            chapter_title=EXCLUDED.chapter_title
+    """, [(a["stand_id"], a["kind"], a["chapter_no"], a["episode_no"],
+           a["chapter_title"], a["raw_text"]) for a in apps])
+    conn.commit()
+    skipped = len(extra["appearances"]) - len(apps)
+    print(f"  出场 {len(apps)} 条"
+          + (f"（跳过 {skipped} 条：替身不在 stands 表）" if skipped else ""))
+
+    mvs = [m for m in extra["moves"] if m["stand_id"] in valid_ids]
+    cur2.executemany("""
+        INSERT INTO stand_moves
+            (stand_id, name, phonetic, alias, debut_chapter, debut_raw, text)
+        VALUES (%s,%s,%s,%s,%s,%s,%s)
+        ON CONFLICT (stand_id, name) DO UPDATE SET
+            phonetic=EXCLUDED.phonetic, alias=EXCLUDED.alias,
+            debut_chapter=EXCLUDED.debut_chapter, debut_raw=EXCLUDED.debut_raw,
+            text=EXCLUDED.text
+    """, [(m["stand_id"], m["name"], m["phonetic"], m["alias"],
+           m["debut_chapter"], m["debut_raw"], m["text"]) for m in mvs])
+    conn.commit()
+    print(f"  必杀技 {len(mvs)} 条"
+          f"（覆盖 {len({m['stand_id'] for m in mvs})} 个替身，"
+          f"★ 覆盖有限，不代表全库都有）")
+
+    ogs = [o for o in extra["origins"] if o["stand_id"] in valid_ids]
+    cur2.executemany("""
+        INSERT INTO stand_origins
+            (stand_id, origin_raw, origin_kind, origin_note)
+        VALUES (%s,%s,%s,%s)
+        ON CONFLICT (stand_id) DO UPDATE SET
+            origin_raw=EXCLUDED.origin_raw,
+            origin_kind=EXCLUDED.origin_kind,
+            origin_note=EXCLUDED.origin_note
+    """, [(o["stand_id"], o["origin_raw"], o["origin_kind"],
+           o["origin_note"]) for o in ogs])
+    conn.commit()
+    _uk = sum(1 for o in ogs if o["origin_kind"] == "unknown")
+    print(f"  来源 {len(ogs)} 条（其中 {_uk} 条有原始串但未归类，"
+          f"与「无来源」不同）")
+    cur2.close()
+
     cur.close()
     conn.close()
     print(f"\n  总耗时 {time.time() - t_all:.1f}s")
@@ -785,10 +851,26 @@ def verify() -> bool:
             (PROC / "text_chunks.json").read_text(encoding="utf-8")))
     except Exception:
         _n_chunks = None
+
+    # ★ M37：附加表的期望值也从磁盘推导（同一原则，见上）
+    _n_apps = _n_moves = _n_origins = None
+    try:
+        from collect_extras import collect as _collect_extras2
+        _ex = _collect_extras2()
+        _n_apps = len({(a["stand_id"], a["kind"], a["raw_text"])
+                       for a in _ex["appearances"]})
+        _n_moves = len({(m["stand_id"], m["name"]) for m in _ex["moves"]})
+        _n_origins = len({o["stand_id"] for o in _ex["origins"]})
+    except Exception:
+        pass
     expect = {
         "characters": None, "stands": 156, "stand_stats": 156,
         "stand_forms": 146, "stat_conflicts": 28,
         "text_chunks": _n_chunks,
+        # M37：三块新表的期望值同样从磁盘推导，不写死
+        "stand_appearances": _n_apps,
+        "stand_moves": _n_moves,
+        "stand_origins": _n_origins,
     }
     all_ok = True
     for t, exp in expect.items():

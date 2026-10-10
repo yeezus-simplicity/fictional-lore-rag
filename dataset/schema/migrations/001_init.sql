@@ -453,6 +453,110 @@ COMMENT ON VIEW v_stand_vector IS
     '六维完整可比的替身（123 条）。★ 生成数值答案时应加此过滤';
 
 -- --------------------------------------------------------------------------
+-- 3.5 出场记录 / 必杀技 / 替身来源（M37）
+-- --------------------------------------------------------------------------
+-- ★ 这三块数据**早就抓在磁盘上**了（dataset/sources/rendered/*.json
+--   与 sources/details.json 的 infobox），只是之前没建表。
+--   落库后可直接回答「第一次出场是第几话」「必杀技有几个」
+--   「哪些替身是箭命中的」，不必再靠语义检索翻英文原文。
+
+-- 3.5.1 stand_appearances —— 替身出场记录（4111 条 / 覆盖 145 个替身）
+-- ★ kind 的取值与含义（实测 4111 条的分布）：
+--     'manga'   漫画章节，2139 条  「Chapter 114: Jotaro Kujo, Part 1」
+--     'anime'   动画集数， 978 条  「SC Episode 1」
+--     'cover'   封面/提及，993 条  「Chapter 1 Cover」「OVER HEAVEN Chapter 5 (Mentioned)」
+--   ★ cover 单独一类而不是混进 manga：它们表示「出现在封面/被提及」，
+--     **不等于该话里有实际戏份**。若混在一起，
+--     「第一次出场是第几话」会答成封面号 —— 那是错的。
+--   —— 这个区分直接决定「首次出场」类问题是否可信。
+CREATE TABLE IF NOT EXISTS stand_appearances (
+    app_id     BIGSERIAL PRIMARY KEY,
+    stand_id   TEXT NOT NULL REFERENCES stands(stand_id) ON DELETE CASCADE,
+    kind       TEXT NOT NULL CHECK (kind IN ('manga','anime','cover')),
+    chapter_no INTEGER,              -- 章节号；解析不出则为 NULL
+    episode_no TEXT,                 -- 动画集号（可能有「13.5」这种小数）
+    chapter_title TEXT,              -- 「Jotaro Kujo, Part 1」等副标题
+    raw_text   TEXT NOT NULL,        -- 原始串，保留以便追溯
+    UNIQUE (stand_id, kind, raw_text)
+);
+
+CREATE INDEX IF NOT EXISTS idx_app_stand  ON stand_appearances(stand_id);
+CREATE INDEX IF NOT EXISTS idx_app_chapter ON stand_appearances(chapter_no);
+CREATE INDEX IF NOT EXISTS idx_app_kind    ON stand_appearances(kind);
+
+COMMENT ON TABLE stand_appearances IS
+    '替身出场记录。★ kind=manga/anime 才是实际出场，'
+    'cover 仅表示封面或被提及，不等于有戏份。'
+    '解析不出编号的行 chapter_no 为 NULL —— 按「无数据」处理，不要当 0';
+
+-- 3.5.2 stand_moves —— 必杀技（19 条 / 仅覆盖 10 个替身）
+-- ★★ 覆盖极低（145 个替身里只有 10 个有必杀技记录）★★
+--   对外表述**必须**带上这个限定，否则会被当成全库都有。
+--   phonetic 是假名（如 オラオラ），是「用日语念出必杀技」这类问题的依据。
+CREATE TABLE IF NOT EXISTS stand_moves (
+    move_id    BIGSERIAL PRIMARY KEY,
+    stand_id   TEXT NOT NULL REFERENCES stands(stand_id) ON DELETE CASCADE,
+    name       TEXT NOT NULL,
+    phonetic   TEXT,                 -- 假名读法
+    alias      TEXT,                 -- 罗马字 / 别名
+    debut_chapter INTEGER,           -- 登场章节；解析不出为 NULL
+    debut_raw  TEXT,                 -- 原始 debut 串（常含章节+动画集）
+    text       TEXT,
+    UNIQUE (stand_id, name)
+);
+
+CREATE INDEX IF NOT EXISTS idx_move_stand ON stand_moves(stand_id);
+
+COMMENT ON TABLE stand_moves IS
+    '必杀技。★★ 仅 10 个替身有此数据（145 个里有 135 个没有）★★ '
+    'phonetic 为假名读法。回答相关问题时必须说明覆盖有限';
+
+-- 3.5.3 stand_origins —— 替身来源 / 血缘（71/154 有值，46%）
+-- ★ 这是本库**唯一**能表达「替身之间关系」的字段：
+--   Natural-born / Arrow → DIO (Signal) / 等
+--   —— 回答「哪些替身跟 DIO 有关」这类问题只能靠它。
+-- ★ 填充率仅 46%，且是**非结构化英文串**（如 "Arrow → DIO (Signal)"），
+--   所以额外抽出 kind 列便于过滤，但**不代表解析完备**。
+CREATE TABLE IF NOT EXISTS stand_origins (
+    stand_id   TEXT PRIMARY KEY REFERENCES stands(stand_id) ON DELETE CASCADE,
+    origin_raw TEXT NOT NULL,        -- 原始串
+    -- ★ 这 7 类是按实测的 23 种写法归并出来的（去重后 65 条）。
+    --   'unknown' = 「有原始串但没归类出来」，**不是**「无来源」——
+    --   两者在统计时不可混同（这是本项目的一条硬规则）。
+    origin_kind TEXT CHECK (origin_kind IN (
+                 'arrow',          -- Arrow-born / Arrow → X（箭血统）
+                 'exposure',       -- Devil's Palm / Wall Eyes 接触获得
+                 'natural',        -- Natural-born：天生
+                 'bloodline',      -- 血缘继承
+                 'saint_corpse',   -- Saint's Corpse / Eye of the Saint
+                 'merge',          -- 与 Green Baby 融合等
+                 'technique',      -- 招式/密传真授
+                 'unknown'
+             )),
+    origin_note TEXT                -- 如「箭的来源: DIO」
+);
+
+CREATE INDEX IF NOT EXISTS idx_origin_kind ON stand_origins(origin_kind);
+
+COMMENT ON TABLE stand_origins IS
+    '替身来源。★ 填充 44%（65/148，唯一 stand_id）。'
+    'origin_kind=''unknown'' 表示「有原始串但未归类」，'
+    '不是「无来源」—— 二者在统计时不可混同';
+
+-- 汇总视图：各来源类别的替身数（★ unknown 单列，不并入其他类）
+CREATE OR REPLACE VIEW v_origin_summary AS
+SELECT
+    o.origin_kind,
+    count(*)                 AS n_stands,
+    count(*) FILTER (WHERE o.origin_note IS NOT NULL) AS n_with_note
+FROM stand_origins o
+GROUP BY o.origin_kind
+ORDER BY n_stands DESC;
+
+COMMENT ON VIEW v_origin_summary IS
+    '替身来源分类汇总。★ unknown 行是「有串未归类」，不是「无来源」';
+
+-- --------------------------------------------------------------------------
 -- 4. 统计视图
 -- --------------------------------------------------------------------------
 CREATE OR REPLACE VIEW v_data_quality AS

@@ -63,11 +63,11 @@ if not defined PY (
     echo  ------------------------------------------------------------
     echo  Pick one fix:
     echo.
-    echo  [A] Run without the vector model  (recommended, much smaller)
+    echo  [A] Run without the vector model -- recommended, much smaller
     echo      python -m pip install fastapi uvicorn psycopg2-binary
     echo      python start.py --no-vector
     echo.
-    echo  [B] Install everything  (includes the ~7GB embedding model)
+    echo  [B] Install everything -- includes the ~7GB embedding model
     echo      python -m pip install -i https://pypi.org/simple -r requirements.txt
     echo.
     echo  [C] Already have a Python that has the deps? Run it directly:

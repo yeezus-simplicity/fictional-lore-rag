@@ -73,5 +73,12 @@ dataset/sources/zh_names/_cache_*
 dataset/processed/text_chunks.json
 dataset/sources/stand_stats_main.html
 
+# ---- B 方案（扩语料）：jojowiki 文章正文，同样是第三方版权原文 ----
+#   articles.json / article_chunks.json / text_chunks_aug.json
+#   均由 fetch_articles.py + build_article_chunks.py 可从 jojowiki 重建 → 不入库
+dataset/sources/jojowiki/articles.json
+dataset/processed/article_chunks.json
+dataset/processed/text_chunks_aug.json
+
 # ---- filter-branch 的临时产物（不要提交）----
 .git-rewrite/

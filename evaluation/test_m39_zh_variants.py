@@ -154,6 +154,47 @@ def main() -> int:
                   f"卡片文本片段：{txt[:120]}")
             check("卡片标注缺失维度为「无数据」", "无数据" in txt)
 
+            # ---------- 5. 检索过程卡默认折叠（不干扰演示） ----------
+            #   ★ 用户要求「把整体折叠起来 不要干扰正常演示」。
+            #     实测根因：这一块会铺开 6 行（意图/检索/证据1-3/组织），
+            #     把答案挤出首屏 —— 而「证据 N 条」「英文原文」两个
+            #     details 本来就是收起的，真正抢戏的是这张卡。
+            print("\n5) 检索过程卡折叠")
+            st = pg.evaluate("""() => {
+                const pc = document.querySelector('#procCard');
+                return { exists: !!pc, open: pc && pc.open,
+                         cardH: pc ? pc.getBoundingClientRect().height : -1,
+                         summary: pc && pc.querySelector('summary')
+                                    ? pc.querySelector('summary').textContent : '' };
+            }""")
+            check("检索过程卡存在", st["exists"])
+            check("默认是收起的（open=false）", st["open"] is False,
+                  f"实际 open={st['open']}")
+            # ★ 折叠时卡片高度应远小于展开态（实测收起 ~59px / 展开 ~420px），
+            #   比 offsetHeight 可靠：<details> 收起时内部元素仍报高度。
+            check("折叠后卡片高度很小（<150px）", 0 < st["cardH"] < 150,
+                  f"实际 {st['cardH']:.1f}px")
+            check("标题写明可点击展开", "检索过程" in st["summary"],
+                  f"实际 {st['summary'][:60]}")
+
+            # 点开 → 应变高
+            pg.click("#procCard summary")
+            pg.wait_for_timeout(600)
+            h_open = pg.evaluate(
+                "document.querySelector('#procCard').getBoundingClientRect().height")
+            check("点击后展开（高度变大）", h_open > st["cardH"] * 2,
+                  f"展开 {h_open:.1f}px vs 收起 {st['cardH']:.1f}px")
+
+            # ★ 关键回归：新查询必须重新收起，否则折叠形同虚设
+            pg.fill("#qi", "白金之星的速度")
+            pg.click("button:has-text('查询')")
+            pg.wait_for_timeout(3500)
+            again = pg.evaluate("document.querySelector('#procCard').open")
+            check("新一轮查询自动重新收起", again is False,
+                  f"实际 open={again}")
+
+            pg.click("#procCard summary")   # 展开后截图，便于人工核对
+            pg.wait_for_timeout(500)
             shot = OUT / "m39_variants.png"
             pg.screenshot(path=str(shot))
             print(f"     截图 → {shot}")

@@ -263,6 +263,18 @@ details.ev summary:hover { color: var(--text); }
 }
 .ev-text { font-size: 12.5px; line-height: 1.65; color: var(--text-dim); }
 /* 检索过程 */
+/* ★ 默认折叠（M39）：演示时这一块铺开有 6 行，会挤走答案的视线焦点。
+   改成 <details> 后只留一行标题，想看细节再点开 —— 信息没丢，只是不抢戏。 */
+.proc-fold summary {
+  cursor: pointer; font-size: 13px; font-weight: 500;
+  color: var(--text-dim); list-style: none; padding: 2px 0;
+}
+.proc-fold summary::-webkit-details-marker { display: none; }
+.proc-fold summary:before { content: "▸ "; color: var(--text-faint); }
+.proc-fold[open] summary:before { content: "▾ "; }
+.proc-fold summary:hover { color: var(--text); }
+.proc-fold[open] summary { margin-bottom: 8px; }
+.proc-hint { font-weight: 400; font-size: 11px; color: var(--text-faint); }
 .steps { counter-reset: s; }
 .step {
   position: relative; padding: 8px 0 8px 32px;
@@ -526,11 +538,11 @@ td.num { font-family: var(--mono); font-size: 12px; text-align: right; }
 
   <div id="rout"></div>
 
-  <!-- 检索过程 -->
-  <div class="card" id="procCard" style="display:none">
-    <h3>检索过程</h3>
+  <!-- 检索过程（★ 默认折叠：演示时只显示一行标题，不干扰答案阅读） -->
+  <details class="card proc-fold" id="procCard" style="display:none">
+    <summary>检索过程<span class="proc-hint">（点击展开：意图识别 / 检索方式 / 证据 / 组织）</span></summary>
     <div class="steps" id="proc"></div>
-  </div>
+  </details>
 
   <!-- 答案 -->
   <div id="ans"></div>
@@ -794,7 +806,12 @@ function renderProcess(d){
   $('#proc').innerHTML = steps.map(s=>
     `<div class="step ${s.cls}"><div class="t">${s.t}</div><div class="d">${s.d}</div></div>`
   ).join('');
-  $('#procCard').style.display = '';
+  // ★ M39：每轮新查询都强制收起。
+  //   否则用户展开过一次后，后续所有查询都会是展开态 ——
+  //   折叠就白做了（演示时仍然每屏都铺着 6 行）。
+  const _pc = $('#procCard');
+  _pc.open = false;
+  _pc.style.display = '';
 }
 
 // ★★ M32：中文摘要卡 ★★

@@ -346,9 +346,18 @@ COMMENT ON TABLE resolution_log IS
 -- 2.7 text_chunks —— 文本块
 -- ★ 与 stand_stats 分离的理由（数据规范 §3.1）：
 --   结构化数据不进向量索引。数值走 SQL，文本才走向量。
+--
+-- ★★ B 方案（扩语料）改动：块分两种来源 ★★
+--   1. 替身页块：有 stand_id（原有形态）
+--   2. 角色页块：实体是角色，没有 stand_id → 用 character_id
+--   → stand_id 从 NOT NULL 改为可空，并新增 character_id
+--   → 约束 chk_chunk_owner 保证「至少有一个归属」，不允许两者皆空
 CREATE TABLE IF NOT EXISTS text_chunks (
     chunk_id    INTEGER PRIMARY KEY,
-    stand_id    TEXT NOT NULL REFERENCES stands(stand_id) ON DELETE CASCADE,
+    -- 替身页块：指向 stands；角色页块为 NULL
+    stand_id    TEXT REFERENCES stands(stand_id) ON DELETE CASCADE,
+    -- ★ 角色页块：指向 characters（此前不存在该列）
+    character_id TEXT REFERENCES characters(character_id) ON DELETE CASCADE,
     stand_name  TEXT,
     part        SMALLINT,
     chunk_type  TEXT NOT NULL,
@@ -368,13 +377,19 @@ CREATE TABLE IF NOT EXISTS text_chunks (
     -- embedding vector(1024),
 
     CONSTRAINT chk_chunk_len CHECK (content_len > 0),
+    -- ★ article_section：jojowiki 文章正文切出的块（B 方案新增）
     CONSTRAINT chk_chunk_type CHECK (
         chunk_type IN ('ability_overview','move','battle_record',
-                       'lore','section')
+                       'lore','section','article_section')
+    ),
+    -- ★ 每个块必须有归属：替身页块给 stand_id，角色页块给 character_id
+    CONSTRAINT chk_chunk_owner CHECK (
+        stand_id IS NOT NULL OR character_id IS NOT NULL
     )
 );
 
 CREATE INDEX IF NOT EXISTS idx_chunks_stand ON text_chunks(stand_id);
+CREATE INDEX IF NOT EXISTS idx_chunks_character ON text_chunks(character_id);
 CREATE INDEX IF NOT EXISTS idx_chunks_type  ON text_chunks(chunk_type);
 CREATE INDEX IF NOT EXISTS idx_chunks_part  ON text_chunks(part);
 CREATE INDEX IF NOT EXISTS idx_chunks_len   ON text_chunks(content_len);
@@ -385,7 +400,9 @@ CREATE INDEX IF NOT EXISTS idx_chunks_fts ON text_chunks
 COMMENT ON TABLE text_chunks IS
     '文本块。★ 结构化能力值在 stand_stats，不进本表';
 COMMENT ON COLUMN text_chunks.chunk_type IS
-    'ability_overview / move / battle_record / lore / section';
+    'ability_overview / move / battle_record / lore / section / article_section';
+COMMENT ON COLUMN text_chunks.character_id IS
+    '角色页块的角色 id（替身页块为 NULL）；与 stand_id 至少一个非空';
 
 -- --------------------------------------------------------------------------
 -- 3. 视图

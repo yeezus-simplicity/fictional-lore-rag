@@ -78,6 +78,15 @@ def fetch_wikitext(title: str, retries: int = 2) -> str | None:
 def build_targets() -> list[dict]:
     """从 stands.json 生成待抓页面清单（替身页 + 角色页）。"""
     stands = json.loads(STANDS.read_text(encoding="utf-8"))
+    # ★★ 复用 load_db 的角色 id 规则，不自己另造一套 ★★
+    #   实测踩坑：stands.json 的 `owner_id` **全部为 None**（154/154），
+    #   早先版本直接取它 → 角色页块拿不到归属，character_id 全空，
+    #   违反 chk_chunk_owner 约束（stand_id 与 character_id 不能都为空）。
+    #   → 改用与 characters 表**完全相同**的 `_char_id(split_owner_names(...))`，
+    #     否则生成的 id 对不上外键，入库会被拒。
+    sys.path.insert(0, str(ROOT / "database"))
+    from load_db import _char_id, split_owner_names      # noqa: E402
+
     targets: list[dict] = []
     seen: set[tuple] = set()
 
@@ -89,17 +98,17 @@ def build_targets() -> list[dict]:
             targets.append({"title": nm, "kind": "stand", "entity_id": sid})
 
     for s in stands:
-        oid = s.get("owner_id")
-        raw = s.get("owner_name") or ""
-        for o in raw.split(","):
-            o = o.strip()
-            if not o or o.lower() in ("none", "unknown", ""):
+        raw = (s.get("owner_name") or "").strip()
+        if not raw:
+            continue
+        for o in split_owner_names(raw):
+            if not o or o.lower() in ("none", "unknown"):
                 continue
             if ("character", o) in seen:
                 continue
             seen.add(("character", o))
             targets.append({"title": o, "kind": "character",
-                            "entity_id": oid})
+                            "entity_id": _char_id(o)})
     return targets
 
 

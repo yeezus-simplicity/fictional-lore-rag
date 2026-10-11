@@ -43,7 +43,22 @@ from typing import Any, Optional
 ROOT = Path(__file__).resolve().parents[1]
 PROC = ROOT / "dataset" / "processed"
 SCHEMA = ROOT / "dataset" / "schema" / "data_schema.sql"
-MIGRATION = ROOT / "dataset" / "schema" / "migrations" / "001_init.sql"
+MIGRATIONS_DIR = ROOT / "dataset" / "schema" / "migrations"
+# ★ B 方案：文章块语料（若有则追加；缺失时行为与以前完全一致）
+ARTICLES = PROC / "article_chunks.json"
+
+
+def migrations() -> list[Path]:
+    """按文件名排序返回全部 migration。
+
+    ★ 为什么从「单个 001」改成「目录下全部」：
+      002 是对**已存在的库**做幂等 ALTER（001 用的 CREATE TABLE
+      IF NOT EXISTS 对已存在的表不会生效）——
+      只跑 001 的话，旧库拿不到 character_id 列，入库会直接报错。
+    """
+    if not MIGRATIONS_DIR.exists():
+        return []
+    return sorted(MIGRATIONS_DIR.glob("*.sql"))
 
 # ------------------------------------------------------------------
 # 连接参数
@@ -249,21 +264,34 @@ def init_db() -> bool:
     conn = connect()
     cur = conn.cursor()
 
-    if MIGRATION.exists():
-        sql = MIGRATION.read_text(encoding="utf-8")
-        print(f"  执行 {MIGRATION.name}（{len(sql):,} 字符）")
+    migs = migrations()
+    if migs:
+        ok_all = True
+        for mig in migs:
+            sql = mig.read_text(encoding="utf-8")
+            print(f"  执行 {mig.name}（{len(sql):,} 字符）")
+            try:
+                cur.execute(sql)
+                conn.commit()
+            except Exception as e:          # noqa: BLE001
+                conn.rollback()
+                print(f"  [FAIL] {mig.name} 执行失败：{e}")
+                ok_all = False
+                break
+        if not ok_all:
+            return False
+        print("  [OK] schema 执行完成")
     else:
         sql = SCHEMA.read_text(encoding="utf-8")
         print(f"  执行 {SCHEMA.name}（{len(sql):,} 字符）")
-
-    try:
-        cur.execute(sql)
-        conn.commit()
-        print("  [OK] schema 执行完成")
-    except Exception as e:
-        conn.rollback()
-        print(f"  [FAIL] schema 执行失败：{e}")
-        return False
+        try:
+            cur.execute(sql)
+            conn.commit()
+            print("  [OK] schema 执行完成")
+        except Exception as e:              # noqa: BLE001
+            conn.rollback()
+            print(f"  [FAIL] schema 执行失败：{e}")
+            return False
 
     # 列出实际创建的表
     cur.execute("""
@@ -624,28 +652,44 @@ def load_data() -> bool:
 
     # ---------- text_chunks ----------
     print("\n[7/7] text_chunks（分批）")
+    # ★ B 方案：若有文章块语料（article_chunks.json）则并入。
+    #   缺失时行为与以前完全一致（向后兼容）——
+    #   该文件是抓取派生产物，已按第三方版权约定 gitignore。
+    art: list[dict] = []
+    if ARTICLES.exists():
+        try:
+            art = json.loads(ARTICLES.read_text(encoding="utf-8"))
+            print(f"  + 文章块 {len(art)} 条（来自 {ARTICLES.name}）")
+        except Exception as e:              # noqa: BLE001
+            print(f"  [WARN] {ARTICLES.name} 解析失败，跳过：{e}")
+            art = []
+    all_chunks = list(chunks) + art
+
     BATCH = 500
+    # ★ character_id：替身页块为 None，角色页块取自 extra.kind=='character'
     chunk_rows = [(
-        c["chunk_id"], c["stand_id"], c.get("stand_name"), c.get("part"),
+        c["chunk_id"], c.get("stand_id"), c.get("stand_name"), c.get("part"),
         c.get("chunk_type"), c.get("content"), c.get("content_len"),
         c.get("section"), c.get("entity"), c.get("alias"), c.get("debut"),
         c.get("source_url"), c.get("data_source", "jojowiki_rendered"),
-    ) for c in chunks]
+        c.get("character_id"),
+    ) for c in all_chunks]
     for i in range(0, len(chunk_rows), BATCH):
         batch = chunk_rows[i:i + BATCH]
         cur.executemany("""
             INSERT INTO text_chunks
                 (chunk_id, stand_id, stand_name, part, chunk_type, content,
                  content_len, section, entity, alias, debut, source_url,
-                 data_source)
-            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                 data_source, character_id)
+            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
             ON CONFLICT (chunk_id) DO UPDATE SET
                 stand_id=EXCLUDED.stand_id, stand_name=EXCLUDED.stand_name,
                 part=EXCLUDED.part, chunk_type=EXCLUDED.chunk_type,
                 content=EXCLUDED.content, content_len=EXCLUDED.content_len,
                 section=EXCLUDED.section, entity=EXCLUDED.entity,
                 alias=EXCLUDED.alias, debut=EXCLUDED.debut,
-                source_url=EXCLUDED.source_url, data_source=EXCLUDED.data_source
+                source_url=EXCLUDED.source_url, data_source=EXCLUDED.data_source,
+                character_id=EXCLUDED.character_id
         """, batch)
         conn.commit()
         print(f"  {i + len(batch)}/{len(chunk_rows)}")

@@ -64,9 +64,14 @@ def main() -> int:
             if len(content) < 80:          # 太短的块是噪声
                 stat["skipped_short"] += 1
                 continue
+            # ★ 归属字段必须**规范**：替身页给 stand_id、角色页给 character_id。
+            #   早先版本把角色的 id 塞进 stand_id 靠 extra.kind 区分 ——
+            #   下游（load_db）得猜，且会写进错误的外键。这里改成一目了然。
+            is_stand = (kind == "stand")
             out.append({
                 "chunk_id": next_id,
-                "stand_id": eid,           # 替身页=stand_id；角色页=character_id
+                "stand_id": eid if is_stand else None,
+                "character_id": None if is_stand else eid,
                 "stand_name": p["title"],
                 "part": part,
                 "chunk_type": CHUNK_TYPE,

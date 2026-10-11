@@ -29,6 +29,18 @@ FAILURES: list[str] = []
 WARNINGS: list[str] = []
 
 
+def _all_migration_sql() -> list[str]:
+    """按文件名排序返回全部 migration 的 SQL 文本。
+
+    ★ 为什么不能只读 001：002 会**重定义** chk_chunk_type 等约束，
+      以最后定义为准。只看 001 会得出过期结论。
+    """
+    d = MIGRATION.parent
+    if not d.exists():
+        return []
+    return [p.read_text(encoding="utf-8") for p in sorted(d.glob("*.sql"))]
+
+
 def check_enum_consistency() -> None:
     """Category 枚举 vs stat_category 枚举。"""
     print("\n[1] 枚举一致性（encode.py ↔ 001_init.sql）")
@@ -102,29 +114,41 @@ def check_form_type_consistency() -> None:
 
 
 def check_chunk_type_consistency() -> None:
-    """text_chunks.chunk_type 的 CHECK 约束 vs 实际数据。"""
+    """text_chunks.chunk_type 的 CHECK 约束 vs 实际数据。
+
+    ★ B 方案更新：新增 chunk_type 'article_section' 与文章块语料。
+      检查范围必须同时覆盖 **两份语料** 与 **全部 migration**——
+      只读 001 + text_chunks.json 会漏掉所有文章块（正是最容易出错的部分）。
+    """
     print("\n[3] chunk_type 约束 vs 实际数据")
     import json
-    chunks_path = ROOT / "dataset" / "processed" / "text_chunks.json"
-    if not chunks_path.exists():
-        WARNINGS.append("text_chunks.json 不存在，跳过")
+    # 两份语料都要查
+    paths = [ROOT / "dataset" / "processed" / "text_chunks.json",
+             ROOT / "dataset" / "processed" / "article_chunks.json"]
+    actual: set[str] = set()
+    n_total = 0
+    got_any = False
+    for p in paths:
+        if not p.exists():
+            continue
+        got_any = True
+        data = json.loads(p.read_text(encoding="utf-8"))
+        n_total += len(data)
+        actual |= {c.get("chunk_type") for c in data}
+    if not got_any:
+        WARNINGS.append("两份语料都不存在，跳过")
         return
-    data = json.loads(chunks_path.read_text(encoding="utf-8"))
-    actual = {c.get("chunk_type") for c in data}
+    print(f"    语料 {n_total} 块 → chunk_type {sorted(actual)}")
 
-    sql = MIGRATION.read_text(encoding="utf-8")
-    m = re.search(r"chk_chunk_type CHECK \((.*?)\)\s*\)", sql, re.S)
-    if not m:
-        # 回退：简单抓枚举列表
-        m2 = re.search(r"chunk_type IN \((.*?)\)", sql, re.S)
-        if not m2:
-            WARNINGS.append("找不到 chunk_type CHECK 约束")
-            return
-        allowed = set(re.findall(r"'(\w+)'", m2.group(1)))
-    else:
-        allowed = set(re.findall(r"'(\w+)'", m.group(1)))
-
-    print(f"    实际数据: {sorted(actual)}")
+    # ★ 约束可能被后面的 migration 覆盖（如 002 重定义了 chk_chunk_type）
+    #   → 以**最后一个**出现该约束的文件为准
+    allowed: set[str] = set()
+    for sql in _all_migration_sql():
+        for m in re.finditer(r"chunk_type IN \((.*?)\)", sql, re.S):
+            allowed = set(re.findall(r"'(\w+)'", m.group(1)))
+    if not allowed:
+        WARNINGS.append("找不到 chunk_type CHECK 约束")
+        return
     print(f"    约束允许: {sorted(allowed)}")
     bad = actual - allowed
     if bad:
@@ -161,39 +185,69 @@ def check_composite_constraint() -> None:
 
 
 def check_idempotency() -> None:
-    """schema 的幂等性。"""
+    """schema 的幂等性。
+
+    ★ B 方案更新：从「只查 001」改为「逐个查全部 migration」——
+      002 是新加的幂等 ALTER，也必须过同一套门槛
+      （无裸 DROP TABLE、括号/引号/$$ 平衡）。
+      报告时逐文件区分，出问题能直接定位到是哪个文件。
+    """
     print("\n[5] 迁移文件幂等性")
-    sql = MIGRATION.read_text(encoding="utf-8")
-    n_table = sql.count("CREATE TABLE IF NOT EXISTS")
-    n_index = sql.count("CREATE INDEX IF NOT EXISTS")
-    n_view = sql.count("CREATE OR REPLACE VIEW")
-    n_ext = sql.count("CREATE EXTENSION IF NOT EXISTS")
-    print(f"    表 {n_table} / 索引 {n_index} / 视图 {n_view} / 扩展 {n_ext}")
+    files = sorted(MIGRATION.parent.glob("*.sql")) if MIGRATION.parent.exists() else []
+    if not files:
+        WARNINGS.append("找不到任何 migration")
+        return
+    for f in files:
+        sql = f.read_text(encoding="utf-8")
+        n_table = sql.count("CREATE TABLE IF NOT EXISTS")
+        n_index = sql.count("CREATE INDEX IF NOT EXISTS")
+        n_view = sql.count("CREATE OR REPLACE VIEW")
+        n_ext = sql.count("CREATE EXTENSION IF NOT EXISTS")
+        print(f"    [{f.name}] 表 {n_table} / 索引 {n_index} / "
+              f"视图 {n_view} / 扩展 {n_ext}")
 
-    # CREATE TYPE 必须包在 DO 块里（Postgres 不支持 IF NOT EXISTS）
-    n_type = len(re.findall(r"CREATE TYPE", sql))
-    n_do = len(re.findall(r"DO \$\$", sql))
-    print(f"    CREATE TYPE {n_type} 个 / DO 块 {n_do} 个")
-    if n_type != n_do:
-        FAILURES.append(
-            f"CREATE TYPE({n_type}) 与 DO 块({n_do}) 数量不匹配 —— "
-            f"裸CREATE TYPE 会导致二次执行报错")
+        # CREATE TYPE 必须包在 DO 块里（Postgres 不支持 IF NOT EXISTS）
+        # ★ 判据是「**裸** CREATE TYPE」而非「CREATE TYPE 数 == DO 块数」——
+        #   后者会把「DO 块用于条件 ALTER」误判为错误（002 正是这种用法）。
+        #   剥注释后逐行判断该行是否在 DO 块内，才是原意。
+        sql_nc0 = re.sub(r"--.*", "", sql)
+        bare_type = 0
+        in_do = False
+        for line in sql_nc0.split("\n"):
+            if re.search(r"\bDO\s*\$\$", line):
+                in_do = True
+            if re.search(r"\bCREATE\s+TYPE\b", line) and not in_do:
+                bare_type += 1
+            if re.search(r"\$\$\s*;", line):
+                in_do = False
+        n_type = len(re.findall(r"CREATE TYPE", sql_nc0))
+        n_do = len(re.findall(r"DO \$\$", sql_nc0))
+        print(f"      CREATE TYPE {n_type} 个 / DO 块 {n_do} 个"
+              f"（裸 {bare_type} 个）")
+        if bare_type:
+            FAILURES.append(
+                f"{f.name}: 有 {bare_type} 个裸 CREATE TYPE —— "
+                f"二次执行会报错，必须包进 DO 块")
 
-    # 不应出现裸 DROP TABLE
-    # ★ 坑：先剥注释再检测，否则 "-- 无 DROP TABLE" 这类说明会被误判
-    sql_nc = re.sub(r"--.*", "", sql)
-    if re.search(r"\bDROP\s+TABLE\b", sql_nc, re.I):
-        FAILURES.append("迁移文件含裸 DROP TABLE —— 会删数据，违反幂等安全原则")
-    else:
-        print("    [OK] 无裸 DROP TABLE")
+        # 不应出现裸 DROP TABLE
+        # ★ 坑：先剥注释再检测，否则 "-- 无 DROP TABLE" 这类说明会被误判
+        sql_nc = sql_nc0
+        if re.search(r"\bDROP\s+TABLE\b", sql_nc, re.I):
+            FAILURES.append(f"{f.name}: 含裸 DROP TABLE —— 会删数据，违反幂等安全原则")
+        else:
+            print("      [OK] 无裸 DROP TABLE")
 
-    # 括号与引号平衡
-    if sql.count("(") != sql.count(")"):
-        FAILURES.append("括号不平衡")
-    if sql.count("'") % 2 != 0:
-        FAILURES.append("引号不成对")
-    if sql.count("$$") % 2 != 0:
-        FAILURES.append("DO 块分隔符 $$ 不成对")
+        # 括号与引号平衡
+        # ★★ 同一个坑又踩一次：必须用**剥注释后**的 sql_nc ★★
+        #   v1 用未剥注释的原文计数 → 注释里的列表序号 "1)" "2)" "3)"
+        #   被当成 SQL 括号，导致「括号不平衡」误报（002 实测中招）。
+        if sql_nc.count("(") != sql_nc.count(")"):
+            FAILURES.append(f"{f.name}: 括号不平衡"
+                            f"（(={sql_nc.count('(')} )={sql_nc.count(')')}）")
+        if sql_nc.count("'") % 2 != 0:
+            FAILURES.append(f"{f.name}: 引号不成对")
+        if sql_nc.count("$$") % 2 != 0:
+            FAILURES.append(f"{f.name}: DO 块分隔符 $$ 不成对")
     if not FAILURES:
         print("    [OK] 结构检查通过")
 

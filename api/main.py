@@ -395,7 +395,8 @@ class QueryResponse(BaseModel):
     #   用于缓解「语料全是英文、答案看不动」的观感。
     #   ★ 不替换英文原文 —— 证据链必须保持可追溯。
     zh_card: Optional[dict] = Field(
-        None, description="中文摘要：{name_zh, name_ja, owner, part, stats_cn}")
+        None, description=("中文摘要：{name_zh, name_zh_variants, name_zh_level, "
+                           "name_ja, owner, part, stats_cn}"))
     stand_images: Optional[dict] = Field(
         None, description="替身图片：{stand,user,manga,anime} 分组 + URL")
 
@@ -855,9 +856,23 @@ def query(
                         _own_en = (row[1] or "").split(",")[0].strip()
                         _own_list = (STATE.get("char_zh_map") or {}).get(row[11])
                         _own_zh = (_own_list or [None])[0] if _own_list else None
+                        # ★★ M39：异译别名要**显示出来** ★★
+                        #   实测用户反馈：输入「娃娃脸」能查到 Baby Face，
+                        #   但卡片第一行写「婴儿面孔」—— 用户输入与屏幕对不上，
+                        #   于是怀疑「是不是机翻」。
+                        #   根因不是数据缺（别名早就在 name_zh_variants 里），
+                        #   而是**从没被展示过** → 这里透传给前端。
+                        _zh_main = zh_rec.get("name_zh")
+                        _zh_vars = [v for v in (zh_rec.get("name_zh_variants") or [])
+                                    if v and v != _zh_main]
                         zh_card = {
                             "stand_id": sid,
-                            "name_zh": zh_rec.get("name_zh"),
+                            "name_zh": _zh_main,
+                            "name_zh_variants": _zh_vars,
+                            # ★ 可信级别：A=官方 / B=双源一致 / C=单源 / D=反推
+                            #   让用户能分辨「哪条译名是有据可查的」
+                            "name_zh_level": zh_rec.get("level"),
+                            "name_zh_source": zh_rec.get("source"),
                             "name_en": row[0],
                             "name_ja": _ja,
                             "owner": _own_zh or _own_en or None,

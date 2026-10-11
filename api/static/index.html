@@ -416,6 +416,15 @@ td.num { font-family: var(--mono); font-size: 12px; text-align: right; }
 .zc-k { flex: 0 0 52px; color: var(--text-faint); font-size: 12px; padding-top: 1px; }
 .zc-v { flex: 1; color: var(--text); }
 .zc-sub { color: var(--text-dim); font-size: 12px; margin-left: 8px; }
+/* ★ M39：译名可信级别徽标（与主译名区分，小而不抢眼） */
+.zc-lv { display: inline-block; margin-left: 8px; padding: 0 6px;
+  font-size: 11px; line-height: 16px; border-radius: 8px;
+  color: var(--text-dim); background: var(--bg-hover); }
+/* ★ M39：异译别名行 —— 用户记得的写法可能是这一行里的某个 */
+.zc-vars { margin-top: 3px; font-size: 12px; color: var(--text-faint); }
+.zc-var { display: inline-block; margin-left: 6px; padding: 0 7px;
+  line-height: 17px; border-radius: 8px; font-size: 12px;
+  color: var(--text-dim); border: 1px solid var(--border-strong); }
 .zc-dims { display: flex; flex-wrap: wrap; gap: 4px 14px; }
 .zc-dim { font-size: 12px; color: var(--text-dim); }
 .zc-dim b { color: var(--accent); font-weight: 600; margin-left: 3px; }
@@ -799,9 +808,23 @@ function renderZhCard(zc){
   if(!zc) return '';
   const names = [zc.name_en, zc.name_ja].filter(Boolean);
   const rows = [];
+  // ★★ M39：可信级别与出处 ★★
+  //   A=jojowiki 官方 / B=两来源一致 / C=单一来源 / D=由形态名反推
+  //   ★ 标出来是为了让用户能分辨「这条译名有没有据可查」，
+  //     而不是让所有中文名看起来同等权威（反馈「感觉像机翻」的根源之一）。
+  const LV = {A:'官方译名', B:'双来源一致', C:'单一来源', D:'由形态名反推'};
+  const lvTxt = LV[zc.name_zh_level] || '';
+  // ★★ M39：异译别名 ★★
+  //   同一个替身流传多个译名（Baby Face = 婴儿面孔 / 娃娃脸），
+  //   用户往往记得的是**非主译名**那个。
+  //   不显示的话，输入「娃娃脸」却看到「婴儿面孔」，会以为翻错了。
+  const vars = (zc.name_zh_variants||[]).filter(Boolean);
   rows.push(`<div class="zc-row"><span class="zc-k">名称</span>
     <span class="zc-v"><b>${esc(zc.name_zh||zc.name_en||'—')}</b>
-    ${names.length? `<span class="zc-sub">${esc(names.join(' · '))}</span>`:''}</span></div>`);
+    ${names.length? `<span class="zc-sub">${esc(names.join(' · '))}</span>`:''}
+    ${lvTxt? `<span class="zc-lv" title="译名可信级别">${esc(lvTxt)}</span>`:''}
+    ${vars.length? `<div class="zc-vars">其他译名：${vars.map(v=>`<span class="zc-var">${esc(v)}</span>`).join('')}</div>`:''}
+    </span></div>`);
   if(zc.owner) rows.push(`<div class="zc-row"><span class="zc-k">使用者</span>
     <span class="zc-v">${esc(zc.owner)}
     ${zc.owner_en? `<span class="zc-sub">${esc(zc.owner_en)}</span>`:''}</span></div>`);

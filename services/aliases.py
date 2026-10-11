@@ -306,6 +306,29 @@ def build_alias_table() -> tuple[dict[str, str], dict[str, list[str]]]:
         if names:
             register(sid, names)
 
+    # ★★ M39：口语缩略写法（**白名单**，不是规则生成）★★
+    #   ★ 为什么不用规则「去修饰字」生成：
+    #     实测对 156 条主译名跑「去掉 色/之/的」→ 得 32 个候选，
+    #     但其中「白金星 / 隐者紫 / 绿法皇 / 红魔术师」这类
+    #     **中文圈根本没人这么叫**（白金之星/隐者之紫本身就是通行译名，
+    #     没有缩略形式）。加进去的害处：用户问「绿法皇的六维」时
+    #     系统会当作有效查询返回 —— 等于把自造词认成了真名。
+    #   → 只有**确实有人这么写**的才收，逐条人工确认，宁缺毋滥。
+    _COLLOQUIAL: dict[str, str] = {
+        "黑安息日": "black_sabbath",      # Black Sabbath 口语省略「色」
+        "卖鸡小子": "magician_s_red",     # Magician's Red 的圈内昵称
+        "疯钻": "crazy_diamond",          # Crazy Diamond 口语简称
+        "黄镇": "gold_experience_requiem",  # 黄金体验镇魂歌简称
+        "银镇": "chariot_requiem",        # 银色战车镇魂歌简称
+        "白蛇": "whitesnake",             # Whitesnake（本已是通名，防漏补）
+    }
+    for _k, _sid in _COLLOQUIAL.items():
+        # ★ 只补「该 stand 确实存在、且这个写法还没被别人占用」的
+        if _sid in id2alias and _k not in alias2id:
+            alias2id.setdefault(_k, _sid)
+            if _k not in id2alias[_sid]:
+                id2alias[_sid].append(_k)
+
     return alias2id, id2alias
 
 

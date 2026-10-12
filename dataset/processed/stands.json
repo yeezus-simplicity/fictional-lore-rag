@@ -4724,5 +4724,53 @@
    "jojowiki_article"
   ],
   "detail_url": "https://jojowiki.com/West_End_Girl"
+ },
+ {
+  "stand_id": "les_feuilles",
+  "name_en": "Les Feuilles",
+  "name_raw": "Les Feuilles",
+  "part": 8,
+  "part_name_en": "JoJolion",
+  "owner_id": null,
+  "owner_name": null,
+  "stand_type": "Multi-UnitAutomatic",
+  "reference": "Autumn Leaves (1945 song) (Joseph Kosma song)",
+  "name_ja": "オータム・リーブス",
+  "name_romaji": "Ōtamu Rībusu",
+  "manga_debut": "JJL Chapter 18",
+  "anime_debut": null,
+  "form_count": 1,
+  "form_chain": [
+   "les_feuilles__f0"
+  ],
+  "main_table_registrations": 0,
+  "data_sources": [
+   "jojowiki_article"
+  ],
+  "detail_url": "https://jojowiki.com/Les_Feuilles"
+ },
+ {
+  "stand_id": "schott_key_no_2",
+  "name_en": "Schott Key No.2",
+  "name_raw": "Schott Key No.2",
+  "part": 8,
+  "part_name_en": "JoJolion",
+  "owner_id": null,
+  "owner_name": "Younger A. Phex Brother",
+  "stand_type": "Close-Range",
+  "reference": "Selected Ambient Works 85–92 (Aphex Twin song)",
+  "name_ja": "ショット・キーNo.2",
+  "name_romaji": "Shotto Kī Nanbā Tsū",
+  "manga_debut": "JJL Chapter 46",
+  "anime_debut": null,
+  "form_count": 1,
+  "form_chain": [
+   "schott_key_no_2__f0"
+  ],
+  "main_table_registrations": 0,
+  "data_sources": [
+   "jojowiki_article"
+  ],
+  "detail_url": "https://jojowiki.com/Schott_Key_No.2"
  }
 ]

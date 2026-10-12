@@ -1,0 +1,116 @@
+{
+  "_note": "人工核实的补录译名（M41）。每一条都必须有可核对的出处 —— 不推测、不机翻、不自造。",
+  "_why": [
+    "起因：用户反馈「还是缺失很多替身啊 比如繁荣之墓 再度失言」。",
+    "实测这两个替身都在库里，缺的是**中文名映射**：",
+    "  stand_name_zh.json 只有 156 条，B 方案新补的第 8/9 部替身基本没有中文名；",
+    "  且已有的中文名只收了单一译名（如 Tomb of the Boom 只收「盛世之墓」），",
+    "  用户用的另一个通行译名（「繁荣之墓」）匹配不到。",
+    "自动化抓取（fetch_moegirl_stands.py）能覆盖一部分，",
+    "但萌娘镜像 moegirl.uk 的搜索索引对第 8/9 部新条目不全 → 这部分靠人工核实补。"
+  ],
+  "_sources": {
+    "moegirl_entry": "萌娘百科替身条目的「替身名」字段（经 WebSearch 拿到原页面片段）",
+    "huiji_list": "jojo.huijiwiki.com「替身列表」页（第3-9部共 171 个有名字的替身，表格内含中英日对照）",
+    "bilibili": "bilibili 专栏替身中英文对照表（第七部 cv4624640 / 第九部 21873055）",
+    "user": "用户直接给出的译名（用户为 JOJO 中文圈的用法，视为有效出处）"
+  },
+  "_key_format": "规范化英文名（NFKC + 小写 + 只保留字母数字），与 build_zh_map.py 的 norm_en 一致",
+  "pairs": {
+    "_comment_8": "===== 第 8 部（JoJolion）=====",
+    "milagroman": {
+      "name_zh": "奇迹之人",
+      "variants": ["奇蹟之人"],
+      "source": "moegirl_entry",
+      "part": 8
+    },
+    "ozonbaby": {
+      "name_zh": "臭氧宝贝",
+      "variants": ["臭氧寶貝"],
+      "source": "moegirl_entry",
+      "part": 8
+    },
+    "lesfeuilles": {
+      "name_zh": "秋日落叶",
+      "variants": [],
+      "source": "huiji_list",
+      "part": 8
+    },
+    "schottkeyno2": {
+      "name_zh": "肖特基2号",
+      "variants": ["肖特钥匙二号", "肖特基二号"],
+      "source": "huiji_list",
+      "part": 8
+    },
+
+    "_comment_9": "===== 第 9 部（The JOJOLands）=====",
+    "bigmouthstrikesagain": {
+      "name_zh": "再度失言",
+      "variants": ["大嘴又惹祸"],
+      "source": "user+huiji_list",
+      "part": 9
+    },
+    "catsize": {
+      "name_zh": "猫咪尺寸",
+      "variants": [],
+      "source": "huiji_list",
+      "part": 9
+    },
+    "glorydays": {
+      "name_zh": "峥嵘岁月",
+      "variants": [],
+      "source": "huiji_list",
+      "part": 9
+    },
+    "bagsgroove": {
+      "name_zh": "袋之律动",
+      "variants": [],
+      "source": "huiji_list",
+      "part": 9
+    },
+    "200balloons": {
+      "name_zh": "百倍膨胀",
+      "variants": ["双百浮囊"],
+      "source": "huiji_list+bilibili",
+      "part": 9
+    },
+    "lyineyes": {
+      "name_zh": "谎言之眼",
+      "variants": ["谎眼"],
+      "source": "huiji_list+bilibili",
+      "part": 9
+    },
+    "westendgirl": {
+      "name_zh": "西区女孩",
+      "variants": [],
+      "source": "huiji_list",
+      "part": 9
+    },
+    "eclipseeight": {
+      "name_zh": "日蚀八号",
+      "variants": ["日食八号"],
+      "source": "huiji_list",
+      "part": 9
+    },
+    "themattekudasai": {
+      "name_zh": "片刻静候",
+      "variants": [],
+      "source": "huiji_list",
+      "part": 9
+    },
+    "pointblankseal": {
+      "name_zh": "至近距离札",
+      "variants": ["近距离贴"],
+      "source": "moegirl_entry",
+      "part": 9
+    },
+
+    "_comment_7": "===== 第 7 部：库内主名是 bilibili 版「盛世之墓」，此处补萌娘版作异译 =====",
+    "tomboftheboom123": {
+      "name_zh": "盛世之墓",
+      "variants": ["繁荣之墓"],
+      "source": "moegirl_entry",
+      "part": 7
+    }
+  }
+}

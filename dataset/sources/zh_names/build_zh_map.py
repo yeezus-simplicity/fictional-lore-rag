@@ -259,6 +259,50 @@ def main() -> int:
             n_wiki = len(data)
     print(f"  抓取来源：中文维基 {n_wiki} 组 / JOJO中文维基 {n_huiji} 组")
 
+    # ---- M41：萌娘百科补录（自动抓取 + 人工核实）----
+    #   起因：用户反馈「还是缺失很多替身啊 比如繁荣之墓 再度失言」。
+    #   ★ 实测那两个替身**都在库里**，缺的是中文名映射：
+    #     B 方案新补的第 8/9 部替身基本没有中文名；
+    #     而已有的又只收单一译名（Tomb of the Boom 只收「盛世之墓」，
+    #     用户用的「繁荣之墓」匹配不到）→ 与「娃娃脸」完全同一模式。
+    #   ★ 两个文件用途相同、来源不同：
+    #     zh_moegirl_pairs.json → 自动抓（fetch_moegirl_stands.py，走 moegirl.uk API）
+    #     zh_names_manual.json  → 人工核实（每条都注明出处，抓不到的补上）
+    #   都有两重作用：① 给缺中文名的替身提供主名
+    #                ② 给已有中文名的替身提供**异译别名**
+    extra_zh: dict[str, list[str]] = {}
+    for _fname in ("zh_moegirl_pairs.json", "zh_names_manual.json"):
+        _p = Path(__file__).resolve().parent / _fname
+        if not _p.exists():
+            print(f"  !缺少 {_fname}，跳过")
+            continue
+        _data = json.loads(_p.read_text(encoding="utf-8"))
+        if "pairs" in _data:              # manual 文件带元数据包装
+            _data = _data["pairs"]
+        for _k, _v in _data.items():
+            if _k.startswith("_"):        # 跳过 _note / _sources 等
+                continue
+            if isinstance(_v, list):
+                _names = list(_v)
+            else:
+                _names = [_v.get("name_zh")] + list(_v.get("variants") or [])
+            # ★★ 只保留 ≥3 汉字的译名 ★★
+            #   实测回归：「天**气**」（Weather Report 的萌娘简称）被收进来后，
+            #   日常问句「今天天气怎么样」被抽出候选实体「天气」→
+            #   不再判 unknown → 路由成 entity_semantic，test_m21 的
+            #   「无关问句仍拒答」直接失败。
+            #   同类还有「奶油」「手枪」「鲨鱼」「丰收」「折纸」等日常词。
+            #   → 与既有原则一致：宁可少收（用户仍可用全名查询）。
+            _names = [n for n in _names
+                      if n and len(re.findall(r"[\u4e00-\u9fff]", n)) >= 3]
+            if not _names:
+                continue
+            _slot = extra_zh.setdefault(_k, [])
+            for _n in _names:
+                if _n not in _slot:
+                    _slot.append(_n)
+    print(f"  M41 补录源：{len(extra_zh)} 个英文名有萌娘/人工译名")
+
     # ---- Level A：官方 name_ja 括号内的中文名（优先级最高）----
     official: dict[str, str] = {}
     for s in stands:
@@ -290,8 +334,19 @@ def main() -> int:
         return any(mk in zh for mk in _JP_MARKERS)
 
     # ---- 组装 ----
+    # ★★ M41：单字名一律不收（把原来的 _SINGLE_CHAR_OFFICIAL 通用化）★★
+    #   实测新增两例：Tusk 的 name_ja「タスク (牙) / (爪)」→「牙」；
+    #                 Surface 的「うわっ面」→ 汉字只有「面」。
+    #   单字名会**抢匹配**（M14 实测：「力」抢走「黄金体验的能力」），
+    #   宁可不收 —— 用户仍可用英文名查询。
+    #   ★ 必须放在**出口**把关，只在 official 分支拦不够：
+    #     Tusk 被拦掉后，会再从 fetched（_SBR_CONFIRMED）兜底拿回同一个「牙」。
+    def _ok_zh(x: str | None) -> bool:
+        return bool(x) and len(re.findall(r"[\u4e00-\u9fff]", x)) >= 2
+
     out: dict[str, dict] = {}
     n_a = n_b = n_c = 0
+    _skipped_single: list[tuple[str, str]] = []
     for s in stands:
         en = s["name_en"]
         k = norm_en(en)
@@ -318,7 +373,8 @@ def main() -> int:
         #    而用户输入简体（黄金体验 / 白金之星）。
         #    → 简体译名优先，官方日文名作为**补充别名**保留。
         #    （两者都收，两种写法都能命中）
-        simp_zh = fetched.get(k)
+        # ★ M41：简体替代也可来自萌娘/人工补录（新替身没有 fetched 源）
+        simp_zh = fetched.get(k) or (extra_zh.get(k) or [None])[0]
         if zh and _has_japanese_forms(zh):
             if simp_zh:
                 e = {
@@ -346,6 +402,13 @@ def main() -> int:
             src = "jojogh.jojo6.com" if level == "C" else "bilibili+萌娘百科"
             n_b += level == "B"
             n_c += level == "C"
+        elif k in extra_zh:
+            # ★ M41：萌娘百科（自动抓取 / 人工核实）补录
+            #   B 方案新补的第 8/9 部替身走这条 —— 原来直接 continue 丢掉，
+            #   所以用户用中文搜这些替身永远查不到（体感＝「这个替身没收录」）。
+            zh = extra_zh[k][0]
+            level, src = "C", "moegirl.uk / 人工核实"
+            n_c += 1
         else:
             continue
         entry = {
@@ -358,6 +421,17 @@ def main() -> int:
         # ★ 用户两种写法都会输入（软又湿 / 柔软且湿润），必须并列收录，
         #   否则用户换个说法就匹配不上 → 又变成"答非所问"。
         vs = [n for n in fetched_variants.get(k, []) if n != zh]
+        # ★ M41：萌娘/人工补录的译名**同样并入异译**。
+        #   这才是「繁荣之墓」能被搜到的地方 ——
+        #   库内主名是 bilibili 版「盛世之墓」，用户用的是萌娘版「繁荣之墓」，
+        #   只收一个 → 另一个写法查不到。
+        for _n in extra_zh.get(k, []):
+            if _n != zh and _n not in vs:
+                vs.append(_n)
+        # ★ M41 出口把关：单字名不写入（无论来自 official / fetched / extra_zh）
+        if not _ok_zh(zh):
+            _skipped_single.append((en, zh))
+            continue
         if vs:
             entry["name_zh_variants"] = [zh] + vs
         out[s["stand_id"]] = entry
@@ -373,6 +447,17 @@ def main() -> int:
                 })
                 out[s["stand_id"]]["name_zh_variants"] = variants
                 break
+
+    # ---- M41 统一出口把关：单字名一律剔除 ----
+    #   ★ 为什么要在**最后**再过滤一次，而不是在各分支里拦：
+    #     Tusk 在 official 分支被拦掉后，会从 fetched（_SBR_CONFIRMED）
+    #     兜底拿回**同一个「牙」**；Surface 走的是日文形替换分支。
+    #     逐分支拦容易漏，出口统一过滤才彻底。
+    for _sid in [k for k, v in out.items() if not _ok_zh(v.get("name_zh"))]:
+        _v = out[_sid]
+        print(f"      · 剔除单字名 {_v.get('name_en')} → {_v.get('name_zh')!r}"
+              f"（单字会误匹配，该替身改用英文名查询）")
+        del out[_sid]
 
     # ---- 统计与自检 ----
     total = len(stands)
@@ -509,12 +594,20 @@ def main() -> int:
 
 ★ Level A 优先：官方译名与民间译名冲突时以官方为准。
   ★ 例：Anubis 官方标「無」→ 我们的C 级写「安努比斯神」，
-    但因为官方那条 name_ja 没括号，所以不冲突。
-
-★ M16 结果：154/154 全覆盖，异译别名 84 条（共 179 个可接受中文写法）。
-  ★ 关键是这些译名全部**来自人工编纂的词条/对照表**，没有一个是机器翻译：
-    「骇游天外」「紫烟破音」「洋娃娃匕首」「永恒的守望塔」这类译法
-    一看就是查证过的，也正是用户实际会输入的写法。""")
+    但因为官方那条 name_ja 没括号，所以不冲突。""")
+    # ★ 统计数字一律动态渲染 —— 原实现把「154/154、84 条、179 个」写死在
+    #   文案里，补数据后就成了错误说明（与「断言绑死具体数字」同一类坑）。
+    print(f"""
+★ M41 结果：中文名覆盖 {have}/{total}（{have / total * 100:.0f}%），
+  异译别名 {n_var} 条（共 {n_var_all} 个可接受中文写法）。
+  ★ 新增来源（M41。起因：用户反馈「还是缺失很多替身啊 比如繁荣之墓 再度失言」
+    —— 实测那两个替身都在库里，缺的是中文名映射）：
+      + moegirl.uk（萌娘百科镜像）逐词条抓取 → fetch_moegirl_stands.py
+      + zh_names_manual.json（人工核实，每条注明出处）
+  ★ 这些译名全部来自**人工编纂的词条/对照表**，没有一个是机器翻译：
+    「骇游天外」「繁荣之墓」「再度失言」这类译法一看就是查证过的，
+    也正是用户实际会输入的写法。
+  ★ 单字名一律不收（如 Tusk→「牙」）：单字会抢匹配（M14 实测）。""")
     return 0
 
 

@@ -208,9 +208,23 @@ def main() -> int:
                if any(re.search(r"[\u4e00-\u9fff]", x) for x in v))
     # ★ id2alias 是 {stand_id: [别名列表]}，所以替身总数 = len(id2alias)
     n_total = len(id2alias)
-    ok_zh = (n_zh == n_total)
+    # ★★ M41：断言从「100% 全覆盖」改为「除显式豁免外全覆盖」★★
+    #   原因：**单字名一律不收**（M14 实测「力」会抢走「黄金体验的能力」）。
+    #   B 方案补入 Tusk 母体后，其 name_ja 是「タスク (牙) / (爪)」，
+    #   提取出的「牙」是单字 → 按规则不收 → Tusk 及其 4 个形态
+    #   （tusk_act1~4）都没有中文名。这是**有意为之**，不是漏网。
+    #   ★ 但绝不放任大面积缺失：豁免名单之外只要有缺，仍然报红。
+    _EXEMPT_SINGLE = {"tusk", "tusk_act1", "tusk_act2", "tusk_act3",
+                      "tusk_act4", "surface"}
+    missing_zh = [sid for sid, vs in id2alias.items()
+                  if sid not in _EXEMPT_SINGLE
+                  and not any(re.search(r"[\u4e00-\u9fff]", x) for x in vs)]
+    ok_zh = not missing_zh
+    n_exempt = len(_EXEMPT_SINGLE & set(id2alias))
     print(f"  {'OK ' if ok_zh else 'XX '}带中文名的替身{n_zh} / {n_total}"
-          f"{'' if ok_zh else '（应全覆盖）'}")
+          f"（豁免 {n_exempt} 个单字名替身）")
+    if missing_zh:
+        print(f"       漏网：{missing_zh[:8]}")
     if not ok_zh:
         bad3b += 1
     if bad3b:

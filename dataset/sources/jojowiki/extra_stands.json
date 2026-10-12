@@ -742,5 +742,53 @@
   "part": 9,
   "part_name_en": "The JOJOLands",
   "wiki_owner_page": "Key West"
+ },
+ {
+  "title": "Les Feuilles",
+  "name_en": "Les Feuilles",
+  "name_ja": "オータム・リーブス",
+  "name_romaji": "Ōtamu Rībusu",
+  "owner_name": null,
+  "reference": "Autumn Leaves (1945 song) (Joseph Kosma song)",
+  "stand_type": "Multi-UnitAutomatic",
+  "manga_debut": "JJL Chapter 18",
+  "anime_debut": null,
+  "stats": {
+   "destpower": null,
+   "speed": null,
+   "range": null,
+   "stamina": null,
+   "precision": null,
+   "potential": null
+  },
+  "stats_available": false,
+  "stand_id": "les_feuilles",
+  "part": 8,
+  "part_name_en": "JoJolion",
+  "wiki_owner_page": null
+ },
+ {
+  "title": "Schott Key No.2",
+  "name_en": "Schott Key No.2",
+  "name_ja": "ショット・キーNo.2",
+  "name_romaji": "Shotto Kī Nanbā Tsū",
+  "owner_name": "Younger A. Phex Brother",
+  "reference": "Selected Ambient Works 85–92 (Aphex Twin song)",
+  "stand_type": "Close-Range",
+  "manga_debut": "JJL Chapter 46",
+  "anime_debut": null,
+  "stats": {
+   "destpower": null,
+   "speed": null,
+   "range": null,
+   "stamina": null,
+   "precision": null,
+   "potential": null
+  },
+  "stats_available": false,
+  "stand_id": "schott_key_no_2",
+  "part": 8,
+  "part_name_en": "JoJolion",
+  "wiki_owner_page": null
  }
 ]

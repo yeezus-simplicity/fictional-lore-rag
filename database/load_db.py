@@ -890,6 +890,25 @@ def verify() -> bool:
     #   见 evaluation/make_min_fixture.py）。
     #   写死会让 CI 永远失败 —— 首次跑 CI 就是这么红的（实测）。
     #   推导后依然能发现「入库行数 ≠ 文件行数」这类真问题。
+    # ★★ stands / stand_stats 的期望也改为**从磁盘推导**，不写死 156 ★★
+    #   原值 156 = 154(stands.json) + 2(echoes/tusk 聚合父记录)。
+    #   ★ 补第 8/9 部替身后 154 会变 → 写死必然不符。
+    #     这与上方 text_chunks 的处理是同一原则
+    #     （「断言绑死具体数字」在换数据形态后必然失败，实测踩过）。
+    #   ★ agg_records 在 load_data() 里，此处是 verify() —— 不能直接引用，
+    #     按**同一规则**重算：echoes/tusk 形态组各补 1 条聚合父记录。
+    try:
+        _stands_json = json.loads(
+            (PROC / "stands.json").read_text(encoding="utf-8"))
+        _agg_ids = set()
+        for _s in _stands_json:
+            _m = re.match(r"^(echoes|tusk)_(act\d+)$", _s.get("stand_id", ""))
+            if _m:
+                _agg_ids.add(_m.group(1))
+        _n_stands = len(_stands_json) + len(_agg_ids)
+    except Exception:
+        _n_stands = None
+
     try:
         _n_chunks = len(json.loads(
             (PROC / "text_chunks.json").read_text(encoding="utf-8")))
@@ -908,7 +927,9 @@ def verify() -> bool:
     except Exception:
         pass
     expect = {
-        "characters": None, "stands": 156, "stand_stats": 156,
+        "characters": None,
+        # ★ 动态（见上方推导）；原写死 156
+        "stands": _n_stands, "stand_stats": _n_stands,
         "stand_forms": 146, "stat_conflicts": 28,
         "text_chunks": _n_chunks,
         # M37：三块新表的期望值同样从磁盘推导，不写死

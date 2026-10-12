@@ -82,3 +82,6 @@ dataset/processed/text_chunks_aug.json
 
 # ---- filter-branch 的临时产物（不要提交）----
 .git-rewrite/
+
+# ---- 补替身时的数据备份（*.bak，可由 merge 脚本重建）----
+dataset/processed/*.bak

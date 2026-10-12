@@ -171,6 +171,36 @@ def merge_chunks(base: list[dict],
     return out
 
 
+def _load_base_chunks() -> list[dict]:
+    """载入检索语料 —— ★ M43：并入 B 方案扩的文章块。
+
+    ★★ 为什么可以合并（实测核实，不是推断）★★
+      · 原语料 chunk_id 区间 **1 ~ 2407**，文章块 **2408 ~ 5669**
+        → **id 空间完全不重叠**（`set(old) & set(new) == 空`）
+      · 评测集 `eval_set.json` 的 **55 个 gold chunk_id 全在 43 ~ 2405**，
+        **0 个落在新空间** → 合并后评测集照样有效，不会因换语料而失效。
+
+    ★ 为什么不直接重写 text_chunks.json：
+      本文件开头已写明 —— 评测集 T4/T5 直接引用 chunk_id，
+      **覆写会毁掉评测**。所以原文件保持不动，改为**运行时合并**。
+
+    ★ 实测动因（用户看不到扩语料的收益）：
+      服务此前只加载 2407 块，B 方案扩的 3262 块**从未进入检索链路**。
+      问「臭氧宝贝的能力」返回的 6 条证据全是无关旧块
+      （strength / spice_girl / soft_wet）——
+      旧语料里「臭氧宝贝」命中 **0** 次，新语料里有 **4** 块。
+    """
+    p = PROC / "text_chunks.json"
+    if not p.exists():
+        raise FileNotFoundError(f"主索引缺失：{p}")
+    base = json.loads(p.read_text(encoding="utf-8"))
+
+    extra_p = PROC / "article_chunks.json"
+    if extra_p.exists():
+        base = base + json.loads(extra_p.read_text(encoding="utf-8"))
+    return base
+
+
 def build_chunks(target: Optional[int] = None,
                  overlap_blocks: int = RECOMMENDED_OVERLAP_BLOCKS,
                  ) -> list[dict]:
@@ -181,12 +211,10 @@ def build_chunks(target: Optional[int] = None,
         overlap_blocks: 重叠块数
 
     Returns:
-        块列表。不合并时就是原始 2407 块。
+        块列表。不合并时是「原 2407 块 + 文章块 3262 块」= 5669 块
+        （M43 之前只返回 2407 —— 那时扩语料还没接入检索）。
     """
-    p = PROC / "text_chunks.json"
-    if not p.exists():
-        raise FileNotFoundError(f"主索引缺失：{p}")
-    base = json.loads(p.read_text(encoding="utf-8"))
+    base = _load_base_chunks()
 
     if not target or target <= 0:
         return base

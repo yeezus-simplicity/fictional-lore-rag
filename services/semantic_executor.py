@@ -98,11 +98,18 @@ class SemanticExecutor:
                 return False
             self._vec = build_index(
                 self._chunks, backend="dense",
-                # ★★ 缓存 key 必须含合并参数 ——
-                #   否则 512 模式会读到「不合并」的旧缓存，
-                #   或反过来（实测踩过：缓存是按 chunk_id 列表算的）
-                cache_name=(f"m3_bge_m3_merge{self.chunk_merge_target}"
-                            if self.chunk_merge_target else "m3_bge_m3"),
+                # ★★ 缓存 key 必须含两样东西 ★★
+                #   ① 合并参数 —— 否则 512 模式会读到「不合并」的旧缓存，
+                #      或反过来（实测踩过：缓存是按 chunk_id 列表算的）
+                #   ② **语料指纹**（块数）—— M43 实测踩到的第二个坑：
+                #      扩语料接入后，缓存 key 仍是 "m3_bge_m3"，
+                #      于是命中了 10-03 生成的、基于 **2407 块**的旧索引
+                #      → 明明加载了 5669 块，检索结果却完全没变。
+                #      （表现极隐蔽：health 显示 n_chunks=5669（来自 chunks），
+                #        但向量索引其实是旧的 —— 两个来源不一致。）
+                cache_name=((f"m3_bge_m3_merge{self.chunk_merge_target}"
+                             if self.chunk_merge_target else "m3_bge_m3")
+                            + f"_n{len(self._chunks)}"),
                 verbose=self.verbose)
             return True
         except Exception as e:

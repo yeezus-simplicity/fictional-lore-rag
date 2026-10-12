@@ -193,8 +193,10 @@ def check_env() -> bool:
             ok = False
 
     # schema
+    # ★ B 方案：从「检查单个 MIGRATION 常量」改为「检查 migrations 目录」
+    #   （支持 002 等后续 migration；原 MIGRATION 常量已移除）
     print("\n  Schema：")
-    for p in (SCHEMA, MIGRATION):
+    for p in ([SCHEMA] + migrations()):
         if p.exists():
             print(f"  [OK]   {p.relative_to(ROOT)}")
         else:
@@ -409,8 +411,19 @@ def load_data() -> bool:
         if m:
             agg_groups[m.group(1)].append(sid)
 
+    _existing_ids = {s["stand_id"] for s in stands}
     agg_records: list[dict] = []
     for agg_id, member_ids in agg_groups.items():
+        # ★ 母体已存在于 stands.json → 不再补建。
+        #   否则合成记录会在 executemany 里对同一 stand_id 触发
+        #   ON CONFLICT DO UPDATE，把真实数据（owner / name_ja /
+        #   stand_type）**静默覆盖**成 Aggregate。
+        #   实测：B 方案补入 Tusk 母体后，DB 里 tusk 的 owner 与
+        #   name_ja 被抹掉、stand_type 变成 'Aggregate (form group)'。
+        if agg_id in _existing_ids:
+            print(f"  跳过聚合父记录 {agg_id}：母体已在 stands.json"
+                  f"（{len(member_ids)} 个形态）")
+            continue
         members = [x for x in stands if x["stand_id"] in member_ids]
         agg_records.append({
             "stand_id": agg_id,
@@ -901,17 +914,24 @@ def verify() -> bool:
         _stands_json = json.loads(
             (PROC / "stands.json").read_text(encoding="utf-8"))
         _agg_ids = set()
+        _present = {_s.get("stand_id") for _s in _stands_json}
         for _s in _stands_json:
             _m = re.match(r"^(echoes|tusk)_(act\d+)$", _s.get("stand_id", ""))
             if _m:
                 _agg_ids.add(_m.group(1))
-        _n_stands = len(_stands_json) + len(_agg_ids)
+        # ★ 仅补建**母体不在 stands.json** 的聚合记录（与 load_data 同规则）
+        _n_stands = len(_stands_json) + len(_agg_ids - _present)
     except Exception:
         _n_stands = None
 
+    # ★ text_chunks 的期望 = 原语料 + 文章块语料（load_data 里两者合并写入，
+    #   见 `all_chunks = list(chunks) + art`）
+    #   原实现只读 text_chunks.json → 入库含文章块后必然不符。
     try:
         _n_chunks = len(json.loads(
             (PROC / "text_chunks.json").read_text(encoding="utf-8")))
+        if ARTICLES.exists():
+            _n_chunks += len(json.loads(ARTICLES.read_text(encoding="utf-8")))
     except Exception:
         _n_chunks = None
 

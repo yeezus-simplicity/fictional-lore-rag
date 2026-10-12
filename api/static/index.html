@@ -1186,6 +1186,13 @@ function renderStructured(a){
     return `<dl class="kv"><dt>范围</dt><dd>${esc(a.scope||a.dimension_cn)}</dd>
       <dt>数量</dt><dd><b>${esc(a.count)}</b></dd></dl>`;
   }
+  if(t==='part_list'){
+    // ★ 「第X部有哪些替身」：列出该部全部替身（补数据后新增）
+    const items=a.items||[];
+    return `<div style="margin-bottom:8px">第 ${esc(a.part)} 部共
+        <b>${esc(a.count)}</b> 个替身</div>
+      <div>${items.map(x=>`<span class="tag">${esc(x.name)}</span>`).join('')}</div>`;
+  }
   if(t==='owner'){
     return `<dl class="kv"><dt>替身</dt><dd>${esc(a.stand_name)}</dd>
       <dt>使用者</dt><dd><b>${esc(a.owner)}</b></dd></dl>`;

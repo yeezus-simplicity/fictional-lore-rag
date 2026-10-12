@@ -389,7 +389,11 @@ CREATE TABLE IF NOT EXISTS text_chunks (
 );
 
 CREATE INDEX IF NOT EXISTS idx_chunks_stand ON text_chunks(stand_id);
-CREATE INDEX IF NOT EXISTS idx_chunks_character ON text_chunks(character_id);
+-- ★ character_id 的索引**不在这里建**：
+--   旧库的 text_chunks 是既有表，`CREATE TABLE IF NOT EXISTS` 会跳过，
+--   该列由 002 的 ALTER 添加 —— 若在此处建索引，旧库会因
+--   「column "character_id" does not exist」直接失败（实测踩过）。
+--   → 索引随列一起放在 002。
 CREATE INDEX IF NOT EXISTS idx_chunks_type  ON text_chunks(chunk_type);
 CREATE INDEX IF NOT EXISTS idx_chunks_part  ON text_chunks(part);
 CREATE INDEX IF NOT EXISTS idx_chunks_len   ON text_chunks(content_len);
@@ -401,8 +405,9 @@ COMMENT ON TABLE text_chunks IS
     '文本块。★ 结构化能力值在 stand_stats，不进本表';
 COMMENT ON COLUMN text_chunks.chunk_type IS
     'ability_overview / move / battle_record / lore / section / article_section';
-COMMENT ON COLUMN text_chunks.character_id IS
-    '角色页块的角色 id（替身页块为 NULL）；与 stand_id 至少一个非空';
+-- ★ character_id 的 COMMENT 也**不在这里**（理由同上方索引）：
+--   旧库该列由 002 添加，此处 COMMENT 会因列不存在而失败。
+--   → 随列一起放在 002。
 
 -- --------------------------------------------------------------------------
 -- 3. 视图

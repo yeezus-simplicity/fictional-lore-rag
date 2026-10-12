@@ -91,12 +91,40 @@ INTENT_STAND_OF = re.compile(
 #   判据：出现聚合/章节/疑问词，说明问的不是「某个人的替身」。
 INTENT_AGG_GUARD = re.compile(
     r"(多少|几个|数量|总数|排名|最高|最强|最弱|最大|最小|"
-    r"各部|每部|这部|哪部|第\s*\d+\s*部|部数)")
+    r"各部|每部|这部|哪部|第\s*(\d+|[一二三四五六七八九十]+)\s*部|部数)")
+# ★ 「第X部有哪些替身」这类**列表**问法。
+#   实测缺失：它不含 INTENT_EXTREME 的词、也不含「多少个」，
+#   于是 detect_intent 落到 unknown → 退回语义检索，
+#   返回一堆无关 wiki 片段（补进去的第9部替身完全查不到）。
+INTENT_PART_LIST = re.compile(
+    r"(有哪些|是哪些|都有(哪些|什么)|都是(什么|哪些)|列出|列一下|列表)")
 INTENT_FORMS = re.compile(r"(几个形态|有哪些形态|形态链)")
 INTENT_EXTREME = re.compile(
     r"(最高|最大|最强|最低|最小|最弱|多少个|几个|排名|综合|总分|"
     r"所有替身|同时满足|达到)")
-INTENT_PART = re.compile(r"(第\s*(\d+)\s*部)")
+# ★ 部数：必须同时认中文数字。
+#   原正则 `第\s*(\d+)\s*部` 只认阿拉伯数字，
+#   实测「第八部有多少替身」「第九部有哪些替身」全都匹配不到
+#   → part=None → 落到语义检索，返回一堆无关 wiki 片段。
+#   （而 verify 里用 SQL 直接查 part=3 是通的，所以静态检查发现不了。）
+_CN_NUM = {"一": 1, "二": 2, "三": 3, "四": 4, "五": 5,
+           "六": 6, "七": 7, "八": 8, "九": 9, "十": 10}
+
+
+def part_to_int(s: str | None) -> int | None:
+    """把 '8' / '八' / '第九' 之类的部数写法转成 int。"""
+    if not s:
+        return None
+    s = s.strip()
+    if s.isdigit():
+        return int(s)
+    # 「十」→10；「十一」这类本项目用不到，但仍处理「十N」
+    if s.startswith("十"):
+        return 10 + _CN_NUM.get(s[1:], 0) if len(s) > 1 else 10
+    return _CN_NUM.get(s[0])
+
+
+INTENT_PART = re.compile(r"(第\s*(\d+|[一二三四五六七八九十]+)\s*部)")
 # ★ 篇章统计的**显式**触发词（M14 新增）
 #   原来没有这些词，靠 detect_intent 的兜底"碰巧"触发 ——
 #   代价是所有识别失败的问题都落到这里。
@@ -133,6 +161,11 @@ def detect_intent(question: str) -> str:
     """
     if INTENT_FORMS.search(question):
         return "forms"
+    # ★ 「第X部有哪些替身」→ 列表。必须放在 stand_of 之前：
+    #   它含「替身」，若主体被当成部数名会诱使 stand_of 抢走。
+    if INTENT_PART.search(question) and INTENT_PART_LIST.search(question) \
+            and "替身" in question:
+        return "part_list"
     # ★ M20：「XX 的替身是什么」优先于 owner —— 
     #   问的是「哪个替身」(stand_of)，不是「替身的使用者」(owner)。
     #   两者都含「的替身」，必须先判 stand_of，
@@ -357,6 +390,8 @@ class StructuredExecutor:
             "part_count": self._part_count,
             # ★ M20
             "stand_of": self._stand_of,
+            # ★ 「第X部有哪些替身」列表
+            "part_list": self._part_list,
         }.get(intent)
         # ★ M14：认不出意图时**明确说不知道**，不给无关答案
         if fn is None:
@@ -523,7 +558,7 @@ class StructuredExecutor:
         cur = self.conn.cursor()
         dim = extract_dim(question)
         mp = INTENT_PART.search(question)
-        part = int(mp.group(2)) if mp else None
+        part = part_to_int(mp.group(2)) if mp else None
 
         # top-N 形式
         m = re.search(r"前\s*(\d+)", question)
@@ -811,6 +846,30 @@ class StructuredExecutor:
                  "pwr_raw": r[9], "rng_raw": r[10],
              } for r in rows]},
             [{"type": "database", "table": "stand_forms"}],
+        )
+
+    # ---------------------------------------------------------
+    def _part_list(self, question: str, name2id: dict[str, str]):
+        """★ 列出某部的全部替身（「第九部有哪些替身」）。
+
+        实测缺失：这类问法既不含 INTENT_EXTREME 的词，也不含「多少个」，
+        detect_intent 原会落到 unknown → 退回语义检索，
+        返回一堆无关 wiki 片段 —— 补进去的第 9 部替身**完全查不到**。
+        """
+        cur = self.conn.cursor()
+        mp = INTENT_PART.search(question)
+        part = part_to_int(mp.group(2)) if mp else None
+        if part is None:
+            return self._unknown(question, name2id)
+        cur.execute(
+            "SELECT name_en, stand_id, name_ja FROM stands "
+            "WHERE part = %s ORDER BY name_en", (part,))
+        rows = cur.fetchall()
+        return (
+            {"type": "part_list", "part": part, "count": len(rows),
+             "items": [{"name": r[0], "stand_id": r[1], "name_ja": r[2]}
+                       for r in rows]},
+            [{"type": "database", "table": "stands", "note": f"part = {part}"}],
         )
 
     # ---------------------------------------------------------

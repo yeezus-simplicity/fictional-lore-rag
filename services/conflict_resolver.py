@@ -390,7 +390,15 @@ class Router:
     #     'Starlight Express 在第 9 部中的表现如何？'
     #     '替身 Stand Arise v2 的使用者叫什么名字？'
     #   特征：问「第 9 部」（本项目只有 3–8 部）
-    OUT_OF_RANGE_PART = re.compile(r"第\s*(?:9|一[零一二三四五六七八九]|\d{2,})\s*部")
+    # ★★ 部数越界判定：原写死「9」，但**第 9 部（The JOJOLands）已有数据**
+    #   （实测 13 个替身，含主角替身 November Rain）。
+    #   → 原规则把「第9部有哪些替身」判成「询问不存在的内容」直接拒答。
+    #   ★ 它还只认阿拉伯数字：中文「第九部」不被匹配，
+    #     于是**同一问题的两种写法，一个能答一个拒答**——硬编码部数上限
+    #     本身就是脆的（数据一扩就错）。
+    #   现改为只判**真正越界**：第 0 部、第 10 部及以后。
+    OUT_OF_RANGE_PART = re.compile(
+        r"第\s*(?:0|\d{2,}|十|[一二三四五六七八九]十)\s*部")
     VERSION_LIKE = re.compile(r"\bv\d+\b", re.I)   # "Arise v2"
 
     # 极值/聚合意图
@@ -747,7 +755,7 @@ class Router:
             elif fabricated_signal:
                 hit = "编造信号词"
             elif oor_part:
-                hit = "询问不存在的部（第 9 部及以后）"
+                hit = "询问不存在的部（第 10 部及以后）"
             else:
                 hit = "版本号形态（如 v2），本数据集无此形态"
             return RouteDecision(

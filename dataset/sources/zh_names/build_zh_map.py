@@ -303,6 +303,21 @@ def main() -> int:
                     _slot.append(_n)
     print(f"  M41 补录源：{len(extra_zh)} 个英文名有萌娘/人工译名")
 
+    # ---- M42c：主名覆盖（人工核实，逐条注明理由）----
+    # ★ 用途：数据源给的主名不如另一个写法通行时，换过来；原主名自动降为异译。
+    #   实测动因：启用「共享译名一律剔除」后，「杀手皇后」因同时挂在
+    #   Killer Queen 与 Sheer Heart Attack 的异译里而被剔掉 —— 但它是
+    #   **Killer Queen 最通行的译名**（萌娘对应条目的条目名就是它）。
+    #   提为主名即可保留，同时自动从 Sheer Heart Attack 侧剔除。
+    forced_primary: dict[str, dict] = {}
+    _mp = Path(__file__).resolve().parent / "zh_names_manual.json"
+    if _mp.exists():
+        _md = json.loads(_mp.read_text(encoding="utf-8"))
+        forced_primary = _md.get("overrides") or {}
+    if forced_primary:
+        print(f"  M42c 主名覆盖：{len(forced_primary)} 条"
+              f"（{'、'.join(forced_primary)}）")
+
     # ---- Level A：官方 name_ja 括号内的中文名（优先级最高）----
     official: dict[str, str] = {}
     for s in stands:
@@ -347,6 +362,9 @@ def main() -> int:
     out: dict[str, dict] = {}
     n_a = n_b = n_c = 0
     _skipped_single: list[tuple[str, str]] = []
+    # ★ M42c：主名覆盖时被「降级」的原主名 → 记下它属于谁，
+    #   共享译名剔除时只保留在**这个**替身身上（从别处删）
+    _promoted: dict[str, str] = {}
     for s in stands:
         en = s["name_en"]
         k = norm_en(en)
@@ -393,7 +411,24 @@ def main() -> int:
                 n_c += 1
                 continue
             # 没有简体译名 → 仍用官方名，但记明是日文形
-        if zh:
+        # ★ M42c：人工核实的主名覆盖优先于一切自动来源
+        _ov = forced_primary.get(k)
+        if _ov:
+            _old = zh or (fetched.get(k)
+                          or (extra_zh.get(k) or [None])[0])
+            zh = _ov["name_zh"]
+            level, src = "B", _ov.get("source", "人工覆盖")
+            n_b += 1
+            # 原主名降为异译，保证两种写法都能命中
+            if _old and _old != zh:
+                _slot = extra_zh.setdefault(k, [])
+                if _old not in _slot:
+                    _slot.append(_old)
+                # ★ 它曾被本替身用作主名 → 豁免「共享译名剔除」。
+                #   否则「皇后杀手」会因为同时出现在 Sheer Heart Attack 的
+                #   异译里而被一起剔掉 —— 但它确实是 Killer Queen 的译名。
+                _promoted[_old] = s["stand_id"]
+        elif zh:
             level, src = "A", "jojowiki name_ja"
             n_a += 1
         elif k in fetched:
@@ -447,6 +482,87 @@ def main() -> int:
                 })
                 out[s["stand_id"]]["name_zh_variants"] = variants
                 break
+
+    # ---- M42：别名归属仲裁 ----
+    # ★ 实测（全量核查 evaluation/verify_full_coverage.py 抓到 12 条）：
+    #   jojogh 来源把同一批译名挂到了多个 stand_id 上，例如
+    #     「华丽挚爱」同时在 Love Deluxe(第4部) 与 Love Love Deluxe(第8部) 的
+    #       variants 里 —— 而它其实是**后者**的主名；
+    #     「杀手皇后」同时在 Killer Queen 与 Sheer Heart Attack 里；
+    #     「恶行易施」同时在 Dirty Deeds Done Dirt Cheap 与 D4C Love Train 里。
+    #   别名表按注册顺序覆盖 → 搜这些词会命中**错误的替身**（张冠李戴，
+    #   比"查不到"更危险 —— 用户不会察觉答案错了）。
+    # ★ 仲裁规则：若译名 X 是 A 的**主名**，就从所有其他替身的 variants 里删掉 X。
+    #   依据是「主名比异译更可靠」，可自动执行，不需要人工逐条判断。
+    _primary_owner: dict[str, list[str]] = {}
+    for _sid, _v in out.items():
+        _p = _v.get("name_zh")
+        if _p:
+            _primary_owner.setdefault(_p, []).append(_sid)
+
+    _n_arb = 0
+    for _sid, _v in out.items():
+        _vs = _v.get("name_zh_variants")
+        if not _vs:
+            continue
+        _keep = []
+        for _n in _vs:
+            _owners = _primary_owner.get(_n)
+            if _owners and _sid not in _owners:
+                _n_arb += 1          # 该译名的主名在别处 → 让位
+                continue
+            _keep.append(_n)
+        _v["name_zh_variants"] = _keep
+    if _n_arb:
+        print(f"  M42 别名归属仲裁：剔除 {_n_arb} 个「主名属于别的替身」的异译")
+
+    _conflict = {n: s for n, s in _primary_owner.items() if len(s) > 1}
+    if _conflict:
+        print(f"  ! 主名冲突 {len(_conflict)} 组"
+              f"（同一译名对应多个替身，别名表按注册顺序取一个）：")
+        for _n, _s in list(_conflict.items())[:6]:
+            print(f"      「{_n}」→ {_s}")
+
+    # ---- M42b：共享译名一律剔除 ----
+    # ★★ 实测证据（萌娘百科）★★
+    #   「**素质替身**」同时出现在「娃娃脸(Baby Face)」与「辣妹(Spice Girl)」
+    #   两个条目的别名栏里，而且两个条目都写着
+    #     「同为素质替身：回音ACT3、辣妹 / 回音、娃娃脸」。
+    #   → 它**根本不是某替身的名字**，而是**一类替身的梗标签**
+    #     （指会给本体甩脸色的替身）。
+    #   收成别名 → 必然张冠李戴：实测搜「素质替身」命中了 Baby Face，
+    #     而用户想说的很可能是 Spice Girl。
+    # ★ 规则：一个写法若同时挂在 ≥2 个替身的译名列表里，
+    #   系统**无法判断用户指谁** → 一律不收录。
+    #   宁可让用户改用主名查，也不给一个"看起来对"的错答案
+    #   （与 detect_intent 里 `unknown` 不兜底给无关答案是同一条原则）。
+    _cnt: dict[str, int] = {}
+    for _v in out.values():
+        for _n in [_v.get("name_zh")] + list(_v.get("name_zh_variants") or []):
+            if _n:
+                _cnt[_n] = _cnt.get(_n, 0) + 1
+    #   ★ 例外：M42c 里被降级的**原主名**，只保留在它真正所属的那个替身身上
+    #     （「皇后杀手」应归 Killer Queen，不该同时挂在 Sheer Heart Attack 上）
+    _shared = {n for n, c in _cnt.items() if c > 1}
+    _n_shared = 0
+    for _sid, _v in out.items():
+        _vs = _v.get("name_zh_variants") or []
+        _keep = []
+        for _n in _vs:
+            if _n in _shared:
+                if _promoted.get(_n) == _sid:
+                    _keep.append(_n)     # 它确实属于本替身
+                    continue
+                _n_shared += 1
+                continue
+            _keep.append(_n)
+        if len(_keep) != len(_vs):
+            _v["name_zh_variants"] = _keep
+    if _n_shared:
+        print(f"  M42b 共享译名剔除：{_n_shared} 个"
+              f"（同一写法对应多个替身 → 无法判断用户指谁，不收录）")
+    if _shared:
+        print(f"      共享词：{'、'.join(sorted(_shared)[:8])}")
 
     # ---- M41 统一出口把关：单字名一律剔除 ----
     #   ★ 为什么要在**最后**再过滤一次，而不是在各分支里拦：
@@ -530,7 +646,13 @@ def main() -> int:
     if n_base:
         print(f"  + 补齐形态组母体中文名 {n_base} 条（级别 D，由派生名反推）")
 
-    _NON_SIMP_JP = set("審判壓氣車門鬥髮馬鳥魚館裝經驗體験複"
+    # ★★ M42：这里的字必须**只收繁体/日文特有字形**，不能混进简繁同形字 ★★
+    #   实测误伤：原集合含「**判**」，而「判」在简繁中**同形** →
+    #   Judgement 的正确简体译名「审判」被判成"含繁体字形"→
+    #   标记 _excluded_from_matching → **该替身彻底查不到**
+    #   （全量核查 verify_full_coverage.py 抓到的唯一一条"完全无路可走"）。
+    #   → 去掉「判」；保留「審」（那才是繁体形）。
+    _NON_SIMP_JP = set("審壓氣車門鬥髮馬鳥魚館裝經驗體験複"
                        "數據點擊網頁實現處於業務")
     non_simp = [(v["name_en"], v["name_zh"]) for v in out.values()
                 if any(ch in _NON_SIMP_JP for ch in v["name_zh"])]

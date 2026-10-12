@@ -5,7 +5,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "安努比斯神",
       "阿努比斯神",
       "阿努比斯"
     ]
@@ -16,7 +15,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "阿多姆神",
       "亚图姆神"
     ]
   },
@@ -26,7 +24,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "巴斯特女神",
       "巴斯提女神"
     ]
   },
@@ -36,7 +33,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "亚空瘴气",
       "香草冰"
     ]
   },
@@ -58,7 +54,6 @@
     "level": "A",
     "source": "jojowiki name_ja",
     "name_zh_variants": [
-      "女教皇",
       "女祭司"
     ]
   },
@@ -68,7 +63,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "霍尔斯神",
       "荷鲁斯神"
     ]
   },
@@ -78,8 +72,7 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_ja_official": "審判",
-    "_note": "官方 name_ja 是日文汉字写法（審判），用户多用简体（审判），两者都收录；繁体/日文形另存aliases",
-    "_excluded_from_matching": true
+    "_note": "官方 name_ja 是日文汉字写法（審判），用户多用简体（审判），两者都收录；繁体/日文形另存aliases"
   },
   "khnum": {
     "name_en": "Khnum",
@@ -87,7 +80,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "库努姆神",
       "克努姆神"
     ]
   },
@@ -97,7 +89,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "奥西里斯",
       "欧西里斯神"
     ]
   },
@@ -107,7 +98,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "瑟多神",
       "赛特神"
     ]
   },
@@ -117,7 +107,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "迪那·塞克斯",
       "高音萨克斯",
       "次中音萨克斯"
     ]
@@ -128,7 +117,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "托托神",
       "欧因哥波因哥兄弟大冒险",
       "托特神",
       "图特神"
@@ -142,7 +130,6 @@
     "name_ja_official": "暗青の月",
     "_note": "官方 name_ja 是日文汉字写法（暗青の月），用户多用简体（暗青之月），两者都收录；繁体/日文形另存aliases",
     "name_zh_variants": [
-      "暗青之月",
       "暗蓝之月"
     ]
   },
@@ -158,7 +145,6 @@
     "level": "A",
     "source": "jojowiki name_ja",
     "name_zh_variants": [
-      "悪魔",
       "黑檀木恶魔",
       "黑檀木魔鬼"
     ]
@@ -169,7 +155,6 @@
     "level": "A",
     "source": "jojowiki name_ja",
     "name_zh_variants": [
-      "女帝",
       "啾咪咪"
     ]
   },
@@ -179,7 +164,6 @@
     "level": "A",
     "source": "jojowiki name_ja",
     "name_zh_variants": [
-      "吊られた男",
       "倒吊人",
       "倒吊男"
     ]
@@ -200,7 +184,6 @@
     "name_ja_official": "法皇の緑",
     "_note": "官方 name_ja 是日文汉字写法（法皇の緑），用户多用简体（绿之法皇），两者都收录；繁体/日文形另存aliases",
     "name_zh_variants": [
-      "绿之法皇",
       "绿色法皇"
     ]
   },
@@ -210,7 +193,6 @@
     "level": "A",
     "source": "jojowiki name_ja",
     "name_zh_variants": [
-      "正義",
       "正义"
     ]
   },
@@ -228,7 +210,6 @@
     "name_ja_official": "魔術師の赤",
     "_note": "官方 name_ja 是日文汉字写法（魔術師の赤），用户多用简体（红色魔术师），两者都收录；繁体/日文形另存aliases",
     "name_zh_variants": [
-      "红色魔术师",
       "魔术师之红"
     ]
   },
@@ -262,7 +243,6 @@
     "level": "A",
     "source": "jojowiki name_ja",
     "name_zh_variants": [
-      "太陽",
       "太阳"
     ]
   },
@@ -272,7 +252,6 @@
     "level": "A",
     "source": "jojowiki name_ja",
     "name_zh_variants": [
-      "愚者",
       "砂之愚者",
       "砸葫芦"
     ]
@@ -283,7 +262,6 @@
     "level": "A",
     "source": "jojowiki name_ja",
     "name_zh_variants": [
-      "世界",
       "七部世界",
       "七部砸瓦鲁多",
       "迪亚哥世界",
@@ -298,7 +276,6 @@
     "name_ja_official": "灰の塔",
     "_note": "官方 name_ja 是日文汉字写法（灰の塔），用户多用简体（灰塔），两者都收录；繁体/日文形另存aliases",
     "name_zh_variants": [
-      "灰塔",
       "灰之塔"
     ]
   },
@@ -310,7 +287,6 @@
     "name_ja_official": "運命の車輪",
     "_note": "官方 name_ja 是日文汉字写法（運命の車輪），用户多用简体（命运的车轮），两者都收录；繁体/日文形另存aliases",
     "name_zh_variants": [
-      "命运的车轮",
       "命运之轮"
     ]
   },
@@ -336,7 +312,6 @@
     "name_ja_official": "水の首飾り",
     "_note": "官方 name_ja 是日文汉字写法（水の首飾り），用户多用简体（银水链），两者都收录；繁体/日文形另存aliases",
     "name_zh_variants": [
-      "银水链",
       "水项链"
     ]
   },
@@ -346,7 +321,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "破碎的慈父心",
       "原子心之父",
       "破碎慈父心",
       "照片老爹"
@@ -358,7 +332,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "极恶中队",
       "破坏军团",
       "全员恶人",
       "恶人公司"
@@ -370,7 +343,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "猜拳小子",
       "大人小孩双拍档"
     ]
   },
@@ -380,7 +352,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "廉价魔术",
       "廉价把戏",
       "便宜把戏",
       "廉价诡计",
@@ -393,7 +364,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "灰姑娘",
       "英语 ： Cinderella"
     ]
   },
@@ -403,7 +373,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "疯狂钻石",
       "裤勒鸡黛雅萌多"
     ]
   },
@@ -413,7 +382,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "摺纸师",
       "英格玛",
       "折纸师"
     ]
@@ -424,7 +392,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "大地·风和火",
       "大地，风，火",
       "大地风火"
     ]
@@ -435,7 +402,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "钱宝宝",
       "收成者"
     ]
   },
@@ -453,19 +419,16 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "高速之星",
       "公路之星"
     ]
   },
   "killer_queen": {
     "name_en": "Killer Queen",
-    "name_zh": "皇后杀手",
-    "level": "C",
-    "source": "jojogh.jojo6.com",
+    "name_zh": "杀手皇后",
+    "level": "B",
+    "source": "moegirl_entry",
     "name_zh_variants": [
-      "皇后杀手",
-      "杀手皇后",
-      "粉红色大猫猫"
+      "皇后杀手"
     ]
   },
   "sheer_heart_attack": {
@@ -473,12 +436,7 @@
     "name_zh": "穿心攻击",
     "level": "C",
     "source": "jojogh.jojo6.com",
-    "name_zh_variants": [
-      "穿心攻击",
-      "杀手皇后",
-      "皇后杀手",
-      "粉红色大猫猫"
-    ]
+    "name_zh_variants": []
   },
   "bites_the_dust": {
     "name_en": "Bites the Dust",
@@ -492,10 +450,7 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "紫色恋人",
-      "奢美之恋",
-      "华丽挚爱",
-      "紫色紫色恋人"
+      "奢美之恋"
     ]
   },
   "pearl_jam": {
@@ -504,7 +459,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "珍珠果酱",
       "小番茄",
       "食用版疯狂钻石"
     ]
@@ -515,7 +469,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "虫眼",
       "鼠王",
       "虫蚀",
       "溶蚀针",
@@ -528,7 +481,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "辛红辣椒",
       "呛辣红椒",
       "呛红辣椒",
       "猩红辣椒"
@@ -540,7 +492,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "超能平底锅",
       "超级飞人"
     ]
   },
@@ -576,7 +527,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "回音Act 3",
       "回音 ACT3"
     ]
   },
@@ -586,7 +536,6 @@
     "level": "A",
     "source": "jojowiki name_ja",
     "name_zh_variants": [
-      "猫草",
       "迷途猫"
     ]
   },
@@ -596,7 +545,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "黑色安息日",
       "荒野女巫"
     ]
   },
@@ -606,9 +554,7 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "婴儿面孔",
       "娃娃脸",
-      "素质替身",
       "婴儿脸孔"
     ]
   },
@@ -626,7 +572,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "万能手指",
       "钢链手指",
       "拉链手指"
     ]
@@ -637,7 +582,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "金属制品",
       "梅达利卡"
     ]
   },
@@ -647,7 +591,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "紫色烟雾",
       "紫烟"
     ]
   },
@@ -657,7 +600,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "蓝色忧郁",
       "忧郁蓝调",
       "抑郁蓝调",
       "墓地布鲁斯"
@@ -669,7 +611,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "性感手枪",
       "性手枪"
     ]
   },
@@ -679,7 +620,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "幸福死亡",
       "壮烈成仁",
       "感恩而死",
       "伟大之死（来自日文直译）"
@@ -691,7 +631,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "空中狙击手",
       "航空史密斯",
       "史密斯飞船",
       "史密斯飞艇",
@@ -705,7 +644,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "海滩男孩",
       "沙滩男孩"
     ]
   },
@@ -715,7 +653,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "镜中人",
       "隔离区"
     ]
   },
@@ -725,7 +662,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "战车镇魂歌",
       "银色战车镇魂曲",
       "镇魂曲",
       "战车镇魂曲"
@@ -737,7 +673,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "冲击",
       "食人鱼",
       "鱼翅汤"
     ]
@@ -748,7 +683,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "黄金体验·镇魂歌",
       "黄金体验镇魂曲",
       "黄金镇魂曲",
       "黄金·E·镇魂曲",
@@ -761,7 +695,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "绿色末日",
       "青春岁月"
     ]
   },
@@ -771,7 +704,6 @@
     "level": "A",
     "source": "jojowiki name_ja",
     "name_zh_variants": [
-      "墓碑銘",
       "绯红之王",
       "深红之王",
       "罪恶王者",
@@ -787,7 +719,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "工匠",
       "手艺工作"
     ]
   },
@@ -797,7 +728,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "小脚",
       "三寸金莲"
     ]
   },
@@ -807,7 +737,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "乌龟",
       "总裁先生",
       "总统先生",
       "乌龟的替身",
@@ -820,7 +749,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "臭名昭著",
       "恶名昭彰的B.I.G"
     ]
   },
@@ -830,7 +758,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "沙漠绿洲",
       "绿洲"
     ]
   },
@@ -852,11 +779,9 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "辣妹",
       "绯红公主",
       "真•柔软机器",
       "男人克星",
-      "素质替身",
       "辣妹儿~"
     ]
   },
@@ -866,7 +791,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "谈话头脑",
       "脸部特写",
       "面部特写"
     ]
@@ -877,7 +801,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "白色相册",
       "白色相簿",
       "白色专辑"
     ]
@@ -888,7 +811,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "白蛇",
       "盜版光碟制造商{{jk|",
       "歪头洗内裤"
     ]
@@ -905,7 +827,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "恶魔枷锁",
       "监狱枷锁"
     ]
   },
@@ -915,7 +836,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "自由之石",
       "石之自由",
       "免费石头",
       "石之印表机"
@@ -927,7 +847,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "变化人偶",
       "咕咕娃娃"
     ]
   },
@@ -943,7 +862,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "骇游天外",
       "骇飞天外",
       "天外来客"
     ]
@@ -968,7 +886,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "幽灵房间",
       "放火烧厝",
       "烧毁之屋",
       "焚毁之室",
@@ -981,7 +898,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "潜伏者",
       "怒海潜将",
       "潜行者",
       "潜水夫",
@@ -996,7 +912,6 @@
     "name_ja_official": "龍の夢",
     "_note": "官方 name_ja 是日文汉字写法（龍の夢），用户多用简体（龙之梦），两者都收录；繁体/日文形另存aliases",
     "name_zh_variants": [
-      "龙之梦",
       "幻梦龙玲"
     ]
   },
@@ -1006,7 +921,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "无名斗士",
       "斗魂骇客",
       "简称F.F"
     ]
@@ -1017,7 +931,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "绿草之家",
       "幼苗归乡",
       "绿草包容之室",
       "青草之家"
@@ -1029,7 +942,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "地狱高速路",
       "地狱高速",
       "地狱高速公路"
     ]
@@ -1046,7 +958,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "旋转闪光",
       "闪灵劫重螺旋",
       "跳跃闪电杰克",
       "闪电劫重螺旋"
@@ -1058,7 +969,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "圆舞黑鹰",
       "恹软鉼干",
       "阴魂·冰兹基特",
       "阴魂冰兹基特"
@@ -1070,7 +980,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "天堂制造",
       "没抖音还问",
       "妹抖天堂",
       "加速世界"
@@ -1082,7 +991,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "曼哈顿转播站",
       "曼哈顿传送站",
       "曼哈顿中转站",
       "曼哈顿运输",
@@ -1095,7 +1003,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "追债人玛丽莲",
       "讨债人 玛丽琳曼森",
       "玛丽莲·曼森",
       "讨债人玛丽莲·曼森"
@@ -1107,7 +1014,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "行星波导",
       "行星波动",
       "流浪之星"
     ]
@@ -1118,7 +1024,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "生存",
       "生存者",
       "生还者",
       "幸存者"
@@ -1130,7 +1035,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "天气预报",
       "天候预报"
     ]
   },
@@ -1140,7 +1044,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "陀螺",
       "马友友",
       "友友马"
     ]
@@ -1151,7 +1054,6 @@
     "level": "B",
     "source": "bilibili+萌娘百科",
     "name_zh_variants": [
-      "20世纪少年",
       "20世纪男孩"
     ]
   },
@@ -1167,7 +1069,6 @@
     "level": "B",
     "source": "bilibili+萌娘百科",
     "name_zh_variants": [
-      "聆听我的旋律",
       "聆听我的节奏"
     ]
   },
@@ -1187,7 +1088,6 @@
     "level": "B",
     "source": "bilibili+萌娘百科",
     "name_zh_variants": [
-      "巧克力迪斯科",
       "巧克力迪斯可"
     ]
   },
@@ -1197,7 +1097,6 @@
     "level": "B",
     "source": "bilibili+萌娘百科",
     "name_zh_variants": [
-      "南北战争",
       "内战"
     ]
   },
@@ -1207,7 +1106,6 @@
     "level": "B",
     "source": "bilibili+萌娘百科",
     "name_zh_variants": [
-      "护霜旅行者",
       "防狼喷雾",
       "肉罐喷雾"
     ]
@@ -1217,13 +1115,7 @@
     "name_zh": "恶行易施",
     "level": "B",
     "source": "bilibili+萌娘百科",
-    "name_zh_variants": [
-      "恶行易施",
-      "极为轻易行出的肮脏行径",
-      "肮脏缔造低廉",
-      "低廉暴行",
-      "大兔子"
-    ]
+    "name_zh_variants": []
   },
   "d4c_love_train": {
     "name_en": "D4C Love Train",
@@ -1231,14 +1123,8 @@
     "level": "B",
     "source": "bilibili+萌娘百科",
     "name_zh_variants": [
-      "D4C爱的列车",
       "极易实施的肮脏行径",
-      "爱之列车",
-      "极为轻易行出的肮脏行径",
-      "肮脏缔造低廉",
-      "恶行易施",
-      "低廉暴行",
-      "大兔子"
+      "爱之列车"
     ]
   },
   "hey_ya": {
@@ -1257,8 +1143,7 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "寂静之道",
-      "沉默之道"
+      "寂静之道"
     ]
   },
   "mandom": {
@@ -1273,7 +1158,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "喔!寂寞的我",
       "哦!孤独的我"
     ]
   },
@@ -1283,7 +1167,6 @@
     "level": "B",
     "source": "bilibili+萌娘百科",
     "name_zh_variants": [
-      "骇人恶兽",
       "侏罗纪公园",
       "害人饿瘦"
     ]
@@ -1294,7 +1177,6 @@
     "level": "B",
     "source": "bilibili+萌娘百科",
     "name_zh_variants": [
-      "香糖山之泉",
       "香糖山",
       "甜糖山",
       "甜糖山之泉",
@@ -1307,7 +1189,6 @@
     "level": "B",
     "source": "bilibili+萌娘百科",
     "name_zh_variants": [
-      "为你纹身",
       "为你纹身!"
     ]
   },
@@ -1327,7 +1208,6 @@
     "level": "B",
     "source": "bilibili+萌娘百科",
     "name_zh_variants": [
-      "盛世之墓",
       "繁荣之墓"
     ]
   },
@@ -1355,7 +1235,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "加州大床",
       "加州大床ちゃん",
       "加州大床酱",
       "加利福尼亚大床"
@@ -1367,7 +1246,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "牵线木偶师",
       "乐趣无穷",
       "柠檬榨汁机"
     ]
@@ -1378,7 +1256,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "纳·京·高",
       "纳金高"
     ]
   },
@@ -1394,7 +1271,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "纸月之王",
       "纸之月"
     ]
   },
@@ -1404,7 +1280,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "软又湿",
       "柔软且湿润"
     ]
   },
@@ -1456,7 +1331,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "遥远浪漫",
       "遥感浪漫"
     ]
   },
@@ -1466,7 +1340,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "神圣之屋",
       "荷莉之屋"
     ]
   },
@@ -1476,7 +1349,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "小面孔",
       "小脸"
     ]
   },
@@ -1486,7 +1358,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "苏醒三叶",
       "觉醒三叶"
     ]
   },
@@ -1508,7 +1379,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "羽博士",
       "羽医生",
       "吴医生"
     ]
@@ -1519,7 +1389,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "狗狗风格",
       "犬式风格",
       "小狗风格"
     ]
@@ -1530,7 +1399,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "杜比华",
       "杜比哇!"
     ]
   },
@@ -1540,7 +1408,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "我是磐石",
       "吾为磐岩",
       "我即岩石"
     ]
@@ -1551,7 +1418,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "虚名之王",
       "虚无之王",
       "没事之王"
     ]
@@ -1561,10 +1427,7 @@
     "name_zh": "华丽挚爱",
     "level": "C",
     "source": "jojogh.jojo6.com",
-    "name_zh_variants": [
-      "华丽挚爱",
-      "紫色紫色恋人"
-    ]
+    "name_zh_variants": []
   },
   "milagroman": {
     "name_en": "Milagroman",
@@ -1572,7 +1435,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "奇象之人",
       "奇迹之人",
       "奇蹟之人"
     ]
@@ -1583,7 +1445,6 @@
     "level": "C",
     "source": "moegirl.uk / 人工核实",
     "name_zh_variants": [
-      "臭氧宝贝",
       "臭氧寶貝"
     ]
   },
@@ -1593,7 +1454,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "肖基特一号",
       "肖特基1号",
       "肖特钥匙一号",
       "肖特基一号"
@@ -1605,7 +1465,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "太空运输/空间运输",
       "太空运输",
       "宇宙传输",
       "空间追踪"
@@ -1617,7 +1476,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "速率之王",
       "速度之王"
     ]
   },
@@ -1633,7 +1491,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "行走的心",
       "步行之心",
       "行走之心"
     ]
@@ -1644,7 +1501,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "你的奇迹",
       "奇迹于你",
       "你的奇迹之爱",
       "奇迹之U"
@@ -1656,7 +1512,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "200个气球",
       "百倍膨胀",
       "双百浮囊"
     ]
@@ -1667,7 +1522,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "袋之律动",
       "暗袋之舞"
     ]
   },
@@ -1677,7 +1531,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "再度失言",
       "大嘴又惹祸"
     ]
   },
@@ -1687,7 +1540,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "尺寸猫",
       "猫的大小",
       "猫咪尺寸"
     ]
@@ -1698,7 +1550,6 @@
     "level": "C",
     "source": "moegirl.uk / 人工核实",
     "name_zh_variants": [
-      "日蚀八号",
       "日食八号"
     ]
   },
@@ -1708,7 +1559,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "光辉岁月",
       "峥嵘岁月"
     ]
   },
@@ -1718,7 +1568,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "说谎的眼神",
       "谎言之眼"
     ]
   },
@@ -1730,7 +1579,6 @@
     "name_ja_official": "11月の雨",
     "_note": "官方 name_ja 是日文汉字写法（11月の雨），用户多用简体（十一月雨），两者都收录；繁体/日文形另存aliases",
     "name_zh_variants": [
-      "十一月雨",
       "霜月之雨、十一月的冷雨"
     ]
   },
@@ -1740,7 +1588,6 @@
     "level": "C",
     "source": "moegirl.uk / 人工核实",
     "name_zh_variants": [
-      "至近距离札",
       "近距离贴"
     ]
   },
@@ -1750,7 +1597,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "调情圣手",
       "平滑操作员"
     ]
   },
@@ -1766,7 +1612,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "强夺哈娑",
       "肌情哈娑",
       "哈娑舞"
     ]
@@ -1783,7 +1628,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "秋日落叶",
       "秋日红叶"
     ]
   },
@@ -1793,7 +1637,6 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "肖基特二号",
       "肖特基2号",
       "肖特钥匙二号",
       "肖特基二号"

@@ -16,6 +16,19 @@
     "user": "用户直接给出的译名（用户为 JOJO 中文圈的用法，视为有效出处）"
   },
   "_key_format": "规范化英文名（NFKC + 小写 + 只保留字母数字），与 build_zh_map.py 的 norm_en 一致",
+
+  "_overrides_note": [
+    "主名覆盖：用更通行的译名替换数据源给的主名（原主名自动降为异译，仍可匹配）。",
+    "★ 只在有可核对出处时才覆盖 —— 不凭感觉调。"
+  ],
+  "overrides": {
+    "killerqueen": {
+      "name_zh": "杀手皇后",
+      "source": "moegirl_entry",
+      "reason": "萌娘百科对应条目的条目名就是「杀手皇后」（搜索 Killer Queen 直接返回该条目，另有一个消歧条目「杀手皇后(乔乔福音)」对应第8部版本）。原主名「皇后杀手」是 jojogh 来源的次常用写法 → 降为异译。★ 实测动因：启用「共享译名一律剔除」后，「杀手皇后」因同时挂在 Killer Queen 与 Sheer Heart Attack 的异译里而被剔掉，用户就搜不到了；把它提为主名即可保留，同时从 Sheer Heart Attack 侧剔除。"
+    }
+  },
+
   "pairs": {
     "_comment_8": "===== 第 8 部（JoJolion）=====",
     "milagroman": {

@@ -803,6 +803,20 @@ def query(
         sid = None
         if isinstance(answer, dict):
             sid = answer.get("stand_id")
+            # ★★ 修复：stand_of / stands_of_owner 的替身名在 **stands 列表**里，
+            #   顶层没有 stand_id。
+            #   实测症状：问「东方常秀的替身」→ 答出 Nut King Call，
+            #   但**没有图片、没有雷达、没有替身档案卡**（用户反馈
+            #   「这个替身咋没图片呢」）。
+            #   根因：这里只取顶层 stand_id → None → 回退到 _guess_stand(问句)，
+            #   而「东方常秀的替身」句子里根本没有替身名 → 猜不到 → 整块媒体跳过。
+            #   ★ 讽刺的是，本文件下方的**指代消解**早就做了这个兜底
+            #     （注释原话：「必须**先看答案**：stand_of 的替身名在
+            #     answer["stands"] 里」），媒体分支漏了同一件事。
+            if not sid:
+                _st = answer.get("stands")
+                if isinstance(_st, list) and _st and isinstance(_st[0], dict):
+                    sid = _st[0].get("stand_id")
         if not sid:
             sid = _guess_stand(resolved_q, STATE)
         if sid and STATE.get("conn"):

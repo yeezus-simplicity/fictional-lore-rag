@@ -345,6 +345,20 @@ def load_data() -> bool:
     conflicts = _load_json("conflicts.json")
     chunks = _load_json("text_chunks.json")
 
+    # ★ M45：角色日文名（解决 M38 遗留的「角色日文名 0%」）
+    #   数据来自 B 方案已抓的角色页 wikitext —— 每个 {{Character Infobox}}
+    #   都带 |ja_kanji=，只是此前**从没被提取过**。
+    #   → dataset/processed/character_ja.json（由 extract_character_ja.py 生成）
+    #   ★ key 用英文名：characters.name_en 是从 stands.owner_name 反推的，
+    #     与 jojowiki 页面标题一致，用它对齐不引入新的 id 规则。
+    _char_ja: dict[str, str] = {}
+    _ja_path = PROC / "character_ja.json"
+    if _ja_path.exists():
+        try:
+            _char_ja = json.loads(_ja_path.read_text(encoding="utf-8"))
+        except Exception:
+            _char_ja = {}
+
     # owner_name 可能含多个角色（jojowiki 的 infobox 用 <br> 分隔多持有者，
     # 抓取时未拆开），需先拆分。实测 5 条超长样本，如：
     #   'Caravan SeraiChakaFour Unnamed miceKhanJean Pierre PolnareffUnnamed boyCow'
@@ -364,7 +378,8 @@ def load_data() -> bool:
                 owner_map[cid] = {
                     "character_id": cid,
                     "name_en": base,
-                    "name_ja": None,
+                    # ★ M45：日文名（原名硬编码 None → 长期 0% 覆盖）
+                    "name_ja": _char_ja.get(base),
                     "part": s.get("part"),
                     "stand_ids": [],
                 }
@@ -391,7 +406,12 @@ def load_data() -> bool:
                 stand_ids= EXCLUDED.stand_ids
         """)
     n_with_part = sum(1 for c in owner_map.values() if c["part"] is not None)
+    n_ja = sum(1 for c in owner_map.values() if c.get("name_ja"))
     print(f"  {len(owner_map)} 个角色（{n_with_part} 有部信息）")
+    if owner_map:
+        print(f"  日文名 {n_ja}/{len(owner_map)}"
+              f"（{n_ja / len(owner_map) * 100:.0f}%）"
+              f"  ← M45 从已抓的角色页 infobox 提取")
     if multi_owner_stands:
         print(f"  注：{multi_owner_stands} 个替身有多个持有者，已拆分为多条角色")
 
@@ -586,6 +606,10 @@ def load_data() -> bool:
         form_rows.append((
             f["form_id"], f["stand_id"], f.get("form_name"),
             f.get("form_type") or "base",
+            # ★ M45：形态链的父子指针。此前根本没读这个字段 →
+            #   即便 stand_forms.json 里有 parent_id，DB 里也永远是 NULL
+            #   （schema 早已定义该列并带外键，只是入库时漏了）。
+            f.get("parent_id"),
             *[enc[d] for d in STAT_DIMS],
             *[vals.get(d) for d in STAT_DIMS],   # raw
             *cats,                               # cat
@@ -594,17 +618,18 @@ def load_data() -> bool:
 
     cur.executemany("""
         INSERT INTO stand_forms
-            (form_id, stand_id, form_name, form_type,
+            (form_id, stand_id, form_name, form_type, parent_id,
              pwr, spd, rng, sta, prc, dev,
              pwr_raw, spd_raw, rng_raw, sta_raw, prc_raw, dev_raw,
              pwr_cat, spd_cat, rng_cat, sta_cat, prc_cat, dev_cat,
              raw_order)
-        VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,
+        VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,
                 %s,%s,%s,%s,%s,%s,
                 %s,%s,%s,%s,%s,%s,
                 %s)
         ON CONFLICT (form_id) DO UPDATE SET
             form_name=EXCLUDED.form_name, form_type=EXCLUDED.form_type,
+            parent_id=EXCLUDED.parent_id,
             pwr=EXCLUDED.pwr, spd=EXCLUDED.spd, rng=EXCLUDED.rng,
             sta=EXCLUDED.sta, prc=EXCLUDED.prc, dev=EXCLUDED.dev,
             pwr_raw=EXCLUDED.pwr_raw, spd_raw=EXCLUDED.spd_raw,
@@ -935,6 +960,19 @@ def verify() -> bool:
     except Exception:
         _n_chunks = None
 
+    # ★ M45：stand_forms / stat_conflicts 也改从磁盘推导
+    _n_forms = _n_conflicts = None
+    try:
+        _n_forms = len(json.loads(
+            (PROC / "stand_forms.json").read_text(encoding="utf-8")))
+    except Exception:
+        pass
+    try:
+        _n_conflicts = len(json.loads(
+            (PROC / "conflicts.json").read_text(encoding="utf-8")))
+    except Exception:
+        pass
+
     # ★ M37：附加表的期望值也从磁盘推导（同一原则，见上）
     _n_apps = _n_moves = _n_origins = None
     try:
@@ -950,7 +988,9 @@ def verify() -> bool:
         "characters": None,
         # ★ 动态（见上方推导）；原写死 156
         "stands": _n_stands, "stand_stats": _n_stands,
-        "stand_forms": 146, "stat_conflicts": 28,
+        # ★ M45：同样改为从磁盘推导 —— 补形态链后 stand_forms 146 → 153，
+        #   写死必然报「不符」（与 stands / text_chunks 是同一类坑）。
+        "stand_forms": _n_forms, "stat_conflicts": _n_conflicts,
         "text_chunks": _n_chunks,
         # M37：三块新表的期望值同样从磁盘推导，不写死
         "stand_appearances": _n_apps,

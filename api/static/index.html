@@ -907,23 +907,35 @@ async function ask(q){
     render(await r.json());
     ping();                    // 顺带刷新状态灯
   }catch(e){
-    // ★「Failed to fetch」是浏览器级错误，分不清是服务没起还是网络问题。
-    //   给可操作的提示，而不是把原始英文抛给用户。
+    // ★★ M58b：区分「连不上」与「服务报错」★★
+    //   实测教训：我把 **HTTP 500**（服务端内部错误）也写成
+    //   「无法连接到服务 / 最可能的原因：API 服务已停止」——
+    //   而服务明明活着，用户被这句话带去查"服务是不是挂了"，方向完全错。
+    //   → 只有 fetch 本身失败（网络层）才提示"连不上"；
+    //     5xx 提示"服务内部错误"，4xx 提示"请求被拒绝"。
+    const _m = String((e && e.message) || e);
+    const _st = (() => { const x = _m.match(/HTTP\s+(\d{3})/); return x ? +x[1] : 0; })();
+    const _net = !_st && /fetch|network|load|timeout/i.test(_m);
+    const head = _net ? '无法连接到服务' : (_st >= 500 ? '服务内部错误' : '请求未被接受');
+    const why = _net
+      ? `最可能的原因：<b>API 服务没在运行</b>。它在独立进程里，
+         关掉那个窗口或进程被回收后就查不了。`
+      : (_st >= 500
+        ? `<b>服务还活着</b>，但处理这次请求时内部出错（HTTP ${_st}）。
+           多半是这条问句触发了某个分支的缺陷 —— 换个说法通常能绕过。`
+        : `服务收到了请求但拒绝了它（HTTP ${_st}），请检查问法或参数。`);
     $('#rout').innerHTML = `
       <div class="card">
-        <h3>无法连接到服务</h3>
+        <h3>${head}</h3>
         <div class="alert err">
-          ${esc(e.message)}
-          <div style="margin-top:10px">
-            最可能的原因：<b>API 服务已停止</b>。它在独立进程里运行，
-            关掉终端或进程被回收后界面就无法查询。
-          </div>
+          ${esc(_m)}
+          <div style="margin-top:10px">${why}</div>
         </div>
-        <div class="meta" style="margin-top:12px">
+        ${_net ? `<div class="meta" style="margin-top:12px">
           重新启动：在<b>项目根目录</b>执行 <code>python start.py</code><br>
           或 <code>python api/main.py --no-vector</code><br>
           再打开 <code>http://127.0.0.1:8765</code>
-        </div>
+        </div>` : ''}
         <div class="meta" style="margin-top:8px">
           当前页面地址：<code>${esc(location.href)}</code><br>
           界面请求的地址：<code>${esc(location.origin)}</code>

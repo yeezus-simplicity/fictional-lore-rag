@@ -906,8 +906,14 @@ def query(
     # ★ 图片可能走网络抓取（首次 5-15 秒），所以：
     #   - 只在认得出实体时做
     #   - 严格限时，失败就返回空列表，不影响主答案
+    # ★★ M58b：sid 必须在这里就初始化 ★★
+    #   它原来只在 `if route != "abstain" and _images_enabled():` 里面赋值
+    #   （见下方媒体块），而**形态链那段代码在 if 之外**读它 ——
+    #   实测：问句被判 abstain（或禁用图片）时，那段 if 整块跳过 →
+    #   `if sid and ...` 直接 UnboundLocalError → 整个请求 **500**。
+    #   前端只显示「无法连接到服务」，把用户引向了错误方向（服务其实活着）。
+    sid = None
     if route != "abstain" and _images_enabled():
-        sid = None
         if isinstance(answer, dict):
             sid = answer.get("stand_id")
             # ★★ 修复：stand_of / stands_of_owner 的替身名在 **stands 列表**里，
@@ -1085,7 +1091,12 @@ def query(
     if sid and STATE.get("conn"):
         try:
             _c = STATE["conn"].cursor()
-            _forms_out = _forms_of(_c, sid, (zh_card or {}).get("name_zh")) or None
+            # ★★ M58b：标签用**母体**的名字，不是当前替身的 ★★
+            #   否则点进某个形态后，标签会变成「獠牙ACT1 ACT2」，越点越长，
+            #   最后拼出「獠牙ACT1 ACT4」这种查不到的句子（实测会 500）。
+            _base = re.sub(r"_act\d+$", "", sid)
+            _zhm = (STATE.get("zh_map") or {}).get(_base) or {}
+            _forms_out = _forms_of(_c, sid, _zhm.get("name_zh")) or None
             _c.close()
         except Exception:  # noqa: BLE001
             _forms_out = None

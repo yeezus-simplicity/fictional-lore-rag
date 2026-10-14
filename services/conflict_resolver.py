@@ -689,7 +689,34 @@ class Router:
         signals: dict[str, Any] = {}
 
         # ---------- 1. 无答案判定（优先，最容易误判的地方） ----------
-        fabricated_signal = bool(self.FABRICATED_HINTS.search(q))
+        # ★★ M58b：编造信号词要**窄判** ★★
+        #   实测踩坑（用户报的「点一个 ACT 后其他都不管用」）：
+        #   FABRICATED_HINTS 里有 `act\s*4`（T6 评测集的假想替身叫「ACT4」），
+        #   而 **Tusk ACT4 是我们库里真实的形态成员** → 一刀切拒答，
+        #   用户问「獠牙 ACT4 的六维能力」直接被拦下，连带**整块档案卡与形态标签
+        #   都不渲染** → 后面点别的形态毫无反应。
+        #   ★ 不能改成"问句里有已知替身就放过"：T6 的编造题大多**同时提到真替身**
+        #     （「替身 Star Platinum Ultimate 的使用者是谁」、
+        #       「Tusk Final Form 是否有官方认证…」）→ 那样会把 9 条拒答题放过去。
+        #   → 判据收窄为：命中词被**某个已知别名包含**时才算误伤。
+        #     「獠牙 ACT4」含 ACT4 → 放过 ✓
+        #     「Star Platinum」不含 Ultimate → 仍然拒答 ✓
+        _fab = self.FABRICATED_HINTS.search(q)
+        fabricated_signal = bool(_fab)
+        if _fab and self.known_all:
+            _frag = re.sub(r"\s+", " ", _fab.group(0)).strip().lower()
+            # ★ 比对时**去掉所有空格**：别名表里存的是「獠牙ACT4」，
+            #   用户写的是「獠牙 ACT4」—— 实测因为这个空格没对上，
+            #   Tusk ACT4 依然被当成编造词拒答。
+            _frag_ns = _frag.replace(" ", "")
+            _qns = re.sub(r"\s+", "", q).lower()
+            for _a in self.known_all:
+                _a2 = re.sub(r"\s+", " ", str(_a)).strip().lower()
+                if len(_a2) > len(_frag) and _frag in _a2 \
+                        and _a2.replace(" ", "") in _qns:
+                    fabricated_signal = False
+                    signals["fabricated_hint_as_alias"] = _a2
+                    break
         # 第二类信号：问不存在的内容（第9 部 / 版本号）
         oor_part = bool(self.OUT_OF_RANGE_PART.search(q))
         version_like = bool(self.VERSION_LIKE.search(q))

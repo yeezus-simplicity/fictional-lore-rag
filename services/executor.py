@@ -588,13 +588,26 @@ class StructuredExecutor:
             #   但它那条是「Only during replays」—— 只在回放时成立。
             #   不标出来，这个第一名就是误导。
             sql = """
-                SELECT o.name_en, o.part, o.{d}, o.name_ja, c.condition_note
+                SELECT o.name_en, o.part, o.{d}, o.name_ja, c.condition_note,
+                       o.{d}_cat
                 FROM v_stand_overview o
                 LEFT JOIN stand_stat_conditional c
                        ON c.stand_id = o.stand_id AND c.stat_dim = %s
-                WHERE o.composite IS NOT NULL AND o.{d} IS NOT NULL
+                -- ★★ M54：把「∞（无限）」放进排名，并排在 A 之前 ★★
+                --   以前 `o.{d} IS NOT NULL` 直接把它排除 ——
+                --   实测「速度最高的是谁」漏掉了速度无限的天堂制造，
+                --   返回的是 A 级的 Ball Breaker。
+                --   ∞ 的数值列是 NULL（放不进 1..5），所以三个条件都要放宽：
+                --     · composite IS NOT NULL（原过滤：六维不全就不参评）
+                --     · {d} IS NOT NULL
+                WHERE (o.composite IS NOT NULL OR o.{d}_cat = 'INFINITE')
+                  AND (o.{d} IS NOT NULL OR o.{d}_cat = 'INFINITE')
                 {part_filter}
-                ORDER BY o.{d} DESC, o.name_en
+                -- ★ 先按「是不是 ∞」排（true 在前），再按数值降序。
+                --   DESC 默认 NULLS FIRST（Postgres）→ 必须显式 NULLS LAST，
+                --   否则 ∞ 那一行的数值 NULL 会跑到最前面。
+                ORDER BY (o.{d}_cat = 'INFINITE') DESC NULLS LAST,
+                         o.{d} DESC NULLS LAST, o.name_en
                 LIMIT %s
             """
             # ★ psycopg2 的 execute() 返回 None，结果要用 cur.fetchall() 取
@@ -607,9 +620,17 @@ class StructuredExecutor:
                         params)
             rows = cur.fetchall()
             items = []
+            n_inf = 0
             for r in rows:
+                _cat = r[5]
+                _inf = (_cat == "INFINITE")
+                if _inf:
+                    n_inf += 1
+                # ★ M54：INFINITE 的 value 是 NULL → label 用 level_label 得 '∞'
                 it = {"name": r[0], "part": r[1], "value": r[2],
-                      "label": LEVEL_CN.get(r[2]), "name_ja": r[3]}
+                      "label": level_label(r[2], _cat), "name_ja": r[3]}
+                if _inf:
+                    it["infinite"] = True
                 if r[4]:
                     it["conditional_note"] = r[4]
                     it["conditional_note_cn"] = explain_condition(r[4], dim)
@@ -621,15 +642,25 @@ class StructuredExecutor:
                 "part": part, "limit": n,
                 "items": items,
             }
+            _caveats = []
+            if n_inf:
+                # ★ 必须说明排在前面的原因，否则「∞ 排第一」看着像系统 bug
+                _caveats.append(
+                    f"榜单含 {n_inf} 项「∞（无限）」：源数据里它不是等级数字"
+                    f"（数值列为空），此处按「高于 A 级」排在 A 之前。"
+                    f"它无法与 A~E 直接比较，只表示「超出该刻度」。")
             if n_cond:
                 # ★ 明说有几个带条件 —— 不加这句，榜单看起来全是硬实力
-                result["caveat"] = (
+                _caveats.append(
                     f"该榜单有 {n_cond} 项带条件限定（已在条目上标注）："
                     f"这些值只在特定条件下成立，不代表无条件时的水平。")
+            if _caveats:
+                result["caveat"] = " ".join(_caveats)
             return (
                 result,
                 [{"type": "database", "table": "v_stand_overview",
-                  "note": f"按 {dim} 降序，已过滤 composite IS NOT NULL"}
+                  "note": f"按 {dim} 降序（∞ 视为高于 A）；"
+                          f"过滤 composite IS NOT NULL 或该维为 ∞"}
                  ] + ([{"type": "database", "table": "stand_stat_conditional",
                         "note": f"{n_cond} 项带条件限定（来自源数据 condition_note）"}]
                       if n_cond else []),
@@ -679,28 +710,61 @@ class StructuredExecutor:
         agg = "ASC" if ("最低" in question or "最小" in question) else "DESC"
         word = "最低" if agg == "ASC" else "最高"
         dim = dim or "PWR"
-        sql = f"""
-            SELECT name_en, part, {dim.lower()}, {dim.lower()}_cat
-            FROM v_stand_overview
-            WHERE composite IS NOT NULL AND {dim.lower()} IS NOT NULL
-            {"" if part is None else "AND part = %s"}
-            ORDER BY {dim.lower()} {agg}, name_en
-        """
+        _d = dim.lower()
+        if agg == "DESC":
+            # ★★ M54：最高 —— 「∞（无限）」不是缺失，它比 A 更高 ★★
+            #   以前 `{d} IS NOT NULL` 把它整行排除 → 「速度最高的是谁」
+            #   漏掉速度无限的天堂制造。
+            sql = f"""
+                SELECT name_en, part, {_d}, {_d}_cat
+                FROM v_stand_overview
+                WHERE (composite IS NOT NULL OR {_d}_cat = 'INFINITE')
+                  AND ({_d} IS NOT NULL OR {_d}_cat = 'INFINITE')
+                {"" if part is None else "AND part = %s"}
+                ORDER BY ({_d}_cat = 'INFINITE') DESC NULLS LAST,
+                         {_d} DESC NULLS LAST, name_en
+            """
+        else:
+            # ★ 最低：∞ 不是「最低」，保持排除（与既有行为一致）
+            sql = f"""
+                SELECT name_en, part, {_d}, {_d}_cat
+                FROM v_stand_overview
+                WHERE composite IS NOT NULL AND {_d} IS NOT NULL
+                {"" if part is None else "AND part = %s"}
+                ORDER BY {_d} ASC, name_en
+            """
         cur.execute(sql, (part,) if part else ())
         rows = cur.fetchall()
         if not rows:
             return None, [{"note": "无满足条件的替身（六维不完整）"}]
-        top = rows[0][2]
-        winners = [r for r in rows if r[2] == top]
+        top, top_cat = rows[0][2], rows[0][3]
+        # ★ M54：top 为 NULL 时只有一种可能 —— 它是 ∞（其余 NULL 已被 WHERE 排除），
+        #   所以并列项要按 cat 判，不能按 `r[2] == top`（None == None 会误并）
+        winners = ([r for r in rows if r[3] == "INFINITE"]
+                   if top_cat == "INFINITE"
+                   else [r for r in rows if r[2] == top])
+        result = {
+            "type": "extreme", "dimension": dim, "dimension_cn": DIM_CN[dim],
+            "direction": word, "part": part, "value": top,
+            # ★ M54：∞ 的 value 是 NULL → level_label 给 '∞'（不是 None → 前端「—」）
+            "value_label": level_label(top, top_cat),
+            "winners": [{"name": r[0], "part": r[1], "cat": r[3]}
+                        for r in winners],
+        }
+        if top_cat == "INFINITE":
+            result["caveat"] = (
+                f"{DIM_CN[dim]}最高的是「∞（无限）」—— 它不是一个等级数字，"
+                f"此处按「高于 A 级」列出；它无法与 A~E 直接比较。")
         return (
-            {"type": "extreme", "dimension": dim, "dimension_cn": DIM_CN[dim],
-             "direction": word, "part": part, "value": top,
-             "value_label": LEVEL_CN.get(top),
-             "winners": [{"name": r[0], "part": r[1], "cat": r[3]}
-                         for r in winners]},
+            result,
             [{"type": "database", "table": "v_stand_overview",
-              "note": f"ORDER BY {dim} {agg}；已过滤 composite IS NOT NULL "
-                      f"（★ 缺任一维时composite 为 NULL，不代表能力低）"}],
+              "note": (f"ORDER BY {dim} {agg}；"
+                       f"∞（无限）视为高于 A —— 它的数值列是空的，"
+                       f"所以先按「是否 ∞」排、再按数值排"
+                       if agg == "DESC" else
+                       f"ORDER BY {dim} {agg}；已过滤 composite IS NOT NULL "
+                       f"（★ 缺任一维时 composite 为 NULL，不代表能力低；"
+                       f"∞ 也不参评「最低」）")}],
         )
 
     # ---------------------------------------------------------

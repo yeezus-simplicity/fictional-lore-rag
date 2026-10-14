@@ -35,39 +35,75 @@ body {
   font: 14px/1.6 -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
   min-height: 100vh;
 }
-/* 顶栏 */
-header {
-  border-bottom: 1px solid var(--border);
-  padding: 14px 22px;
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  position: sticky;
-  top: 0;
-  background: var(--bg);
+/* ★★ M54：左侧导航栏（原「顶栏」）★★
+   .app 是「侧栏 + 内容」的两列容器；侧栏 sticky 常驻，
+   内容区 .wrap 自适应剩余宽度。窄屏（≤900px）整块转成上下布局。 */
+.app { display: flex; align-items: flex-start; min-height: 100vh; }
+.side {
+  flex: 0 0 216px; width: 216px;
+  position: sticky; top: 0; align-self: stretch;
+  height: 100vh; overflow-y: auto;
+  display: flex; flex-direction: column; gap: 16px;
+  padding: 18px 14px 14px;
+  background: var(--bg-panel);
+  border-right: 1px solid var(--border);
   z-index: 10;
 }
-header h1 { font-size: 15px; font-weight: 600; letter-spacing: .3px; }
-header .sub { color: var(--text-faint); font-size: 12px; }
+.brand-name { font-size: 15px; font-weight: 600; letter-spacing: .3px; }
+.brand-sub { font-size: 11px; color: var(--text-faint); margin-top: 4px; }
+.side nav { display: flex; flex-direction: column; gap: 4px; margin: 0; }
+.side nav button {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 2px;
+  width: 100%; text-align: left; padding: 8px 11px; cursor: pointer;
+  background: none; border: 1px solid transparent;
+  border-left: 2px solid transparent; border-radius: 4px;
+  color: var(--text-dim); font-size: 13px;
+}
+.side nav button:hover { color: var(--text); background: var(--bg-hover); }
+.side nav button.on {
+  color: var(--text); background: var(--bg);
+  border-color: var(--border-strong); border-left-color: var(--accent);
+}
+/* 每项下的一行说明 —— 让 4 项导航自带"这里是干什么的" */
+.nb { font-size: 11px; font-weight: 400; color: var(--text-faint); }
+.side nav button.on .nb { color: var(--text-dim); }
+.side-foot {
+  margin-top: auto; padding-top: 12px; line-height: 1.8;
+  border-top: 1px solid var(--border);
+  font-size: 11px; color: var(--text-faint);
+}
 /* 服务状态灯 */
 #dot { font-size: 11px; margin-right: 4px; color: var(--text-faint); }
 #dot.ok { color: var(--ok); }
 #dot.bad { color: var(--err); }
 #dot.wait { color: var(--warn); }
-nav { display: flex; gap: 2px; margin-left: auto; }
-nav button {
-  background: none; border: 1px solid transparent; color: var(--text-dim);
-  padding: 5px 13px; cursor: pointer; font-size: 13px; border-radius: 4px;
-}
-nav button:hover { color: var(--text); background: var(--bg-hover); }
-nav button.on {
-  color: var(--text); border-color: var(--border-strong);
-  background: var(--bg-panel);
-}
+.side-stat { color: var(--text-faint); }
 /* 布局 */
-.wrap { max-width: 1180px; margin: 0 auto; padding: 22px; }
+.wrap { flex: 1 1 auto; min-width: 0;
+        max-width: 1180px; margin: 0 auto; padding: 22px; }
 .view { display: none; }
 .view.on { display: block; }
+/* ★ M54：窄屏 —— 侧栏转为**顶部横条**，导航横排、说明文字收起。
+   （原来顶栏在窄屏就是横的，行为上等价，不会让人陌生） */
+@media (max-width: 900px) {
+  .app { flex-direction: column; }
+  .side {
+    position: static; height: auto; width: 100%; flex: 0 0 auto;
+    flex-direction: row; align-items: center; gap: 10px;
+    padding: 10px 14px; border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .side nav { flex-direction: row; flex-wrap: wrap; gap: 4px; }
+  .side nav button {
+    width: auto; flex-direction: row; align-items: center; gap: 0;
+    padding: 5px 12px; border-left-width: 1px;
+  }
+  .nb { display: none; }
+  .side-foot { margin: 0 0 0 auto; padding-top: 0; border-top: none;
+    text-align: right; line-height: 1.5; }
+  .side-stat { display: none; }
+  .wrap { padding: 16px; }
+}
 /* 查询框 */
 .qbox { display: flex; gap: 8px; margin-bottom: 18px; }
 input[type=text] {
@@ -527,6 +563,8 @@ td.num { font-family: var(--mono); font-size: 12px; text-align: right; }
   margin-left: 6px;
 }
 .tag.c-cond { border-color: var(--warn); color: var(--warn); cursor: help; }
+/* ★ M54：∞（无限）的条目 —— 与主色一致，区别于「有等级」的条目 */
+.tag.c-inf { border-color: var(--accent); color: var(--accent); cursor: help; }
 
 .ok { color: var(--ok); } .bad { color: var(--err); }
 .empty { color: var(--text-faint); font-size: 13px; padding: 22px; text-align: center; }
@@ -535,19 +573,30 @@ td.num { font-family: var(--mono); font-size: 12px; text-align: right; }
 </head>
 <body>
 
-<header>
-  <h1>fictional-lore-rag</h1>
-  <span class="sub">替身数据混合检索问答</span>
-  <span id="dot" title="服务状态">●</span><span id="dotTxt" class="sub">连接中</span>
-  <nav>
-    <button class="on" data-v="q">问答</button>
-    <button data-v="b">数据浏览</button>
-    <button data-v="c">冲突记录</button>
-    <button data-v="s">系统状态</button>
-  </nav>
-</header>
+<!-- ★★ M54：顶部 header 改成**左侧导航栏** ★★
+     用户要求：「帮我做个左侧导航栏」。
+     原来的横条 nav 会随内容滚动走（position:sticky 但占满整行宽度），
+     改成侧栏后导航常驻在左、内容区在右，且状态灯/规模数字有了固定位置。
+     ★ #dot / #dotTxt 的 id 必须保留 —— ping() 靠它们更新服务状态。 -->
+<div class="app">
+  <aside class="side">
+    <div class="brand">
+      <div class="brand-name">fictional-lore-rag</div>
+      <div class="brand-sub">替身数据混合检索问答</div>
+    </div>
+    <nav>
+      <button class="on" data-v="q">问答<span class="nb">用中文 / 英文 / 日文名提问</span></button>
+      <button data-v="b">数据浏览<span class="nb">按替身查六维与出处</span></button>
+      <button data-v="c">冲突记录<span class="nb">同一维度多来源不一致</span></button>
+      <button data-v="s">系统状态<span class="nb">索引、语料与数据库</span></button>
+    </nav>
+    <div class="side-foot">
+      <div><span id="dot" title="服务状态">●</span><span id="dotTxt">连接中</span></div>
+      <div id="sideStat" class="side-stat"></div>
+    </div>
+  </aside>
 
-<div class="wrap">
+  <main class="wrap">
 
 <!-- ══════════ 问答 ══════════ -->
 <div class="view on" id="v-q">
@@ -608,6 +657,7 @@ td.num { font-family: var(--mono); font-size: 12px; text-align: right; }
   <div id="sans" class="loading">加载中…</div>
 </div>
 
+  </main>
 </div>
 
 <script>
@@ -682,6 +732,8 @@ function setMode(m){
 //   API 才需要后端。加个探活，用户不用靠「查询失败」才发现服务挂了。
 async function ping(){
   const dot=$('#dot'), txt=$('#dotTxt');
+  // ★ M54：侧栏底部再显示一行规模数字（替身数 / 语料块数）
+  const st=$('#sideStat');
   try{
     const r = await fetch(API+'/health', {cache:'no-store'});
     const d = await r.json();
@@ -698,9 +750,12 @@ async function ping(){
       dot.className='wait'; dot.title='数据库降级中';
       txt.textContent=`已连接·降级 · ${idx}`;
     }
+    if(st) st.textContent =
+      `替身 ${d.n_stands ?? '?'} · 语料 ${d.n_chunks ?? '?'} 块`;
   }catch(e){
     dot.className='bad'; dot.title='服务未启动';
     txt.textContent='服务未启动';
+    if(st) st.textContent='';
   }
 }
 ping();
@@ -961,19 +1016,25 @@ function renderAnswer(d){
   }
   else body = esc(String(a ?? '（无内容）'));
 
-  // ★★ M36：替身档案 + 六维雷达**合并为一张卡**，答案另起一张卡 ★★
-  //   用户原话：「界面上的替身档案和六维放在一起吗 答案单独放在下方」。
-  //   之前档案、答案、雷达图是三张独立卡片，读起来割裂
-  //   （六维是档案的一部分，却夹在答案和图片中间）。
-  let html = `${renderStandPanel(d)}<div class="card">
+  // ★★ M54：答案卡移到**最上面** ★★
+  //   用户原话：「帮我把答案调到替身档案之上 让人一下子就能看到答案」。
+  //   原顺序 [档案+雷达] → [答案（含图片/证据）] —— 答案被压在档案下面，
+  //   要滚动才看得到。
+  //   新顺序：[答案] → [替身档案 + 六维雷达] → [图片 + 证据] → [相似替身]
+  //   ★ 图片与证据从「答案卡」里**分出来**单独成卡：
+  //     它们各有自己的标题（「相关图片」/「检索过程」），
+  //     留在答案卡里只会让"答案"这张卡很长，把档案挤得更靠下。
+  let html = `<div class="card">
     <h3>答案${d.mode==='generate'?' <span style="color:var(--warn);font-weight:400">（生成式）</span>':''}</h3>
     <div class="answer ${refused?'answer-refused':''}${isHtml?' ans-html':''}">${body}</div>`;
   if(d.warning) html += `<div class="alert">⚠ ${esc(d.warning)}</div>`;
   if(d.generation) html += renderGeneration(d.generation, d.faithfulness);
-  // ★★ M17：六维雷达图 + 替身图片
-  html += renderMedia(d);
-  html += renderEvidence(d.evidence);
   html += '</div>';
+  html += renderStandPanel(d);
+  // ★ M17：替身图片 + 检索证据（两样都是"补充材料"，放最后）
+  const _media = renderMedia(d);
+  const _ev = renderEvidence(d.evidence);
+  if(_media || _ev) html += `<div class="card">${_media}${_ev}</div>`;
   html += '<div id="simBox"></div>';   // ★ M32：相似替身占位
   $('#ans').innerHTML = html;
   // ★ M19：图片渲染完按真实宽高比调整卡片高度（否则竖图留大片空白）
@@ -1226,11 +1287,24 @@ function renderStructured(a){
     const caveat = a.caveat
       ? `<div class="caveat"><div class="cv-body">${esc(a.caveat)}</div></div>`
       : '';
+    // ★ M54：∞ 的条目要显式标出来 —— 它被排在 A 之前，
+    //   不标的话看着像排序错了（实测「速度最高」榜首是天堂制造 ∞）。
+    //   ★ 兼容两种数据：extreme_top 的 items 带 `infinite` 标记，
+    //     而 extreme(max/min) 的 winners 只有 `cat`。
+    const dim = a.dimension_cn || '';
+    const tagOf = x => {
+      const inf = x.infinite || x.cat === 'INFINITE';
+      const tip = [
+        x.conditional_note ? esc(x.conditional_note) : '',
+        inf ? `${esc(dim)} ∞（无限，超出 E~A 等级，无法与等级直接比较）` : '',
+      ].filter(Boolean).join(' · ');
+      return `<span class="tag${x.conditional_note ? ' c-cond' : ''}${
+        inf ? ' c-inf' : ''}" title="${tip}">${esc(x.name)}${
+        inf ? ' ∞' : ''}${x.conditional_note ? ' ※' : ''}</span>`;
+    };
     return `<div style="margin-bottom:8px">${esc(a.dimension_cn)} ${esc(a.direction||'最高')}
       = <b>${esc(a.value_label ?? (items[0]&&items[0].label) ?? '—')}</b></div>
-      <div>${items.map(x=>`<span class="tag${x.conditional_note?' c-cond':''}"
-        title="${x.conditional_note? esc(x.conditional_note):''}"
-        >${esc(x.name)}${x.conditional_note?' ※':''}</span>`).join('')}</div>
+      <div>${items.map(tagOf).join('')}</div>
       ${caveat}`;
   }
   if(t==='count' || t==='count_by_level'){

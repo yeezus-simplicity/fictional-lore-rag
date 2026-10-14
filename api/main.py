@@ -27,11 +27,12 @@ import re# ★ M14：别名表要用它判断「含中文」
 import sys
 import time
 from contextlib import asynccontextmanager
+from datetime import datetime
 from pathlib import Path
 from typing import Any, Optional
 
 from fastapi import FastAPI, HTTPException, Query
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, Response
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
@@ -411,6 +412,11 @@ class HealthResponse(BaseModel):
     # ★ M12：把索引配置暴露出来 —— 用户要能确认「当前用的是哪套索引」
     chunk_merge_target: Optional[int] = None
     n_chunks: int = 0
+    # ★ M56：网页构建号 = index.html 的修改时间。
+    #   ★ 必须写进模型 —— `response_model` 会**静默丢掉**未声明的字段，
+    #     实测踩坑：health() 里 return 了 web_build，但接口上没有，
+    #     页面拿不到值就无法自检"我看到的是不是最新页面"。
+    web_build: Optional[str] = None
 
 
 # ==================================================================
@@ -440,6 +446,32 @@ app.add_middleware(
 STATIC_DIR = Path(__file__).resolve().parent / "static"
 
 
+def _web_build() -> str:
+    """网页构建标记 = index.html 的修改时间（MM-DD HH:MM）。
+
+    ★ 注意：这个函数**不能带路由装饰器**。
+      实测踩坑：插入它时把原来 `@app.get("/")` 那行留在了它头上，
+      于是 `/` 被它接管 —— 页面变成 13 字节的 JSON 字符串
+      （`"10-14 18:17"`），整个网页白屏。而 FastAPI 不会报错，
+      因为 "/" 注册两次时**先注册的那个生效**，`root()` 被静默忽略。
+      → 新增函数时，装饰器必须紧贴它自己的函数定义。
+
+    ★★ M56：为什么要把构建号**注入页面** ★★
+      用户反复说「网页还是没区别」，而我这边 `curl /` 明明是新版 ——
+      双方都无法判断是「浏览器缓存了旧页面」还是「他开的是另一个服务」。
+      → 页面上直接印出这个数字，并且 `/health` 也返回同一个值：
+          · 页面上的数字 == 服务器上的数字 → 看到的就是最新的
+          · 数字偏旧  → 浏览器缓存了旧页面（页面自己会提示强制刷新）
+          · 显示占位符 `__WEB_BUILD__` → 服务进程是旧的（不会做替换）
+            → 页面提示「请重启 start.bat」
+    """
+    html = STATIC_DIR / "index.html"
+    if not html.exists():
+        return "无"
+    return datetime.fromtimestamp(
+        html.stat().st_mtime).strftime("%m-%d %H:%M")
+
+
 @app.get("/", include_in_schema=False)
 def root():
     """★ 网页界面（单文件 HTML，零依赖）。
@@ -454,11 +486,25 @@ def root():
       ★ 对比：图片走 `/images/...` 那条路**故意**设了
         `max-age=604800`（内容不变，缓存划算）——
         两者策略不同是有意的。
+
+    ★★ M56：同时在响应体里替换构建标记 ★★
+      缓存头只能约束"从这一刻起"的浏览器；对于**在加这个头之前**
+      就已经缓存过的旧页面，浏览器可能一直不回来验证。
+      注入构建号的好处是：即使看到的是缓存页，用户也能一眼看出"这是旧的"。
     """
     html = STATIC_DIR / "index.html"
     if html.exists():
-        return FileResponse(
-            html,
+        # ★★ 占位符在整份 HTML 里只出现一次（那个 <b> 里），这里也只换第一次 ★★
+        #   实测踩坑：原来是 `replace(占位符, 构建号)`（**全局**），
+        #   结果把 JS 里的 `mine === '<占位符>'` 也一起改写了 ——
+        #   于是页面把「正确的构建号」判成「没被替换」，
+        #   自己误报"旧版本"。文本替换是**不看上下文**的，必须限制范围。
+        txt = html.read_text(encoding="utf-8").replace(
+            "__WEB_BUILD__", _web_build(), 1)
+        #   ★ 这里**不做断言** —— 请求路径上断言会让首页 500，
+        #     代价远大于"多出一个占位符"。由 test_m56 守住"只允许一处"。
+        return Response(
+            txt, media_type="text/html; charset=utf-8",
             headers={"Cache-Control": "no-cache, must-revalidate"})
     return {
         "service": "fictional-lore-rag 混合检索 API",
@@ -577,6 +623,9 @@ def health():
         "chunk_merge_target": STATE.get("chunk_merge_target"),
         "n_chunks": len(STATE.get("semantic")._chunks)
                      if STATE.get("semantic") else 0,
+        # ★ M56：网页构建号（= index.html 的 mtime）。页面拿它自检
+        #   「你看到的是不是最新页面」，见 _web_build() 的说明
+        "web_build": _web_build(),
     }
 
 

@@ -21,6 +21,7 @@
 from __future__ import annotations
 
 import argparse
+from datetime import datetime
 import socket
 import subprocess
 import sys
@@ -83,11 +84,32 @@ def banner(port: int, with_vector: bool,
     print()
 
 
+def web_url(port: int) -> str:
+    """网页地址 —— ★ M56：带上构建号参数，**强制拿到最新页面**。
+
+    为什么需要：用户反复反馈「网页还是没区别」，而服务端明明是新版。
+    浏览器缓存是**按完整 URL** 分的，所以只要 URL 变一次，
+    缓存就必然失效。这里用 `index.html` 的修改时间当参数：
+      · 页面没改 → 参数不变 → 仍旧命中缓存（快）
+      · 页面改过 → 参数自动变 → 一定重新下载
+    比"教用户按 Ctrl+Shift+R"可靠得多 —— 那是要人记住的操作，
+    而这是双击 bat 就自动生效的。
+    """
+    url = f"http://127.0.0.1:{port}/"
+    try:
+        mt = (ROOT / "api" / "static" / "index.html").stat().st_mtime
+        # 用「月日时分秒」当构建号：可读，且改一次变一次（精确到秒）
+        url = f"http://127.0.0.1:{port}/?v={datetime.fromtimestamp(mt):%m%d%H%M%S}"
+    except OSError:
+        pass
+    return url
+
+
 def open_browser_later(port: int, delay: float = 18.0) -> None:
     """等服务起来后再开浏览器。"""
     def go() -> None:
         time.sleep(delay)
-        url = f"http://127.0.0.1:{port}"
+        url = web_url(port)
         try:
             webbrowser.open(url)
             print(f"  已打开浏览器：{url}")
@@ -126,8 +148,11 @@ def main() -> int:
     if port_in_use(port):
         print(f"✗ 端口 {port} 已被占用。")
         print()
-        print("  可能服务已在运行 —— 直接访问：")
-        print(f"    http://127.0.0.1:{port}")
+        print("  可能服务已在运行 —— 直接访问（★ 已带构建号，不会拿到缓存旧页）：")
+        print(f"    {web_url(port)}")
+        print()
+        print("  ★ 若页面看起来还是旧的：上面这个链接的 v= 值就是当前网页的构建号，")
+        print("    把它换成别的数字（如 ?v=1）再回车，缓存一定失效。")
         print()
         print("  若要停止它：")
         print(f'    netstat -ano | findstr ":{port}"     查出 PID')

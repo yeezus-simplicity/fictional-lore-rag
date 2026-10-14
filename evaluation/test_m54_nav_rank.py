@@ -53,18 +53,29 @@ PORT = 8798
 PY = sys.executable
 
 
-def wait_ready(port: int, timeout: float = 150) -> bool:
+def wait_ready(port: int, timeout: float = 240) -> bool:
+    """等到**能真正应答**为止。
+
+    ★ 实测踩坑：uvicorn「先 bind 端口，再跑启动事件」——
+      只探测 TCP 端口会「假就绪」，请求拿不到响应，
+      失败信息还会误导（表现为"响应体不对"而不是"服务没起来"）。
+      → 轮询 /health 拿到 200 才算就绪；并给服务加 --no-vector（与向量无关）。
+    """
     t0 = time.time()
     while time.time() - t0 < timeout:
-        s = socket.socket()
-        s.settimeout(1.5)
+        c = http.client.HTTPConnection("127.0.0.1", port, timeout=5)
         try:
-            s.connect(("127.0.0.1", port))
-            return True
-        except OSError:
-            time.sleep(2)
+            c.request("GET", "/health")
+            if c.getresponse().status == 200:
+                return True
+        except Exception:  # noqa: BLE001
+            pass
         finally:
-            s.close()
+            try:
+                c.close()
+            except Exception:  # noqa: BLE001
+                pass
+        time.sleep(2)
     return False
 
 
@@ -167,7 +178,7 @@ def main() -> int:
     print("\n[4] 端到端排名（127.0.0.1:%d）" % PORT)
     log = (ROOT / ".tmp_preview" / "_m54_server.log").open("w", encoding="utf-8")
     proc = subprocess.Popen(
-        [PY, str(ROOT / "api" / "main.py"), "--port", str(PORT)],
+        [PY, str(ROOT / "api" / "main.py"), "--port", str(PORT), "--no-vector"],
         cwd=str(ROOT), stdout=log, stderr=subprocess.STDOUT,
         stdin=subprocess.DEVNULL)
     try:

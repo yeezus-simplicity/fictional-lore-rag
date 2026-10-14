@@ -78,6 +78,11 @@ body {
 #dot.bad { color: var(--err); }
 #dot.wait { color: var(--warn); }
 .side-stat { color: var(--text-faint); }
+/* ★ M56：网页构建号 + 「你看到的是旧页面」自检提示 */
+.side-ver { color: var(--text-faint); }
+.side-ver b { font-weight: 500; color: var(--text-dim);
+              font-family: var(--mono); }
+.side-warn { color: var(--warn); margin-top: 4px; line-height: 1.5; }
 /* 布局 */
 .wrap { flex: 1 1 auto; min-width: 0;
         max-width: 1180px; margin: 0 auto; padding: 22px; }
@@ -598,6 +603,19 @@ td.num { font-family: var(--mono); font-size: 12px; text-align: right; }
     <div class="side-foot">
       <div><span id="dot" title="服务状态">●</span><span id="dotTxt">连接中</span></div>
       <div id="sideStat" class="side-stat"></div>
+      <!-- ★★ M56：网页构建号（服务端注入 index.html 的修改时间）★★
+           用途：用户反复说「网页还是没区别」，而服务端明明是新版 ——
+           光靠"强刷新"这句话解决不了。这里直接印出来 + 自动比对：
+             · 显示具体时间且与服务器一致 → 看到的就是最新页面
+             · 显示「未知」  → 服务是旧进程（不会做替换）→ 重启 start.bat
+             · 与服务器不一致 → 浏览器缓存了旧页面 → 页面下方会自动提示
+           ★ 注意：占位符在整份 HTML 里**只允许出现一次**（就是这个 <b> 里）。
+             不要把它写进注释或 JS 字面量 —— 服务端是"全局文本替换"，
+             会把那些地方一起改写掉。实测踩坑：JS 里原本写的是
+             `mine === '<占位符>'`，被替换成了 `mine === '<构建号>'`，
+             于是「正确的构建号」反而被判成「没被替换」→ 页面自己误报旧版本。 -->
+      <div class="side-ver">网页版本 <b id="webBuild">__WEB_BUILD__</b></div>
+      <div id="verWarn" class="side-warn" hidden></div>
     </div>
   </aside>
 
@@ -732,6 +750,36 @@ function setMode(m){
   h.classList.toggle('gen', m==='generate');
 }
 
+// ---------- ★ M56：页面自检「我是不是旧页面」----------
+//   用户反复反馈「网页还是没区别」，而服务端 `curl /` 明明是新版 ——
+//   原因只可能是两类，但**从界面上看不出来**：
+//     ① 浏览器缓存了旧页面（连 F5 都不回来验证）
+//     ② 打开的不是这个服务（旧进程 / 别的端口）
+//   → 把构建号印在侧栏，并拿服务器返回的构建号自动比对；
+//     不一致就直接把"该怎么办"写在页面上，不用再猜。
+function checkWebBuild(serverBuild){
+  const el = $('#webBuild'), warn = $('#verWarn');
+  if(!el || !warn) return;
+  const mine = el.textContent.trim();
+  // ★★ 不要用「mine === 占位符字面量」来判断"没被替换" ★★
+  //   服务端是**全局文本替换**，写成字面量会被一起改写掉：
+  //   实测踩坑 —— 那个比较式里的字面量被换成了构建号本身，
+  //   于是**正确的构建号反而被判成占位符**，页面自己误报"旧版本"。
+  //   → 改成判断"像不像构建号"（格式校验），就不再依赖会被改写的字面量。
+  const looksLikeStamp = /^\d{2}-\d{2} \d{2}:\d{2}$/.test(mine);
+  let msg = '';
+  if(!looksLikeStamp){
+    // 占位符没被替换 → 服务端是**旧进程**（旧代码不做这个替换）
+    el.textContent = '未知';
+    msg = '服务是旧进程（不会注入构建号）→ 请关掉黑窗口，重新双击 start.bat';
+  }else if(serverBuild && serverBuild !== mine){
+    msg = `你看到的是缓存的旧页面（页面 ${mine} · 服务器 ${serverBuild}）`
+        + ` → 按 Ctrl+Shift+R，或在网址后面加 ?v=2 再回车`;
+  }
+  warn.hidden = !msg;
+  warn.textContent = msg;
+}
+
 // ---------- 服务状态灯 ----------
 // ★ 教训：界面本身能打开不代表服务活着 —— 静态 HTML 是本地文件，
 //   API 才需要后端。加个探活，用户不用靠「查询失败」才发现服务挂了。
@@ -757,12 +805,18 @@ async function ping(){
     }
     if(st) st.textContent =
       `替身 ${d.n_stands ?? '?'} · 语料 ${d.n_chunks ?? '?'} 块`;
+    // ★ M56：拿服务器返回的构建号跟本页自带的比对（见 checkWebBuild）
+    checkWebBuild(d.web_build);
   }catch(e){
     dot.className='bad'; dot.title='服务未启动';
     txt.textContent='服务未启动';
     if(st) st.textContent='';
   }
 }
+// ★ M56：先做一次**不依赖网络**的自检 ——
+//   如果构建号还是占位符，说明服务端是旧进程（旧代码不做替换），
+//   这种情况连 /health 都可能拿不到新字段，所以要在这里先报出来。
+checkWebBuild(null);
 ping();
 setInterval(ping, 10000);
 

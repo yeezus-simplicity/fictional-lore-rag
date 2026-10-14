@@ -671,6 +671,22 @@ def save(stand_id: str, items: list[tuple[str, str, str]],
                  f"{fname[:46]}")
     (d / "_images.json").write_text(
         json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
+
+    # ★ M48c：清掉**上一轮遗留**的图片文件。
+    #   文件名是 `{kind}_{序号}{后缀}`，重抓时张数可能变少（配额/来源变化），
+    #   旧的 `stand_4.jpg` 之类就会留下 —— 实测 `--force` 重跑后
+    #   **150 个替身、547 个残留文件**。
+    #   危害：GUI 若按目录扫图会把旧图也显示出来，且白占磁盘。
+    #   ★ 只在**本次有成功下载**时才清理：全失败时保留原有图，不至于清空。
+    if manifest["images"]:
+        listed = {i["file"] for i in manifest["images"]}
+        for _f in d.iterdir():
+            if (_f.suffix.lower() in (".png", ".jpg", ".jpeg")
+                    and _f.name not in listed):
+                try:
+                    _f.unlink()
+                except OSError:
+                    pass
     return manifest
 
 

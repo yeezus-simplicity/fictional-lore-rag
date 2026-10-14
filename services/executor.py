@@ -56,6 +56,24 @@ CAT_CN = {
     "UNPARSED": "未解析",
 }
 
+
+def level_label(value, cat: str | None = None) -> str | None:
+    """等级值 → 显示文本。
+
+    ★★ M53：INFINITE 的 `value` 是 NULL（∞ 放不进 1..5 的刻度），
+       **但它是有值的** —— raw 列写着「∞」。
+       以前这里一律按 `value is None` 返回 None，于是：
+          用户问「天堂制造的速度是几级」→「数值」显示 **—**
+          （看起来像"没数据"，而事实是"无限"，含义刚好相反）
+       实测全库只有 6 个 INFINITE 维度（4 个替身），
+       类别分布：NOT_APPLICABLE 198 / EMPTY_SLOT 53 / UNKNOWN 16 /
+       **INFINITE 6** / CONDITIONAL_NO_BASE 3
+       —— 只有 INFINITE 的 raw 是一个**值符号**，其余都是真的没有这个数。
+    """
+    if cat == "INFINITE":
+        return "∞"
+    return LEVEL_CN.get(value) if value is not None else None
+
 # 意图识别
 # ★ M31：维度词补上**繁体与日文** —— 原来只有简体，
 #   于是「スタープラチナの破壊力」虽然路由放行了，意图却认不出来，
@@ -489,14 +507,14 @@ class StructuredExecutor:
             "dimension": dim,
             "dimension_cn": DIM_CN[dim],
             "value": v["value"],
-            "value_label": LEVEL_CN.get(v["value"], None) if v["value"] is not None else None,
+            # ★ M53：INFINITE → ∞（不是 None → 前端显示「—」）
+            "value_label": level_label(v["value"], cat),
             "raw": v["raw"],
             "category": cat,
             "category_cn": CAT_CN.get(cat, cat),
             "all_dims": {d: {
                 "value": vals[d]["value"],
-                "label": LEVEL_CN.get(vals[d]["value"])
-                        if vals[d]["value"] is not None else None,
+                "label": level_label(vals[d]["value"], vals[d]["cat"]),
                 "raw": vals[d]["raw"],
                 "category": vals[d]["cat"],
                 # ★ M38：连同中文一起给 —— 前端就不必再抄一份映射
@@ -528,8 +546,7 @@ class StructuredExecutor:
                  "note": conds[d]["note"],
                  "note_cn": explain_condition(conds[d]["note"], d),
                  "value": vals[d]["value"],
-                 "value_label": LEVEL_CN.get(vals[d]["value"])
-                 if vals[d]["value"] is not None else None}
+                 "value_label": level_label(vals[d]["value"], vals[d]["cat"])}
                 for d in others
             ]
 

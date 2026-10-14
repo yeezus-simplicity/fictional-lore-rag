@@ -80,18 +80,28 @@ def _esc(s: str) -> str:
 def radar_svg(stats: dict[str, Optional[int]],
                missing: Optional[Sequence[str]] = None,
                title: str = "",
-               accent: str = "#7F77DD") -> str:
+               accent: str = "#7F77DD",
+               specials: Optional[dict[str, str]] = None) -> str:
     """生成六维雷达图 SVG。
 
     参数
-      stats   : {dim_key: value_or_None}，value ∈ 0..5
-      missing : 明确声明缺失的维度（会与 stats 里的 None 合并）
-      title   : 图上方标题（通常是替身名）
-      accent  : 主色
+      stats    : {dim_key: value_or_None}，value ∈ 0..5
+      missing  : 明确声明缺失的维度（会与 stats 里的 None 合并）
+      title    : 图上方标题（通常是替身名）
+      accent   : 主色
+      specials : {dim_key: 原始字面量} —— **有值、但超出 1..5 刻度**的维度
+                 （目前只有 INFINITE，raw = '∞'）。
+                 ★★ M53：它们**不是「无数据」**。以前和 missing 混在一起，
+                   于是「天堂制造的速度是无限」在图上写成了「无数据」，
+                   下面还注明「未推测为 0」—— 把"无限"说成"没有数据"。
+                 画法：外圈画一个**空心**标记（区别于实心数据点，
+                 表示"超出刻度"），**不连线**（不猜它在刻度上的位置），
+                 标签第二行直接写原始值（∞），并在图下单独说明。
 
     ★ 缺失维度处理见文件头说明：不填 0，连线断开，图下列出。
     """
     missing_set = set(missing or ())
+    special_set = set(specials or {})
     vals: list[Optional[float]] = []
     for k, _ in DIMS:
         v = stats.get(k)
@@ -108,17 +118,33 @@ def radar_svg(stats: dict[str, Optional[int]],
     for i, (k, _) in enumerate(DIMS):
         if k in missing_set:
             vals[i] = None
+    # ★ M53：无限维度也不参与多边形 —— 它在刻度上没有位置可放
+    for i, (k, _) in enumerate(DIMS):
+        if k in special_set:
+            vals[i] = None
 
     # ---- ★ M51：先算好「缺失说明」的位置与行数，再决定画布高度 ----
     #   底部标签是 i=3（正下方），它的第二行基线 = _CY + _R*_LABEL_R + dy。
     #   说明必须写在**它下面**，否则就会像之前那样压在「持续力 A」上。
-    note_lines: list[str] = []
+    #   ★ M53：说明分两类（缺数据 / 无限），逐条按需拆行。
+    raw_notes: list[str] = []
     if missing_set:
-        miss_cn = "、".join(cn for k, cn in DIMS if k in missing_set)
-        note_lines = [f"{miss_cn} 无数据（未推测为 0）"]
+        raw_notes.append(
+            "、".join(cn for k, cn in DIMS if k in missing_set)
+            + " 无数据（未推测为 0）")
+    if special_set:
+        raw_notes.append(
+            "、".join(f"{cn} = {specials.get(k) or '∞'}"
+                      for k, cn in DIMS if k in special_set)
+            + "（无限，超出 E~A 等级，未画入图中）")
+    note_lines: list[str] = []
+    for ln in raw_notes:
         # 中文按 1em/字估算宽度；画布宽 _SIZE，留出边距
-        if len(note_lines[0]) * _NOTE_FS > _SIZE - 16:
-            note_lines = [f"{miss_cn} 无数据", "（未推测为 0）"]
+        if len(ln) * _NOTE_FS > _SIZE - 16 and "（" in ln:
+            head, tail = ln.split("（", 1)
+            note_lines += [head, "（" + tail]
+        else:
+            note_lines.append(ln)
     _label_cy = _CY + _R * _LABEL_R          # 底部标签（i=3，正下方）的中心 y
     _note_y = _label_cy + _NOTE_DY_FROM_BOTTOM
     _height = (_note_y + (len(note_lines) - 1) * (_NOTE_FS + 2) + 6
@@ -178,12 +204,29 @@ def radar_svg(stats: dict[str, Optional[int]],
         x, y = _pt(i, min(v / VMAX, 1.0))
         p.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="3" fill="{accent}"/>')
 
-    # ---- 维度标签（缺失的标「无数据」）----
+    # ---- ★ M53：无限维度 —— 外圈画**空心**标记 ----
+    #   实心点 = 有等级；空心 = 超出刻度（∞），两者一眼可分辨。
+    #   位置放在外圈上（不是刻度上的某一点），并不连线。
+    for i, (k, _) in enumerate(DIMS):
+        if k not in special_set:
+            continue
+        mx, my = _pt(i, 1.0)
+        p.append(f'<circle cx="{mx:.1f}" cy="{my:.1f}" r="3.6" fill="none" '
+                 f'stroke="{accent}" stroke-width="1.6"/>')
+
+    # ---- 维度标签（缺失的标「无数据」；无限的标原始值 ∞）----
     for i, (k, cn) in enumerate(DIMS):
         # 标签放外圈外一点
         lx, ly = _pt(i, _LABEL_R)
         v = vals[i]
-        if v is None:
+        if k in special_set:
+            p.append(f'<text x="{lx:.1f}" y="{ly:.1f}" text-anchor="middle" '
+                     f'dominant-baseline="central" font-size="11" '
+                     f'fill="var(--color-text-secondary,#aaa)">{_esc(cn)}'
+                     f'<tspan x="{lx:.1f}" dy="{_LABEL_LINE2_DY}" font-size="10" '
+                     f'fill="{accent}">{_esc(specials.get(k) or "∞")}</tspan>'
+                     f'</text>')
+        elif v is None:
             p.append(f'<text x="{lx:.1f}" y="{ly:.1f}" text-anchor="middle" '
                      f'dominant-baseline="central" font-size="11" '
                      f'fill="var(--color-text-tertiary,#999)">{_esc(cn)}'

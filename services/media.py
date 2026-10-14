@@ -206,10 +206,12 @@ def image_payload(stand_en: str, stand_id: str, owner: str = "") -> dict:
 # 雷达图：把 DB 的行组装成 radar_svg 需要的输入
 # ------------------------------------------------------------
 DIM_KEYS = ("pwr", "spd", "rng", "sta", "prc", "dev")
+# ★ M53：唯一「有值但超出刻度」的类别（raw 是 ∞）
+_INFINITE_CAT = "INFINITE"
 
 
 def radar_payload(row: dict, missing_count: int = 0) -> dict:
-    """从 stand_stats 行算出 {stats, missing, values}。
+    """从 stand_stats 行算出 {stats, missing, specials, values}。
 
     ★★★ 实测结论（勿再臆测）★★★
       stand_stats 里**没有任何 0 值**：pwr/spd/rng/sta/prc/dev 六列
@@ -220,19 +222,37 @@ def radar_payload(row: dict, missing_count: int = 0) -> dict:
       → 所以缺失判定**只看 IS NULL**，
         绝不能把 0 当成「无数据」或「能力为 0」——
         0 在这个数据集里根本不存在，凭空判它是缺维会错杀真实数据。
+
+    ★★★ M53：但「NULL」不等于「无数据」★★★
+      value 为 NULL 时各类别的实测分布（写判定前先查过，共 276 处）：
+          NOT_APPLICABLE      198   raw=None            该源未提供
+          EMPTY_SLOT           53   raw='∅'             空位（真缺失）
+          UNKNOWN              16   raw='?'             未知（存在争议）
+          **INFINITE            6   raw='∞'             无限 —— 有值！**
+          CONDITIONAL_NO_BASE   3   raw='※…'            条件值无基础等级
+      —— 只有 INFINITE 的 raw 是一个**值符号**，其余都是真的"没有这个数"。
+      把 INFINITE 归进 missing 的后果（用户实测反馈）：
+        「天堂制造的速度是无限」但六维图/明细都写「无数据」，
+        下方还注明「未推测为 0」—— 把"无限"说成"没有数据"，含义刚好相反。
+      → INFINITE 单独走 `specials`（保留原始字面量 ∞），不计入 missing。
     """
     stats: dict[str, Optional[int]] = {}
     missing: list[str] = []
+    specials: dict[str, str] = {}
     vals: dict[str, Optional[int]] = {}
     for k in DIM_KEYS:
         v = row.get(k)
         if v is None:
             stats[k] = None
             vals[k] = None
-            missing.append(k)
+            if (row.get(f"{k}_cat") or "") == _INFINITE_CAT:
+                raw = row.get(f"{k}_raw")
+                specials[k] = str(raw).strip() if raw else "∞"
+            else:
+                missing.append(k)
         else:
             iv = int(v)
             stats[k] = iv
             vals[k] = iv
-    return {"stats": stats, "missing": missing, "values": vals,
-            "missing_count": missing_count}
+    return {"stats": stats, "missing": missing, "specials": specials,
+            "values": vals, "missing_count": missing_count}

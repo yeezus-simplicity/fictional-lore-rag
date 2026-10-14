@@ -839,20 +839,30 @@ def query(
                 c2.execute("""SELECT s.name_en, s.owner_name_raw,
                                   st.pwr,st.spd,st.rng,st.sta,st.prc,st.dev,
                                   st.missing_count, s.part, s.stand_type,
-                                  s.owner_id
+                                  s.owner_id,
+                                  -- ★ M53：雷达图要区分「无限」与「无数据」，
+                                  --   必须带上 raw（∞）与 cat（INFINITE）
+                                  st.pwr_raw,st.spd_raw,st.rng_raw,
+                                  st.sta_raw,st.prc_raw,st.dev_raw,
+                                  st.pwr_cat,st.spd_cat,st.rng_cat,
+                                  st.sta_cat,st.prc_cat,st.dev_cat
                            FROM stands s
                            LEFT JOIN stand_stats st ON st.stand_id=s.stand_id
                            WHERE s.stand_id=%s""", (sid,))
                 row = c2.fetchone()
                 c2.close()
                 if row:
-                    rp = radar_payload(
-                        {k: row[2 + i] for i, k in enumerate(
-                            ("pwr", "spd", "rng", "sta", "prc", "dev"))},
-                        missing_count=row[8] or 0)
+                    _dk = ("pwr", "spd", "rng", "sta", "prc", "dev")
+                    _srow = {k: row[2 + i] for i, k in enumerate(_dk)}
+                    _srow.update({f"{k}_raw": row[12 + i]
+                                  for i, k in enumerate(_dk)})
+                    _srow.update({f"{k}_cat": row[18 + i]
+                                  for i, k in enumerate(_dk)})
+                    rp = radar_payload(_srow, missing_count=row[8] or 0)
                     zh_rec = (STATE.get("zh_map") or {}).get(sid) or {}
                     radar_svg_out = radar_svg(
                         rp["stats"], missing=rp["missing"],
+                        specials=rp["specials"],
                         title=f"{zh_rec.get('name_zh') or row[0]} 六维能力")
 
                     # ★★ M32：中文摘要卡 ★★
@@ -869,9 +879,17 @@ def query(
                         #   否则 ValueError（被下面的 except 吞掉，
                         #   表现成 zh_card 静默为 None）。
                         _order = ["pwr", "spd", "rng", "sta", "prc", "dev"]
+                        _sp = rp.get("specials") or {}
                         _lv = {}
                         for _k, _cn in DIM_CN.items():
-                            _v = row[2 + _order.index(_k.lower())]
+                            _key = _k.lower()
+                            if _key in _sp:
+                                # ★ M53：无限维度 → 显示原始值（∞）。
+                                #   以前走下面那个分支得到 None，前端一律
+                                #   渲染成「无数据」——把"无限"说成"没有数据"。
+                                _lv[_cn] = _sp[_key]
+                                continue
+                            _v = rp["stats"].get(_key)
                             _lv[_cn] = (LEVEL_CN.get(int(_v))
                                         if isinstance(_v, (int, float))
                                         else None)
@@ -1288,11 +1306,14 @@ def get_stand(stand_id: str):
 
     # ★★★ M17：六维雷达图（SVG 内联，免图片请求）
     #   缺失维度留空 + 标注「无数据」，**不填 0**（填 0 会被误读成"能力为零"）
-    stat_row = {k: r[9 + i] for i, k in
-                enumerate(("pwr", "spd", "rng", "sta", "prc", "dev"))}
+    _dk = ("pwr", "spd", "rng", "sta", "prc", "dev")
+    stat_row = {k: r[9 + i] for i, k in enumerate(_dk)}
+    # ★ M53：raw 在 r[17..22]、cat 在 r[23..28]（列顺序见上面 SELECT 的注释）
+    stat_row.update({f"{k}_raw": r[17 + i] for i, k in enumerate(_dk)})
+    stat_row.update({f"{k}_cat": r[23 + i] for i, k in enumerate(_dk)})
     rp = radar_payload(stat_row, missing_count=r[16] or 0)
     radar = radar_svg(
-        rp["stats"], missing=rp["missing"],
+        rp["stats"], missing=rp["missing"], specials=rp["specials"],
         title=f"{name_zh or r[1]} 六维能力")
 
     # ★★★ M17/M18：图片（**异步**，不阻塞响应）
@@ -1319,7 +1340,11 @@ def get_stand(stand_id: str):
         #   索引：r[0..8] 固定字段 → r[9..14] pwr..dev → r[15] composite
         #        → r[16] missing → r[17..22] *_raw → r[23..28] *_cat
         "stats": {d: {"value": r[9 + i],
-                      "label": level_cn.get(r[9 + i]),
+                      # ★ M53：INFINITE 的 value 是 NULL，但**它是有值的**（∞）。
+                      #   返回 None 会让「值」列显示「—」，而同一行
+                      #   「原始」是 ∞、「类别」是无限 —— 自相矛盾。
+                      "label": ("∞" if r[23 + i] == "INFINITE"
+                                else level_cn.get(r[9 + i])),
                       "raw": r[17 + i],
                       "category": r[23 + i]}
                   for i, d in enumerate(dims)},

@@ -76,6 +76,7 @@ import time
 import urllib.parse
 import urllib.request
 from pathlib import Path
+from typing import Optional   # ★ M59：形态专属图用到 Optional[int]
 
 ROOT = Path(__file__).resolve().parents[3]
 IMG_ROOT = ROOT / "images"
@@ -358,13 +359,15 @@ def owner_page_images(stand: str, owner_hint: str = ""
     return user_imgs
 
 
-def page_images_by_kind(stand: str, owner_hint: str = ""
+def page_images_by_kind(stand: str, owner_hint: str = "",
+                        form_n: Optional[int] = None
                         ) -> tuple[list[tuple[str, str]], list[tuple[str, str]]]:
     """抓替身页 + 角色页，返回 (替身页图, 使者图)。
 
     ★ 使者图从**角色页**抓（见 owner_page_candidates 的说明）。
+    ★ M59：形态成员（form_n 有值）只收自己 ACTn 的图。
     """
-    stand_imgs = page_images(stand, owner_hint)
+    stand_imgs = page_images(stand, owner_hint, form_n)
     return stand_imgs, owner_page_images(stand, owner_hint)
 
 
@@ -509,7 +512,40 @@ def _orig_url(fname: str) -> str:
             f"{h[0]}/{h[:2]}/{urllib.parse.quote(fn)}")
 
 
-def page_images(stand: str, owner_hint: str = "") -> list[tuple[str, str]]:
+# ============================================================
+# ★ M59：形态（ACT）专属图
+# ============================================================
+# 实测根因：jojowiki 上 `Tusk ACT1`~`ACT4`、`Echoes ACT1`~`ACT3`
+#   **全部重定向到主条目**，没有独立页面 → 用形态标题去抓，拿到的必然
+#   是主条目那一批文件 → 四个形态目录**字节级完全相同**。
+#   ★ 而主条目页里**是有分形态的专属图的**（实测）：
+#       Tusk  ACT1~3 各 1 张、ACT4 有 2 张（JJL / SBR）
+#       Echoes ACT1 有 4 张、ACT2 有 2 张、ACT3 有 4 张
+#     文件名形如 `Tusk ACT2 SBR Infobox Manga.png`、`Echoes ACT3 DU Infobox Manga.png`
+#   → 做法：**形态成员只收文件名匹配自己 ACTn 的图**；
+#     母体保持收全部（图题上会标出 ACTn，等于一份"形态图集"）。
+# ★★ 注意：api.php 返回的文件名里**空格已换成下划线**（`Tusk_ACT2_SBR_Infobox.png`），
+#   所以不能直接用 `\bact\d`：`_` 本身是单词字符，`\bact` 在 `_` 前**不成立**
+#   （实测 act_label 全返回 None，而且按 ACT 过滤会把形态的图片全滤光 → 零图）。
+#   → 自己定义边界：前一字符不能是字母/数字（下划线算分隔符），
+#     ACT 与数字之间允许空格或下划线，数字后面不能再跟数字。
+_ACT_RE = re.compile(r"(?:^|[^A-Za-z0-9])act[\s_]*([1-9])(?![0-9])", re.I)
+
+
+def form_no(stand_id: str) -> Optional[int]:
+    """形态成员（tusk_act3）→ 3；普通替身 → None。"""
+    m = re.search(r"_act([1-9])$", (stand_id or "").lower())
+    return int(m.group(1)) if m else None
+
+
+def act_label(fname: str) -> Optional[str]:
+    """文件名里带 ACTn → 返回 "ACTn"（给图当题注用）。"""
+    m = _ACT_RE.search(fname or "")
+    return f"ACT{m.group(1)}" if m else None
+
+
+def page_images(stand: str, owner_hint: str = "",
+                 form_n: Optional[int] = None) -> list[tuple[str, str]]:
     """抓条目页，返回 [(文件名, thumbURL)]（已去重、已滤噪声）。
 
     ★ URL 结构（实测）：
@@ -530,13 +566,28 @@ def page_images(stand: str, owner_hint: str = "") -> list[tuple[str, str]]:
     #   ★ 拿到的是规范文件名，URL 直接用 md5 规则构造，
     #     于是原来那套「从 <img src> 正则反推哈希前缀」的解析整段不再需要
     #     （那套逻辑踩过「前缀是 1+2 字符不是 2+2」的坑）。
+    # ★ M59：形态成员的页面标题用 `<母体> ACTn`
+    #   （`Echoes (ACT1)` 这种带括号的标题在 jojowiki 上**不存在**，
+    #     实测抓不到 → 三个形态零图；而 `Echoes ACT1` 存在并重定向到 Echoes）
+    if form_n:
+        _base = re.sub(r"\s*\(?ACT\s*%d\)?\s*$" % form_n, "", stand).strip()
+        page_title = f"{_base} ACT{form_n}"
+    else:
+        page_title = stand
+    _only_act = (re.compile(r"(?:^|[^A-Za-z0-9])act[\s_]*%d(?![0-9])" % form_n, re.I)
+                 if form_n else None)
+
     out: list[tuple[str, str]] = []
     seen: set[str] = set()
-    for title in _api_images(stand.replace(" ", "_")):
+    for title in _api_images(page_title.replace(" ", "_")):
         fname = title.replace("File:", "").replace(" ", "_")
         if not fname or fname in seen:
             continue
-        if classify(fname, stand, owner_hint) == "noise":
+        # ★ M59：形态成员**只收自己 ACTn 的图**
+        #   否则就会拿到主条目那一批 → 与母体逐字节相同（用户反馈"都一样"）
+        if _only_act and not _only_act.search(fname):
+            continue
+        if classify(fname, page_title, owner_hint) == "noise":
             continue
         seen.add(fname)
         # 统一 400px —— 原图实测 6.4 MB 会下崩（见文件头）
@@ -586,6 +637,14 @@ def save(stand_id: str, items: list[tuple[str, str, str]],
 
     for kind in sorted(by_kind, key=lambda k: order.get(k, 9)):
         lst = by_kind[kind]
+        # ★ M59：本体图里**带 ACT 的优先**。
+        #   母体（Tusk / Echoes）自己没有独立本体图，它页面上的本体图
+        #   就是各形态的专属图 —— 按用户选的方案，母体的图片区应当
+        #   是一份"形态图集"（每张标出 ACTn）。
+        #   实测不排序时母体挑到的是周边商品（JOJOCARAVAN 亚克力摆件等），
+        #   对"这个替身什么样"毫无帮助。
+        if kind == "stand":
+            lst.sort(key=lambda it: 0 if act_label(it[1]) else 1)
         cap = quota.get(kind, 2)
         if len(lst) <= cap:
             kept.extend(lst)
@@ -665,6 +724,8 @@ def save(stand_id: str, items: list[tuple[str, str, str]],
             manifest["images"].append({
                 "kind": kind, "file": local, "bytes": len(data),
                 "source_name": fname,
+                # ★ M59：文件名带 ACTn 时记成题注（图上直接显示"这是第几形态"）
+                "caption": act_label(fname),
                 "source_page": f"https://jojowiki.com/{stand_id.replace('_', ' ')}",
             })
             _out(f"      [{kind:5s}] {local:12s} {len(data)//1024:>5d} KB  "
@@ -839,7 +900,9 @@ def main() -> int:
 
         try:
             # ★ 双来源：替身页取本体/漫画图，角色页取使者立绘
-            stand_pairs, user_pairs = page_images_by_kind(en, owner)
+            # ★ M59：形态成员（tusk_act3 / Echoes (ACT3)）按自己的 ACTn 挑图
+            _fn = form_no(sid)
+            stand_pairs, user_pairs = page_images_by_kind(en, owner, _fn)
             if not stand_pairs and not user_pairs:
                 return "empty", en, 0, time.time() - t_s, sink
             items = [(classify(f, en, owner), f, u) for f, u in stand_pairs]

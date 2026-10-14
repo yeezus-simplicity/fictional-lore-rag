@@ -1334,9 +1334,12 @@ function imgSectionHTML(im){
     if(!arr.length) return '';
     const cells = arr.map(x=>
       `<figure class="shot">
-         <img src="${esc(x.url)}" alt="${esc(IMG_KIND_CN[k]||k)}"
+         <img src="${esc(x.url)}" alt="${esc(x.caption||IMG_KIND_CN[k]||k)}"
               loading="lazy" onclick="zoomImg('${esc(x.url)}')">
-         <figcaption title="${esc(x.caption||'')}">${esc(IMG_KIND_CN[k]||k)}</figcaption>
+         <!-- ★ M59：题注优先用 caption —— 形态专属图会带「ACTn」，
+              这样母体的图集能看出"这张是第几形态"，而不是全都叫"本体" -->
+         <figcaption title="${esc(x.caption||'')}">${
+           esc(x.caption||IMG_KIND_CN[k]||k)}</figcaption>
        </figure>`).join('');
     return `<div class="img-group">
         <div class="img-group-t">${esc(IMG_KIND_CN[k]||k)}

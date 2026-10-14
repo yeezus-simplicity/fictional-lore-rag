@@ -181,7 +181,9 @@ def public_images(manifest: dict) -> dict:
             "file": f,
             "url": f"/images/{sid}/{f}",
             "bytes": item.get("bytes"),
-            "caption": item.get("source_name", ""),
+            # ★ M59：形态专属图带 `caption`（"ACT2"）→ 图上直接显示是第几形态；
+            #   其余图片仍沿用原文件名当题注（保持既有行为）。
+            "caption": item.get("caption") or item.get("source_name", ""),
         })
     res: dict[str, Any] = {
         "stand_id": sid, "total": sum(len(v) for v in out.values())}

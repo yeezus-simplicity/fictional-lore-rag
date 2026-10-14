@@ -121,8 +121,10 @@ def main() -> int:
                          r"\.side\s*\{[\s\S]{0,200}position:\s*static", css)))
     check("窄屏隐藏每项的说明文字", ".nb { display: none; }" in css)
 
-    # ---- ② 卡片顺序（静态） ----
-    print("\n[2] 卡片顺序")
+    # ---- ② 板块顺序（静态） ----
+    #   ★ M55 把卡片重组成「板块」后，这里同步更新为新的意图：
+    #     答案在最前（M54 的要求），证据归答案，图片自成板块。
+    print("\n[2] 板块顺序")
     m = re.search(r"function renderAnswer\(d\)\{[\s\S]*?\n\}", src)
     check("找到 renderAnswer", bool(m))
     if m:
@@ -130,11 +132,14 @@ def main() -> int:
         i_ans = body.index("<h3>答案")
         i_panel = body.index("renderStandPanel(d)")
         i_media = body.index("renderMedia(d)")
-        check("答案卡在档案之前", i_ans < i_panel,
-              f"答案 {i_ans} vs 档案 {i_panel}")
-        check("档案在图片/证据之前", i_panel < i_media)
-        check("答案卡内不再塞图片/证据（否则答案卡过长）",
-              i_media > body.index("html += '</div>'"))
+        i_ev = body.index("renderEvidence(")
+        i_close = body.index("html += '</div>'")
+        check("答案在最前（档案与图片都在它之后）",
+              i_ans < i_panel < i_media,
+              f"答案 {i_ans} / 档案 {i_panel} / 图片 {i_media}")
+        check("证据仍在答案那一块（它是这条答案的出处）",
+              i_ev < i_close, f"证据 {i_ev} vs 答案卡闭合 {i_close}")
+        check("图片在答案卡之外（自成一个板块）", i_media > i_close)
 
     # ---- ③ 极值排名含 ∞（静态） ----
     print("\n[3] 极值排名的 ∞ 处理")

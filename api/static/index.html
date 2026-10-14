@@ -166,6 +166,12 @@ button.go:disabled { opacity: .5; cursor: wait; }
   font-size: 12px; color: var(--text-dim); font-weight: 600;
   text-transform: uppercase; letter-spacing: .8px; margin-bottom: 12px;
 }
+/* ★ M55：板块标题后的小字说明（如「替身信息」后面那句口径说明）。
+   中文没有大写概念，但 text-transform/letter-spacing 要还原成正文样式。 */
+.card h3 .h3n {
+  font-weight: 400; text-transform: none; letter-spacing: 0;
+  font-size: 11px; color: var(--text-faint); margin-left: 6px;
+}
 /* ================================================================
    M17：雷达图 + 图片
    ================================================================ */
@@ -468,9 +474,9 @@ td.num { font-family: var(--mono); font-size: 12px; text-align: right; }
 /* ---- M32/M36：替身档案卡（与六维雷达并排） ---- */
 /* ★ M52：`align-items` 用默认的 stretch —— 让 .sp-info **铺满整行高度**，
    这样里面的六维明细才能「撑到和右边雷达一样高」。
-   原来写 flex-start：左栏高度只按内容算，多出来的高度就成了一大片空白。 */
-.stand-panel { display: flex; gap: 22px;
-  margin-bottom: 14px; }
+   原来写 flex-start：左栏高度只按内容算，多出来的高度就成了一大片空白。
+   ★ M55：它现在是「替身信息」卡片**内部**的行容器（卡片负责外边距） */
+.stand-panel { display: flex; gap: 22px; }
 /* 左栏改成纵向 flex：档案在上、六维明细在下（flex:1 → 吃掉剩余高度） */
 .sp-info { flex: 1 1 auto; min-width: 0;
   display: flex; flex-direction: column; gap: 12px; }
@@ -492,8 +498,7 @@ td.num { font-family: var(--mono); font-size: 12px; text-align: right; }
 .dc-v.zc-na { font-family: inherit; font-size: 11px; font-weight: 400;
   color: var(--text-faint); }
 .zh-card-inner { border-left: 3px solid var(--accent); padding-left: 12px; }
-.zc-title { font-size: 13px; font-weight: 500; margin-bottom: 10px; }
-.zc-title span { font-weight: 400; font-size: 11px; color: var(--text-faint); }
+/* ★ M55：原 .zc-title「替身档案」已删除 —— 标题提到卡片的 h3「替身信息」上了 */
 .zc-row { display: flex; gap: 12px; padding: 4px 0; font-size: 13px; }
 .zc-k { flex: 0 0 52px; color: var(--text-faint); font-size: 12px; padding-top: 1px; }
 .zc-v { flex: 1; color: var(--text); }
@@ -956,10 +961,8 @@ function renderZhCard(zc){
         <div class="dg-cells">${cells}</div>
       </div>`;
   }
+  // ★ M55：标题已提到卡片 h3「替身信息」，这里的 .zc-title 会成为重复 → 删除
   return `<div class="zh-card-inner">
-    <div class="zc-title">替身档案
-      <span>（中文信息，来自结构化数据 · 也可直接用日文名或英文名提问）</span>
-    </div>
     ${rows.join('')}
   </div>${dimGrid}`;
 }
@@ -979,8 +982,14 @@ function renderStandPanel(d){
     : '';
   if(!zc && !radar) return '';
   const info = zc ? renderZhCard(zc) : '';
-  return `<div class="card stand-panel">
-    <div class="sp-info">${info}</div>${radar}
+  // ★★ M55：「替身信息」是一个**板块**（卡片自带标题）★★
+  //   原来标题是卡片内那行 `.zc-title`「替身档案」，现在提到 h3 上，
+  //   并把它的说明挪到 h3 后面的小字（否则同一句话出现两次）。
+  return `<div class="card">
+    <h3>替身信息 <span class="h3n">中文信息来自结构化数据 · 也可直接用日文名或英文名提问</span></h3>
+    <div class="stand-panel">
+      <div class="sp-info">${info}</div>${radar}
+    </div>
   </div>`;
 }
 
@@ -1016,26 +1025,25 @@ function renderAnswer(d){
   }
   else body = esc(String(a ?? '（无内容）'));
 
-  // ★★ M54：答案卡移到**最上面** ★★
-  //   用户原话：「帮我把答案调到替身档案之上 让人一下子就能看到答案」。
-  //   原顺序 [档案+雷达] → [答案（含图片/证据）] —— 答案被压在档案下面，
-  //   要滚动才看得到。
-  //   新顺序：[答案] → [替身档案 + 六维雷达] → [图片 + 证据] → [相似替身]
-  //   ★ 图片与证据从「答案卡」里**分出来**单独成卡：
-  //     它们各有自己的标题（「相关图片」/「检索过程」），
-  //     留在答案卡里只会让"答案"这张卡很长，把档案挤得更靠下。
+  // ★★ M55：搜索结果按**板块**组织 ★★
+  //   用户原话：「搜索出来如果是替身有关的 就应该有好几个板块
+  //             如答案 替身信息 和图片」。
+  //   四个板块各自成卡、各有标题：
+  //     ① 答案（含它的证据 / 检索过程）② 替身信息（档案 + 六维雷达）
+  //     ③ 图片 ④ 相似替身
+  //   ★ 证据跟**答案**走 —— 它是这条答案的出处，不属于图片。
+  //     M54 曾把「图片 + 证据」塞进同一张**没有标题**的卡里，
+  //     结果证据被压在 1500px 的图片墙底下（等于看不见），而且那不叫"板块"。
   let html = `<div class="card">
     <h3>答案${d.mode==='generate'?' <span style="color:var(--warn);font-weight:400">（生成式）</span>':''}</h3>
     <div class="answer ${refused?'answer-refused':''}${isHtml?' ans-html':''}">${body}</div>`;
   if(d.warning) html += `<div class="alert">⚠ ${esc(d.warning)}</div>`;
   if(d.generation) html += renderGeneration(d.generation, d.faithfulness);
+  html += renderEvidence(d.evidence);   // ← 证据回到答案这一块（M54 曾挪去图片卡）
   html += '</div>';
-  html += renderStandPanel(d);
-  // ★ M17：替身图片 + 检索证据（两样都是"补充材料"，放最后）
-  const _media = renderMedia(d);
-  const _ev = renderEvidence(d.evidence);
-  if(_media || _ev) html += `<div class="card">${_media}${_ev}</div>`;
-  html += '<div id="simBox"></div>';   // ★ M32：相似替身占位
+  html += renderStandPanel(d);          // 板块②：替身信息
+  html += renderMedia(d);               // 板块③：图片（自带卡片与标题）
+  html += '<div id="simBox"></div>';    // 板块④：相似替身占位
   $('#ans').innerHTML = html;
   // ★ M19：图片渲染完按真实宽高比调整卡片高度（否则竖图留大片空白）
   applyShotHeights($('#ans'));
@@ -1089,30 +1097,32 @@ const IMG_KIND_CN = {
 };
 
 function renderMedia(d){
-  let out = '';
-  // ★ M36：雷达图已移入「替身档案」卡（renderStandPanel），此处不再重复
-  // ---- 图片：已就绪直接渲染；未就绪显示进度并轮询（M18）----
+  // ★★ M55：「图片」是一个**板块** —— 独立卡片 + 自己的标题 ★★
+  //   三种状态（已就绪 / 抓取中 / 失败）都装在同一张卡里，
+  //   这样异步抓完替换内容时，标题不会跟着消失。
+  //   ★ 没有图片信息时返回 ''（不占位、不出空板块）
   const im = d.stand_images || {};
   const groups = ['stand','user','manga','anime','misc'];
   const has = groups.some(k => (im[k]||[]).length);
+  const head = `<div class="card"><h3>图片</h3>`;
   if(has){
-    out += imgSectionHTML(im);
-  }else if(im.state === 'pending'){
-    // ★ 后台抓图中 —— 给占位 + 启动轮询，不再让用户干等
-    out += `<div class="media-block" id="imgPending">
-      <div class="media-title">相关图片</div>
+    return head + imgSectionHTML(im) + '</div>';
+  }
+  if(im.state === 'pending'){
+    // ★ M18：后台抓图中 —— 给占位 + 启动轮询，不让用户干等
+    pollImages(im.stand_id);
+    return head + `<div class="media-block" id="imgPending">
       <div class="img-wait">
         <span class="spin"></span>图片正在后台抓取（约 10-30 秒），
         抓完会自动出现在这里，不必重复提问
       </div>
-    </div>`;
-    pollImages(im.stand_id);
-  }else if(im.error){
-    out += `<div class="media-block">
-      <div class="media-title">相关图片</div>
-      <div class="img-note">未能获取：${esc(im.error)}</div></div>`;
+    </div></div>`;
   }
-  return out;
+  if(im.error){
+    return head + `<div class="media-block">
+      <div class="img-note">未能获取：${esc(im.error)}</div></div></div>`;
+  }
+  return '';
 }
 
 /* 图片区块 HTML（已就绪时） */
@@ -1134,7 +1144,8 @@ function imgSectionHTML(im){
       </div>`;
   }).join('');
   return `<div class="media-block" id="imgDone">
-    <div class="media-title">相关图片 <span class="cnt">${im.total||0}</span></div>
+    <!-- ★ M55：卡片标题已经是「图片」，这里只报数量与分类口径，避免重复 -->
+    <div class="media-title"><span class="cnt">${im.total||0}</span> 张 · 按来源分组</div>
     ${secs}
     <div class="img-note">分类按 jojowiki 源文件名推断（悬停缩略图可看原名）；
       版权归荒木飞吕彦 / 集英社所有，来源 jojowiki.com</div>

@@ -296,6 +296,9 @@ details.ev summary:hover { color: var(--text); }
 .step.miss:before { background: #3d1f1f; color: var(--err); }
 /* 表格 */
 table { width: 100%; border-collapse: collapse; font-size: 13px; }
+/* ★ M49：内容短的表用 auto —— 不撑满，列宽紧贴内容。
+   （六维能力值表：四列各 2 字，撑满时「类别」列 178px 而内容仅 ~22px） */
+table.tight { width: auto; }
 th, td {
   text-align: left; padding: 7px 11px;
   border-bottom: 1px solid var(--border);
@@ -1329,9 +1332,16 @@ function renderStand(d){
   const DN = {PWR:'破坏力',SPD:'速度',RNG:'射程',STA:'持续力',PRC:'精密性',DEV:'成长性'};
   let rows = '';
   for(const k of dims){
-    const v = st[k], raw = st[k+'_raw'], cat = st[k+'_cat'];
+    // ★★ M49：接口的 stats[k] 是 {value, label, raw, category} ★★
+    //   此前写的是 st[k] / st[k+'_raw'] / st[k+'_cat'] ——
+    //   值取到对象（渲染成 `[object Object]`），
+    //   另两个键**根本不存在** → 「原始」恒为「—」、「类别」恒空白。
+    const cell = st[k] || {};
+    const v   = cell.label;      // 等级字母 E/D/C/B/A（缺失为 null）
+    const raw = cell.raw;        // 数据源原始字面量（可能是 '∞' / '?'）
+    const cat = cell.category;   // 编码类别 RANKED/UNKNOWN/INFINITE/…
     const cn = {RANKED:'正常',UNKNOWN:'未知',INFINITE:'无限',
-                EMPTYSLOT:'空缺',UNCATEGORIZED:'未分类'}[cat] || cat;
+                EMPTYSLOT:'空缺',UNCATEGORIZED:'未分类'}[cat] || cat || '—';
     rows += `<tr><td>${DN[k]}</td>
       <td class="num">${v==null?'—':esc(v)}</td>
       <td class="num">${raw==null?'—':esc(raw)}</td>
@@ -1355,7 +1365,11 @@ function renderStand(d){
     </div>
     <div class="card">
       <h3>六维能力值</h3>
-      <table><thead><tr><th>维度</th><th style="text-align:right">值</th>
+      <!-- ★ M49：加 class="tight"（width:auto）。
+           表格默认 width:100%，四列内容都很短（维度/等级/原始/类别各 2 字），
+           多余空间被均摊 → 实测「值」列被撑到 504px、
+           「类别」列 178px 而内容只有 2 字，看着就是"后面一大片空白"。 -->
+      <table class="tight"><thead><tr><th>维度</th><th style="text-align:right">值</th>
         <th style="text-align:right">原始</th><th>类别</th></tr></thead>
         <tbody>${rows}</tbody></table>
     </div>

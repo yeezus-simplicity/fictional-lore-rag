@@ -1231,7 +1231,16 @@ def get_stand(stand_id: str):
         SELECT s.stand_id, s.name_en, s.name_ja, s.part, s.part_name_en,
                s.owner_name_raw, s.stand_type, s.reference,
                s.form_count, st.pwr, st.spd, st.rng, st.sta, st.prc, st.dev,
-               st.composite, st.missing_count
+               st.composite, st.missing_count,
+               -- ★ M49：原始字面量与类别。前端「六维能力值」表有
+               --   「原始」「类别」两列，但接口此前**没带这两个字段** →
+               --   前端读 st['PWR_raw'] / st['PWR_cat'] 恒为 undefined，
+               --   于是「原始」永远显示「—」、「类别」永远空白。
+               --   （DB 里本来就有这些列，只是没 SELECT 出来。）
+               st.pwr_raw, st.spd_raw, st.rng_raw,
+               st.sta_raw, st.prc_raw, st.dev_raw,
+               st.pwr_cat, st.spd_cat, st.rng_cat,
+               st.sta_cat, st.prc_cat, st.dev_cat
         FROM stands s LEFT JOIN stand_stats st ON st.stand_id = s.stand_id
         WHERE s.stand_id = %s
     """, (stand_id,))
@@ -1292,8 +1301,13 @@ def get_stand(stand_id: str):
         "part": r[3], "part_name": r[4],
         "owner_raw": r[5], "stand_type": r[6], "reference": r[7],
         "form_count": r[8],
+        # ★ M49：每维补 raw（原始字面量，如 'A'/'∞'/'?'）与 category。
+        #   索引：r[0..8] 固定字段 → r[9..14] pwr..dev → r[15] composite
+        #        → r[16] missing → r[17..22] *_raw → r[23..28] *_cat
         "stats": {d: {"value": r[9 + i],
-                      "label": level_cn.get(r[9 + i])}
+                      "label": level_cn.get(r[9 + i]),
+                      "raw": r[17 + i],
+                      "category": r[23 + i]}
                   for i, d in enumerate(dims)},
         "composite": r[15], "missing_count": r[16],
         "n_text_chunks": n_chunks,

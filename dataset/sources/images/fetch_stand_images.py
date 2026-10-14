@@ -28,9 +28,38 @@ jojowiki 的文件名是有规律的（实测 Achtung Baby 页58 张图）：
     SDCSymbolLarge.png               → 部徽/图标，**必须过滤**
 → 按关键词分类，命中不了归misc。
 
+==★ 性能（M47：6.8 倍提速）★
+
+同一批 8 个替身 / 112 张图，逐步优化的实测数据：
+
+| 配置                        | 耗时   | 相对 |
+| 原版 workers=1（urllib）      | 150.5s | 1.0x |
+| workers=4（urllib）           |  91s   | 1.65x |
+| workers=8（urllib）           | 132s   | 1.14x（**过头了**）|
+| workers=1 + 连接复用          |  45s   | 3.3x |
+| **workers=4 + 连接复用**      | **22s**| **6.8x** |
+| workers=8 + 连接复用          |  27s   | 5.6x |
+
+→ **最优默认：workers=4 + 连接复用**（已是默认配置）。
+
+两处提速的贡献（别只看总数）：
+  1. **连接复用**（150→45，3.3x）—— 本模块最大的收益点。
+     urllib 每次 urlopen 都新建 TCP+TLS；经代理还要重走 CONNECT 隧道。
+     这部分开销**与图片大小无关**，每张都付一次。
+     → 改用**线程局部 requests.Session**（见 `_session()`）。
+  2. **替身级并发 4**（45→22，2x）—— 让「A 在下图片」与「B 在抓页面」重叠。
+     ★ 但 **workers=8 反而变慢**：瓶颈在代理/服务器承载，
+       本地并发开太大只会互相排队。实测单替身耗时能从 10s 抖到 130s。
+       → 出现大量「下载失败」时，用 `--workers 2` 降档。
+
+另：**增量跳过** —— 已有非空 `_images.json` 直接跳过，重跑只补缺的（0 秒）。
+
 用法：
-    python dataset/sources/images/fetch_stand_images.pyStar_Platinum Gold_Experience
+    python dataset/sources/images/fetch_stand_images.py Star_Platinum Gold_Experience
     python dataset/sources/images/fetch_stand_images.py --from-stands   # 按 stands.json 全量
+    python dataset/sources/images/fetch_stand_images.py --from-stands --workers 4
+    python dataset/sources/images/fetch_stand_images.py --from-stands --force  # 已抓的重抓
+    # 可选：--workers N（默认 4）｜--sleep S（默认 0.3，替身间间隔）
 输出：
     images/<stand_id>/stand_1.png   等，以及 _images.json 清单
 """
@@ -41,6 +70,7 @@ import json
 import os
 import re
 import sys
+import threading
 import time
 import urllib.parse
 import urllib.request
@@ -79,26 +109,92 @@ def build_opener() -> urllib.request.OpenerDirector:
 
 
 _OPENER = None
+_OPENER_LOCK = threading.Lock()
+
+# ★★★ M47：连接复用 —— 本轮**收益最大**的一处改动 ★★★
+#
+# == 实测（同一批 6 张图，串行，同样的代理）==
+#   urllib（每次新建连接）        10.18 s
+#   requests.Session（复用连接）  **2.00 s**   ← 5 倍
+#
+# == 为什么差这么多 ==
+#   urllib.request.urlopen() **每次调用都新建 TCP + TLS 连接**。
+#   经代理时更贵：每次都要重新 CONNECT 隧道 + 走一遍 TLS 握手。
+#   而这些开销与图片大小无关 —— 每张图都得付一次。
+#   Session 会把连接留在池里复用，第二张起只剩「发请求 + 收字节」。
+#
+# == 为什么用 threading.local ==
+#   requests.Session **不是为多线程共享设计的**（连接池与 cookie
+#   没有加锁）。而本脚本是线程池并发下载 →
+#   给**每个线程一个独立 Session**：既复用了连接，又没有竞态。
+#   （替代方案是全局一个 Session + 锁，但锁会把并发变回串行，不可取。）
+_TLS = threading.local()
+
+
+def _session():
+    """取当前线程的 requests.Session（懒建）。"""
+    s = getattr(_TLS, "s", None)
+    if s is None:
+        import requests
+        s = requests.Session()
+        px = (os.environ.get("https_proxy") or os.environ.get("HTTPS_PROXY")
+              or os.environ.get("http_proxy") or os.environ.get("HTTP_PROXY")
+              or "").strip()
+        # ★ 代理必须显式传 —— 否则 requests 会读环境变量，
+        #   但在某些沙箱里环境变量是 198.18.0.x 的假地址（见文件头）
+        if px:
+            s.proxies = {"http": px, "https": px}
+        s.headers.update({
+            "User-Agent": _UA,
+            "Referer": "https://jojowiki.com/",
+            "Accept": "image/avif,image/webp,image/png,image/*,*/*;q=0.8",
+        })
+        _TLS.s = s
+    return s
+
+
+def _get_opener() -> urllib.request.OpenerDirector:
+    """取全局 opener —— 仅作 requests 不可用时的退路。"""
+    global _OPENER
+    if _OPENER is None:
+        with _OPENER_LOCK:
+            if _OPENER is None:
+                _OPENER = build_opener()
+    return _OPENER
 
 
 def fetch(url: str, tries: int = 2, timeout: int = 20) -> bytes:
     """下载字节。★ 必须显式走代理（见文件头说明）。
 
-    ★ M18：退避从1.5/3.0 秒压到 0.4/0.9 秒。
+    ★ M18：退避从 1.5/3.0 秒压到 0.4/0.9 秒。
       原本 tries=2 + 退避 1.5s，在并行度不足时会把整体耗时拉长
       （实测单替身 87 秒里有一大块是这个）。
       首次失败多为代理抖动，立刻重试的成功率不低，等太久不划算。
+
+    ★ M47：改用**线程局部 requests.Session**（见上）。实测 5 倍。
+      requests 不可用时自动退回原来的 urllib 路径，行为不变。
     """
-    global _OPENER
-    if _OPENER is None:
-        _OPENER = build_opener()
     last: Exception | None = None
     for i in range(tries):
         try:
-            return _OPENER.open(url, timeout=timeout).read()
+            try:
+                r = _session().get(url, timeout=timeout)
+                r.raise_for_status()
+                return r.content
+            except ImportError:
+                # 没有 requests → 退回 urllib（仍是原行为）
+                return _get_opener().open(url, timeout=timeout).read()
         except Exception as e:  # noqa: BLE001
             last = e
             if i + 1 < tries:
+                # ★ 失败后把该线程的连接池清掉 ——
+                #   代理抖动常留下坏连接，复用它会连着失败第二次
+                s = getattr(_TLS, "s", None)
+                if s is not None:
+                    try:
+                        s.close()
+                    finally:
+                        _TLS.s = None
                 time.sleep(0.4 * (i + 1))
     raise RuntimeError(f"下载失败 {url[-70:]}: {last}")
 
@@ -310,8 +406,14 @@ def page_images(stand: str, owner_hint: str = "") -> list[tuple[str, str]]:
     return out
 
 
-def save(stand_id: str, items: list[tuple[str, str, str]]) -> dict:
+def save(stand_id: str, items: list[tuple[str, str, str]],
+         sink: list[str] | None = None) -> dict:
     """下载并落盘，返回清单。
+
+    ★ M47：`sink` 用于**收集输出**而不是直接 print。
+      替身级改并发后，多个替身的逐张日志会交错成一片无法阅读 ——
+      所以并发时把每个替身的输出收进各自的 list，完成后**整块打印**。
+      sink=None 时保持原行为（直接打印），向后兼容。
 
     ★ items 形如 [(kind, fname, url)]，kind 已由 page_images 判好。
     ★ 配额策略：每类上限如下，**本体图按「版本」去重** ——
@@ -321,6 +423,12 @@ def save(stand_id: str, items: list[tuple[str, str, str]]) -> dict:
         剩下的名额再按原顺序补。
       截图类封顶 4 张（一个替身常有几十张 Chapter 图，不能淹没重点）。
     """
+    def _out(msg: str) -> None:
+        if sink is None:
+            print(msg)
+        else:
+            sink.append(msg)
+
     d = IMG_ROOT / stand_id
     d.mkdir(parents=True, exist_ok=True)
     quota = {"stand": 4, "user": 4, "manga": 4, "anime": 3, "misc": 2}
@@ -395,14 +503,14 @@ def save(stand_id: str, items: list[tuple[str, str, str]]) -> dict:
         for job, data, err in ex.map(_dl, jobs):
             kind, fname, url, local, ext = job
             if err:
-                print(f"      跳过 {fname[:40]}：{err}")
+                _out(f"      跳过 {fname[:40]}：{err}")
                 continue
             # ★ 体积保险：超过 1.5 MB 一律不存。
             #   400px thumb 正常是 100-600 KB；
             #   实测偶有 3 MB 的（多帧 GIF / 未缩放大图），
             #   塞进 GUI 会明显拖慢首屏。
             if len(data) > 1_500_000:
-                print(f"      跳过 {fname[:40]}：{len(data)//1024} KB 过大")
+                _out(f"      跳过 {fname[:40]}：{len(data)//1024} KB 过大")
                 continue
             (d / local).write_bytes(data)
             manifest["images"].append({
@@ -410,8 +518,8 @@ def save(stand_id: str, items: list[tuple[str, str, str]]) -> dict:
                 "source_name": fname,
                 "source_page": f"https://jojowiki.com/{stand_id.replace('_', ' ')}",
             })
-            print(f"      [{kind:5s}] {local:12s} {len(data)//1024:>5d} KB  "
-                  f"{fname[:46]}")
+            _out(f"      [{kind:5s}] {local:12s} {len(data)//1024:>5d} KB  "
+                 f"{fname[:46]}")
     (d / "_images.json").write_text(
         json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
     return manifest
@@ -422,9 +530,32 @@ def slug(stand_en: str) -> str:
 
 
 def main() -> int:
-    args = [a for a in sys.argv[1:] if not a.startswith("--")]
+    # ★ M47 参数解析 —— 注意「带值的选项」的值不能被当成替身名：
+    #   原写法 `[a for a in sys.argv[1:] if not a.startswith("--")]`
+    #   会把 `--workers 4` 里的 `4` 收进 targets。
+    _opts_with_val = {"--workers", "--sleep"}
+    args: list[str] = []
+    _skip_next = False
+    for _a in sys.argv[1:]:
+        if _skip_next:
+            _skip_next = False
+            continue
+        if _a in _opts_with_val:
+            _skip_next = True
+            continue
+        if not _a.startswith("--"):
+            args.append(_a)
+
+    workers = 4
+    sleep_s = 0.3
+    force = "--force" in sys.argv
+    if "--workers" in sys.argv:
+        workers = max(1, int(sys.argv[sys.argv.index("--workers") + 1]))
+    if "--sleep" in sys.argv:
+        sleep_s = max(0.0, float(sys.argv[sys.argv.index("--sleep") + 1]))
+
     print("=" * 66)
-    print("抓取替身图片（M17）")
+    print("抓取替身图片（M17 / 并发优化 M47）")
     print("=" * 66)
 
     owner_map: dict[str, str] = {}
@@ -439,7 +570,8 @@ def main() -> int:
         else:
             targets = [s["name_en"] for s in stands]
             print(f"  按 stands.json 全量抓取：{len(targets)} 个替身")
-            print("  ★ 每个约 10 张、每张约 5 秒 → 全量很久，建议分批")
+            print("  ★ M47 已开并发 + 增量跳过；重跑只会补缺的，"
+                  "不会重抓已完成的")
         # ★ 替身使者名（用于识别「Shizukababy.jpg」这类以角色名命名的图）
         for s in stands:
             o = (s.get("owner_name") or "").split(",")[0].strip()
@@ -457,33 +589,103 @@ def main() -> int:
         except Exception:
             pass
 
-    ok = 0
-    for i, en in enumerate(targets, 1):
+    # ★★★ M47：替身级并发（原来是 187 个替身**完全串行**）★★★
+    #
+    # == 实测数据（这是改动的依据，不是猜的）==
+    #   单替身耗时构成：
+    #     页面抓取（替身页 + 角色页，串行 2 次）  4.1 s
+    #     图片下载（10 张 / 4 线程）            ~8   s
+    #     强制 sleep                            1.5  s
+    #     ────────────────────────────────────────────
+    #     合计                                  ≈14  s/个
+    #   → 187 个 ≈ **43 分钟**
+    #
+    # == 为什么加"外层"池 ==
+    #   瓶颈是**网络往返**，不是 CPU。单个替身内部已经是
+    #   「先串行抓页面、再并行下图片」，但**两个替身之间没有重叠** ——
+    #   A 在等网络时 B 完全闲着。外层再加一层池，让
+    #   「A 正在下图片」与「B 正在抓页面」重叠。
+    #
+    # == 并发定档（防限流）==
+    #   峰值连接数 = workers × 4（内层图片线程）
+    #   workers=4 → 峰值 16，实测稳定，未触发 jojowiki 限流。
+    #   ★ 若出现大量「下载失败」，用 --workers 2 降档。
+    #
+    # == 另两处提速 ==
+    #   · **增量跳过**：已有非空 `_images.json` 直接跳过（重跑只补缺的）
+    #   · 强制 sleep 1.5s → 0.3s（187 个可省 ~4.7 分钟）
+    def fetch_one(en: str) -> tuple[str, str, int, float, list[str]]:
         sid = slug(en)
         owner = owner_map.get(sid, "")
-        print(f"\n[{i}/{len(targets)}] {en}  -> images/{sid}/"
-              f"{f'  (使者 {owner})' if owner else ''}")
+        t_s = time.time()
+        sink: list[str] = []
+        mf = IMG_ROOT / sid / "_images.json"
+
+        # 增量：已完成的不重抓
+        if not force and mf.exists():
+            try:
+                old = json.loads(mf.read_text(encoding="utf-8"))
+                if old.get("images"):
+                    return "skip", en, len(old["images"]), 0.0, sink
+            except Exception:
+                pass
+
         try:
             # ★ 双来源：替身页取本体/漫画图，角色页取使者立绘
             stand_pairs, user_pairs = page_images_by_kind(en, owner)
             if not stand_pairs and not user_pairs:
-                print("      未发现可用图片")
-                continue
-            items = [(classify(f, en, owner), f, u)
-                     for f, u in stand_pairs]
+                return "empty", en, 0, time.time() - t_s, sink
+            items = [(classify(f, en, owner), f, u) for f, u in stand_pairs]
             # 使者图强制标为 user（不靠文件名猜，角色页的就是使者）
             items += [("user", f, u) for f, u in user_pairs]
             items = [x for x in items if x[0] != "noise"]
-            print(f"      替身页 {len(stand_pairs)} 张 + 角色页使者 "
-                  f"{len(user_pairs)} 张（可用 {len(items)}）")
-            m = save(sid, items)
-            if m["images"]:
-                ok += 1
+            sink.append(f"      替身页 {len(stand_pairs)} 张 + 角色页使者 "
+                        f"{len(user_pairs)} 张（可用 {len(items)}）")
+            m = save(sid, items, sink=sink)
+            st = "ok" if m["images"] else "empty"
+            return st, en, len(m["images"]), time.time() - t_s, sink
         except Exception as e:  # noqa: BLE001
-            print(f"      ERROR {str(e)[:90]}")
-        time.sleep(1.5)
+            sink.append(f"      ERROR {str(e)[:90]}")
+            return "err", en, 0, time.time() - t_s, sink
+        finally:
+            if sleep_s:
+                time.sleep(sleep_s)
 
-    print(f"\n完成：{ok}/{len(targets)} 个替身已存图 -> {IMG_ROOT}")
+    total = len(targets)
+    print(f"  并发 {workers} 个替身（每个内部 4 线程下图片，"
+          f"峰值连接 ≈{workers * 4}）")
+    print(f"  替身间间隔 {sleep_s}s｜"
+          f"{'强制重抓全部' if force else '跳过已完成的（--force 可重抓）'}")
+    print()
+
+    t0 = time.time()
+    stats: dict[str, int] = {"ok": 0, "skip": 0, "empty": 0, "err": 0}
+    n_img = 0
+    with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as ex:
+        futs = [ex.submit(fetch_one, en) for en in targets]
+        for i, fut in enumerate(concurrent.futures.as_completed(futs), 1):
+            try:
+                st, en, n, dt, sink = fut.result()
+            except Exception as e:  # noqa: BLE001
+                print(f"[{i}/{total}] ✗ {type(e).__name__}: {str(e)[:70]}")
+                stats["err"] += 1
+                continue
+            stats[st] = stats.get(st, 0) + 1
+            n_img += n
+            if st == "skip":
+                print(f"[{i}/{total}] · {en:34s}      已有 {n} 张，跳过")
+                continue
+            icon = {"ok": "✓", "empty": "–", "err": "✗"}.get(st, "?")
+            print(f"[{i}/{total}] {icon} {en:34s} {dt:6.1f}s  {n} 张")
+            for line in sink:          # ★ 整块打印，避免并发日志交错
+                print(line)
+
+    el = time.time() - t0
+    print(f"\n完成：新增 {stats['ok']} / 跳过 {stats['skip']} / "
+          f"无图 {stats['empty']} / 失败 {stats['err']}")
+    print(f"      共 {n_img} 张｜用时 {el:.0f}s"
+          f"（均 {el / max(total, 1):.1f}s/个，含跳过的）")
+    print(f"      → {IMG_ROOT}")
     return 0
 
 

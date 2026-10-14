@@ -430,10 +430,31 @@ td.num { font-family: var(--mono); font-size: 12px; text-align: right; }
 #newChat:hover { background: var(--bg-hover); color: var(--text); }
 
 /* ---- M32/M36：替身档案卡（与六维雷达并排） ---- */
-.stand-panel { display: flex; gap: 22px; align-items: flex-start;
+/* ★ M52：`align-items` 用默认的 stretch —— 让 .sp-info **铺满整行高度**，
+   这样里面的六维明细才能「撑到和右边雷达一样高」。
+   原来写 flex-start：左栏高度只按内容算，多出来的高度就成了一大片空白。 */
+.stand-panel { display: flex; gap: 22px;
   margin-bottom: 14px; }
-.sp-info { flex: 1 1 auto; min-width: 0; }
+/* 左栏改成纵向 flex：档案在上、六维明细在下（flex:1 → 吃掉剩余高度） */
+.sp-info { flex: 1 1 auto; min-width: 0;
+  display: flex; flex-direction: column; gap: 12px; }
 .sp-radar { flex: 0 0 auto; width: 300px; }
+/* ★ M52：六维明细网格 —— 3 列 × 2 行，纵向可拉伸填满左栏 */
+.zc-dimgrid { flex: 1 1 auto; min-height: 0;
+  display: flex; flex-direction: column; gap: 6px;
+  margin-left: 15px; }   /* 对齐 .zh-card-inner 的内容（border 3 + padding 12） */
+.dg-title { font-size: 11px; color: var(--text-faint); }
+.dg-title span { color: var(--text-faint); opacity: .8; }
+.dg-cells { flex: 1 1 auto; min-height: 0;
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.dim-cell { display: flex; flex-direction: column; justify-content: center;
+  gap: 3px; padding: 6px 10px; min-height: 46px;
+  border: 1px solid var(--border); border-radius: 6px;
+  background: var(--bg-panel); }
+.dc-k { font-size: 11px; color: var(--text-faint); }
+.dc-v { font-family: var(--mono); font-size: 15px; color: var(--accent); }
+.dc-v.zc-na { font-family: inherit; font-size: 11px; font-weight: 400;
+  color: var(--text-faint); }
 .zh-card-inner { border-left: 3px solid var(--accent); padding-left: 12px; }
 .zc-title { font-size: 13px; font-weight: 500; margin-bottom: 10px; }
 .zc-title span { font-weight: 400; font-size: 11px; color: var(--text-faint); }
@@ -450,10 +471,10 @@ td.num { font-family: var(--mono); font-size: 12px; text-align: right; }
 .zc-var { display: inline-block; margin-left: 6px; padding: 0 7px;
   line-height: 17px; border-radius: 8px; font-size: 12px;
   color: var(--text-dim); border: 1px solid var(--border-strong); }
-.zc-dims { display: flex; flex-wrap: wrap; gap: 4px 14px; }
-.zc-dim { font-size: 12px; color: var(--text-dim); }
-.zc-dim b { color: var(--accent); font-weight: 600; margin-left: 3px; }
-.zc-dim b.zc-na { color: var(--text-faint); font-weight: 400; font-size: 11px; }
+/* ★ M52：原来的「六维」一行（.zc-dims/.zc-dim）已被左侧六维明细网格取代 */
+@media (max-width: 560px) {
+  .dg-cells { grid-template-columns: repeat(2, 1fr); }
+}
 
 /* 窄屏：档案与雷达改为上下堆叠（挤在一起会很难看） */
 @media (max-width: 860px) {
@@ -862,19 +883,30 @@ function renderZhCard(zc){
     <span class="zc-v">第 ${esc(String(zc.part))} 部</span></div>`);
   if(zc.type) rows.push(`<div class="zc-row"><span class="zc-k">类型</span>
     <span class="zc-v">${esc(zc.type)}</span></div>`);
-  if(zc.stats_cn){
-    const s = Object.entries(zc.stats_cn)
-      .map(([k,v])=>`<span class="zc-dim">${esc(k)}
-        <b class="${v?'':'zc-na'}">${v?esc(v):'无数据'}</b></span>`).join('');
-    rows.push(`<div class="zc-row"><span class="zc-k">六维</span>
-      <span class="zc-v zc-dims">${s}</span></div>`);
+  // ★★ M52：六维从「一行挤 6 个」改为 **3×2 六格明细** ★★
+  //   为什么：右侧雷达 375px 高，而左侧文字只有 174px
+  //   → 左栏下方留出 **201px 空白（占右栏 54%）**，用户反馈「左边一大边空白」。
+  //   ★ 用户明确说不缩雷达 —— 所以反过来：**让左栏有足够的内容**。
+  //   这一块和雷达是**同一份数据**的两种表示（图 + 明细），
+  //   并且能表达雷达给不出的信息（「无数据」是一个明确状态，不是 0）。
+  let dimGrid = '';
+  const dims = Object.entries(zc.stats_cn || {});
+  if(dims.length){
+    const cells = dims.map(([k,v])=>
+      `<div class="dim-cell"><span class="dc-k">${esc(k)}</span>
+        <b class="dc-v${v?'':' zc-na'}">${v?esc(v):'无数据'}</b></div>`).join('');
+    dimGrid = `<div class="zc-dimgrid">
+        <div class="dg-title">六维明细
+          <span>（与右图同源；E~A 为等级，无数据 = 原站未给出，不是 0）</span></div>
+        <div class="dg-cells">${cells}</div>
+      </div>`;
   }
   return `<div class="zh-card-inner">
     <div class="zc-title">替身档案
       <span>（中文信息，来自结构化数据 · 也可直接用日文名或英文名提问）</span>
     </div>
     ${rows.join('')}
-  </div>`;
+  </div>${dimGrid}`;
 }
 
 // ★★ M36：替身档案 + 六维雷达合并成一张卡 ★★

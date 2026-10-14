@@ -442,10 +442,24 @@ STATIC_DIR = Path(__file__).resolve().parent / "static"
 
 @app.get("/", include_in_schema=False)
 def root():
-    """★ 网页界面（单文件 HTML，零依赖）。"""
+    """★ 网页界面（单文件 HTML，零依赖）。
+
+    ★★ M50：必须显式禁缓存 ★★
+      实测：改了 `index.html` 后，服务端返回的确实是新版
+      （`curl / | grep 'table class="tight"'` 命中），
+      但**浏览器仍显示旧页面** —— 因为 `FileResponse` 默认不带
+      `Cache-Control`，浏览器按「启发式缓存」把页面缓存了。
+      → 页面本身很小（~70KB），每次重新验证的代价可忽略，
+        而"改了看不到"的代价很大（会让人以为改动没生效）。
+      ★ 对比：图片走 `/images/...` 那条路**故意**设了
+        `max-age=604800`（内容不变，缓存划算）——
+        两者策略不同是有意的。
+    """
     html = STATIC_DIR / "index.html"
     if html.exists():
-        return FileResponse(html)
+        return FileResponse(
+            html,
+            headers={"Cache-Control": "no-cache, must-revalidate"})
     return {
         "service": "fictional-lore-rag 混合检索 API",
         "version": "0.6.0",

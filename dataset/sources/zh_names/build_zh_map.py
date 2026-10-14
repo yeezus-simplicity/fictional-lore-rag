@@ -271,6 +271,17 @@ def main() -> int:
     #   都有两重作用：① 给缺中文名的替身提供主名
     #                ② 给已有中文名的替身提供**异译别名**
     extra_zh: dict[str, list[str]] = {}
+    # ★★ M58：短译名白名单 ★★
+    #   「≥3 汉字」是为了挡**日常高频词**（天气/奶油/手枪/鲨鱼/丰收/折纸）。
+    #   这里放的是**用户真实输入的替身全名** —— 它们虽然只有 2 个字，
+    #   但不是缩写，而是这个替身的通行写法（用户搜的就是它）。
+    #   ★ 少收的前提是"用户仍可用全名查询"；「回声」本身就是全名，
+    #     挡掉它等于让用户搜不到，与初衷相反。
+    #   ★ 与「回音」同属常用词，风险相同 —— 而「回音」作为主名一直在用。
+    #     由 test_m21「无关问句仍拒答」守住。
+    _SAFE_SHORT = {
+        "回声",   # Echoes 的另一种通行写法（用户实测输入；jojogh 用「回音」）
+    }
     for _fname in ("zh_moegirl_pairs.json", "zh_names_manual.json"):
         _p = Path(__file__).resolve().parent / _fname
         if not _p.exists():
@@ -286,15 +297,30 @@ def main() -> int:
                 _names = list(_v)
             else:
                 _names = [_v.get("name_zh")] + list(_v.get("variants") or [])
-            # ★★ 只保留 ≥3 汉字的译名 ★★
-            #   实测回归：「天**气**」（Weather Report 的萌娘简称）被收进来后，
-            #   日常问句「今天天气怎么样」被抽出候选实体「天气」→
+            # ★★ 只保留「够具体」的译名 ★★
+            #   起因：实测回归 ——「天**气**」（Weather Report 的萌娘简称）
+            #   被收进来后，日常问句「今天天气怎么样」抽出候选实体「天气」→
             #   不再判 unknown → 路由成 entity_semantic，test_m21 的
-            #   「无关问句仍拒答」直接失败。
-            #   同类还有「奶油」「手枪」「鲨鱼」「丰收」「折纸」等日常词。
-            #   → 与既有原则一致：宁可少收（用户仍可用全名查询）。
-            _names = [n for n in _names
-                      if n and len(re.findall(r"[\u4e00-\u9fff]", n)) >= 3]
+            #   「无关问句仍拒答」直接失败。同类还有「奶油」「手枪」「鲨鱼」
+            #   「丰收」「折纸」等日常词 → 一律只收 **≥3 汉字**。
+            #
+            # ★★ M58：但「形态名」被这条规则误杀了 ★★
+            #   实测：「回音ACT1 / 回声ACT1 / 獠牙ACT4 / Echoes ACT1」这类
+            #   「母体译名 + 形态编号」**全部被挡掉**（汉字只有 2 个），
+            #   于是 Tusk 的四个形态、Echoes 的三个形态**一个都搜不到**。
+            #   它们与「天气」的风险完全不同：带 ACT+数字，天然唯一、不可能是日常词。
+            #   → 细化判据：带 ACT+编号的形态名一律放行；
+            #     其余短名走白名单（每条都要有出处，见 _SAFE_SHORT）。
+            def _ok_extra(n: str) -> bool:
+                if not n:
+                    return False
+                han = len(re.findall(r"[\u4e00-\u9fff]", n))
+                if han >= 3:
+                    return True
+                if re.search(r"[Aa][Cc][Tt]\s*\d", n):
+                    return True          # 形态名：母体译名 + ACTn，唯一
+                return n in _SAFE_SHORT
+            _names = [n for n in _names if _ok_extra(n)]
             if not _names:
                 continue
             _slot = extra_zh.setdefault(_k, [])
@@ -463,8 +489,31 @@ def main() -> int:
         for _n in extra_zh.get(k, []):
             if _n != zh and _n not in vs:
                 vs.append(_n)
-        # ★ M41 出口把关：单字名不写入（无论来自 official / fetched / extra_zh）
+        # ★ M41 出口把关：单字名不写入
         if not _ok_zh(zh):
+            # ★★ M58：来源给的译名不合格时，**退回人工补录的译名**，
+            #   而不是整条丢弃 ★★
+            #   实测：tusk_act1..4 的来源译名是「牙ACT1」之类
+            #   （「牙」是单字 → 不变量拒绝），于是这四个形态
+            #   在输出里**完全没有条目** —— 明明补录了「獠牙ACT1」却用不上，
+            #   因为 fetched 分支先命中，补录分支根本没轮到。
+            _alt = [n for n in (extra_zh.get(k) or []) if _ok_zh(n)]
+            if _alt:
+                _bad = zh
+                zh = _alt[0]
+                entry["name_zh"] = zh
+                entry["level"] = "C"
+                entry["source"] = "moegirl.uk / 人工核实"
+                entry["name_zh_rejected"] = _bad
+                entry["_note"] = (
+                    f"来源译名 {_bad!r} 未过出口不变量（字少、易误匹配），"
+                    f"改用人工补录的 {zh!r}；来源名留档备查")
+                vs = [n for n in vs if n != zh]
+                if vs:
+                    entry["name_zh_variants"] = [zh] + vs
+                out[s["stand_id"]] = entry
+                n_c += 1
+                continue
             _skipped_single.append((en, zh))
             continue
         if vs:
@@ -621,7 +670,8 @@ def main() -> int:
     for base in sorted(bases):
         if base in out:
             continue
-        zh_base = ""
+        # ① 原逻辑：从派生形态名反推主名（'回音Act 1' → '回音'）
+        derived = ""
         for n in range(1, 9):
             key = norm_en(f"{base} act {n}")
             cands = fetched_variants.get(key) or (
@@ -629,19 +679,36 @@ def main() -> int:
             for c in cands:
                 z = re.sub(r"\s*[Aa][Cc][Tt]\s*\d+\s*$", "", c).strip()
                 if len(re.sub(r"[\s·、,，/]", "", z)) >= 2:
-                    zh_base = z
+                    derived = z
                     break
-            if zh_base:
+            if derived:
                 break
+        # ★★ M58：母体**不在 stands.json 里**（只有派生形态在）→ 主循环遍历不到它，
+        #   于是"补录表里为母体写的中文名与异译"也一起被漏掉。
+        #   实测：用户输入「回声」查不到 —— 它只能来自补录表，
+        #   而这条反推路径原来根本不看补录表（只看 fetched 源）。
+        #   → 主名仍以反推为准（回音来自源），补录里的其他写法并入**异译**。
+        _ez = [x for x in (extra_zh.get(base) or []) if x]
+        zh_base, zh_vars, level, src = "", [], "D", "由派生形态名反推"
+        if derived:
+            zh_base = derived
+            zh_vars = [x for x in _ez if x != derived]
+        elif _ez:
+            zh_base, zh_vars = _ez[0], _ez[1:]
+            level, src = "C", "moegirl.uk / 人工核实"
         if zh_base:
-            out[base] = {
+            _e = {
                 "name_en": base.replace("_", " ").title(),
-                "name_zh": zh_base, "level": "D",
-                "source": "由派生形态名反推",
-                "_note": ("M21：echoes/tusk 这类「形态组母体」在 stands.json 里"
+                "name_zh": zh_base, "level": level,
+                "source": src,
+                "_note": ("M21/M58：echoes/tusk 这类「形态组母体」在 stands.json 里"
                           "缺失（154/156），中文名由派生形态名去后缀反推，"
                           "非来源直取 → 标 D 级以便审阅"),
             }
+            # ★ M58：补录表里的其他写法并入异译（「回声」就是这么能搜到的）
+            if zh_vars:
+                _e["name_zh_variants"] = [zh_base] + zh_vars
+            out[base] = _e
             n_base += 1
     if n_base:
         print(f"  + 补齐形态组母体中文名 {n_base} 条（级别 D，由派生名反推）")

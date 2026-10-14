@@ -468,6 +468,16 @@ def load_data() -> bool:
         name2cid.setdefault(c["name_en"], c["character_id"])
 
     stand_rows = []
+    # ★★ M58：form_count 以 **stand_forms.json 的形态链**为准 ★★
+    #   实测不一致：stands.json 里 tusk 的 form_count=1（只有 base），
+    #   而形态链里是 ACT1~ACT4 共 4 个 → 界面「形态数」显示 1，
+    #   用户会以为 Tusk 只有一个形态。形态链（M45 建的那份）才是权威。
+    #   取不到时回退 stands.json 的原值。
+    _form_n: dict[str, int] = {}
+    for f in forms:
+        _fid = f.get("stand_id")
+        if _fid:
+            _form_n[_fid] = _form_n.get(_fid, 0) + 1
     for s in stands:
         raw_owner = (s.get("owner_name") or "").strip()
         owners = split_owner_names(raw_owner) if raw_owner else []
@@ -477,7 +487,8 @@ def load_data() -> bool:
             owner_id, s.get("part"), s.get("part_name_en"),
             s.get("stand_type"), s.get("reference"),
             s.get("manga_debut"), s.get("anime_debut"),
-            s.get("form_count", 1), s.get("main_table_registrations", 1),
+            _form_n.get(s["stand_id"], s.get("form_count", 1)),
+            s.get("main_table_registrations", 1),
             s.get("detail_url"), s.get("owner_name"),
         ))
     # 聚合父记录（owner_id 留空，形态成员各有持有者）

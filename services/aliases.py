@@ -105,11 +105,28 @@ def simplify_zh(text: str) -> str:
 
 
 def expand_variants(text: str) -> set[str]:
-    """给一个名字生成所有可接受写法（原形 + 简繁变体）。"""
+    """给一个名字生成所有可接受写法（原形 + 简繁变体 + 形态名的空格变体）。"""
     out = {text}
     s = simplify_zh(text)
     if s != text:
         out.add(s)
+    # ★★ M58：形态名的写法差异**自动生成** ★★
+    #   实测：同一个替身形态，用户会写「獠牙ACT2」「獠牙 ACT2」「獠牙 ACT 2」
+    #   「獠牙Act 2」… 而它们指的是同一个东西。
+    #   我第一版是**逐条枚举**这些写法补进译名表 —— 结果还是漏了
+    #   （补了 4 种写法，用户敲第 5 种又查不到）。
+    #   → 与 M16 同一条原则（"用户两种写法都会输入，必须并列收录"），
+    #     但**在生成层解决**，而不是靠人肉枚举。
+    #   ★ 只对含「ACT+数字」的名字生效，避免普通名字的别名表爆炸。
+    m = _ACT_FORM.search(text)
+    if m:
+        stem = text[:m.start()].strip()
+        num = m.group(1)
+        for act in ("ACT", "act", "Act"):
+            for s1 in ("", " "):
+                for s2 in ("", " "):
+                    out.add(f"{stem}{s1}{act}{s2}{num}")
+        out.add(re.sub(r"\s+", "", text))
     return out
 
 
@@ -121,6 +138,8 @@ def expand_variants(text: str) -> set[str]:
 _PAREN = re.compile(r"[（(]([^（()）]+)[）)]")
 # 汉字（含日文汉字）
 _CJK = re.compile(r"[一-鿿]")
+# ★ M58：形态名模式（ACT1 / ACT 2 / Act 3）—— 用来自动生成空格/大小写变体
+_ACT_FORM = re.compile(r"[Aa][Cc][Tt]\s*(\d)")
 
 
 def extract_zh_aliases(name_ja: Optional[str]) -> list[str]:

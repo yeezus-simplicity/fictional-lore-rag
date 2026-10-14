@@ -16,7 +16,6 @@
     "user": "用户直接给出的译名（用户为 JOJO 中文圈的用法，视为有效出处）"
   },
   "_key_format": "规范化英文名（NFKC + 小写 + 只保留字母数字），与 build_zh_map.py 的 norm_en 一致",
-
   "_overrides_note": [
     "主名覆盖：用更通行的译名替换数据源给的主名（原主名自动降为异译，仍可匹配）。",
     "★ 只在有可核对出处时才覆盖 —— 不凭感觉调。"
@@ -28,18 +27,21 @@
       "reason": "萌娘百科对应条目的条目名就是「杀手皇后」（搜索 Killer Queen 直接返回该条目，另有一个消歧条目「杀手皇后(乔乔福音)」对应第8部版本）。原主名「皇后杀手」是 jojogh 来源的次常用写法 → 降为异译。★ 实测动因：启用「共享译名一律剔除」后，「杀手皇后」因同时挂在 Killer Queen 与 Sheer Heart Attack 的异译里而被剔掉，用户就搜不到了；把它提为主名即可保留，同时从 Sheer Heart Attack 侧剔除。"
     }
   },
-
   "pairs": {
     "_comment_8": "===== 第 8 部（JoJolion）=====",
     "milagroman": {
       "name_zh": "奇迹之人",
-      "variants": ["奇蹟之人"],
+      "variants": [
+        "奇蹟之人"
+      ],
       "source": "moegirl_entry",
       "part": 8
     },
     "ozonbaby": {
       "name_zh": "臭氧宝贝",
-      "variants": ["臭氧寶貝"],
+      "variants": [
+        "臭氧寶貝"
+      ],
       "source": "moegirl_entry",
       "part": 8
     },
@@ -51,15 +53,19 @@
     },
     "schottkeyno2": {
       "name_zh": "肖特基2号",
-      "variants": ["肖特钥匙二号", "肖特基二号"],
+      "variants": [
+        "肖特钥匙二号",
+        "肖特基二号"
+      ],
       "source": "huiji_list",
       "part": 8
     },
-
     "_comment_9": "===== 第 9 部（The JOJOLands）=====",
     "bigmouthstrikesagain": {
       "name_zh": "再度失言",
-      "variants": ["大嘴又惹祸"],
+      "variants": [
+        "大嘴又惹祸"
+      ],
       "source": "user+huiji_list",
       "part": 9
     },
@@ -83,13 +89,17 @@
     },
     "200balloons": {
       "name_zh": "百倍膨胀",
-      "variants": ["双百浮囊"],
+      "variants": [
+        "双百浮囊"
+      ],
       "source": "huiji_list+bilibili",
       "part": 9
     },
     "lyineyes": {
       "name_zh": "谎言之眼",
-      "variants": ["谎眼"],
+      "variants": [
+        "谎眼"
+      ],
       "source": "huiji_list+bilibili",
       "part": 9
     },
@@ -101,7 +111,9 @@
     },
     "eclipseeight": {
       "name_zh": "日蚀八号",
-      "variants": ["日食八号"],
+      "variants": [
+        "日食八号"
+      ],
       "source": "huiji_list",
       "part": 9
     },
@@ -113,16 +125,101 @@
     },
     "pointblankseal": {
       "name_zh": "至近距离札",
-      "variants": ["近距离贴"],
+      "variants": [
+        "近距离贴"
+      ],
       "source": "moegirl_entry",
       "part": 9
     },
-
     "_comment_7": "===== 第 7 部：库内主名是 bilibili 版「盛世之墓」，此处补萌娘版作异译 =====",
     "tomboftheboom123": {
       "name_zh": "盛世之墓",
-      "variants": ["繁荣之墓"],
+      "variants": [
+        "繁荣之墓"
+      ],
       "source": "moegirl_entry",
+      "part": 7
+    },
+    "_comment_a1": "===== M58：形态组（ACT）的中文名与写法 =====",
+    "echoes": {
+      "name_zh": "回音",
+      "variants": [
+        "回声"
+      ],
+      "source": "jojogh.jojo6.com + 用户实际输入",
+      "part": 4,
+      "note": "M58：母体「回音」原本是 D 级反推（由「回音Act 1」去后缀）。用户实测**输入的是「回声」**（同一替身的另一种通行写法）→ 作为异译收进来。★ 与「回音」同属常用词，风险相同；M21 的『无关问句仍拒答』回归会守住它。"
+    },
+    "echoesact1": {
+      "name_zh": "回音ACT1",
+      "variants": [
+        "回音 Act 1",
+        "回声ACT1",
+        "回声 ACT1",
+        "Echoes ACT1"
+      ],
+      "source": "jojogh.jojo6.com + 常见写法",
+      "part": 4,
+      "note": "M58：原来只收「回音Act 1」；无空格写法与「回声」前缀写法都补上。"
+    },
+    "echoesact2": {
+      "name_zh": "回音ACT2",
+      "variants": [
+        "回音 Act 2",
+        "回声ACT2",
+        "回声 ACT2",
+        "Echoes ACT2"
+      ],
+      "source": "jojogh.jojo6.com + 常见写法",
+      "part": 4
+    },
+    "echoesact3": {
+      "name_zh": "回音ACT3",
+      "variants": [
+        "回音 Act 3",
+        "回声ACT3",
+        "回声 ACT3",
+        "Echoes ACT3"
+      ],
+      "source": "jojogh.jojo6.com + 常见写法",
+      "part": 4
+    },
+    "_comment_a2": "===== Tusk 的形态：★ 原来**四个形态都没中文名**，中文搜不到 =====",
+    "tuskact1": {
+      "name_zh": "獠牙ACT1",
+      "variants": [
+        "獠牙 Act 1",
+        "Tusk ACT 1"
+      ],
+      "source": "由母体译名「獠牙」+ 形态编号组成（结构明确，非机翻）",
+      "part": 7,
+      "note": "M58：tusk_act1..4 原来只有英文名「Tusk ACT1..4」，中文一个字都搜不到。"
+    },
+    "tuskact2": {
+      "name_zh": "獠牙ACT2",
+      "variants": [
+        "獠牙 Act 2",
+        "Tusk ACT 2"
+      ],
+      "source": "由母体译名「獠牙」+ 形态编号组成",
+      "part": 7
+    },
+    "tuskact3": {
+      "name_zh": "獠牙ACT3",
+      "variants": [
+        "獠牙 Act 3",
+        "Tusk ACT 3"
+      ],
+      "source": "由母体译名「獠牙」+ 形态编号组成",
+      "part": 7
+    },
+    "tuskact4": {
+      "name_zh": "獠牙ACT4",
+      "variants": [
+        "獠牙 Act 4",
+        "Tusk ACT 4"
+      ],
+      "source": "由母体译名「獠牙」+ 形态编号组成",
       "part": 7
     }
   }

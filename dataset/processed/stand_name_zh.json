@@ -513,13 +513,27 @@
     "name_en": "Echoes (ACT1)",
     "name_zh": "回音Act 1",
     "level": "C",
-    "source": "jojogh.jojo6.com"
+    "source": "jojogh.jojo6.com",
+    "name_zh_variants": [
+      "回音ACT1",
+      "回音 Act 1",
+      "回声ACT1",
+      "回声 ACT1",
+      "Echoes ACT1"
+    ]
   },
   "echoes_act2": {
     "name_en": "Echoes (ACT2)",
     "name_zh": "回音Act 2",
     "level": "C",
-    "source": "jojogh.jojo6.com"
+    "source": "jojogh.jojo6.com",
+    "name_zh_variants": [
+      "回音ACT2",
+      "回音 Act 2",
+      "回声ACT2",
+      "回声 ACT2",
+      "Echoes ACT2"
+    ]
   },
   "echoes_act3": {
     "name_en": "Echoes (ACT3)",
@@ -527,7 +541,12 @@
     "level": "C",
     "source": "jojogh.jojo6.com",
     "name_zh_variants": [
-      "回音 ACT3"
+      "回音 ACT3",
+      "回音ACT3",
+      "回音 Act 3",
+      "回声ACT3",
+      "回声 ACT3",
+      "Echoes ACT3"
     ]
   },
   "stray_cat": {
@@ -1217,6 +1236,54 @@
     "level": "B",
     "source": "bilibili+萌娘百科"
   },
+  "tusk_act1": {
+    "name_en": "Tusk ACT1",
+    "name_zh": "獠牙ACT1",
+    "level": "C",
+    "source": "moegirl.uk / 人工核实",
+    "name_zh_rejected": "牙ACT1",
+    "_note": "来源译名 '牙ACT1' 未过出口不变量（字少、易误匹配），改用人工补录的 '獠牙ACT1'；来源名留档备查",
+    "name_zh_variants": [
+      "獠牙 Act 1",
+      "Tusk ACT 1"
+    ]
+  },
+  "tusk_act2": {
+    "name_en": "Tusk ACT2",
+    "name_zh": "獠牙ACT2",
+    "level": "C",
+    "source": "moegirl.uk / 人工核实",
+    "name_zh_rejected": "牙ACT2",
+    "_note": "来源译名 '牙ACT2' 未过出口不变量（字少、易误匹配），改用人工补录的 '獠牙ACT2'；来源名留档备查",
+    "name_zh_variants": [
+      "獠牙 Act 2",
+      "Tusk ACT 2"
+    ]
+  },
+  "tusk_act3": {
+    "name_en": "Tusk ACT3",
+    "name_zh": "獠牙ACT3",
+    "level": "C",
+    "source": "moegirl.uk / 人工核实",
+    "name_zh_rejected": "牙ACT3",
+    "_note": "来源译名 '牙ACT3' 未过出口不变量（字少、易误匹配），改用人工补录的 '獠牙ACT3'；来源名留档备查",
+    "name_zh_variants": [
+      "獠牙 Act 3",
+      "Tusk ACT 3"
+    ]
+  },
+  "tusk_act4": {
+    "name_en": "Tusk ACT4",
+    "name_zh": "獠牙ACT4",
+    "level": "C",
+    "source": "moegirl.uk / 人工核实",
+    "name_zh_rejected": "牙ACT4",
+    "_note": "来源译名 '牙ACT4' 未过出口不变量（字少、易误匹配），改用人工补录的 '獠牙ACT4'；来源名留档备查",
+    "name_zh_variants": [
+      "獠牙 Act 4",
+      "Tusk ACT 4"
+    ]
+  },
   "wired": {
     "name_en": "Wired",
     "name_zh": "连线",
@@ -1647,13 +1714,17 @@
     "name_zh": "回音",
     "level": "D",
     "source": "由派生形态名反推",
-    "_note": "M21：echoes/tusk 这类「形态组母体」在 stands.json 里缺失（154/156），中文名由派生形态名去后缀反推，非来源直取 → 标 D 级以便审阅"
+    "_note": "M21/M58：echoes/tusk 这类「形态组母体」在 stands.json 里缺失（154/156），中文名由派生形态名去后缀反推，非来源直取 → 标 D 级以便审阅",
+    "name_zh_variants": [
+      "回音",
+      "回声"
+    ]
   },
   "tusk": {
     "name_en": "Tusk",
     "name_zh": "獠牙",
     "level": "D",
     "source": "由派生形态名反推",
-    "_note": "M21：echoes/tusk 这类「形态组母体」在 stands.json 里缺失（154/156），中文名由派生形态名去后缀反推，非来源直取 → 标 D 级以便审阅"
+    "_note": "M21/M58：echoes/tusk 这类「形态组母体」在 stands.json 里缺失（154/156），中文名由派生形态名去后缀反推，非来源直取 → 标 D 级以便审阅"
   }
 }

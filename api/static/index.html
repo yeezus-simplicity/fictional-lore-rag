@@ -525,6 +525,20 @@ td.num { font-family: var(--mono); font-size: 12px; text-align: right; }
   line-height: 17px; border-radius: 8px; font-size: 12px;
   color: var(--text-dim); border: 1px solid var(--border-strong); }
 /* ★ M52：原来的「六维」一行（.zc-dims/.zc-dim）已被左侧六维明细网格取代 */
+/* ★ M58：形态链（ACT1 → ACT2 …）—— 每段可点，当前段高亮 */
+.zc-forms { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.zc-form {
+  display: inline-block; padding: 1px 9px; cursor: pointer; font-size: 12px;
+  color: var(--text-dim); border: 1px solid var(--border-strong);
+  border-radius: 8px;
+}
+.zc-form:hover { color: var(--text); border-color: var(--accent); }
+.zc-form.on {
+  color: var(--text); border-color: var(--accent);
+  background: var(--accent-dim); cursor: default;
+}
+.zc-form.no-link { cursor: default; opacity: .65; }
+.zc-form-arrow { color: var(--text-faint); font-size: 11px; }
 @media (max-width: 560px) {
   .dg-cells { grid-template-columns: repeat(2, 1fr); }
 }
@@ -994,7 +1008,7 @@ function renderProcess(d){
 //     项目的立身之本。改用**本来就有中文的数据**拼一张卡：
 //     中文名 / 日文原名 / 使用者 / 登场部数 / 六维中文等级 / 类型。
 //   英文原文仍然保留（下面折叠展示），中文只是「看得懂的第一层」。
-function renderZhCard(zc){
+function renderZhCard(zc, forms){
   if(!zc) return '';
   const names = [zc.name_en, zc.name_ja].filter(Boolean);
   const rows = [];
@@ -1034,13 +1048,35 @@ function renderZhCard(zc){
     const cells = dims.map(([k,v])=>
       `<div class="dim-cell"><span class="dc-k">${esc(k)}</span>
         <b class="dc-v${v?'':' zc-na'}">${v?esc(v):'无数据'}</b></div>`).join('');
+    // ★ M58：形态组母体本身不单列六维（数据记在各形态上）→ 必须明说，
+    //   否则六格「全部无数据」会被读成"这个替身什么都不知道"
+    //   （实测 Tusk / Echoes 的母体就是这种情况）。
+    const _noOwnDims = forms && forms.length > 1 && zc.stats_cn
+      && Object.values(zc.stats_cn).every(v => !v);
+    const _dimNote = _noOwnDims
+      ? '本替身是形态组，六维记在各形态上 → 点上面的形态查看'
+      : '与右图同源；E~A 为等级，无数据 = 原站未给出，不是 0';
     dimGrid = `<div class="zc-dimgrid">
         <div class="dg-title">六维明细
-          <span>（与右图同源；E~A 为等级，无数据 = 原站未给出，不是 0）</span></div>
+          <span>${esc(_dimNote)}</span></div>
         <div class="dg-cells">${cells}</div>
       </div>`;
   }
-  // ★ M55：标题已提到卡片 h3「替身信息」，这里的 .zc-title 会成为重复 → 删除
+  // ★★ M58：形态链（ACT1 → ACT2 → …），每段可点 ★★
+  //   用户反馈：「tusk 和 echo 这两个替身是有不同阶段的 但是搜索结果只有一种」。
+  //   实测：形态链一直存在于 stand_forms 表，但前端**从来没读过**；
+  //   而母体在 stands.json 里缺失（只有派生形态），于是整条链都在界面上隐身。
+  //   → 现在把 API 返回的 forms 画出来，并标出"当前处于哪一段"。
+  if(forms && forms.length > 1){
+    const chain = forms.map(f =>
+      `<span class="zc-form${f.current ? ' on' : ''}${f.stand_id ? '' : ' no-link'}"
+        ${f.stand_id ? `onclick="ask('${esc(f.label)} 的六维能力')"`
+                     + ` title="查看该形态的六维"` : ' title="该形态未独立收录"'}
+        >${esc(f.name)}</span>`).join(
+      '<span class="zc-form-arrow">→</span>');
+    rows.push(`<div class="zc-row"><span class="zc-k">形态</span>
+      <span class="zc-v zc-forms">${chain}</span></div>`);
+  }
   return `<div class="zh-card-inner">
     ${rows.join('')}
   </div>${dimGrid}`;
@@ -1060,7 +1096,7 @@ function renderStandPanel(d){
        </div>`
     : '';
   if(!zc && !radar) return '';
-  const info = zc ? renderZhCard(zc) : '';
+  const info = zc ? renderZhCard(zc, d.forms) : '';
   // ★★ M55/M57：「替身资料」是一个**板块**（卡片自带标题 + 可被索引跳转）★★
   //   原来标题是卡片内那行 `.zc-title`「替身档案」，现在提到 h3 上，
   //   并把它的说明挪到 h3 后面的小字（否则同一句话出现两次）。

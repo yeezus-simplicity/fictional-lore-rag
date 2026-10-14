@@ -400,6 +400,10 @@ class QueryResponse(BaseModel):
                            "name_ja, owner, part, stats_cn}"))
     stand_images: Optional[dict] = Field(
         None, description="替身图片：{stand,user,manga,anime} 分组 + URL")
+    # ★★ M58：形态链（ACT1→ACT2…）—— 母体与形态成员都能看到"我有几个阶段"
+    forms: Optional[list] = Field(
+        None, description=("形态链：[{form_id, name, label, type, stand_id, current}]"
+                            "；stand_id 为该形态对应的替身条目（可直接点进去）"))
 
 
 class HealthResponse(BaseModel):
@@ -444,6 +448,46 @@ app.add_middleware(
 
 # ------------------------------------------------------------------
 STATIC_DIR = Path(__file__).resolve().parent / "static"
+
+
+def _forms_of(cur, sid: str, zh_name: Optional[str] = None) -> list:
+    """★ M58：取替身的形态链（ACT1 → ACT2 → …）。
+
+    实测问题：Tusk / Echoes 都有多个阶段，但**界面上只显示一种** ——
+      · 母体（echoes/tusk）在 stands.json 里**缺失**（只有派生形态），
+        是入库时按聚合规则补建的；
+      · 形态链只存在于 stand_forms 表，而前端**从来没读过它**。
+    → 于是用户看到「Tusk 只有一份数据」，ACT1~ACT4 全部不可见。
+
+    ★ 形态成员（xxx_actN）也查得到：去掉后缀取母体，把整条链返回，
+      并标出「当前处于哪一段」。
+    ★ 形态 → 替身条目的对应靠命名约定 `{base}__f{k}` ↔ `{base}_act{k+1}`
+      （建链时就是这个约定）；对不上就不给 stand_id（前端只显示名称）。
+    """
+    if not sid:
+        return []
+    base = re.sub(r"_act\d+$", "", sid)
+    cur.execute("""
+        SELECT form_id, form_name, form_type
+        FROM stand_forms WHERE stand_id=%s
+        ORDER BY COALESCE(raw_order, 0), form_id
+    """, (base,))
+    rows = cur.fetchall()
+    if not rows:
+        return []
+    out = []
+    for fid, fname, ftype in rows:
+        m = re.search(r"__f(\d+)$", fid or "")
+        member = f"{base}_act{int(m.group(1)) + 1}" if m else None
+        out.append({
+            "form_id": fid,
+            "name": fname,
+            "label": (f"{zh_name} {fname}" if zh_name else fname),
+            "type": ftype,
+            "stand_id": member,
+            "current": member == sid,
+        })
+    return out
 
 
 def _web_build() -> str:
@@ -1036,6 +1080,16 @@ def query(
         except Exception:  # noqa: BLE001
             pass
 
+    # ★★ M58：形态链 —— 让「Tusk 有 ACT1~ACT4、Echoes 有 ACT1~ACT3」在界面上可见
+    _forms_out = None
+    if sid and STATE.get("conn"):
+        try:
+            _c = STATE["conn"].cursor()
+            _forms_out = _forms_of(_c, sid, (zh_card or {}).get("name_zh")) or None
+            _c.close()
+        except Exception:  # noqa: BLE001
+            _forms_out = None
+
     return {
         "question": q,
         "route": route,
@@ -1057,6 +1111,8 @@ def query(
         # ★★ M17：六维雷达图 + 替身图片
         "radar_svg": radar_svg_out,
         "stand_images": stand_imgs,
+        # ★ M58：形态链（母体与形态成员都能看到自己的阶段）
+        "forms": _forms_out,
         # ★★ M32：中文摘要卡（名称/使用者/分部/六维中文等级）
         #   —— 与英文原文并列，不替换它（证据链保持可追溯）
         "zh_card": zh_card,

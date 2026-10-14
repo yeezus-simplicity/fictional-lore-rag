@@ -66,6 +66,7 @@ jojowiki 的文件名是有规律的（实测 Achtung Baby 页58 张图）：
 from __future__ import annotations
 
 import concurrent.futures
+import hashlib
 import json
 import os
 import re
@@ -367,6 +368,147 @@ def page_images_by_kind(stand: str, owner_hint: str = ""
     return stand_imgs, owner_page_images(stand, owner_hint)
 
 
+# ★ M48：全局页面→图片列表 缓存。由 main() 开头的「批量预取」填满，
+#   之后 `page_images()` 直接命中，**零请求**。
+#   ★ 为什么要预取到全局而不是按替身现查：
+#     瓶颈是**每次请求的往返延迟**（经代理 1~3 s），跟响应体大小关系不大。
+#     实测换成 api.php 后响应从 1~3 MB 降到 3 KB，但耗时几乎没变
+#     （5 个替身：35.8 s vs 旧 35 s）—— 因为请求次数没减少。
+#     → 必须**减少请求次数**：`titles=A|B|C` 一次可查 50 个页面，
+#       把 187 替身 + 角色页从 370+ 次请求压到 **个位数**。
+_API_CACHE: dict[str, list[str]] = {}
+
+
+def _batch_api_images(pages: list[str], chunk: int = 50) -> dict[str, list[str]]:
+    """★ 批量取多个页面的图片列表 —— 一次 API 查 `chunk` 个标题。
+
+    ★ MediaWiki 对 `titles=` 的匿名上限是 **50**（超过会报 too many values）。
+
+    ★★★ M48b：必须处理 **`continue` 续查**，否则会静默丢图 ★★★
+      实测踩坑（很隐蔽，最后一页之前的结果都是对的）：
+        22 个页面一次查完，前面 5 个页面拿到 84/49/169/99/39 个文件，
+        合计 **440**，从这里开始，**后面所有页面全部返回 0 个**。
+      原因：`imlimit=500` 是 **所有页面共享的总上限**，不是每页 500。
+        前几个页面吃掉额度后，其余页面既没图片、也**不报错** ——
+        表现成"这些替身一张图都没有"。
+      → 修法：读响应里的 `continue`，带着它继续请求，直到没有为止。
+
+    ★ `redirects=1` + 手动回填：别名页也能命中 ——
+      API 返回 `redirects: [{from, to}]`，要把结果映射回原名字，
+      否则调用方按原名取会落空。
+    ★ `normalized` 同理（下划线/首字母大小写会被规范化）。
+    """
+    out: dict[str, list[str]] = {}
+
+    def _merge(d: dict) -> None:
+        q = d.get("query", {}) or {}
+        for pg in (q.get("pages", {}) or {}).values():
+            if "missing" in pg:
+                continue
+            t = pg.get("title", "")
+            got = [x["title"] for x in pg.get("images", [])]
+            if got:
+                out.setdefault(t, []).extend(got)
+        for r in q.get("redirects", []) or []:
+            to = out.get(r.get("to", ""))
+            if to is not None:
+                out.setdefault(r.get("from", ""), []).extend(to)
+        for n in q.get("normalized", []) or []:
+            to = out.get(n.get("to", ""))
+            if to is not None:
+                out.setdefault(n.get("from", ""), []).extend(to)
+
+    for i in range(0, len(pages), chunk):
+        batch = pages[i:i + chunk]
+        cont: dict[str, str] = {}
+        while True:
+            params = {"action": "query", "prop": "images", "imlimit": "500",
+                      "format": "json", "redirects": "1",
+                      "titles": "|".join(batch)}
+            params.update(cont)
+            url = ("https://jojowiki.com/api.php?"
+                   + urllib.parse.urlencode(params, safe="|"))
+            try:
+                d = json.loads(fetch(url).decode("utf-8", "ignore"))
+            except Exception:
+                break
+            _merge(d)
+            c = d.get("continue")
+            if not c:
+                break
+            cont = c
+
+    # 去重（续查可能对同一页重复返回）
+    return {k: list(dict.fromkeys(v)) for k, v in out.items()}
+
+
+def _api_images(page: str) -> list[str]:
+    """用 MediaWiki API 取「该页面引用的图片文件名」。
+
+    ★★★ M48：这是本轮最大的一处提速 ★★★
+
+    == 原实现的问题 ==
+      `fetch(页面URL).decode()` 拿的是**整个 HTML**。实测替身页 1~3 MB，
+      页面阶段耗时 **2.2 ~ 20.4 s**（波动极大），而图片下载 10 张只要 2~3 s
+      —— **页面阶段才是大头**。
+
+    == 为什么可以换 ==
+      api.php 的 `prop=images` 返回的正是「该页面引用的文件」列表，
+      与从 HTML 里正则抽 `<img src>` **是同一个集合**，但：
+          响应 **3 KB** / 耗时 **0.96 s**（Atum，84 个文件）
+      体积差几百倍 —— 因为不再需要下载那些被引用的图片本身
+      以及整个页面骨架。
+
+    == 顺带的好处 ==
+      · `titles=A|B|C` 可**一次查多个页面**（上限 50），后面还能再批量化
+      · 拿到的是规范文件名（`File:xxx.png`），不必再解析 URL 反推，
+        也就绕开了「哈希前缀 1+2 字符」那个正则坑
+    """
+    # ★ 命中预取缓存 → 零请求（main 开头的 `_batch_api_images` 会批量填满）
+    key = page.replace(" ", "_")
+    if key in _API_CACHE:
+        return _API_CACHE[key]
+
+    url = ("https://jojowiki.com/api.php?action=query&prop=images"
+           "&imlimit=500&format=json&redirects=1&titles="
+           + urllib.parse.quote(page))
+    try:
+        d = json.loads(fetch(url).decode("utf-8", "ignore"))
+    except Exception:
+        return []
+    out: list[str] = []
+    for pg in (d.get("query", {}).get("pages", {}) or {}).values():
+        if "missing" in pg:
+            continue
+        out += [i["title"] for i in pg.get("images", [])]
+    return out
+
+
+def _thumb_url(fname: str, px: int = THUMB_PX) -> str:
+    """按 MediaWiki 的 md5 规则构造 thumb URL。
+
+    ★ 路径哈希 = `md5(文件名)`，**第 1 段取前 1 位、第 2 段取前 2 位**：
+        /images/thumb/{h[0]}/{h[:2]}/{fname}/{px}px-{fname}
+      （与文件头记的「哈希前缀是 1+2 字符，不是 2+2」是同一条规则）
+    ★ 实测：Atum 页面 6 个文件里 5 个构造成功；
+      唯一的失败是 `Atum.png`（原图本身 ≤400px，该尺寸 thumb 不存在）
+      → 服务端返回 400，由 `_download` 退回原图（见下）。
+    """
+    fn = fname.replace("File:", "").replace(" ", "_")
+    h = hashlib.md5(fn.encode("utf-8")).hexdigest()
+    q = urllib.parse.quote(fn)
+    return (f"https://static.jojowiki.com/images/thumb/"
+            f"{h[0]}/{h[:2]}/{q}/{px}px-{q}")
+
+
+def _orig_url(fname: str) -> str:
+    """原图 URL —— 仅当对应尺寸的 thumb 不存在时用（原图比 px 还小）。"""
+    fn = fname.replace("File:", "").replace(" ", "_")
+    h = hashlib.md5(fn.encode("utf-8")).hexdigest()
+    return (f"https://static.jojowiki.com/images/"
+            f"{h[0]}/{h[:2]}/{urllib.parse.quote(fn)}")
+
+
 def page_images(stand: str, owner_hint: str = "") -> list[tuple[str, str]]:
     """抓条目页，返回 [(文件名, thumbURL)]（已去重、已滤噪声）。
 
@@ -382,27 +524,23 @@ def page_images(stand: str, owner_hint: str = "") -> list[tuple[str, str]]:
       且`latest/<时间戳>/` 是**两段**，漏掉任一段都匹配不上。
       → 正确：/images/thumb/[0-9a-f]/[0-9a-f]{2}/[^/]+/[0-9]+/(fname)/(px)px-
     """
-    url = f"https://jojowiki.com/{urllib.parse.quote(stand.replace(' ', '_'))}"
-    html = fetch(url).decode("utf-8", "ignore")
-    pat = re.compile(r"/images/(?:thumb/)?[0-9a-f]/[0-9a-f]{2}/"
-                     r"[^/]+/[0-9]+/([^/]+)/([0-9]+)px-")
+    # ★ M48：改走 api.php（见 `_api_images` 的说明）——
+    #   原实现是 `fetch(页面URL)` 抓整个 HTML（1~3 MB / 2~20 s），
+    #   现在只取 3 KB 的文件名列表（~1 s）。
+    #   ★ 拿到的是规范文件名，URL 直接用 md5 规则构造，
+    #     于是原来那套「从 <img src> 正则反推哈希前缀」的解析整段不再需要
+    #     （那套逻辑踩过「前缀是 1+2 字符不是 2+2」的坑）。
     out: list[tuple[str, str]] = []
     seen: set[str] = set()
-    for src in re.findall(r'<img[^>]+src="([^"]+)"', html):
-        if "/images/" not in src:
+    for title in _api_images(stand.replace(" ", "_")):
+        fname = title.replace("File:", "").replace(" ", "_")
+        if not fname or fname in seen:
             continue
-        m = pat.search(src)
-        if not m:
-            continue
-        fname = m.group(1)
-        if fname in seen or classify(fname, stand, owner_hint) == "noise":
+        if classify(fname, stand, owner_hint) == "noise":
             continue
         seen.add(fname)
-        # 原图（>1000px）统一降级到 400px thumb —— 原图实测 6.4MB 会下崩
-        if m.group(2) != str(THUMB_PX):
-            base = src.split(f"/{m.group(2)}px-")[0]
-            src = f"{base}/{THUMB_PX}px-{fname.replace(' ', '_')}"
-        out.append((fname, src))
+        # 统一 400px —— 原图实测 6.4 MB 会下崩（见文件头）
+        out.append((fname, _thumb_url(fname)))
     return out
 
 
@@ -495,7 +633,18 @@ def save(stand_id: str, items: list[tuple[str, str, str]],
     def _dl(job):
         kind, fname, url, local, ext = job
         try:
-            return job, fetch(url), None
+            try:
+                return job, fetch(url), None
+            except Exception:
+                # ★ M48：400px 的 thumb 可能**不存在** ——
+                #   当原图本身 ≤400px 时 MediaWiki 不生成该尺寸缩略图，
+                #   服务端直接返回 400。实测 Atum.png 就是这种情况
+                #   （6 个文件里唯一失败的那个）。
+                #   → 退回原图；这类文件本来就小，直接下并不亏。
+                orig = _orig_url(fname)
+                if orig != url:
+                    return job, fetch(orig), None
+                raise
         except Exception as e:  # noqa: BLE001
             return job, None, f"{str(e)[:44]}"
 
@@ -527,6 +676,48 @@ def save(stand_id: str, items: list[tuple[str, str, str]],
 
 def slug(stand_en: str) -> str:
     return re.sub(r"[^a-z0-9]+", "_", stand_en.lower()).strip("_")
+
+
+def _prefetch_image_lists(targets: list[str],
+                          owner_map: dict[str, str]) -> int:
+    """批量预取「替身页 + 全部角色页候选」的图片列表，填进 `_API_CACHE`。
+
+    ★★★ M48：这一步把**请求次数**从 370+ 压到约 10 次 ★★★
+
+    == 为什么不预取不行 ==
+      每个替身现查时要发 2~4 次请求：替身页 1 次，角色页候选最多 3 次
+      （`owner_page_candidates` 会逐个试）。187 个替身 = **370~750 次**。
+      瓶颈是**每次往返 1~3 s**（经代理），跟响应大小无关 ——
+      所以把 HTML 换成 3 KB 的 API 也没让耗时降下来（实测 35.8s vs 35s）。
+
+    == 预取后 ==
+      所有页面按 50 个一批（MediaWiki 匿名上限）→ 约 10 批 → 十几秒
+      拿完全部元数据，之后下载阶段**一次页面请求都不发**。
+    """
+    pages: list[str] = []
+    seen: set[str] = set()
+    for en in targets:
+        for p in ([en.replace(" ", "_")]
+                  + owner_page_candidates(owner_map.get(slug(en), ""))):
+            if p and p not in seen:
+                seen.add(p)
+                pages.append(p)
+    if not pages:
+        return 0
+    n_batch = (len(pages) + 49) // 50
+    print(f"  预取图片列表：{len(pages)} 个页面 → {n_batch} 批"
+          f"（每批 50，MediaWiki 匿名上限）")
+    t = time.time()
+    got = _batch_api_images(pages)
+    _API_CACHE.update(got)
+    el = time.time() - t
+    print(f"  ✓ 拿到 {len(got)} 个页面（{el:.1f}s，"
+          f"约 {el / max(n_batch, 1):.2f}s/批）")
+    miss = len(pages) - len(got)
+    if miss > 0:
+        print(f"  ! {miss} 个页面 API 无返回（不存在或重定向未解析），"
+              f"这些会现查或直接跳过")
+    return len(got)
 
 
 def main() -> int:
@@ -657,6 +848,9 @@ def main() -> int:
     print(f"  替身间间隔 {sleep_s}s｜"
           f"{'强制重抓全部' if force else '跳过已完成的（--force 可重抓）'}")
     print()
+
+    # ★ M48：先把所有页面的图片列表批量拿回来（见函数说明）
+    _prefetch_image_lists(targets, owner_map)
 
     t0 = time.time()
     stats: dict[str, int] = {"ok": 0, "skip": 0, "empty": 0, "err": 0}

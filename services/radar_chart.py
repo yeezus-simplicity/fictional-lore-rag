@@ -45,7 +45,20 @@ LEVEL_CN = {0: "无", 1: "E", 2: "D", 3: "C", 4: "B", 5: "A"}
 
 _SIZE = 260          # 画布边长
 _CX = _CY = 130      # 中心
-_R = 92# 外圈半径
+_R = 92              # 外圈半径
+
+# ★ M51：标签几何必须**单点定义**，供「缺失说明」定位使用。
+#   之前两处各写各的（标签用 1.24、说明用 _SIZE+4），谁也没算对方多高 → 压行。
+_LABEL_R = 1.24      # 标签中心半径倍数
+_LABEL_LINE2_DY = 11  # 标签第二行（等级 / 「无数据」）相对标签中心的偏移
+_NOTE_FS = 10         # 缺失说明字号
+# ★ M51：说明文字的 y **由实测反推**，不能写死（原来是 _SIZE+4，直接压在标签上）。
+#   浏览器实测（Chromium，用 SVG getBBox 量真实文字范围）：
+#     · 底部标签「持续力 A」的 bbox 下缘 = 标签中心 y + 17.5
+#       （两行文字，且含字体 descent —— 光按字号算是 13，会少 4.5px）
+#     · 说明文字（font-size 10）的 bbox 上缘 = y - 10.5
+#   要留 6px 空隙 → 说明 y = 标签中心 y + 17.5 + 10.5 + 6 = 中心 y + 34
+_NOTE_DY_FROM_BOTTOM = 34
 
 
 def _pt(i: int, ratio: float) -> tuple[float, float]:
@@ -96,10 +109,25 @@ def radar_svg(stats: dict[str, Optional[int]],
         if k in missing_set:
             vals[i] = None
 
+    # ---- ★ M51：先算好「缺失说明」的位置与行数，再决定画布高度 ----
+    #   底部标签是 i=3（正下方），它的第二行基线 = _CY + _R*_LABEL_R + dy。
+    #   说明必须写在**它下面**，否则就会像之前那样压在「持续力 A」上。
+    note_lines: list[str] = []
+    if missing_set:
+        miss_cn = "、".join(cn for k, cn in DIMS if k in missing_set)
+        note_lines = [f"{miss_cn} 无数据（未推测为 0）"]
+        # 中文按 1em/字估算宽度；画布宽 _SIZE，留出边距
+        if len(note_lines[0]) * _NOTE_FS > _SIZE - 16:
+            note_lines = [f"{miss_cn} 无数据", "（未推测为 0）"]
+    _label_cy = _CY + _R * _LABEL_R          # 底部标签（i=3，正下方）的中心 y
+    _note_y = _label_cy + _NOTE_DY_FROM_BOTTOM
+    _height = (_note_y + (len(note_lines) - 1) * (_NOTE_FS + 2) + 6
+               if note_lines else _SIZE + 8)
+
     p: list[str] = []
     p.append(
         f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {_SIZE} '
-        f'{_SIZE + (34 if missing_set else 8)}" width="100%" '
+        f'{_height:.0f}" width="100%" '
         f'style="max-width:300px;display:block;margin:0 auto" '
         f'role="img" aria-label="{_esc(title or "六维能力图")}">')
 
@@ -153,19 +181,19 @@ def radar_svg(stats: dict[str, Optional[int]],
     # ---- 维度标签（缺失的标「无数据」）----
     for i, (k, cn) in enumerate(DIMS):
         # 标签放外圈外一点
-        lx, ly = _pt(i, 1.24)
+        lx, ly = _pt(i, _LABEL_R)
         v = vals[i]
         if v is None:
             p.append(f'<text x="{lx:.1f}" y="{ly:.1f}" text-anchor="middle" '
                      f'dominant-baseline="central" font-size="11" '
                      f'fill="var(--color-text-tertiary,#999)">{_esc(cn)}'
-                     f'<tspan x="{lx:.1f}" dy="11" font-size="9">'
+                     f'<tspan x="{lx:.1f}" dy="{_LABEL_LINE2_DY}" font-size="9">'
                      f'无数据</tspan></text>')
         else:
             p.append(f'<text x="{lx:.1f}" y="{ly:.1f}" text-anchor="middle" '
                      f'dominant-baseline="central" font-size="11" '
                      f'fill="var(--color-text-secondary,#aaa)">{_esc(cn)}'
-                     f'<tspan x="{lx:.1f}" dy="11" font-size="10" '
+                     f'<tspan x="{lx:.1f}" dy="{_LABEL_LINE2_DY}" font-size="10" '
                      f'fill="{accent}">{LEVEL_CN.get(int(v), "?")}</tspan>'
                      f'</text>')
 
@@ -174,13 +202,16 @@ def radar_svg(stats: dict[str, Optional[int]],
         p.insert(1, f'<title>{_esc(title)}</title>')
 
     # ---- 缺失维度说明（明确写出，避免被误读成 0 分）----
-    if missing_set:
-        miss_cn = "、".join(cn for k, cn in DIMS if k in missing_set)
-        y0 = _SIZE + 4
+    #   ★ M51：y 按**底部标签的实际末行**推出来（见上方几何计算）。
+    #     原来是写死的 _SIZE+4=264，而底部标签「持续力 A」的第二行
+    #     基线在 255、下缘约 258 —— 两者直接叠在一起。
+    for li, line in enumerate(note_lines):
+        yy = _note_y + li * (_NOTE_FS + 2)
         p.append(
-            f'<text x="{_CX}" y="{y0}" text-anchor="middle" font-size="10" '
+            f'<text x="{_CX}" y="{yy:.0f}" text-anchor="middle" '
+            f'font-size="{_NOTE_FS}" '
             f'fill="var(--color-text-tertiary,#999)">'
-            f'{_esc(miss_cn)} 无数据（未推测为 0）</text>')
+            f'{_esc(line)}</text>')
 
     p.append("</svg>")
     return "".join(p)

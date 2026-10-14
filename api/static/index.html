@@ -223,6 +223,14 @@ button.go:disabled { opacity: .5; cursor: wait; }
 .route.abstain   { background: #4a1f1f; color: var(--err); }
 /* 答案 */
 .answer { font-size: 15px; line-height: 1.75; white-space: pre-wrap; }
+/* ★★ M51：结构化答案必须关掉 pre-wrap ★★
+   .answer 用 pre-wrap 是为了保留**纯文本**答案里的换行（如 \n\n 空行）；
+   但结构化答案是**多行模板字符串**拼出来的 HTML 片段，
+   源码里的换行与缩进会被 pre-wrap 原样渲染成真的换行与缩进。
+   实测：「类别」那一行的 <dd> 恰好以「换行 + 8 个空格」开头
+   （其余 4 行的 <dd> 紧跟标签、没有前导空白），
+   所以**只有它**换到下一行、并缩进 8 个空格宽 —— 用户看到的就是这个。 */
+.answer.ans-html { white-space: normal; }
 .answer-refused { color: var(--warn); }
 .meta { color: var(--text-faint); font-size: 12px; margin-top: 10px; }
 /* 警告 */
@@ -233,7 +241,9 @@ button.go:disabled { opacity: .5; cursor: wait; }
 }
 .alert.err { border-color: var(--err); background: #2a1a1a; color: #f0958f; }
 /* 答案类型分发 */
-.kv { display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; font-size: 13px; }
+.kv { display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; font-size: 13px;
+      /* ★ M51 第二道防线：即使外层有 pre-wrap，键值表也不许换行缩进 */
+      white-space: normal; }
 .kv dt { color: var(--text-faint); }
 .kv dd { font-family: var(--mono); font-size: 12px; }
 .tag {
@@ -891,12 +901,17 @@ function renderAnswer(d){
   const a = d.answer;
   let body = '';
   let refused = false;
+  // ★ M51：body 是不是「HTML 片段」（结构化/折叠框）——
+  //   是的话要关掉 .answer 的 pre-wrap，否则模板源码里的换行与缩进
+  //   会被当成真的换行与缩进渲染（详见 .answer.ans-html 的 CSS 注释）。
+  let isHtml = false;
 
   if(a && a.abstained){ refused = true; body = esc(a.reason);
     if(a.hint) body += '\n\n提示：' + esc(a.hint);
   }
   else if(typeof a==='string'){
-    // ★ 生成式：answer 是自然语言字符串
+    // ★ 生成式：answer 是自然语言字符串 —— ★ 这里**保留** pre-wrap，
+    //   因为字符串里的 \n\n 就是要显示成空行。
     body = esc(a);
   }
   else if(Array.isArray(a)){
@@ -906,9 +921,11 @@ function renderAnswer(d){
     body = `<details class="en-fold">
       <summary>展开英文原文（${a.length} 段，语料来源 jojowiki）</summary>
       <div class="en-body">${a.map(x=>esc(x)).join('\n\n')}</div></details>`;
+    isHtml = true;
   }
   else if(a && typeof a==='object'){
     body = renderStructured(a);
+    isHtml = true;
   }
   else body = esc(String(a ?? '（无内容）'));
 
@@ -918,7 +935,7 @@ function renderAnswer(d){
   //   （六维是档案的一部分，却夹在答案和图片中间）。
   let html = `${renderStandPanel(d)}<div class="card">
     <h3>答案${d.mode==='generate'?' <span style="color:var(--warn);font-weight:400">（生成式）</span>':''}</h3>
-    <div class="answer ${refused?'answer-refused':''}">${body}</div>`;
+    <div class="answer ${refused?'answer-refused':''}${isHtml?' ans-html':''}">${body}</div>`;
   if(d.warning) html += `<div class="alert">⚠ ${esc(d.warning)}</div>`;
   if(d.generation) html += renderGeneration(d.generation, d.faithfulness);
   // ★★ M17：六维雷达图 + 替身图片
@@ -1165,8 +1182,7 @@ function renderStructured(a){
       <dt>维度</dt><dd>${esc(a.dimension_cn)}（${esc(a.dimension)}）</dd>
       <dt>数值</dt><dd>${esc(a.value_label ?? '—')}</dd>
       <dt>原始值</dt><dd>${esc(a.raw ?? '—')}</dd>
-      <dt>类别</dt><dd>
-        <span class="c-cat ${esc(a.category)}"
+      <dt>类别</dt><dd><span class="c-cat ${esc(a.category)}"
               title="数据里的原始类别：${esc(a.category||'')}"
           >${esc(a.category_cn || CAT_CN[a.category] || a.category || '—')}</span></dd>
     </dl>${cond}${others}`;

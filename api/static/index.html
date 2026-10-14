@@ -35,42 +35,31 @@ body {
   font: 14px/1.6 -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
   min-height: 100vh;
 }
-/* ★★ M54：左侧导航栏（原「顶栏」）★★
-   .app 是「侧栏 + 内容」的两列容器；侧栏 sticky 常驻，
-   内容区 .wrap 自适应剩余宽度。窄屏（≤900px）整块转成上下布局。 */
-.app { display: flex; align-items: flex-start; min-height: 100vh; }
-.side {
-  flex: 0 0 216px; width: 216px;
-  position: sticky; top: 0; align-self: stretch;
-  height: 100vh; overflow-y: auto;
-  display: flex; flex-direction: column; gap: 16px;
-  padding: 18px 14px 14px;
-  background: var(--bg-panel);
-  border-right: 1px solid var(--border);
-  z-index: 10;
+/* ★★ M57：顶栏（M54 曾改成左侧全局侧栏，按用户要求改回）★★
+   用户原话：「我不是让你把这个改回去吗 我要的导航栏是搜索结果出来后
+   能够导航到各个部分 如答案 替身资料 检索过程 图片」——
+   即：全局导航归位到顶部，左侧留给**结果页内的板块导航**（见 .res-toc）。 */
+header {
+  position: sticky; top: 0; z-index: 10;
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  padding: 10px 22px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
 }
 .brand-name { font-size: 15px; font-weight: 600; letter-spacing: .3px; }
-.brand-sub { font-size: 11px; color: var(--text-faint); margin-top: 4px; }
-.side nav { display: flex; flex-direction: column; gap: 4px; margin: 0; }
-.side nav button {
-  display: flex; flex-direction: column; align-items: flex-start; gap: 2px;
-  width: 100%; text-align: left; padding: 8px 11px; cursor: pointer;
-  background: none; border: 1px solid transparent;
-  border-left: 2px solid transparent; border-radius: 4px;
-  color: var(--text-dim); font-size: 13px;
+.brand-sub { font-size: 11px; color: var(--text-faint); }
+.head-meta {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
 }
-.side nav button:hover { color: var(--text); background: var(--bg-hover); }
-.side nav button.on {
-  color: var(--text); background: var(--bg);
-  border-color: var(--border-strong); border-left-color: var(--accent);
+nav { display: flex; gap: 2px; margin-left: auto; }
+nav button {
+  background: none; border: 1px solid transparent; color: var(--text-dim);
+  padding: 5px 13px; cursor: pointer; font-size: 13px; border-radius: 4px;
 }
-/* 每项下的一行说明 —— 让 4 项导航自带"这里是干什么的" */
-.nb { font-size: 11px; font-weight: 400; color: var(--text-faint); }
-.side nav button.on .nb { color: var(--text-dim); }
-.side-foot {
-  margin-top: auto; padding-top: 12px; line-height: 1.8;
-  border-top: 1px solid var(--border);
-  font-size: 11px; color: var(--text-faint);
+nav button:hover { color: var(--text); background: var(--bg-hover); }
+nav button.on {
+  color: var(--text); border-color: var(--border-strong);
+  background: var(--bg-panel);
 }
 /* 服务状态灯 */
 #dot { font-size: 11px; margin-right: 4px; color: var(--text-faint); }
@@ -84,29 +73,47 @@ body {
               font-family: var(--mono); }
 .side-warn { color: var(--warn); margin-top: 4px; line-height: 1.5; }
 /* 布局 */
-.wrap { flex: 1 1 auto; min-width: 0;
-        max-width: 1180px; margin: 0 auto; padding: 22px; }
+.wrap { max-width: 1260px; margin: 0 auto; padding: 22px; }
 .view { display: none; }
 .view.on { display: block; }
-/* ★ M54：窄屏 —— 侧栏转为**顶部横条**，导航横排、说明文字收起。
-   （原来顶栏在窄屏就是横的，行为上等价，不会让人陌生） */
-@media (max-width: 900px) {
-  .app { flex-direction: column; }
-  .side {
-    position: static; height: auto; width: 100%; flex: 0 0 auto;
-    flex-direction: row; align-items: center; gap: 10px;
-    padding: 10px 14px; border-right: none;
-    border-bottom: 1px solid var(--border);
+
+/* ★★ M57：结果页内的**板块导航**（左侧索引）★★
+   用户要的正是这个：搜索出结果后能跳到 答案 / 替身资料 / 检索过程 / 图片。
+   · 只在结果里有 >1 个板块时出现（hidden 由 JS 控制，避免无意义的一栏）
+   · sticky 常驻；点击平滑滚动；滚动时自动高亮当前板块（scroll-spy） */
+.result { display: flex; gap: 18px; align-items: flex-start; }
+.res-toc {
+  flex: 0 0 132px; width: 132px;
+  position: sticky; top: 64px;              /* 让开 sticky 顶栏 */
+  display: flex; flex-direction: column; gap: 2px;
+}
+.rt-title { font-size: 11px; color: var(--text-faint); margin-bottom: 4px; }
+.rt-item {
+  display: block; width: 100%; padding: 5px 9px; cursor: pointer;
+  font-size: 12px; color: var(--text-dim); text-align: left;
+  background: none; border: none; border-left: 2px solid transparent;
+  border-radius: 0 4px 4px 0;
+}
+.rt-item:hover { color: var(--text); background: var(--bg-hover); }
+.rt-item.on {
+  color: var(--text); background: var(--bg-panel);
+  border-left-color: var(--accent);
+}
+.res-main { flex: 1 1 auto; min-width: 0; }
+/* 锚点跳转时给 sticky 顶栏留出高度，别让标题被挡住 */
+.res-main [data-sec] { scroll-margin-top: 72px; }
+/* 窄屏：索引变成一行横排 chip（仍可点），不挤压正文 */
+@media (max-width: 860px) {
+  .result { flex-direction: column; gap: 10px; }
+  .res-toc {
+    position: static; width: 100%; flex: 0 0 auto;
+    flex-direction: row; flex-wrap: wrap; gap: 4px;
   }
-  .side nav { flex-direction: row; flex-wrap: wrap; gap: 4px; }
-  .side nav button {
-    width: auto; flex-direction: row; align-items: center; gap: 0;
-    padding: 5px 12px; border-left-width: 1px;
+  .rt-title { display: none; }
+  .rt-item {
+    width: auto; border-left: none; border: 1px solid var(--border);
+    border-radius: 4px; padding: 4px 10px;
   }
-  .nb { display: none; }
-  .side-foot { margin: 0 0 0 auto; padding-top: 0; border-top: none;
-    text-align: right; line-height: 1.5; }
-  .side-stat { display: none; }
   .wrap { padding: 16px; }
 }
 /* 查询框 */
@@ -589,37 +596,45 @@ td.num { font-family: var(--mono); font-size: 12px; text-align: right; }
      改成侧栏后导航常驻在左、内容区在右，且状态灯/规模数字有了固定位置。
      ★ #dot / #dotTxt 的 id 必须保留 —— ping() 靠它们更新服务状态。 -->
 <div class="app">
-  <aside class="side">
-    <div class="brand">
-      <div class="brand-name">fictional-lore-rag</div>
-      <div class="brand-sub">替身数据混合检索问答</div>
-    </div>
-    <nav>
-      <button class="on" data-v="q">问答<span class="nb">用中文 / 英文 / 日文名提问</span></button>
-      <button data-v="b">数据浏览<span class="nb">按替身查六维与出处</span></button>
-      <button data-v="c">冲突记录<span class="nb">同一维度多来源不一致</span></button>
-      <button data-v="s">系统状态<span class="nb">索引、语料与数据库</span></button>
-    </nav>
-    <div class="side-foot">
-      <div><span id="dot" title="服务状态">●</span><span id="dotTxt">连接中</span></div>
-      <div id="sideStat" class="side-stat"></div>
-      <!-- ★★ M56：网页构建号（服务端注入 index.html 的修改时间）★★
-           用途：用户反复说「网页还是没区别」，而服务端明明是新版 ——
-           光靠"强刷新"这句话解决不了。这里直接印出来 + 自动比对：
-             · 显示具体时间且与服务器一致 → 看到的就是最新页面
-             · 显示「未知」  → 服务是旧进程（不会做替换）→ 重启 start.bat
-             · 与服务器不一致 → 浏览器缓存了旧页面 → 页面下方会自动提示
-           ★ 注意：占位符在整份 HTML 里**只允许出现一次**（就是这个 <b> 里）。
-             不要把它写进注释或 JS 字面量 —— 服务端是"全局文本替换"，
-             会把那些地方一起改写掉。实测踩坑：JS 里原本写的是
-             `mine === '<占位符>'`，被替换成了 `mine === '<构建号>'`，
-             于是「正确的构建号」反而被判成「没被替换」→ 页面自己误报旧版本。 -->
-      <div class="side-ver">网页版本 <b id="webBuild">__WEB_BUILD__</b></div>
-      <div id="verWarn" class="side-warn" hidden></div>
-    </div>
-  </aside>
+<!-- ★★ M57：把 M54 的「全局侧栏」改回**顶栏** ★★
+     用户原话：「我不是让你把这个改回去吗 我要的导航栏是搜索结果出来后
+     能够导航到各个部分 如答案 替身资料 检索过程 图片」。
+     → 我把「左侧导航栏」理解成了全局导航（问答/数据浏览/…），
+       而他要的是**结果页内的板块导航**。
+     → 全局导航回到顶栏（M54 之前的样子），左侧留给结果页索引（见 .res-toc）。
+     ★ #dot / #dotTxt / #sideStat / #webBuild / #verWarn 的 id 必须保留 ——
+       ping() 与 checkWebBuild() 靠它们更新。 -->
+<header>
+  <div class="brand">
+    <div class="brand-name">fictional-lore-rag</div>
+    <div class="brand-sub">替身数据混合检索问答</div>
+  </div>
+  <span id="dot" title="服务状态">●</span><span id="dotTxt">连接中</span>
+  <div class="head-meta">
+    <!-- ★★ M56：网页构建号（服务端注入 index.html 的修改时间）★★
+         用途：用户反复说「网页还是没区别」，而服务端明明是新版 ——
+         光靠"强刷新"这句话解决不了。这里直接印出来 + 自动比对：
+           · 显示具体时间且与服务器一致 → 看到的就是最新页面
+           · 显示「未知」  → 服务是旧进程（不会做替换）→ 重启 start.bat
+           · 与服务器不一致 → 浏览器缓存了旧页面 → 顶部会自动提示
+         ★ 注意：占位符在整份 HTML 里**只允许出现一次**（就是这个 <b> 里）。
+           不要把它写进注释或 JS 字面量 —— 服务端是"全局文本替换"，
+           会把那些地方一起改写掉。实测踩坑：JS 里原本写的是
+           `mine === '<占位符>'`，被替换成了 `mine === '<构建号>'`，
+           于是「正确的构建号」反而被判成「没被替换」→ 页面自己误报旧版本。 -->
+    <span id="sideStat" class="side-stat"></span>
+    <span class="side-ver">网页版本 <b id="webBuild">__WEB_BUILD__</b></span>
+    <span id="verWarn" class="side-warn" hidden></span>
+  </div>
+  <nav>
+    <button class="on" data-v="q">问答</button>
+    <button data-v="b">数据浏览</button>
+    <button data-v="c">冲突记录</button>
+    <button data-v="s">系统状态</button>
+  </nav>
+</header>
 
-  <main class="wrap">
+<div class="wrap">
 
 <!-- ══════════ 问答 ══════════ -->
 <div class="view on" id="v-q">
@@ -642,16 +657,23 @@ td.num { font-family: var(--mono); font-size: 12px; text-align: right; }
     <span>试试：</span>
   </div>
 
-  <div id="rout"></div>
-
-  <!-- 检索过程（★ 默认折叠：演示时只显示一行标题，不干扰答案阅读） -->
-  <details class="card proc-fold" id="procCard" style="display:none">
-    <summary>检索过程<span class="proc-hint">（点击展开：意图识别 / 检索方式 / 证据 / 组织）</span></summary>
-    <div class="steps" id="proc"></div>
-  </details>
-
-  <!-- 答案 -->
-  <div id="ans"></div>
+  <!-- ★★ M57：结果区 = 左侧**板块索引** + 右侧正文 ★★
+       用户要的导航栏就是这个：搜索出结果后能跳到各板块
+       （答案 / 替身资料 / 检索过程 / 图片）。
+       ★ 索引项由 buildResToc() **按实际渲染出的板块**生成 ——
+         排名类问题只有「答案」一块，就不会出现点了跳不过去的死链。
+       ★ 原来的「检索过程」是这里的静态折叠块，现已移入 #ans 成为
+         一个正式板块（有 data-sec，可被索引到）。 -->
+  <div class="result">
+    <aside class="res-toc" id="resToc" hidden>
+      <div class="rt-title">本页内容</div>
+    </aside>
+    <div class="res-main" id="resMain">
+      <div id="rout"></div>
+      <!-- 答案 / 替身资料 / 检索过程 / 图片 / 相似替身 都由 JS 渲染进 #ans -->
+      <div id="ans"></div>
+    </div>
+  </div>
 </div>
 
 <!-- ══════════ 数据浏览 ══════════ -->
@@ -680,7 +702,6 @@ td.num { font-family: var(--mono); font-size: 12px; text-align: right; }
   <div id="sans" class="loading">加载中…</div>
 </div>
 
-  </main>
 </div>
 
 <script>
@@ -859,7 +880,9 @@ async function ask(q){
   $('#qb').disabled = true;
   $('#rout').innerHTML = '<div class="card"><div class="loading">检索中…</div></div>';
   $('#ans').innerHTML = '';
-  $('#procCard').style.display = 'none';
+  // ★ M57：#procCard 现在在 #ans 里面，上一步已把它清掉 → 判空再动
+  const _pc0 = $('#procCard');
+  if(_pc0) _pc0.style.display = 'none';
   try{
     // ★ /query 的参数是 **query string**（q / top_k），不是 JSON body
     //   实测踩坑：按 body 传 {question:...} → 422 Unprocessable Content
@@ -917,8 +940,10 @@ function render(d){
         ${d.confidence!=null? ' · 置信度 '+d.confidence : ''}</div>
       ${cfHtml}
     </div>`;
-  renderProcess(d);
+  // ★ M57：**先渲染答案、再填检索过程** —— 答案渲染会生成 #proc / #procCard，
+  //   顺序反了的话 renderProcess 会往一个还不存在的节点里写（静默失效）
   renderAnswer(d);
+  renderProcess(d);
 }
 
 function renderProcess(d){
@@ -957,9 +982,9 @@ function renderProcess(d){
   // ★ M39：每轮新查询都强制收起。
   //   否则用户展开过一次后，后续所有查询都会是展开态 ——
   //   折叠就白做了（演示时仍然每屏都铺着 6 行）。
+  //   ★ M57：判空 —— 它在 #ans 里，理论上一定存在，但别让 null 打断整条渲染
   const _pc = $('#procCard');
-  _pc.open = false;
-  _pc.style.display = '';
+  if(_pc){ _pc.open = false; _pc.style.display = ''; }
 }
 
 // ★★ M32：中文摘要卡 ★★
@@ -1036,15 +1061,83 @@ function renderStandPanel(d){
     : '';
   if(!zc && !radar) return '';
   const info = zc ? renderZhCard(zc) : '';
-  // ★★ M55：「替身信息」是一个**板块**（卡片自带标题）★★
+  // ★★ M55/M57：「替身资料」是一个**板块**（卡片自带标题 + 可被索引跳转）★★
   //   原来标题是卡片内那行 `.zc-title`「替身档案」，现在提到 h3 上，
   //   并把它的说明挪到 h3 后面的小字（否则同一句话出现两次）。
-  return `<div class="card">
-    <h3>替身信息 <span class="h3n">中文信息来自结构化数据 · 也可直接用日文名或英文名提问</span></h3>
+  //   ★ M57：按用户用词改名「替身信息」→「**替身资料**」
+  return `<div class="card" data-sec="sec-stand" data-secname="替身资料">
+    <h3>替身资料 <span class="h3n">中文信息来自结构化数据 · 也可直接用日文名或英文名提问</span></h3>
     <div class="stand-panel">
       <div class="sp-info">${info}</div>${radar}
     </div>
   </div>`;
+}
+
+// ★★ M57：结果页内的**板块导航**（左侧索引）★★
+//   用户原话：「我要的导航栏是搜索结果出来后 能够导航到各个部分
+//             如答案 替身资料 检索过程 图片」。
+//   ★ 索引项**按实际渲染出的板块生成**（读 [data-sec]）——
+//     排名类问题只有「答案」一块，就不会出现"点了跳不过去"的死链；
+//     也正因为如此，只有一个板块时整条索引干脆不显示。
+//   ★ 板块会**异步**出现（相似替身、图片抓取完）→ 用 MutationObserver 自动补建。
+function buildResToc(){
+  const toc = $('#resToc'), main = $('#resMain');
+  if(!toc || !main) return;
+  const secs = [...main.querySelectorAll('[data-sec]')];
+  if(secs.length < 2){                     // 只有一块就没必要导航
+    toc.hidden = true;
+    toc.innerHTML = '';
+    return;
+  }
+  toc.innerHTML = `<div class="rt-title">本页内容</div>` + secs.map((s, i) =>
+    `<button class="rt-item" data-target="${esc(s.dataset.sec)}">${
+      i + 1}. ${esc(s.dataset.secname || s.dataset.sec)}</button>`).join('');
+  toc.hidden = false;
+  toc.querySelectorAll('.rt-item').forEach(b => {
+    b.onclick = () => {
+      // ★ 板块用的是 data-sec **属性**，不是 id ——
+      //   实测踩坑：这里原本写 getElementById(data-sec) 永远取到 null，
+      //   点击**完全没反应**（不报错、不跳转，最难查的那种）。
+      const t = secs.find(s => s.dataset.sec === b.dataset.target);
+      // scroll-margin-top 已在 CSS 里给 sticky 顶栏留了位置
+      if(t) t.scrollIntoView({behavior:'smooth', block:'start'});
+    };
+  });
+  updateTocActive();
+}
+
+// 滚动时高亮「当前板块」：取**最后一个顶部已滚过参考线**的板块
+function updateTocActive(){
+  const toc = $('#resToc'), main = $('#resMain');
+  if(!toc || toc.hidden || !main) return;
+  const secs = [...main.querySelectorAll('[data-sec]')];
+  if(!secs.length) return;
+  const line = 96;                          // 顶栏高度 + 余量
+  let cur = secs[0].dataset.sec;
+  for(const s of secs){
+    if(s.getBoundingClientRect().top - line <= 0) cur = s.dataset.sec;
+  }
+  toc.querySelectorAll('.rt-item').forEach(b =>
+    b.classList.toggle('on', b.dataset.target === cur));
+}
+
+// 滚动用 rAF 节流：滚动事件很密，而这里每次都要读布局
+let _tocRaf = 0;
+window.addEventListener('scroll', () => {
+  if(_tocRaf) return;
+  _tocRaf = requestAnimationFrame(() => { _tocRaf = 0; updateTocActive(); });
+}, {passive: true});
+
+// 板块异步增加（相似替身 / 图片抓完）时自动重建索引
+if(window.MutationObserver){
+  const _resMain = $('#resMain');
+  if(_resMain){
+    let _rebuild = 0;
+    new MutationObserver(() => {
+      if(_rebuild) return;
+      _rebuild = requestAnimationFrame(() => { _rebuild = 0; buildResToc(); });
+    }).observe(_resMain, {childList: true, subtree: true});
+  }
 }
 
 function renderAnswer(d){
@@ -1079,30 +1172,34 @@ function renderAnswer(d){
   }
   else body = esc(String(a ?? '（无内容）'));
 
-  // ★★ M55：搜索结果按**板块**组织 ★★
-  //   用户原话：「搜索出来如果是替身有关的 就应该有好几个板块
-  //             如答案 替身信息 和图片」。
-  //   四个板块各自成卡、各有标题：
-  //     ① 答案（含它的证据 / 检索过程）② 替身信息（档案 + 六维雷达）
-  //     ③ 图片 ④ 相似替身
-  //   ★ 证据跟**答案**走 —— 它是这条答案的出处，不属于图片。
-  //     M54 曾把「图片 + 证据」塞进同一张**没有标题**的卡里，
-  //     结果证据被压在 1500px 的图片墙底下（等于看不见），而且那不叫"板块"。
-  let html = `<div class="card">
+  // ★★ M55/M57：搜索结果按**板块**组织，每块带 data-sec（供左侧索引跳转）★★
+  //   板块顺序按用户原话：「如答案 替身资料 检索过程 图片」
+  //     ① 答案 ② 替身资料 ③ 检索过程 ④ 图片 ⑤ 相似替身
+  let html = `<div class="card" data-sec="sec-answer" data-secname="答案">
     <h3>答案${d.mode==='generate'?' <span style="color:var(--warn);font-weight:400">（生成式）</span>':''}</h3>
     <div class="answer ${refused?'answer-refused':''}${isHtml?' ans-html':''}">${body}</div>`;
   if(d.warning) html += `<div class="alert">⚠ ${esc(d.warning)}</div>`;
   if(d.generation) html += renderGeneration(d.generation, d.faithfulness);
-  html += renderEvidence(d.evidence);   // ← 证据回到答案这一块（M54 曾挪去图片卡）
   html += '</div>';
-  html += renderStandPanel(d);          // 板块②：替身信息
-  html += renderMedia(d);               // 板块③：图片（自带卡片与标题）
-  html += '<div id="simBox"></div>';    // 板块④：相似替身占位
+  html += renderStandPanel(d);          // ② 替身资料
+  // ③ 检索过程 —— ★ M57：从"页顶的折叠块"变成**正式板块**（可被左侧索引到）
+  //    证据（原文）也归这里：它就是这条答案的出处
+  html += `<div class="card" data-sec="sec-proc" data-secname="检索过程">
+      <details class="proc-fold" id="procCard">
+        <summary>检索过程<span class="proc-hint">（点击展开：意图识别 / 检索方式 / 证据 / 组织）</span></summary>
+        <div class="steps" id="proc"></div>
+      </details>
+      ${renderEvidence(d.evidence)}
+    </div>`;
+  html += renderMedia(d);               // ④ 图片（自带卡片与标题）
+  html += '<div id="simBox"></div>';    // ⑤ 相似替身占位
   $('#ans').innerHTML = html;
   // ★ M19：图片渲染完按真实宽高比调整卡片高度（否则竖图留大片空白）
   applyShotHeights($('#ans'));
   // ★ M32：异步拉相似替身 —— 不阻塞主答案（它是增强项）
   if(d.zh_card && d.zh_card.stand_id) loadSimilar(d.zh_card.stand_id);
+  // ★ M57：板块渲染完就生成左侧索引（异步新增的板块由观察器补建）
+  buildResToc();
 }
 
 // ★★ M32：相似替身（按六维数值）★★
@@ -1117,7 +1214,9 @@ function loadSimilar(sid){
       if(!box) return;
       if(d.error){ box.innerHTML = ''; return; }
       const list = d.similar || [];
-      const head = `<div class="card"><h3>相似替身
+      // ★ M57：这一块也是板块（可被左侧索引跳转）——它是**异步**来的，
+      //   索引由 MutationObserver 自动补建
+      const head = `<div class="card" data-sec="sec-similar" data-secname="相似替身"><h3>相似替身
         <span class="sim-scope">${esc(d.scope||'')}</span></h3>`;
       if(!list.length){
         box.innerHTML = head +
@@ -1158,7 +1257,7 @@ function renderMedia(d){
   const im = d.stand_images || {};
   const groups = ['stand','user','manga','anime','misc'];
   const has = groups.some(k => (im[k]||[]).length);
-  const head = `<div class="card"><h3>图片</h3>`;
+  const head = `<div class="card" data-sec="sec-images" data-secname="图片"><h3>图片</h3>`;
   if(has){
     return head + imgSectionHTML(im) + '</div>';
   }

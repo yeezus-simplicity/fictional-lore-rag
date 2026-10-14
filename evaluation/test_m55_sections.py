@@ -66,34 +66,56 @@ def main() -> int:
     print("M55：搜索结果按板块组织（答案 / 替身信息 / 图片 / 相似替身）")
     print("=" * 74)
 
-    # ---- ① 四个板块都有标题 ----
-    print("\n[1] 四个板块的标题")
+    # ---- ① 五个板块都有标题，且都带 data-sec（供左侧索引跳转） ----
+    print("\n[1] 板块的标题与锚点")
     ra, rp, rm = fn("renderAnswer"), fn("renderStandPanel"), fn("renderMedia")
     check("找到三个渲染函数", bool(ra and rp and rm))
     check("板块「答案」有 h3", "<h3>答案" in ra)
-    check("板块「替身信息」有 h3", "<h3>替身信息" in rp)
+    # ★ M57：按用户用词改名「替身信息」→「替身资料」
+    check("板块「替身资料」有 h3", "<h3>替身资料" in rp)
+    check("板块「检索过程」有自己的卡片与折叠标题（M57 从页顶移进来）",
+          'data-sec="sec-proc"' in ra and "<summary>检索过程" in ra)
     check("板块「图片」有 h3", '<h3>图片' in rm)
     check("板块「相似替身」有 h3", "<h3>相似替身" in src)
     check("★ 不再有「无标题卡片」（M54 的 media+evidence 合卡已删除）",
           not re.search(r"\$\{_media\}\$\{_ev\}", src)
           and "const _media = renderMedia(d);" not in ra)
+    # 五个板块的 data-sec / data-secname
+    for key, nm in [("sec-answer", "答案"), ("sec-stand", "替身资料"),
+                    ("sec-proc", "检索过程"), ("sec-images", "图片"),
+                    ("sec-similar", "相似替身")]:
+        check(f"「{nm}」带 data-sec={key} + data-secname={nm}",
+              f'data-sec="{key}" data-secname="{nm}"' in src)
 
-    # ---- ② 证据归答案、图片自成板块 ----
-    print("\n[2] 证据与图片的归属")
+    # ---- ② 板块顺序 = 用户列的顺序；证据归「检索过程」 ----
+    print("\n[2] 板块顺序与证据归属")
+    i_ans = ra.find("sec-answer")
+    i_stand = ra.find("renderStandPanel(d)")
+    i_proc = ra.find("sec-proc")
     i_ev = ra.find("renderEvidence(")
-    i_close = ra.find("html += '</div>'")
     i_media = ra.find("renderMedia(")
-    check("证据在答案卡内（闭合之前）", 0 <= i_ev < i_close,
-          f"证据 {i_ev} / 闭合 {i_close}")
-    check("图片在答案卡之外", i_media > i_close > 0,
-          f"图片 {i_media} / 闭合 {i_close}")
+    check("顺序：答案 → 替身资料 → 检索过程 → 图片",
+          0 <= i_ans < i_stand < i_proc < i_media,
+          f"答案 {i_ans} / 资料 {i_stand} / 检索 {i_proc} / 图片 {i_media}")
+    check("★ 证据归「检索过程」板块（它是这条答案的出处）",
+          i_proc < i_ev < i_media, f"检索 {i_proc} / 证据 {i_ev} / 图片 {i_media}")
+    check("★ 先渲染答案再填检索过程（否则 #proc 还不存在，写入静默失效）",
+          bool(re.search(r"renderAnswer\(d\);\s*\n\s*renderProcess\(d\);",
+                         src)))
+    check("#procCard 访问都判空（它在 #ans 里，可能已被清空）",
+          src.count("const _pc0 = $('#procCard');") == 1
+          and "if(_pc){ _pc.open = false;" in src)
 
     # ---- ③ 图片板块的三种状态同卡 ----
     print("\n[3] 图片板块（三种状态都不能丢标题）")
-    check("先说清卡片头只定义一次", "const head = `<div class=\"card\"><h3>图片</h3>`" in rm)
-    check("已就绪分支用 head 拼", "return head + imgSectionHTML(im) + '</div>'" in rm)
-    check("抓取中分支用 head 拼", bool(re.search(r"return head \+ `<div class=\"media-block\" id=\"imgPending\"", rm)))
-    check("失败分支用 head 拼", bool(re.search(r"return head \+ `<div class=\"media-block\">", rm)))
+    check("卡片头只定义一次、且带锚点",
+          'const head = `<div class="card" data-sec="sec-images"' in rm)
+    check("已就绪分支用 head 拼",
+          "return head + imgSectionHTML(im) + '</div>'" in rm)
+    check("抓取中分支用 head 拼",
+          bool(re.search(r"return head \+ `<div class=\"media-block\" id=\"imgPending\"", rm)))
+    check("失败分支用 head 拼",
+          bool(re.search(r"return head \+ `<div class=\"media-block\">", rm)))
     check("无图片信息时返回空串（不出空板块）", bool(re.search(r"return '';\s*\n\}", rm)))
     check("抓取中仍会启动轮询", "pollImages(im.stand_id)" in rm)
 

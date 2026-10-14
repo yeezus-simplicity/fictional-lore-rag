@@ -109,28 +109,49 @@ def main() -> int:
     print("M54：无限算最高 / 答案置顶 / 左侧导航栏")
     print("=" * 74)
 
-    # ---- ① 左侧导航栏（静态） ----
-    print("\n[1] 左侧导航栏")
-    check("有 .app 两列容器", bool(re.search(r"\.app\s*\{[^}]*display:\s*flex", css)))
-    check("有 .side 侧栏且 sticky 常驻",
-          bool(re.search(r"\.side\s*\{[^}]*position:\s*sticky", css)))
-    check("侧栏有固定宽度",
-          bool(re.search(r"\.side\s*\{[^}]*flex:\s*0 0 \d+px", css)))
-    check("旧的 <header> 已移除", "<header>" not in src)
-    check("导航按钮在 .side nav 内（切换逻辑靠 'nav button' 选择器）",
-          bool(re.search(r'<aside class="side">[\s\S]*?<nav>[\s\S]*?data-v="q"', src)))
+    # ---- ① 顶栏（全局导航）+ 结果页内的板块索引 ----
+    #   ★★ M57：我原来把「左侧导航栏」理解成**全局**导航（问答/数据浏览/…），
+    #     用户纠正：「我要的导航栏是搜索结果出来后 能够导航到各个部分
+    #               如答案 替身资料 检索过程 图片」。
+    #     → 全局导航回到顶栏；左侧留给**结果页内的板块索引**（.res-toc）。
+    print("\n[1] 顶栏（全局导航）")
+    check("有 <header>", "<header>" in src)
+    check("M54 的左侧全局侧栏已移除", '<aside class="side">' not in src)
+    check("导航按钮在 header 内（切换逻辑靠 'nav button' 选择器）",
+          bool(re.search(r'<header>[\s\S]*?<nav>[\s\S]*?data-v="q"', src)))
     check("4 个视图按钮都在", all(f'data-v="{v}"' in src for v in "qbcs"))
-    check("★ #dot / #dotTxt 仍保留（ping 靠它们更新状态）",
-          'id="dot"' in src and 'id="dotTxt"' in src)
-    check("侧栏底部有规模数字位 #sideStat", 'id="sideStat"' in src)
+    check("★ #dot/#dotTxt/#sideStat/#webBuild/#verWarn 都还在（ping/自检依赖）",
+          bool(re.search(r'<header>[\s\S]*?id="dot"[\s\S]*?id="dotTxt"'
+                         r'[\s\S]*?id="sideStat"[\s\S]*?id="webBuild"'
+                         r'[\s\S]*?id="verWarn"', src)))
     check("ping() 会填 #sideStat",
           bool(re.search(r"\$\('#sideStat'\)", src))
           and bool(re.search(r"st\.textContent\s*=[\s\S]{0,120}n_stands", src)),
           "没找到写入语句")
-    check("窄屏（≤900px）侧栏转横条",
-          bool(re.search(r"@media \(max-width: 900px\)[\s\S]{0,200}"
-                         r"\.side\s*\{[\s\S]{0,200}position:\s*static", css)))
-    check("窄屏隐藏每项的说明文字", ".nb { display: none; }" in css)
+
+    print("\n[2] 结果页内的板块索引（用户真正要的导航栏）")
+    check("有 .result / .res-toc / .res-main 结构",
+          '.result {' in css and '.res-toc {' in css and '.res-main {' in css)
+    check("DOM 里有 #resToc 与 #resMain",
+          'id="resToc"' in src and 'id="resMain"' in src)
+    check("有 buildResToc()", "function buildResToc(" in src)
+    check("★ 索引项按**实际渲染出的板块**生成（读 [data-sec]）",
+          "querySelectorAll('[data-sec]')" in src)
+    check("少于 2 个板块时不显示索引（避免死链）",
+          "toc.hidden = true" in src and "secs.length < 2" in src)
+    check("★ 点击跳转按 data-sec 匹配（**不是** getElementById —— 实测踩过）",
+          "secs.find(s => s.dataset.sec === b.dataset.target)" in src
+          and "getElementById(b.dataset.target)" not in src)
+    check("滚动时高亮当前板块（scroll-spy）",
+          "function updateTocActive(" in src and "addEventListener('scroll'" in src)
+    check("板块异步出现时自动补建索引（相似替身/图片）",
+          "MutationObserver" in src and "buildResToc();" in src)
+    check("锚点跳转让开 sticky 顶栏",
+          bool(re.search(r"\[data-sec\]\s*\{[^}]*scroll-margin-top", css)))
+    check("窄屏索引改横排 chip",
+          bool(re.search(r"max-width:\s*860px[\s\S]{0,240}\.res-toc", css)))
+    n_sec = src.count("data-secname=")
+    check(f"五个板块都带 data-sec/data-secname（实测 {n_sec} 处）", n_sec >= 5)
 
     # ---- ② 板块顺序（静态） ----
     #   ★ M55 把卡片重组成「板块」后，这里同步更新为新的意图：
@@ -143,13 +164,15 @@ def main() -> int:
         i_ans = body.index("<h3>答案")
         i_panel = body.index("renderStandPanel(d)")
         i_media = body.index("renderMedia(d)")
+        i_proc = body.index('data-sec="sec-proc"')
         i_ev = body.index("renderEvidence(")
         i_close = body.index("html += '</div>'")
         check("答案在最前（档案与图片都在它之后）",
               i_ans < i_panel < i_media,
               f"答案 {i_ans} / 档案 {i_panel} / 图片 {i_media}")
-        check("证据仍在答案那一块（它是这条答案的出处）",
-              i_ev < i_close, f"证据 {i_ev} vs 答案卡闭合 {i_close}")
+        # ★ M57：证据改归「检索过程」板块（它是检索的产物），不再塞在答案卡里
+        check("★ 证据在「检索过程」板块里（M57 起如此）",
+              i_proc < i_ev, f"检索过程 {i_proc} vs 证据 {i_ev}")
         check("图片在答案卡之外（自成一个板块）", i_media > i_close)
 
     # ---- ③ 极值排名含 ∞（静态） ----

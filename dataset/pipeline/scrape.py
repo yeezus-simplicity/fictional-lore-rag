@@ -220,6 +220,33 @@ def _clean(text: str) -> str:
     return t.strip()
 
 
+# ★★ M67：多值字段的分隔符 ★★
+#   Infobox 里「同一栏写多个值」用 `<br>` 分隔（owner / type 最常见）。
+#   ★★ lxml 的 `text_content()` **会丢掉 `<br>` 且不补任何分隔符** ★★
+#      → `<div>Benjamin Boomboom (1)<br/>Andre Boomboom (2)</div>`
+#        取出来是 `Benjamin Boomboom (1)Andre Boomboom (2)`
+#   → 下游 `_char_id` 就把**两个人粘成一个人**：
+#        characters 表里出现 `Andre BoomboomL.A. Boomboom` /
+#        `Caravan SeraiChakaFour Unnamed miceKhan…` 这种名字，
+#        **10 个角色因此查不到**（id 长到要走哈希兜底）；
+#        `stand_type` 同样被粘成 `AutomaticMaterializedPsychological…`。
+#   → 取文本前先把 `<br>` 换成 **", "**（逗号是下游既有的分隔语义，
+#      `load_db.split_owner_names` 与展示都直接可用）。
+MULTI_SEP = ", "
+
+
+def _text_with_breaks(el) -> str:
+    """取元素文本，**把 `<br>` 变成 `, `**（否则多个值会粘成一个）。
+
+    ★ 只改 `br.tail`，不动其它节点 —— 幂等（重复调用不会加出两个逗号）。
+    """
+    for br in el.xpath(".//br"):
+        tail = br.tail or ""
+        if not tail.startswith(MULTI_SEP):
+            br.tail = MULTI_SEP + tail
+    return el.text_content()
+
+
 def parse_detail(html_text: str, url: str) -> DetailPage:
     """解析详情页，提取 infobox 字段与形态数值组。
 
@@ -249,9 +276,11 @@ def parse_detail(html_text: str, url: str) -> DetailPage:
         sib = h3.getnext()
         if sib is None:
             continue
-        val = _clean(sib.text_content())
-        if val and len(val) < 400:
-            page.infobox[field] = val
+        # ★ 长度阈值用**无分隔版本**判定 —— 保持原有语义不变，
+        #   否则加了 `, ` 之后长值可能被新阈值误杀（宁可漏修，不可错删）
+        plain = _clean(sib.text_content())
+        if plain and len(plain) < 400:
+            page.infobox[field] = _clean(_text_with_breaks(sib)) or plain
 
     # --- 2. 形态数值组 ---
     # 按 DOM 顺序扫描 pi-data-value，把连续 6 维视为一组

@@ -1,0 +1,53 @@
+{
+  "_note": "M67：owner 粘连修复后，把中文名从「粘连 id」搬到「拆分后的 character_id」。★ 逐条人工确认，不靠自动定位 —— 自动按位置对齐实测会错配（把「白蛇」这个替身名挂到角色上）。",
+  "_why_manual": [
+    "zh_char_pairs.json 的键是**入库时的 character_id**，粘连 id 上挂的名字",
+    "与各个真实角色的对应关系在源数据里是**丢失的**（值的个数常常与名字个数不等）。",
+    "按位置硬对齐会产生**看着合理、其实是错的**映射 ——",
+    "与本项目一贯口径一致：宁可少给一个中文名，不给错的中文名。"
+  ],
+  "_verified": "每条都在下面注明依据；Chinese 名称与角色英文名的对应按 JoJo 中文圈通行译名核对",
+  "entries": {
+    "andre_boomboom": {
+      "zh": "安得列·祊玢",
+      "from_glued_id": "andre_boombooml_a_boomboom",
+      "note": "旧值 ['安得列·祊玢','L·A·祊玢'] 与粘连串 'Andre BoomboomL.A. Boomboom' 两段一一对应",
+      "confidence": "high"
+    },
+    "l_a_boomboom": {
+      "zh": "L·A·祊玢",
+      "from_glued_id": "andre_boombooml_a_boomboom",
+      "note": "同上（第二段）",
+      "confidence": "high"
+    },
+    "thunder_mcqueen": {
+      "zh": "桑达·麦奎恩",
+      "from_glued_id": "whitesnake_s_unknown_victim_thunder_mcqueen",
+      "note": "旧值里 '桑达·麦奎恩' 即 Thunder McQueen；另一个值 '白蛇' 是**替身名**，不属角色",
+      "confidence": "high"
+    },
+    "sports_maxx": {
+      "zh": "史波兹·马克思",
+      "from_glued_id": "whitesnake_s_unknown_victim_sports_maxx",
+      "note": "旧值只有一个名字，对应 Sports Maxx",
+      "confidence": "high"
+    },
+    "miraschon": {
+      "zh": "蜜拉休",
+      "from_glued_id": "whitesnake_s_unknown_victim_miraschon",
+      "note": "同上",
+      "confidence": "high"
+    },
+    "viviano_westwood": {
+      "zh": "维瓦诺·魏斯伍德",
+      "from_glued_id": "whitesnake_s_unknown_victim_viviano_westwood",
+      "note": "同上",
+      "confidence": "high"
+    }
+  },
+  "_skipped": {
+    "caravan_seraichakafour_unnamed_micekha_0b0ac773": "旧值 ['理发厅老板康','波鲁那雷夫'] 只有 2 个名字而粘连串含 7 段（Caravan Serai/Chaka/Four Unnamed mice/Khan/Jean Pierre Polnareff/Unnamed boy/Cow），无法确定归属 → 不给中文名（英文名可查）",
+    "unnamed_mountain_lodge_owner": "旧值 ['古奇']，而「古奇」= Guccio 是**另一个角色**（`guccio` 已有该名）→ 该键属误配，不给它中文名",
+    "dixie_flatlinen": "旧值里没有中文名"
+  }
+}

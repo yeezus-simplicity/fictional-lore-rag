@@ -519,6 +519,29 @@ def load_data() -> bool:
     n_owner = sum(1 for r in stand_rows if r[3])
     print(f"  {len(stand_rows)} 个替身（{n_owner} 个已关联主持有者）")
 
+    # ---------- ★★ 清掉本轮不再产生的角色行 ★★ ----------
+    #   `ON CONFLICT (character_id) DO UPDATE` 只更新/插入，**从不删除** ——
+    #   修好 owner 拆分（M67）之后，那 10 个"粘连 id"会**永久留在库里**，
+    #   于是「本地库」比「全新库」多出一批脏行 —— 这正是 M12/CI 那类
+    #   「本地能跑 ≠ 全新部署能跑」的翻版（**只是这次是数据多、不是代码缺**）。
+    #   ★ 只删**没有任何 stands.owner_id 指向**的行：绝不误删在用角色。
+    #   ★ 必须放在 stands 入库**之后** —— 在那之前 owner_id 还指着旧值，
+    #     删了会踩外键。
+    if owner_map:
+        #   ★ 数组要用 `array_literal` 直接拼（本项目惯例）——
+        #     占位符传 list 会被当成字符串加引号 → `syntax error at or near "{"`
+        #     （实测踩到，与本文件里 TEXT[] 那两个字段同一个坑）。
+        _ids = array_literal(list(owner_map))
+        cur.execute(f"""
+            DELETE FROM characters c
+             WHERE NOT (c.character_id = ANY({_ids}))
+               AND NOT EXISTS (SELECT 1 FROM stands s
+                                WHERE s.owner_id = c.character_id)
+        """)
+        if cur.rowcount:
+            print(f"  清理已不再产生的角色行：{cur.rowcount} 条"
+                  f"（owner 拆分修复后的残留，仅删无人引用的）")
+
     # ---------- stand_stats ----------
     print("\n[3/7] stand_stats")
     stat_rows = []
@@ -699,6 +722,122 @@ def load_data() -> bool:
     print(f"  {len(conf_rows)} 条冲突（已存在的不覆盖）")
     conn.commit()
 
+    # ---------- 地点维度（M67 补：M65 只建了表，没写 loader）----------
+    #   ★★ 为什么必须在这一步补上（实测踩到）★★
+    #     `text_chunks.location_id` 有外键指向 `locations`，
+    #     而 `locations` 一直是**空表**（M65 只跑了 `--init` 建表）→
+    #     地点块入库时 ForeignKeyViolation：
+    #       Key (location_id)=(air_supplena_island) is not present in table "locations"
+    #     ★ 服务层从 JSON 读、不查 DB，所以**线上功能一直是好的** ——
+    #       空表只在"真正把全量语料灌进全新库"时才会炸。
+    #       这正是「本地能跑 ≠ 全新部署能跑」的又一形态。
+    print("\n[6.5/7] 地点维度（locations / location_places / location_mentions）")
+    loc_p = PROC / "locations.json"
+    if loc_p.exists():
+        loc_raw = json.loads(loc_p.read_text(encoding="utf-8"))
+        kept = [e for e in loc_raw.get("locations", []) if e.get("included")]
+        zh_map = {}
+        zh_p = PROC / "location_name_zh.json"
+        if zh_p.exists():
+            try:
+                for e in json.loads(zh_p.read_text(encoding="utf-8")).get("entries", []):
+                    if e.get("name_zh"):
+                        zh_map[e["location_id"]] = e["name_zh"]
+            except Exception:                       # noqa: BLE001
+                pass
+
+        def _debut_chapter(s) -> int | None:
+            m = re.search(r"Chapter\s+(\d+)", str(s or ""))
+            return int(m.group(1)) if m else None
+
+        # ★ `TEXT[]` 走**拼接**而不是占位符（本项目惯例，见 array_literal 的说明）：
+        #   实测占位符传 list 时，psycopg2 会渲染成 `{"a","b"}` 这种**未加引号**的
+        #   数组字面量 → `syntax error at or near "{"`（SQL 里数组字面量必须整体
+        #   写成字符串 `'{"a"}'`）。→ 用 `array_literal` 直接拼进 SQL。
+        loc_vals = []
+        for e in kept:
+            loc_vals.append(
+                "(" + ", ".join([
+                    _q(e["location_id"]), _q(e["title"]),
+                    _q(e.get("name_ja")), _q(e.get("name_romaji")),
+                    _q(e.get("type")), array_literal(e.get("types") or []),
+                    str(e["part"]) if e.get("part") is not None else "NULL",
+                    _q(e.get("part_basis")), _q(e.get("mangadebut")),
+                    _q(e.get("animedebut")),
+                    (str(_debut_chapter(e.get("mangadebut")))
+                     if _debut_chapter(e.get("mangadebut")) is not None else "NULL"),
+                    _q(e.get("source_url") or
+                       f"https://jojowiki.com/{str(e['title']).replace(' ', '_')}"),
+                    (str(e["n_infobox_fields"])
+                     if e.get("n_infobox_fields") is not None else "NULL"),
+                    _q("jojowiki_location"),
+                ]) + ")"
+            )
+        if loc_vals:
+            cur.execute("""
+                INSERT INTO locations
+                    (location_id, name_en, name_ja, name_romaji, primary_type,
+                     types, part, part_basis, mangadebut, animedebut,
+                     debut_chapter, source_url, n_infobox_fields, data_source)
+                VALUES """ + ", ".join(loc_vals) + """
+                ON CONFLICT (location_id) DO UPDATE SET
+                    name_en=EXCLUDED.name_en, name_ja=EXCLUDED.name_ja,
+                    name_romaji=EXCLUDED.name_romaji,
+                    primary_type=EXCLUDED.primary_type, types=EXCLUDED.types,
+                    part=EXCLUDED.part, part_basis=EXCLUDED.part_basis,
+                    mangadebut=EXCLUDED.mangadebut,
+                    animedebut=EXCLUDED.animedebut,
+                    debut_chapter=EXCLUDED.debut_chapter,
+                    source_url=EXCLUDED.source_url,
+                    n_infobox_fields=EXCLUDED.n_infobox_fields,
+                    data_source=EXCLUDED.data_source
+            """)
+        loc_rows = kept          # 仅用于下面的计数打印
+        print(f"  {len(loc_rows)} 个地点"
+              f"（有中文名 {len(zh_map)}）")
+
+        # 归属层级：**先删后插**（`place_paths` 是整体的，增量更新没意义）
+        cur.execute("DELETE FROM location_places")
+        place_rows = []
+        for e in kept:
+            for pi, chain in enumerate(e.get("place_paths") or []):
+                for di, nm in enumerate(chain):
+                    place_rows.append((e["location_id"], pi, di, nm))
+        if place_rows:
+            cur.executemany("""
+                INSERT INTO location_places
+                    (location_id, path_index, depth, place_name)
+                VALUES (%s,%s,%s,%s)
+                ON CONFLICT (location_id, path_index, depth) DO UPDATE
+                    SET place_name=EXCLUDED.place_name
+            """, place_rows)
+        print(f"  {len(place_rows)} 条归属层级")
+
+        men_p = PROC / "location_mentions.json"
+        if men_p.exists():
+            men = json.loads(men_p.read_text(encoding="utf-8"))
+            valid = {e["location_id"] for e in kept}
+            men_rows = [(
+                m["location_id"], m.get("chunk_id"), m.get("entity_kind"),
+                m.get("entity_id"), m.get("direction", "entity_page"),
+                m.get("match_kind"), m.get("matched_term"), m.get("snippet"),
+            ) for m in (men.get("mentions") or [])
+                if m.get("location_id") in valid]
+            # 先删后插：关联表是**派生产物**，按最新语料整体重建
+            cur.execute("DELETE FROM location_mentions")
+            for i in range(0, len(men_rows), 1000):
+                cur.executemany("""
+                    INSERT INTO location_mentions
+                        (location_id, chunk_id, entity_kind, entity_id,
+                         direction, match_kind, matched_term, snippet)
+                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s)
+                """, men_rows[i:i + 1000])
+            print(f"  {len(men_rows)} 条关联（强 "
+                  f"{sum(1 for r in men_rows if r[4] == 'location_page')}）")
+        conn.commit()
+    else:
+        print("  跳过（缺 locations.json）")
+
     # ---------- text_chunks ----------
     print("\n[7/7] text_chunks（分批）")
     # ★ B 方案：若有文章块语料（article_chunks.json）则并入。
@@ -716,12 +855,23 @@ def load_data() -> bool:
 
     BATCH = 500
     # ★ character_id：替身页块为 None，角色页块取自 extra.kind=='character'
+    # ★★ M67 补：**地点块必须带 location_id** ★★
+    #   约束 `chk_chunk_owner` 要求「替身/角色/地点 三选一」，
+    #   而这里原先只写 stand_id / character_id → 地点块直接违反约束：
+    #     CheckViolation: chk_chunk_owner
+    #     Failing row contains (6762, null, 'Air Supplena Island', …)
+    #   ★★ 为什么一直没暴露（值得记）：CI 用的是合成语料
+    #      （make_min_fixture 只造替身/角色块），**没有地点块** →
+    #      这条路径在 CI 里永远走不到；而本地库里 text_chunks 是 M65 之前
+    #      灌的，之后只跑过 `--init`（只建表、不入库）→ 两边都看不见。
+    #   这正是「**本地能跑 ≠ 全新部署能跑**」的又一形态：
+    #      缺的不是代码，是"某条数据路径从来没被跑过"。
     chunk_rows = [(
         c["chunk_id"], c.get("stand_id"), c.get("stand_name"), c.get("part"),
         c.get("chunk_type"), c.get("content"), c.get("content_len"),
         c.get("section"), c.get("entity"), c.get("alias"), c.get("debut"),
         c.get("source_url"), c.get("data_source", "jojowiki_rendered"),
-        c.get("character_id"),
+        c.get("character_id"), c.get("location_id"),
     ) for c in all_chunks]
     for i in range(0, len(chunk_rows), BATCH):
         batch = chunk_rows[i:i + BATCH]
@@ -729,8 +879,8 @@ def load_data() -> bool:
             INSERT INTO text_chunks
                 (chunk_id, stand_id, stand_name, part, chunk_type, content,
                  content_len, section, entity, alias, debut, source_url,
-                 data_source, character_id)
-            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                 data_source, character_id, location_id)
+            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
             ON CONFLICT (chunk_id) DO UPDATE SET
                 stand_id=EXCLUDED.stand_id, stand_name=EXCLUDED.stand_name,
                 part=EXCLUDED.part, chunk_type=EXCLUDED.chunk_type,
@@ -738,7 +888,8 @@ def load_data() -> bool:
                 section=EXCLUDED.section, entity=EXCLUDED.entity,
                 alias=EXCLUDED.alias, debut=EXCLUDED.debut,
                 source_url=EXCLUDED.source_url, data_source=EXCLUDED.data_source,
-                character_id=EXCLUDED.character_id
+                character_id=EXCLUDED.character_id,
+                location_id=EXCLUDED.location_id
         """, batch)
         conn.commit()
         print(f"  {i + len(batch)}/{len(chunk_rows)}")
@@ -891,14 +1042,16 @@ def split_owner_names(raw: str) -> list[str]:
       若直接当一个角色处理，生成的 ID 长达 74 字符。
 
     拆分策略（保守优先，宁可漏拆不可错拆）：
-      1. 无分隔符 → 原样返回（绝大多数情况）
-      2. 有显式分隔符（逗号/分号/and/&）→ 拆开
-      3. 无分隔符但含 camelCase 边界 → 按边界拆（保护 Mc/Mac 前缀）
-      4. 拆开后去括号注释，丢弃空段
+      1. **有显式分隔符**（逗号/分号/斜杠/and/&/+/|）→ 按它拆，**不再套用启发式保护**
+         ★ M67 起这是主路径：owner 粘连修好后，多持有者字段本身就是 `, ` 分隔的
+      2. 无分隔符但含 camelCase 边界 → 按边界拆（保护 Mc/Mac 前缀）
+      3. 拆开后丢弃空段与"没有真名字"的碎片（如被 `/` 切开的 `N/A`）
 
-    实测：13 个替身有多持有者，正确率可接受。
-    剩余未拆的（如 'Caravan SeraiChakaFour Unnamed mice...'）由 _char_id
-    截断 + 哈希兜底，不影响功能但角色粒度偏粗 —— 属已知局限。
+    ★★ M67 踩到的坑：原来有两条启发式保护，其中「拆出 >6 段 → 回退整体」
+      把 **Anubis 的 7 个持有者**当成了"过拆" → 整串被当成**一个角色**
+      （DB 里出现 `caravan_serai_chaka_four_unnamed_mice__0152b175`）。
+      保护逻辑本身没错，错的是**把它套用在源站已明确写出分隔符的串上**。
+      → 现在只在启发式（策略 2）路径上保留保护。
     """
     s = (raw or "").strip()
     if not s:
@@ -909,9 +1062,20 @@ def split_owner_names(raw: str) -> list[str]:
     if not s:
         return []
 
-    # 策略 1/2：有显式分隔符
-    parts = [p.strip() for p in _OWNER_SPLIT.split(s) if p and p.strip()]
-    # 拆分后每段仍含 camelCase 边界 → 继续拆
+    def _real_name(p: str) -> bool:
+        """是不是一个"真名字"：至少两个字母（挡掉 `N` / `A` / `-` 这类碎片）。"""
+        return len(p) >= 2 and bool(re.search(r"[A-Za-z]{2}", p))
+
+    # 策略 1：**显式分隔符**（源站写明的，直接信任；不做 >6 段回退）
+    if _OWNER_SPLIT.search(s):
+        parts = [p.strip(" ,;·/|+") for p in _OWNER_SPLIT.split(s)]
+        out = [p for p in parts if _real_name(p)]
+        if out:
+            return out
+        return [s]
+
+    # 策略 2：无分隔符 → camelCase 启发式（保守，保留两条保护）
+    parts = [p.strip() for p in _safe_camel_split(s) if p.strip()]
     expanded: list[str] = []
     for p in parts:
         sub = [q.strip() for q in _safe_camel_split(p)]

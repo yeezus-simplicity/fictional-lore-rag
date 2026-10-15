@@ -1,0 +1,1144 @@
+{
+ "n_locations": 113,
+ "n_with_zh": 59,
+ "by_source": {
+  "generic_zh": 22,
+  "moegirl_search": 0,
+  "ja_kanji": 0,
+  "manual": 37,
+  "none": 54
+ },
+ "_note": "★ 每条都带 source + evidence + confidence，可逐条复核。moegirl_search=萌娘搜索且**候选条目正文含该地点英文/日文名**；ja_kanji=日文名为纯汉字（可直接用）；manual=人工补录（待复核）。★ 含假名的日文名**不**做机械转换（M41 教训：会造出自造词）。",
+ "entries": [
+  {
+   "location_id": "air_supplena_island",
+   "title": "Air Supplena Island",
+   "name_ja": "エア・サプレーナ島",
+   "name_zh": "爱雅·萨弗雷拉岛",
+   "source": "manual",
+   "evidence": "萌娘条目名（正文含英文名，校验通过）",
+   "confidence": "high",
+   "candidates": []
+  },
+  {
+   "location_id": "angelo_rock",
+   "title": "Angelo Rock",
+   "name_ja": "アンジェロ岩",
+   "name_zh": "安杰罗岩",
+   "source": "manual",
+   "evidence": "用户给定；与日文 アンジェロ岩 一致",
+   "confidence": "high",
+   "candidates": []
+  },
+  {
+   "location_id": "arabian_peninsula",
+   "title": "Arabian Peninsula",
+   "name_ja": "アラビア半島",
+   "name_zh": "阿拉伯半岛",
+   "source": "manual",
+   "evidence": "日文 アラビア半島 直译",
+   "confidence": "medium",
+   "candidates": []
+  },
+  {
+   "location_id": "arizona_desert",
+   "title": "Arizona Desert",
+   "name_ja": "アリゾナ砂漠",
+   "name_zh": "亚利桑那沙漠",
+   "source": "manual",
+   "evidence": "日文 アリゾナ砂漠 直译",
+   "confidence": "medium",
+   "candidates": []
+  },
+  {
+   "location_id": "beauty_salon_cinderella",
+   "title": "Beauty Salon Cinderella",
+   "name_ja": "シンデレラ",
+   "name_zh": "灰姑娘美容院",
+   "source": "manual",
+   "evidence": "日文 シンデレラ；类型为美容院",
+   "confidence": "medium",
+   "candidates": []
+  },
+  {
+   "location_id": "boyoyoing_cape",
+   "title": "Boyoyoing Cape",
+   "name_ja": "ボヨヨン岬",
+   "name_zh": null,
+   "source": null,
+   "evidence": null,
+   "confidence": null,
+   "candidates": []
+  },
+  {
+   "location_id": "budogaoka_bank",
+   "title": "Budogaoka Bank",
+   "name_ja": "ぶどうヶ丘銀行",
+   "name_zh": "葡萄丘银行",
+   "source": "manual",
+   "evidence": "日文 ぶどうヶ丘銀行（ぶどう＝葡萄）",
+   "confidence": "medium",
+   "candidates": []
+  },
+  {
+   "location_id": "budogaoka_general_hospital",
+   "title": "Budogaoka General Hospital",
+   "name_ja": "ぶどうヶ丘総合病院",
+   "name_zh": "葡萄丘综合医院",
+   "source": "manual",
+   "evidence": "日文 ぶどうヶ丘総合病院",
+   "confidence": "medium",
+   "candidates": []
+  },
+  {
+   "location_id": "budogaoka_high_school",
+   "title": "Budogaoka High School",
+   "name_ja": "ぶどうヶ丘高校",
+   "name_zh": "葡萄丘高中",
+   "source": "manual",
+   "evidence": "日文 ぶどうヶ丘高校",
+   "confidence": "medium",
+   "candidates": []
+  },
+  {
+   "location_id": "caf_deux_magots",
+   "title": "Café Deux Magots",
+   "name_ja": "カフェ・ドゥ・マゴ",
+   "name_zh": "双叟咖啡馆",
+   "source": "manual",
+   "evidence": "法语 Café Deux Magots 通行译名",
+   "confidence": "high",
+   "candidates": []
+  },
+  {
+   "location_id": "cairo",
+   "title": "Cairo",
+   "name_ja": "カイロ",
+   "name_zh": "开罗",
+   "source": "generic_zh",
+   "evidence": "通行中文译名（泛地理词，不走搜索）",
+   "confidence": "high",
+   "candidates": []
+  },
+  {
+   "location_id": "capri",
+   "title": "Capri",
+   "name_ja": "カプリ島",
+   "name_zh": "卡普里岛",
+   "source": "generic_zh",
+   "evidence": "通行中文译名（泛地理词，不走搜索）",
+   "confidence": "high",
+   "candidates": []
+  },
+  {
+   "location_id": "colosseum",
+   "title": "Colosseum",
+   "name_ja": "コロッセオ",
+   "name_zh": "罗马斗兽场",
+   "source": "generic_zh",
+   "evidence": "通行中文译名（泛地理词，不走搜索）",
+   "confidence": "high",
+   "candidates": []
+  },
+  {
+   "location_id": "courtyard",
+   "title": "Courtyard",
+   "name_ja": "中庭",
+   "name_zh": "中庭",
+   "source": "manual",
+   "evidence": "日文 中庭；绿海豚监狱的中庭",
+   "confidence": "medium",
+   "candidates": []
+  },
+  {
+   "location_id": "dio_s_mansion",
+   "title": "DIO's Mansion",
+   "name_ja": "DIOの館",
+   "name_zh": "DIO 公馆",
+   "source": "manual",
+   "evidence": "萌娘条目名「DIO的公馆」",
+   "confidence": "high",
+   "candidates": []
+  },
+  {
+   "location_id": "damokan_cleaning",
+   "title": "Damokan Cleaning",
+   "name_ja": "ダモカンクリーニング",
+   "name_zh": null,
+   "source": null,
+   "evidence": null,
+   "confidence": null,
+   "candidates": []
+  },
+  {
+   "location_id": "devil_s_palm",
+   "title": "Devil's Palm",
+   "name_ja": "悪魔の手のひら",
+   "name_zh": "恶魔掌心",
+   "source": "manual",
+   "evidence": "萌娘条目名；与用户给定一致",
+   "confidence": "high",
+   "candidates": []
+  },
+  {
+   "location_id": "dio_s_castle",
+   "title": "Dio's Castle",
+   "name_ja": "ディオの館",
+   "name_zh": "迪奥城堡",
+   "source": "manual",
+   "evidence": "日文 ディオの館",
+   "confidence": "medium",
+   "candidates": []
+  },
+  {
+   "location_id": "egypt",
+   "title": "Egypt",
+   "name_ja": "エジプト",
+   "name_zh": "埃及",
+   "source": "generic_zh",
+   "evidence": "通行中文译名（泛地理词，不走搜索）",
+   "confidence": "high",
+   "candidates": []
+  },
+  {
+   "location_id": "england",
+   "title": "England",
+   "name_ja": "イングランド",
+   "name_zh": "英国",
+   "source": "generic_zh",
+   "evidence": "通行中文译名（泛地理词，不走搜索）",
+   "confidence": "high",
+   "candidates": []
+  },
+  {
+   "location_id": "everglades",
+   "title": "Everglades",
+   "name_ja": "湿地帯",
+   "name_zh": "大沼泽地",
+   "source": "manual",
+   "evidence": "佛罗里达 Everglades 通行译名",
+   "confidence": "high",
+   "candidates": []
+  },
+  {
+   "location_id": "express_train",
+   "title": "Express Train",
+   "name_ja": "超特急",
+   "name_zh": "特快列车",
+   "source": "manual",
+   "evidence": "日文 超特急",
+   "confidence": "medium",
+   "candidates": []
+  },
+  {
+   "location_id": "female_wing",
+   "title": "Female Wing",
+   "name_ja": "女子監",
+   "name_zh": "女囚区",
+   "source": "manual",
+   "evidence": "日文 女子監（不采用日式写法）",
+   "confidence": "medium",
+   "candidates": []
+  },
+  {
+   "location_id": "florida",
+   "title": "Florida",
+   "name_ja": "フロリダ州",
+   "name_zh": "佛罗里达",
+   "source": "generic_zh",
+   "evidence": "通行中文译名（泛地理词，不走搜索）",
+   "confidence": "high",
+   "candidates": []
+  },
+  {
+   "location_id": "foggy_town_hotel",
+   "title": "Foggy Town Hotel",
+   "name_ja": "霧深い町のホテル",
+   "name_zh": "雾深镇旅馆",
+   "source": "manual",
+   "evidence": "日文 霧深い町のホテル 直译",
+   "confidence": "medium",
+   "candidates": []
+  },
+  {
+   "location_id": "futatsumori_tunnel",
+   "title": "Futatsumori Tunnel",
+   "name_ja": "二つ杜トンネル",
+   "name_zh": "双杜隧道",
+   "source": "manual",
+   "evidence": "日文 二つ杜トンネル（二つ＝双）",
+   "confidence": "medium",
+   "candidates": []
+  },
+  {
+   "location_id": "germany",
+   "title": "Germany",
+   "name_ja": "ドイツ",
+   "name_zh": "德国",
+   "source": "generic_zh",
+   "evidence": "通行中文译名（泛地理词，不走搜索）",
+   "confidence": "high",
+   "candidates": []
+  },
+  {
+   "location_id": "gessler_s_hotel",
+   "title": "Gessler's Hotel",
+   "name_ja": "ゲスラーのホテル",
+   "name_zh": "盖斯勒旅馆",
+   "source": "manual",
+   "evidence": "Gessler 音译",
+   "confidence": "medium",
+   "candidates": []
+  },
+  {
+   "location_id": "gettysburg",
+   "title": "Gettysburg",
+   "name_ja": "ゲティスバーグ",
+   "name_zh": null,
+   "source": null,
+   "evidence": null,
+   "confidence": null,
+   "candidates": []
+  },
+  {
+   "location_id": "ghost_girl_s_alley",
+   "title": "Ghost Girl's Alley",
+   "name_ja": "少女の幽霊に会える小道",
+   "name_zh": "幽灵少女小道",
+   "source": "manual",
+   "evidence": "日文 少女の幽霊に会える小道",
+   "confidence": "medium",
+   "candidates": []
+  },
+  {
+   "location_id": "great_tree_of_sugar_mountain",
+   "title": "Great Tree of Sugar Mountain",
+   "name_ja": "シュガーマウンテンの大木",
+   "name_zh": "糖果山巨树",
+   "source": "manual",
+   "evidence": "Sugar Mountain 直译",
+   "confidence": "medium",
+   "candidates": []
+  },
+  {
+   "location_id": "green_dolphin_street_prison",
+   "title": "Green Dolphin Street Prison",
+   "name_ja": "グリーン・ドルフィン・ストリート刑務所",
+   "name_zh": "绿海豚街监狱",
+   "source": "manual",
+   "evidence": "萌娘条目名「绿海豚监狱」",
+   "confidence": "high",
+   "candidates": []
+  },
+  {
+   "location_id": "hasekura_academy_elementary_school",
+   "title": "Hasekura Academy Elementary School",
+   "name_ja": "支倉学園小等部",
+   "name_zh": "支仓学园小学部",
+   "source": "manual",
+   "evidence": "日文 支倉学園小等部",
+   "confidence": "medium",
+   "candidates": []
+  },
+  {
+   "location_id": "hawaii",
+   "title": "Hawaii",
+   "name_ja": "ハワイ州",
+   "name_zh": null,
+   "source": null,
+   "evidence": null,
+   "confidence": null,
+   "candidates": []
+  },
+  {
+   "location_id": "hawaii_state_land_registry_office",
+   "title": "Hawaii State Land Registry Office",
+   "name_ja": "ハワイ州土地登記所",
+   "name_zh": null,
+   "source": null,
+   "evidence": null,
+   "confidence": null,
+   "candidates": []
+  },
+  {
+   "location_id": "higashikata_fruit_parlor",
+   "title": "Higashikata Fruit Parlor",
+   "name_ja": "東方フルーツパーラー",
+   "name_zh": null,
+   "source": null,
+   "evidence": null,
+   "confidence": null,
+   "candidates": []
+  },
+  {
+   "location_id": "higashikata_residence",
+   "title": "Higashikata Residence",
+   "name_ja": "東方邸",
+   "name_zh": "东方宅邸",
+   "source": "manual",
+   "evidence": "日文 東方邸（東方＝东方）",
+   "confidence": "high",
+   "candidates": []
+  },
+  {
+   "location_id": "higashikata_residence_jojolion",
+   "title": "Higashikata Residence (JoJolion)",
+   "name_ja": "東方邸",
+   "name_zh": "东方宅邸（第8部）",
+   "source": "manual",
+   "evidence": "日文 東方邸；与第4部同名不同地",
+   "confidence": "high",
+   "candidates": []
+  },
+  {
+   "location_id": "hirose_residence",
+   "title": "Hirose Residence",
+   "name_ja": "広瀬邸",
+   "name_zh": "广濑宅邸",
+   "source": "manual",
+   "evidence": "日文 広瀬邸（広＝广）",
+   "confidence": "high",
+   "candidates": []
+  },
+  {
+   "location_id": "hong_kong",
+   "title": "Hong Kong",
+   "name_ja": "香港",
+   "name_zh": "香港",
+   "source": "generic_zh",
+   "evidence": "通行中文译名（泛地理词，不走搜索）",
+   "confidence": "high",
+   "candidates": []
+  },
+  {
+   "location_id": "howler_s_megayacht",
+   "title": "Howler's Megayacht",
+   "name_ja": "ハウラーのメガヨット",
+   "name_zh": null,
+   "source": null,
+   "evidence": null,
+   "confidence": null,
+   "candidates": []
+  },
+  {
+   "location_id": "hualalai",
+   "title": "Hualalai",
+   "name_ja": "フアラライ山",
+   "name_zh": null,
+   "source": null,
+   "evidence": null,
+   "confidence": null,
+   "candidates": []
+  },
+  {
+   "location_id": "iko_iko",
+   "title": "IKO IKO",
+   "name_ja": "アイコアイコ",
+   "name_zh": null,
+   "source": null,
+   "evidence": null,
+   "confidence": null,
+   "candidates": []
+  },
+  {
+   "location_id": "india",
+   "title": "India",
+   "name_ja": "インド",
+   "name_zh": "印度",
+   "source": "generic_zh",
+   "evidence": "通行中文译名（泛地理词，不走搜索）",
+   "confidence": "high",
+   "candidates": []
+  },
+  {
+   "location_id": "italy",
+   "title": "Italy",
+   "name_ja": "イタリア",
+   "name_zh": "意大利",
+   "source": "generic_zh",
+   "evidence": "通行中文译名（泛地理词，不走搜索）",
+   "confidence": "high",
+   "candidates": []
+  },
+  {
+   "location_id": "joestar_jizo",
+   "title": "Joestar Jizo",
+   "name_ja": "ジョースター地蔵",
+   "name_zh": null,
+   "source": null,
+   "evidence": null,
+   "confidence": null,
+   "candidates": []
+  },
+  {
+   "location_id": "joestar_mansion",
+   "title": "Joestar Mansion",
+   "name_ja": "ジョースター邸",
+   "name_zh": "乔斯达宅邸",
+   "source": "manual",
+   "evidence": "萌娘条目名",
+   "confidence": "high",
+   "candidates": []
+  },
+  {
+   "location_id": "kameyu_market",
+   "title": "Kameyu Market",
+   "name_ja": "亀友マーケット",
+   "name_zh": null,
+   "source": null,
+   "evidence": null,
+   "confidence": null,
+   "candidates": []
+  },
+  {
+   "location_id": "kansas_city",
+   "title": "Kansas City",
+   "name_ja": "カンザス・シティ",
+   "name_zh": null,
+   "source": null,
+   "evidence": null,
+   "confidence": null,
+   "candidates": []
+  },
+  {
+   "location_id": "kawajiri_residence",
+   "title": "Kawajiri Residence",
+   "name_ja": "川尻邸",
+   "name_zh": "川尻宅邸",
+   "source": "manual",
+   "evidence": "日文 川尻邸",
+   "confidence": "high",
+   "candidates": []
+  },
+  {
+   "location_id": "kennedy_space_center",
+   "title": "Kennedy Space Center",
+   "name_ja": "ケネディ宇宙センター",
+   "name_zh": null,
+   "source": null,
+   "evidence": null,
+   "confidence": null,
+   "candidates": []
+  },
+  {
+   "location_id": "kingdom_of_naples",
+   "title": "Kingdom of Naples",
+   "name_ja": "ネアポリス王国",
+   "name_zh": null,
+   "source": null,
+   "evidence": null,
+   "confidence": null,
+   "candidates": []
+  },
+  {
+   "location_id": "kira_residence",
+   "title": "Kira Residence",
+   "name_ja": "吉良邸",
+   "name_zh": "吉良宅邸",
+   "source": "manual",
+   "evidence": "日文 吉良邸",
+   "confidence": "high",
+   "candidates": []
+  },
+  {
+   "location_id": "kujo_mansion",
+   "title": "Kujo Mansion",
+   "name_ja": "空条邸",
+   "name_zh": "空条宅邸",
+   "source": "manual",
+   "evidence": "日文 空条邸",
+   "confidence": "high",
+   "candidates": []
+  },
+  {
+   "location_id": "libeccio",
+   "title": "Libeccio",
+   "name_ja": "",
+   "name_zh": null,
+   "source": null,
+   "evidence": null,
+   "confidence": null,
+   "candidates": []
+  },
+  {
+   "location_id": "mexico",
+   "title": "Mexico",
+   "name_ja": "メキシコ",
+   "name_zh": "墨西哥",
+   "source": "generic_zh",
+   "evidence": "通行中文译名（泛地理词，不走搜索）",
+   "confidence": "high",
+   "candidates": []
+  },
+  {
+   "location_id": "morioh",
+   "title": "Morioh",
+   "name_ja": "杜王町",
+   "name_zh": "杜王町",
+   "source": "manual",
+   "evidence": "日文 杜王町；中文圈通行",
+   "confidence": "high",
+   "candidates": []
+  },
+  {
+   "location_id": "morioh_jojolion",
+   "title": "Morioh (JoJolion)",
+   "name_ja": "杜王町",
+   "name_zh": "杜王町（第8部）",
+   "source": "manual",
+   "evidence": "同名不同地（_loc_id 保留括号以区分）",
+   "confidence": "high",
+   "candidates": []
+  },
+  {
+   "location_id": "morioh_arcade",
+   "title": "Morioh Arcade",
+   "name_ja": "",
+   "name_zh": null,
+   "source": null,
+   "evidence": null,
+   "confidence": null,
+   "candidates": []
+  },
+  {
+   "location_id": "morioh_grand_hotel",
+   "title": "Morioh Grand Hotel",
+   "name_ja": "杜王グランドホテル",
+   "name_zh": null,
+   "source": null,
+   "evidence": null,
+   "confidence": null,
+   "candidates": []
+  },
+  {
+   "location_id": "morioh_port",
+   "title": "Morioh Port",
+   "name_ja": "杜王港",
+   "name_zh": null,
+   "source": null,
+   "evidence": null,
+   "confidence": null,
+   "candidates": []
+  },
+  {
+   "location_id": "morioh_port_jojolion",
+   "title": "Morioh Port (JoJolion)",
+   "name_ja": "杜王港",
+   "name_zh": null,
+   "source": null,
+   "evidence": null,
+   "confidence": null,
+   "candidates": []
+  },
+  {
+   "location_id": "morioh_public_library",
+   "title": "Morioh Public Library",
+   "name_ja": "杜王町立図書館",
+   "name_zh": null,
+   "source": null,
+   "evidence": null,
+   "confidence": null,
+   "candidates": []
+  },
+  {
+   "location_id": "morioh_stadium",
+   "title": "Morioh Stadium",
+   "name_ja": "杜王スタジアム",
+   "name_zh": null,
+   "source": null,
+   "evidence": null,
+   "confidence": null,
+   "candidates": []
+  },
+  {
+   "location_id": "morioh_station",
+   "title": "Morioh Station",
+   "name_ja": "杜王駅",
+   "name_zh": null,
+   "source": null,
+   "evidence": null,
+   "confidence": null,
+   "candidates": []
+  },
+  {
+   "location_id": "mount_hananero",
+   "title": "Mount Hananero",
+   "name_ja": "鼻炉山",
+   "name_zh": null,
+   "source": null,
+   "evidence": null,
+   "confidence": null,
+   "candidates": []
+  },
+  {
+   "location_id": "mukade_shoe_store",
+   "title": "Mukade Shoe Store",
+   "name_ja": "靴のムカデ屋",
+   "name_zh": null,
+   "source": null,
+   "evidence": null,
+   "confidence": null,
+   "candidates": []
+  },
+  {
+   "location_id": "mutsu_kabe_shrine",
+   "title": "Mutsu-kabe Shrine",
+   "name_ja": "六壁神社",
+   "name_zh": null,
+   "source": null,
+   "evidence": null,
+   "confidence": null,
+   "candidates": []
+  },
+  {
+   "location_id": "naples",
+   "title": "Naples",
+   "name_ja": "ネアポリス",
+   "name_zh": "那不勒斯",
+   "source": "generic_zh",
+   "evidence": "通行中文译名（泛地理词，不走搜索）",
+   "confidence": "high",
+   "candidates": []
+  },
+  {
+   "location_id": "naples_station",
+   "title": "Naples Station",
+   "name_ja": "ネアポリス駅",
+   "name_zh": null,
+   "source": null,
+   "evidence": null,
+   "confidence": null,
+   "candidates": []
+  },
+  {
+   "location_id": "new_jersey",
+   "title": "New Jersey",
+   "name_ja": "ニュージャージー州",
+   "name_zh": null,
+   "source": null,
+   "evidence": null,
+   "confidence": null,
+   "candidates": []
+  },
+  {
+   "location_id": "new_york_city",
+   "title": "New York City",
+   "name_ja": "ニューヨーク市",
+   "name_zh": "纽约市",
+   "source": "generic_zh",
+   "evidence": "通行中文译名（泛地理词，不走搜索）",
+   "confidence": "high",
+   "candidates": []
+  },
+  {
+   "location_id": "nightmare_world",
+   "title": "Nightmare World",
+   "name_ja": "悪夢世界",
+   "name_zh": null,
+   "source": null,
+   "evidence": null,
+   "confidence": null,
+   "candidates": []
+  },
+  {
+   "location_id": "nijimura_residence",
+   "title": "Nijimura Residence",
+   "name_ja": "虹村邸",
+   "name_zh": "虹村宅邸",
+   "source": "manual",
+   "evidence": "日文 虹村邸",
+   "confidence": "high",
+   "candidates": []
+  },
+  {
+   "location_id": "nine_pyramids_lounge",
+   "title": "Nine Pyramids Lounge",
+   "name_ja": "ナイン・ピラミッズ・ ラウンジ",
+   "name_zh": null,
+   "source": null,
+   "evidence": null,
+   "confidence": null,
+   "candidates": []
+  },
+  {
+   "location_id": "ocean_liner_to_america",
+   "title": "Ocean Liner to America",
+   "name_ja": "アメリカ行き客船",
+   "name_zh": null,
+   "source": null,
+   "evidence": null,
+   "confidence": null,
+   "candidates": []
+  },
+  {
+   "location_id": "ogre_street",
+   "title": "Ogre Street",
+   "name_ja": "食屍鬼街",
+   "name_zh": "食尸鬼街",
+   "source": "manual",
+   "evidence": "萌娘条目名；日文 食屍鬼街",
+   "confidence": "high",
+   "candidates": []
+  },
+  {
+   "location_id": "orlando_state_hospital",
+   "title": "Orlando State Hospital",
+   "name_ja": "オーランド州立病院",
+   "name_zh": null,
+   "source": null,
+   "evidence": null,
+   "confidence": null,
+   "candidates": []
+  },
+  {
+   "location_id": "owson",
+   "title": "Owson",
+   "name_ja": "オーソン",
+   "name_zh": null,
+   "source": null,
+   "evidence": null,
+   "confidence": null,
+   "candidates": []
+  },
+  {
+   "location_id": "pakistan",
+   "title": "Pakistan",
+   "name_ja": "パキスタン",
+   "name_zh": "巴基斯坦",
+   "source": "generic_zh",
+   "evidence": "通行中文译名（泛地理词，不走搜索）",
+   "confidence": "high",
+   "candidates": []
+  },
+  {
+   "location_id": "pearl_general_hospital",
+   "title": "Pearl General Hospital",
+   "name_ja": "パール総合病院",
+   "name_zh": null,
+   "source": null,
+   "evidence": null,
+   "confidence": null,
+   "candidates": []
+  },
+  {
+   "location_id": "pepsi_sign_street",
+   "title": "Pepsi Sign Street",
+   "name_ja": "ペプシの看板のある通り",
+   "name_zh": null,
+   "source": null,
+   "evidence": null,
+   "confidence": null,
+   "candidates": []
+  },
+  {
+   "location_id": "philadelphia",
+   "title": "Philadelphia",
+   "name_ja": "フィラデルフィア",
+   "name_zh": null,
+   "source": null,
+   "evidence": null,
+   "confidence": null,
+   "candidates": []
+  },
+  {
+   "location_id": "pompeii",
+   "title": "Pompeii",
+   "name_ja": "ポンペイ",
+   "name_zh": null,
+   "source": null,
+   "evidence": null,
+   "confidence": null,
+   "candidates": []
+  },
+  {
+   "location_id": "radio_gaga_incident_orchard",
+   "title": "Radio Gaga Incident Orchard",
+   "name_ja": "ラヂオ・ガガ事件の果樹園",
+   "name_zh": null,
+   "source": null,
+   "evidence": null,
+   "confidence": null,
+   "candidates": []
+  },
+  {
+   "location_id": "red_sea",
+   "title": "Red Sea",
+   "name_ja": "紅海",
+   "name_zh": "红海",
+   "source": "generic_zh",
+   "evidence": "通行中文译名（泛地理词，不走搜索）",
+   "confidence": "high",
+   "candidates": []
+  },
+  {
+   "location_id": "rocky_mountain_village",
+   "title": "Rocky Mountain Village",
+   "name_ja": "ロッキー山脈麓の村",
+   "name_zh": null,
+   "source": null,
+   "evidence": null,
+   "confidence": null,
+   "candidates": []
+  },
+  {
+   "location_id": "rohan_s_house",
+   "title": "Rohan's House",
+   "name_ja": "岸辺露伴の家",
+   "name_zh": "岸边露伴宅",
+   "source": "manual",
+   "evidence": "岸边露伴的住所",
+   "confidence": "medium",
+   "candidates": []
+  },
+  {
+   "location_id": "rohan_s_villa",
+   "title": "Rohan's Villa",
+   "name_ja": "",
+   "name_zh": null,
+   "source": null,
+   "evidence": null,
+   "confidence": null,
+   "candidates": []
+  },
+  {
+   "location_id": "rome",
+   "title": "Rome",
+   "name_ja": "ローマ",
+   "name_zh": "罗马",
+   "source": "generic_zh",
+   "evidence": "通行中文译名（泛地理词，不走搜索）",
+   "confidence": "high",
+   "candidates": []
+  },
+  {
+   "location_id": "sbr_hat_shop",
+   "title": "SBR Hat Shop",
+   "name_ja": "SBR帽子店",
+   "name_zh": null,
+   "source": null,
+   "evidence": null,
+   "confidence": null,
+   "candidates": []
+  },
+  {
+   "location_id": "san_diego_beach",
+   "title": "San Diego Beach",
+   "name_ja": "サンディエゴビーチ",
+   "name_zh": "圣迭戈海滩",
+   "source": "generic_zh",
+   "evidence": "通行中文译名（泛地理词，不走搜索）",
+   "confidence": "high",
+   "candidates": []
+  },
+  {
+   "location_id": "san_giorgio_maggiore",
+   "title": "San Giorgio Maggiore",
+   "name_ja": "サン・ジョルジョ・マッジョーレ島",
+   "name_zh": null,
+   "source": null,
+   "evidence": null,
+   "confidence": null,
+   "candidates": []
+  },
+  {
+   "location_id": "sardinia",
+   "title": "Sardinia",
+   "name_ja": "サルデーニャ島",
+   "name_zh": null,
+   "source": null,
+   "evidence": null,
+   "confidence": null,
+   "candidates": []
+  },
+  {
+   "location_id": "satoru_nakae_s_apartment",
+   "title": "Satoru Nakae's Apartment",
+   "name_ja": "",
+   "name_zh": null,
+   "source": null,
+   "evidence": null,
+   "confidence": null,
+   "candidates": []
+  },
+  {
+   "location_id": "shakedown_road",
+   "title": "Shakedown Road",
+   "name_ja": "カツアゲロード",
+   "name_zh": "勒索之路",
+   "source": "manual",
+   "evidence": "用户给定；日文 カツアゲロード（敲诈之路）",
+   "confidence": "high",
+   "candidates": []
+  },
+  {
+   "location_id": "singapore",
+   "title": "Singapore",
+   "name_ja": "シンガポ",
+   "name_zh": "新加坡",
+   "source": "generic_zh",
+   "evidence": "通行中文译名（泛地理词，不走搜索）",
+   "confidence": "high",
+   "candidates": []
+  },
+  {
+   "location_id": "skeleton_heel_stone",
+   "title": "Skeleton Heel Stone",
+   "name_ja": "骸骨の踵石",
+   "name_zh": null,
+   "source": null,
+   "evidence": null,
+   "confidence": null,
+   "candidates": []
+  },
+  {
+   "location_id": "south_china_sea",
+   "title": "South China Sea",
+   "name_ja": "南シナ海",
+   "name_zh": "南海",
+   "source": "generic_zh",
+   "evidence": "通行中文译名（泛地理词，不走搜索）",
+   "confidence": "high",
+   "candidates": []
+  },
+  {
+   "location_id": "st_gentleman",
+   "title": "St. Gentleman",
+   "name_ja": "サンジェルマン",
+   "name_zh": null,
+   "source": null,
+   "evidence": null,
+   "confidence": null,
+   "candidates": []
+  },
+  {
+   "location_id": "switzerland",
+   "title": "Switzerland",
+   "name_ja": "スイス",
+   "name_zh": "瑞士",
+   "source": "generic_zh",
+   "evidence": "通行中文译名（泛地理词，不走搜索）",
+   "confidence": "high",
+   "candidates": []
+  },
+  {
+   "location_id": "tg_university_hospital",
+   "title": "TG University Hospital",
+   "name_ja": "TG 大学病院",
+   "name_zh": null,
+   "source": null,
+   "evidence": null,
+   "confidence": null,
+   "candidates": []
+  },
+  {
+   "location_id": "telence_t_d_arby_s_island",
+   "title": "Telence T. D'Arby's Island",
+   "name_ja": "テレンス・T.・ダービー島",
+   "name_zh": null,
+   "source": null,
+   "evidence": null,
+   "confidence": null,
+   "candidates": []
+  },
+  {
+   "location_id": "tibetan_temple",
+   "title": "Tibetan Temple",
+   "name_ja": "チベットの寺院",
+   "name_zh": null,
+   "source": null,
+   "evidence": null,
+   "confidence": null,
+   "candidates": []
+  },
+  {
+   "location_id": "tokyo",
+   "title": "Tokyo",
+   "name_ja": "東京都",
+   "name_zh": "东京",
+   "source": "generic_zh",
+   "evidence": "通行中文译名（泛地理词，不走搜索）",
+   "confidence": "high",
+   "candidates": []
+  },
+  {
+   "location_id": "trattoria_trussardi",
+   "title": "Trattoria Trussardi",
+   "name_ja": "イタリア料理「トラサルディー」",
+   "name_zh": null,
+   "source": null,
+   "evidence": null,
+   "confidence": null,
+   "candidates": []
+  },
+  {
+   "location_id": "tsutsujigaoka",
+   "title": "Tsutsujigaoka",
+   "name_ja": "つつじヶ丘",
+   "name_zh": null,
+   "source": null,
+   "evidence": null,
+   "confidence": null,
+   "candidates": []
+  },
+  {
+   "location_id": "twin_pines",
+   "title": "Twin Pines",
+   "name_ja": "二本松",
+   "name_zh": null,
+   "source": null,
+   "evidence": null,
+   "confidence": null,
+   "candidates": []
+  },
+  {
+   "location_id": "ultra_security_house_unit",
+   "title": "Ultra Security House Unit",
+   "name_ja": "厳正懲罰隔離房",
+   "name_zh": null,
+   "source": null,
+   "evidence": null,
+   "confidence": null,
+   "candidates": []
+  },
+  {
+   "location_id": "venice",
+   "title": "Venice",
+   "name_ja": "ヴェネツィア",
+   "name_zh": "威尼斯",
+   "source": "generic_zh",
+   "evidence": "通行中文译名（泛地理词，不走搜索）",
+   "confidence": "high",
+   "candidates": []
+  },
+  {
+   "location_id": "wall_eyes",
+   "title": "Wall Eyes",
+   "name_ja": "壁の目",
+   "name_zh": null,
+   "source": null,
+   "evidence": null,
+   "confidence": null,
+   "candidates": []
+  },
+  {
+   "location_id": "windknight_s_lot",
+   "title": "Windknight's Lot",
+   "name_ja": "風の騎士たちの町",
+   "name_zh": "风之骑士领",
+   "source": "manual",
+   "evidence": "萌娘条目名",
+   "confidence": "high",
+   "candidates": []
+  },
+  {
+   "location_id": "yasuho_s_house",
+   "title": "Yasuho's House",
+   "name_ja": "広瀬康穂の家",
+   "name_zh": null,
+   "source": null,
+   "evidence": null,
+   "confidence": null,
+   "candidates": []
+  }
+ ]
+}

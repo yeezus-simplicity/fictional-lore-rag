@@ -12,6 +12,7 @@ M18 之前一直以为前端没问题，直到用户反馈"界面看不到图片
 from __future__ import annotations
 
 import json
+import os
 import shutil
 import socket
 import subprocess
@@ -65,7 +66,10 @@ def main() -> int:
         #   结构化答案走 SQL、雷达图要 stand_id、缓存图片按 stand_id 取清单。
         #   DB 没起来时它们会一起失败，而报错长得像"功能坏了"，
         #   实测就误导过一次（用户以为界面改坏了，实际是 Docker 没运行）。
-        #   → 这里先查 /health，DB 不通就**直接说明原因**，别让人猜。
+        #   → 这里先查 /health；DB 不通就**直接说明原因**并**跳过**。
+        #   ★ 默认"跳过不算失败"：数据库跑在 Docker 里，属于环境前提，
+        #     不该让整条流水线因为没开 Docker 而挂红。
+        #     需要严格时用 `--require-db`（或 CI=true）→ 缺库即失败。
         import urllib.request as _u
         try:
             _op = _u.build_opener(_u.ProxyHandler({}))
@@ -75,15 +79,20 @@ def main() -> int:
             _n = _h.get("n_stands")
         except Exception as e:  # noqa: BLE001
             _db_ok, _n = False, f"（health 读不到：{str(e)[:40]}）"
+        _strict = ("--require-db" in sys.argv) or (os.environ.get("CI") == "true")
         if not _db_ok:
             print("=" * 70)
-            print("✗ 环境不满足：数据库没连上 → 本测试无法进行")
-            print(f"    /health: database={_db_ok and 'connected' or 'disconnected'}"
-                  f"  n_stands={_n}")
-            print("    起库：先启动 **Docker Desktop**，再执行")
+            print("⏭ 已跳过（环境不满足）：数据库没连上 → 本测试的三项断言都依赖它")
+            print(f"    /health: database=disconnected  n_stands={_n}")
+            print("    要真正跑这一项，请先启动 **Docker Desktop**，再执行：")
             print("           cd docker && docker compose up -d postgres")
+            if _strict:
+                print("    （--require-db / CI=true：缺库视为失败）")
+                print("=" * 70)
+                return 1
+            print("    （未开 --require-db，按「跳过」处理，不计失败）")
             print("=" * 70)
-            return 1
+            return 0
         print(f"[前置] 数据库已连接（n_stands={_n}）")
 
         try:

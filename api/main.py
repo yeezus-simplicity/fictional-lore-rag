@@ -194,9 +194,33 @@ def _init_state(use_vector: bool = True,
         print(f"[api] ⚠ 地点维度不可用（{type(e).__name__}）："
               f"地点类问题将按普通语义处理")
     STATE["known_locations"] = known_locations
+    # ★★ M66：角色维度 ★★
+    #   `known_characters` 传**角色名**（英/日/中 + 中文异译），与地点同理：
+    #   角色名混进 known_entities 会让「东方仗助」被当成"锚定替身"。
+    #   同时取 DB 的 `characters.part`（既有、已验证）作部数首选值 ——
+    #   源站 mangadebut 推断会把「第 2 部末客串的承太郎」算成第 2 部。
+    known_characters: set = set()
+    char_part_map: dict = {}
+    try:
+        from characters import all_names as _char_names
+        known_characters = set(_char_names())
+        print(f"[api] 角色维度：{len(known_characters)} 个写法")
+    except Exception as e:  # noqa: BLE001
+        print(f"[api] ⚠ 角色维度不可用（{type(e).__name__}）")
+    if db_ok:
+        try:
+            _cc = STATE["conn"].cursor()
+            _cc.execute("SELECT character_id, part FROM characters")
+            char_part_map = {a: b for a, b in _cc.fetchall() if b}
+            _cc.close()
+        except Exception:  # noqa: BLE001
+            char_part_map = {}
+    STATE["known_characters"] = known_characters
+    STATE["char_part_map"] = char_part_map
     STATE["router"] = Router(known_stands=known_stands,
                              known_entities=known_entities,
-                             known_locations=known_locations)
+                             known_locations=known_locations,
+                             known_characters=known_characters)
     STATE["known"] = known_stands
     # ---- name → id 映射（★ M14：全量别名，不只英文名）----
     #实测问题：用户问「黄金体验的能力」，而 name2id 只有英文名
@@ -430,6 +454,15 @@ class QueryResponse(BaseModel):
         None, description=("地点档案：{location_id, name_zh, name_en, name_ja, "
                            "types, part, place_paths, mangadebuts, "
                            "stands, characters, weak_count, missing}"))
+    # ★★ M66：角色档案卡 ★★
+    #   用户最初的诉求是「补一下人物的背景」——这一项补的就是它。
+    #   ★ 简介/背景/性格是**源站英文原文**（不机翻），中文只给结构化事实。
+    #   ★ part 取 DB 值（源站 mangadebut 推断会把"上一部客串"算错），
+    #     两者不一致时用 part_note 说明。
+    character_card: Optional[dict] = Field(
+        None, description=("角色档案：{character_id, name_zh, name_en, name_ja, "
+                           "part, part_note, stand_names, bio, background, "
+                           "personality, bio_chunk_id, missing}"))
 
 
 class HealthResponse(BaseModel):
@@ -733,6 +766,8 @@ def query(
     zh_card: Optional[dict] = None
     # ★★ M65：地点档案卡（route=location 时填）
     location_card: Optional[dict] = None
+    # ★★ M66：角色档案卡（route=character 时填）
+    character_card: Optional[dict] = None
 
     # ---------- M25：指代消解（必须最早做）----------
     # ★ 时机很关键：必须在 router.route() 之前。
@@ -808,6 +843,28 @@ def query(
             answer = {"note": f"地点模块出错：{type(e).__name__}: {e}"}
             answer_type = "none"
             location_card = None
+
+    # ---------- character（M66）----------
+    #   ★ 与地点一样：读 JSON 就能答，**不依赖数据库**
+    #     （只有"部数取 DB 值"这一步在 DB 不可用时退回源站推断值）
+    elif route == "character":
+        try:
+            from characters import answer as _char_answer
+            _ans, _ev, character_card = _char_answer(
+                resolved_q, top_k=top_k,
+                part_map=STATE.get("char_part_map") or {})
+            answer = _ans
+            answer_type = _ans.get("type", "character_fact")
+            evidence.extend(_ev)
+            evidence.append({
+                "type": "note",
+                "note": "角色数据来自 jojowiki 角色条目（Infobox + 正文首段）；"
+                        "简介/背景/性格为**源站英文原文**，未做机器翻译",
+            })
+        except Exception as e:  # noqa: BLE001
+            answer = {"note": f"角色模块出错：{type(e).__name__}: {e}"}
+            answer_type = "none"
+            character_card = None
 
     # ---------- structured ----------
     elif route in ("structured", "hybrid"):
@@ -1177,6 +1234,8 @@ def query(
         "zh_card": zh_card,
         # ★★ M65：地点档案卡（route=location 时才有）
         "location_card": location_card,
+        # ★★ M66：角色档案卡（route=character 时才有）
+        "character_card": character_card,
         # ★★ M25：指代消解信息（发生替换时才有）
         "coref": coref_info,
     }

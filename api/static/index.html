@@ -558,6 +558,22 @@ td.num { font-family: var(--mono); font-size: 12px; text-align: right; }
 .lc-ev-h { font-size: 12px; color: var(--text-dim); margin-bottom: 4px; }
 .lc-ev-b { font-size: 12.5px; line-height: 1.7; color: var(--text);
   white-space: pre-wrap; word-break: break-word; }
+/* ============ M66：角色卡 ============ */
+.cc-link { cursor: pointer; border-bottom: 1px dashed var(--border-strong); }
+.cc-link:hover { color: var(--text); border-bottom-color: var(--accent); }
+.cc-note { margin-top: 2px; font-size: 11.5px; color: var(--text-faint); }
+.cc-facts { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 4px 18px; }
+.cc-fact { font-size: 12.5px; }
+.cc-fk { color: var(--text-faint); margin-right: 6px; }
+.cc-fv { color: var(--text); }
+/* 三段原文（简介/背景/性格）：默认收起，展开看源站英文 */
+.cc-fold { margin-top: 6px; border-top: 1px solid var(--border); padding-top: 6px; }
+.cc-fold summary { cursor: pointer; font-size: 12.5px; color: var(--text-dim); }
+.cc-fold summary:hover { color: var(--text); }
+.cc-src { margin-left: 8px; font-size: 11px; color: var(--text-faint); }
+.cc-body { margin-top: 6px; font-size: 12.5px; line-height: 1.75;
+  color: var(--text); white-space: pre-wrap; }
+.cc-bio { font-size: 13px; line-height: 1.8; color: var(--text); margin-top: 4px; }
 .zc-form.no-link { cursor: default; opacity: .65; }
 .zc-form-arrow { color: var(--text-faint); font-size: 11px; }
 @media (max-width: 560px) {
@@ -1069,7 +1085,9 @@ function renderZhCard(zc, forms){
     ${vars.length? `<div class="zc-vars">其他译名：${vars.map(v=>`<span class="zc-var">${esc(v)}</span>`).join('')}</div>`:''}
     </span></div>`);
   if(zc.owner) rows.push(`<div class="zc-row"><span class="zc-k">使用者</span>
-    <span class="zc-v">${esc(zc.owner)}
+    <span class="zc-v"><span class="cc-link" role="button" tabindex="0"
+      data-ask="${esc(zc.owner + ' 是谁')}"
+      title="查看该角色的档案（背景 / 性格 / 经历）">${esc(zc.owner)}</span>
     ${zc.owner_en? `<span class="zc-sub">${esc(zc.owner_en)}</span>`:''}</span></div>`);
   if(zc.part) rows.push(`<div class="zc-row"><span class="zc-k">登场</span>
     <span class="zc-v">第 ${esc(String(zc.part))} 部</span></div>`);
@@ -1218,6 +1236,76 @@ function renderLocationPanel(d){
   </div>`;
 }
 
+// ★★ M66：角色档案卡（人物背景）★★
+//   用户最初的诉求就是「补一下人物的背景」。
+//   三条原则（与地点卡一致）：
+//     ① 简介/背景/性格是**源站英文原文**，不机翻 —— 中文只给结构化事实；
+//        想看原文点一下展开（证据可追溯）。
+//     ② 源站没填的字段照实写「源站未提供」，不填 0、不猜。
+//     ③ 部数优先用 DB 值；与"首次出场推断"不一致时**把差异写出来**
+//        （如承太郎：第 2 部末客串、主要登场第 3 部），不静默丢弃。
+function renderCharacterPanel(d){
+  const c = d.character_card;
+  if(!c) return '';
+  const rows = [];
+  const sub = [c.name_en, c.name_ja, c.name_romaji].filter(Boolean);
+  const vars = (c.name_zh_variants||[]).filter(Boolean);
+  rows.push(`<div class="zc-row"><span class="zc-k">名称</span>
+    <span class="zc-v"><b>${esc(c.name_zh || c.name_en || '—')}</b>
+    ${sub.length? `<span class="zc-sub">${esc(sub.join(' · '))}</span>`:''}
+    ${vars.length? `<div class="zc-vars">其他译名：${vars.map(v=>`<span class="zc-var">${esc(v)}</span>`).join('')}</div>`:''}
+    ${(c.aliases||[]).length? `<div class="zc-vars">别称：${c.aliases.map(v=>`<span class="zc-var">${esc(v)}</span>`).join('')}</div>`:''}
+    </span></div>`);
+  // ★ 部数 + 差异说明（不一样时明说，否则用户会以为数据错了）
+  rows.push(`<div class="zc-row"><span class="zc-k">登场</span>
+    <span class="zc-v">${c.part? `第 ${esc(String(c.part))} 部` :
+      '<span class="lc-na">源站未提供</span>'}
+    ${c.part_note? `<div class="cc-note">${esc(c.part_note)}</div>`:''}</span></div>`);
+  // 替身：可点（去看那张替身档案）
+  if((c.stand_names||[]).length){
+    rows.push(`<div class="zc-row"><span class="zc-k">替身</span>
+      <span class="zc-v">${c.stand_names.map(s=>`<span class="tag lc-rel"
+        role="button" tabindex="0" data-ask="${esc(s+' 的六维能力')}"
+        >${esc(s)}</span>`).join('')}</span></div>`);
+  } else {
+    rows.push(`<div class="zc-row"><span class="zc-k">替身</span>
+      <span class="zc-v lc-na">源站未标注（第 1、2 部为波纹时代，本就没有替身）</span></div>`);
+  }
+  // 基本信息：只显示**有值的**那些，没有的整行不出现（不写一串"未提供"）
+  const facts = [
+    ['性别', c.gender], ['年龄', c.age], ['生日', c.birthday],
+    ['身高', c.height], ['体重', c.weight], ['血型', c.blood],
+    ['国籍', (c.nations||[]).join('／')],
+    ['职业', (c.occupations||[]).join('／')],
+    ['所属', (c.affiliations||[]).join('／')],
+    ['家人', (c.families||[]).slice(0,5).join('／') + ((c.families||[]).length>5? ' …' : '')],
+    ['状态', c.status],
+    ['声优', (c.seiyuus||[]).slice(0,3).join('／')],
+  ].filter(([k,v]) => v && String(v).trim());
+  if(facts.length){
+    rows.push(`<div class="cc-facts">${facts.map(([k,v]) =>
+      `<div class="cc-fact"><span class="cc-fk">${esc(k)}</span>
+        <span class="cc-fv">${esc(String(v).replace(/\n/g,' ／ '))}</span></div>`).join('')}</div>`);
+  }
+  // ★ 三段原文（简介 / 背景 / 性格）—— 默认收起，展开看原文
+  const secs = [
+    ['简介', c.bio, c.bio_chunk_id],
+    ['背景', c.background, c.background_chunk_id],
+    ['性格', c.personality, c.personality_chunk_id],
+  ].filter(([n,t]) => t);
+  const folds = secs.map(([n,t,cid]) => `
+    <details class="cc-fold">
+      <summary>${esc(n)}<span class="cc-src">源站原文（英文）
+        ${cid? `· 语料块 #${esc(String(cid))}`:''}</span></summary>
+      <div class="cc-body">${esc(t)}</div>
+    </details>`).join('');
+  return `<div class="card" data-sec="sec-char" data-secname="角色资料">
+    <h3>角色资料 <span class="h3n">数据来自 jojowiki 角色条目 · 简介/背景/性格为源站原文，未机翻</span></h3>
+    <div class="zh-card-inner">${rows.join('')}</div>
+    ${folds}
+  </div>`;
+}
+
 // ★★ M36：替身档案 + 六维雷达合并成一张卡 ★★
 //   之前是三张独立卡片（档案 / 答案 / 雷达），六维明明是档案的一部分，
 //   却夹在答案和图片中间，读起来割裂。
@@ -1355,6 +1443,7 @@ function renderAnswer(d){
   html += '</div>';
   html += renderStandPanel(d);          // ② 替身资料
   html += renderLocationPanel(d);       // ②′ 地点资料（M65，只在 route=location 时出现）
+  html += renderCharacterPanel(d);      // ②″ 角色资料（M66，只在 route=character 时出现）
   // ③ 检索过程 —— ★ M57：从"页顶的折叠块"变成**正式板块**（可被左侧索引到）
   //    证据（原文）也归这里：它就是这条答案的出处
   html += `<div class="card" data-sec="sec-proc" data-secname="检索过程">
@@ -1369,6 +1458,20 @@ function renderAnswer(d){
   $('#ans').innerHTML = html;
   // ★ M19：图片渲染完按真实宽高比调整卡片高度（否则竖图留大片空白）
   applyShotHeights($('#ans'));
+  // ★★ M66：统一的可点问句 —— `data-ask` + 事件委托，**不用内联 onclick** ★★
+  //   原因：内联写法必须把值放进 HTML 属性里，而**替身/地点/角色名里真的有引号**：
+  //     `Devil's Palm`（第 7 部地点）· `Daniel J. D'Arby`（角色）
+  //   → 无论用单引号还是双引号属性，都会被**提前闭合**，onclick 变成半截代码，
+  //     点击毫无反应（不报错、最难查的那一类）。
+  //   ★ M65 只修了我自己那处（showLocEvidence 改索引），
+  //     **地点列表那处还留着同样的隐患** —— 本轮一并改成委托。
+  $('#ans').querySelectorAll('[data-ask]').forEach(el => {
+    const go = () => ask(el.dataset.ask);
+    el.onclick = go;
+    el.onkeydown = e => {
+      if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); go(); }
+    };
+  });
   // ★ M32：异步拉相似替身 —— 不阻塞主答案（它是增强项）
   if(d.zh_card && d.zh_card.stand_id) loadSimilar(d.zh_card.stand_id);
   // ★ M57：板块渲染完就生成左侧索引（异步新增的板块由观察器补建）
@@ -1400,8 +1503,11 @@ function loadSimilar(sid){
         const diffs = Object.entries(x.diff||{}).slice(0,6)
           .map(([k,v])=>`<span class="sd">${esc(k)} ${v>0?'+':''}${v}</span>`)
           .join('');
+        // ★ M66：改用 data-ask + 委托 —— 这个内联 onclick 从 M32 起就带着隐患
+        //   （替身名里若有撇号会提前闭合属性）。它与 renderAnswer 里的委托是同一套：
+        //   loadSimilar 是**异步**的，所以在下面单独再挂一次事件。
         return `<div class="sim-item" role="button" tabindex="0"
-             onclick='ask(${JSON.stringify((x.name_zh || x.name) + ' 的六维能力')})'>
+             data-ask="${esc((x.name_zh || x.name) + ' 的六维能力')}">
           <div class="sim-name">${esc(x.name_zh || x.name)}
             ${x.name_zh? `<span class="zc-sub">${esc(x.name)}</span>`:''}</div>
           <div class="sim-meta">距离 ${x.distance} · 共同维度 ${x.common_dims}</div>
@@ -1410,6 +1516,13 @@ function loadSimilar(sid){
       }).join('');
       box.innerHTML = head + `<div class="sim-list">${items}</div>
         ${d.note? `<div class="meta sim-note">${esc(d.note)}</div>`:''}</div>`;
+      // ★ 异步插入的节点不在 renderAnswer 那次委托的作用域里 → 这里再挂一次
+      box.querySelectorAll('[data-ask]').forEach(el => {
+        el.onclick = () => ask(el.dataset.ask);
+        el.onkeydown = e => {
+          if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); ask(el.dataset.ask); }
+        };
+      });
     })
     .catch(()=>{ /* 相似替身是增强项，失败不影响主答案 */ });
 }
@@ -1608,7 +1721,7 @@ function renderStructured(a){
     return `<div style="margin-bottom:8px">${esc(a.scope||'')} 共
         <b>${esc(String(a.count))}</b> 个地点</div>
       <div>${items.map(x=>`<span class="tag lc-rel" role="button" tabindex="0"
-        onclick='ask(${JSON.stringify((x.name||x.name_en)+" 是什么地方")})'
+        data-ask="${esc((x.name||x.name_en)+' 是什么地方')}"
         >${esc(x.name||x.name_en)}${x.part? `<span class="lc-p">第${esc(String(x.part))}部</span>`:''}</span>`).join('')}</div>
       ${a.note? `<div class="meta" style="margin-top:8px">${esc(a.note)}</div>`:''}`;
   }
@@ -1625,6 +1738,46 @@ function renderStructured(a){
       ${a.note? `<div class="meta" style="margin-top:8px">${esc(a.note)}</div>`:''}`;
   }
   if(t==='location_hint'){
+    return `<div>${esc(a.note)}</div>`;
+  }
+  // ★★ M66：角色类答案（route=character）★★
+  //   完整档案在上方「角色资料」卡里，这里只给**结论 + 首段简介**。
+  if(t==='character_fact'){
+    const nm = esc(a.name_zh || a.name_en || '—');
+    const meta = [a.part? `第 ${esc(String(a.part))} 部` : '',
+                  (a.stands||[]).length? `替身 ${esc((a.stands||[]).join('、'))}` : '',
+                  a.status? esc(a.status) : ''].filter(Boolean).join(' · ');
+    return `<div style="margin-bottom:8px"><b style="font-size:20px">${nm}</b>
+        <span class="zc-sub">${esc(a.name_en||'')}</span>
+        ${a.name_ja? `<span class="zc-sub">${esc(a.name_ja)}</span>`:''}</div>
+      ${meta? `<div class="lc-line">${meta}</div>`:''}
+      ${a.part_note? `<div class="cc-note">${esc(a.part_note)}</div>`:''}
+      ${a.bio? `<div class="cc-bio">${esc(a.bio)}</div>
+        <div class="meta">▲ 以上为源站首段原文（英文）。
+          ${a.bio_chunk_id? `语料块 #${esc(String(a.bio_chunk_id))}`:''}
+          中文信息见下方「角色资料」。</div>`
+        : '<div class="meta">该角色条目没有可用的首段简介。</div>'}`;
+  }
+  if(t==='character_list'){
+    const items = a.items||[];
+    return `<div style="margin-bottom:8px">${esc(a.scope||'')} 共
+        <b>${esc(String(a.count))}</b> 个角色</div>
+      <div>${items.map(x=>`<span class="tag lc-rel" role="button" tabindex="0"
+        data-ask="${esc((x.name||x.name_en)+' 是谁')}"
+        >${esc(x.name||x.name_en)}${x.part? `<span class="lc-p">第${esc(String(x.part))}部</span>`:''}${
+          x.has_stand===false? '<span class="lc-p">无替身</span>':''}</span>`).join('')}</div>
+      ${a.note? `<div class="meta" style="margin-top:8px">${esc(a.note)}</div>`:''}`;
+  }
+  if(t==='character_stands'){
+    const st = a.stands||[];
+    return `<div style="margin-bottom:8px">${esc(a.character||'')} 的替身</div>
+      ${st.length? `<div style="font-size:20px;font-weight:700;margin-bottom:8px">${
+        st.map(n=>`<span class="tag lc-rel" role="button" tabindex="0"
+          data-ask="${esc(n+' 的六维能力')}">${esc(n)}</span>`).join('')}</div>`
+        : '<div>该角色条目未标注替身。</div>'}
+      ${a.note? `<div class="meta">${esc(a.note)}</div>`:''}`;
+  }
+  if(t==='character_hint'){
     return `<div>${esc(a.note)}</div>`;
   }
   if(t==='fact'){

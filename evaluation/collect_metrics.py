@@ -76,6 +76,11 @@ def collect_m1() -> dict:
     # ★ M65：地点（正传 9 部）
     _loc = _load("locations.json") or {}
     n_locations = _loc.get("n_included") or 0
+    # ★ M66：角色（人物背景）—— 有简介的角色数也要能被闸门校验
+    _chr = _load("characters_ext.json") or {}
+    _chrs = _chr.get("characters") or []
+    n_characters = len(_chrs)
+    n_char_bio = sum(1 for c in _chrs if c.get("bio"))
     n_base_chunks = chunks.get("n_chunks") or 0
     part_of = {s["stand_id"]: s.get("part") for s in stand}
     by_part: dict = {}
@@ -95,6 +100,8 @@ def collect_m1() -> dict:
         "n_chunks_article": len(art_chunks),
         "n_chunks_total": n_base_chunks + len(art_chunks),
         "n_locations": n_locations,
+        "n_characters": n_characters,
+        "n_char_bio": n_char_bio,
         "n_stands_covered": chunks.get("n_stands_covered"),
         "total_chars": chunks.get("total_chars"),
         "chunk_type_dist": chunks.get("type_distribution", {}),
@@ -511,6 +518,9 @@ PUBLIC_NUMBERS = {
     "数据.语料总量": ("M1", "n_chunks_total", 7940),
     # ★ M65 新增：正传地点（含语料块）
     "数据.地点数": ("M1", "n_locations", 113),
+    # ★ M66 新增：角色维度（人物背景）
+    "数据.角色数": ("M1", "n_characters", 168),
+    "数据.角色简介覆盖": ("M1", "n_char_bio", 168),
     # ★ 六维齐全率下降是**覆盖面变大**，不是数据变差 —— 见 collect_m1 的注释
     "数据.六维齐全率": ("M1", "completeness_ratio", 0.6578),
     "数据.六维非全空率": ("M1", "completeness_any_ratio", 0.8075),

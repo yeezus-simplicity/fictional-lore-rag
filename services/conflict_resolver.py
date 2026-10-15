@@ -363,7 +363,7 @@ class ConflictResolver:
 class RouteDecision:
     """一次路由决策（可解释）。"""
 
-    route: str# structured / semantic / hybrid / abstain / entity_semantic / location
+    route: str# structured/semantic/hybrid/abstain/entity_semantic/location/character
     reason: str
     signals: dict = field(default_factory=dict)
 
@@ -577,9 +577,23 @@ class Router:
     # 部数（用于「第 X 部有哪些地点」，与 OUT_OF_RANGE_PART 互补）
     PART_ANY = re.compile(r"第\s*[0-9一二三四五六七八九]+\s*部")
 
+    # ★★ M66：角色意图 ★★
+    #   用户最初的诉求包含「补一下人物的背景」——角色页一直在语料里，
+    #   但「东方仗助是谁」这类问句**不命中任何既有规则**（没有六维词、
+    #   没有"替身"）→ 落到默认 structured → 执行器解析不出 → 降级语义检索。
+    #   ★ 判据只有这一条（"要角色列表"）**加上**「抽到已知角色名」——见 route()。
+    #   ★ 刻意**不**用「是谁 / 介绍 / 背景」这类宽词：
+    #     · "是谁"    → 「这个替身的使用者是谁」里也有，会抢走 owner 查询
+    #     · "介绍"    → 在 SEMANTIC 里，收了会抢走替身语义问句
+    ROLE_LIST = re.compile(r"(哪些角色|有什么角色|角色列表|哪些人物)")
+
+    # 同理：明确的**地点列表**问法（窄判，见 has_domain 的说明）
+    LOC_LIST = re.compile(r"(哪些地点|有什么地点|地点列表|有哪些场所|哪些场所)")
+
     def __init__(self, known_stands: Optional[set[str]] = None,
                  known_entities: Optional[set[str]] = None,
-                 known_locations: Optional[set[str]] = None):
+                 known_locations: Optional[set[str]] = None,
+                 known_characters: Optional[set[str]] = None):
         """
         Args:
             known_stands: 替身名集合（判定的基准）
@@ -593,6 +607,10 @@ class Router:
                 ★ 它必须与 known_entities 分开传：地名要参与「这是不是地点问句」
                   的判定，而 **不能**被当成替身名（否则「安杰罗岩」会被判成
                   锚定替身 → 走 entity_semantic → 去检索一个不存在的地点的原文）。
+            known_characters: **角色名**（M66）—— 同理单独一份。
+                ★ 角色名此前混在 known_entities 里（M20 起），后果与地名一样：
+                  「东方仗助」会被当成**锚定替身** → 走 entity_semantic →
+                  拿一个不存在的 stand_id 去检索。现在显式分开。
         """
         self.known = {s.lower() for s in (known_stands or set())}
         all_known = set(self.known)
@@ -607,6 +625,9 @@ class Router:
         #     _is_known 返回 False 被判成**编造实体**直接拒答。
         self.known_locations = {x.lower() for x in (known_locations or set())}
         self.known_all |= self.known_locations
+        # ★ M66：角色名单独一份（同地名）
+        self.known_characters = {x.lower() for x in (known_characters or set())}
+        self.known_all |= self.known_characters
 
     def _is_known(self, cand: str) -> bool:
         """判断候选实体是否已知。
@@ -790,7 +811,9 @@ class Router:
              # ★ M65：地名**不算**替身锚定 —— 否则「安杰罗岩」会被判成
              #   锚定替身 → 走 entity_semantic → 拿一个不存在的 stand_id
              #   去检索，返回与问题无关的原文。
-             and c.lower() not in self.known_locations),
+             and c.lower() not in self.known_locations
+             # ★ M66：角色名同理（此前混在 known_entities 里，一直有这个隐患）
+             and c.lower() not in self.known_characters),
             None)
         signals["stand_entity"] = stand_hit
 
@@ -800,9 +823,22 @@ class Router:
             None)
         signals["location_entity"] = location_hit
 
+        # ★ M66：角色锚定
+        character_hit = next(
+            (c for c in candidates if c.lower() in self.known_characters),
+            None)
+        signals["character_entity"] = character_hit
+
         # ★★ M14 前置：领域相关性检查（放在所有意图判定之前）
         #   没有领域信号 → 明确拒答，而不是强行匹配某个意图
-        has_domain = bool(self.DOMAIN_HINT.search(q))
+        #   ★ M65/M66：两类**明确的列表问法**也算领域信号
+        #     （「有哪些角色」「哪些地点」——它们不含任何六维词、
+        #      也抽不到实体名，不放行就会被当成无关问句拒答）。
+        #     ★ 只放**窄**的列表问法：不能因为出现"地点/角色"这种词就放行，
+        #       否则「华盛顿在哪里」也会变成有答案的。
+        has_domain = (bool(self.DOMAIN_HINT.search(q))
+                      or bool(self.ROLE_LIST.search(q))
+                      or bool(self.LOC_LIST.search(q)))
         signals["has_domain_hint"] = has_domain
         # 已知实体也算领域信号（「Tusk 的外观」有实体）
         has_entity = bool(candidates) and unknown_hit is None
@@ -838,7 +874,8 @@ class Router:
         #   ★ 与替身名的关系：若同句锚定了替身且**没问地点**，
         #     仍按替身走（例：「Tusk 的破坏力」），不能被地名抢走。
         loc_ask = bool(self.LOCATION_ASK.search(q))
-        if location_hit or (loc_ask and self.PART_ANY.search(q)):
+        if location_hit or (loc_ask and self.PART_ANY.search(q)) \
+                or self.LOC_LIST.search(q):
             if not (stand_hit and not loc_ask):
                 return RouteDecision(
                     "location",
@@ -888,6 +925,24 @@ class Router:
                     "问「某人的替身是哪个」→ 直接查库给替身名"
                     "（M20：不再走语义检索返回长段介绍）",
                     signals)
+        # ---------- 2‴. 角色意图（M66）----------
+        #   ★ 必须排在 STAND_OF_ASK **之后**：「Jotaro Kujo 的替身是什么」
+        #     是"反查替身名"，用户要的是一个词，不能被角色卡抢走。
+        #   ★★ 判据刻意**只有两条**（我第一版写成「出现 char_ask 就路由」，
+        #      差点把「这个替身的使用者是谁」抢走 —— 那句里没有替身名，
+        #      stand_hit 为空，会被判成角色问句而答成"没识别出角色"）：
+        #     ① 抽到了**已知角色名**（且没同时锚定替身/地点）
+        #     ② 问句明确要**角色列表**（「第 X 部有哪些角色」）
+        #   ★ 与地点守门同一原则：不能只因为出现「角色/是谁」就路由，
+        #     否则无关问句会变成"有答案"的（M21 的守门测试就是这么挂的）。
+        _role_list = bool(self.ROLE_LIST.search(q))
+        if not stand_hit and not location_hit and (character_hit or _role_list):
+            return RouteDecision(
+                "character",
+                (f"识别到角色「{character_hit}」→ 查角色档案" if character_hit
+                 else "问句要角色列表 → 按部/全库列出"),
+                signals)
+
         if self.EXTREME.search(q):
             return RouteDecision("structured", "极值/聚合类问题 → SQL", signals)
         if self.STRUCT_FACT.search(q):

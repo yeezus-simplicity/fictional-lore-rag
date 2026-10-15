@@ -34,7 +34,7 @@
 == ★★ 解析里踩的三个坑（每一个都会产出"看着合理但是错的"数据）★★
 【1】**用非贪婪正则截模板 → 在嵌套模板处提前截断**
      `{{Location Infobox …}}` 里常嵌套 `{{Tabber}}`，而它的结束 `}}` 会独占一行
-     → `\{\{Location Infobox(.*?)\n\}\}` 在那里就停了。
+     → `{{Location Infobox(.*?)` + 换行 + `}}` 在那里就停了。
      实测后果：`Devil's Palm` 被截成只剩 `title`/`image` 两个字段，
      我据此判定"它的 Infobox 不完整、字段在正文里" —— **前提本身就是错的**，
      而 `place` / `mangadebut` / `animedebut` 明明就在 Infobox 里（L12-14）。

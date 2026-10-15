@@ -22,6 +22,8 @@ ROOT = Path(__file__).resolve().parents[1]
 PORT = 8792
 PY = sys.executable
 OUT = ROOT / ".tmp_preview"
+# ★ M63：图片缓存根目录（CI checkout 里是空的 → 测试整体跳过）
+IMG_ROOT = ROOT / "images"
 
 
 def wait_ready(port: int, timeout: float = 90) -> bool:
@@ -42,6 +44,15 @@ def wait_ready(port: int, timeout: float = 90) -> bool:
 def main() -> int:
     OUT.mkdir(exist_ok=True)
     fails: list[str] = []
+
+    # ★ M63：没有图片缓存（CI / 新克隆）→ 本测试逐条核对缩略图高度，
+    #   无图则无可检查项 → 跳过不算失败。
+    if not any(IMG_ROOT.glob("*/_images.json")):
+        print("=" * 70)
+        print("⏭ 已跳过（环境不满足）：本地没有图片缓存（images/ 被 .gitignore）")
+        print("    抓图：python dataset/sources/images/fetch_stand_images.py --from-stands")
+        print("=" * 70)
+        return 0
 
     def check(name: str, ok: bool, detail: str = "") -> None:
         print(f"  {'PASS' if ok else 'FAIL'}  {name}"

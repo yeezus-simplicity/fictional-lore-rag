@@ -21,6 +21,8 @@ import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+# ★ M63：图片缓存根目录（CI checkout 里是空的，见下方 [4] 的说明）
+IMG_ROOT = ROOT / "images"
 PORT = 8794
 PY = sys.executable
 OUT = ROOT / ".tmp_preview"
@@ -153,16 +155,36 @@ def main() -> int:
 
             # ==== 4) 图片：已缓存替身应直接出图 ====
             print("\n[4] 已缓存替身 → 直接出图（不等后台）")
-            got_shot = False
-            try:
-                pg.wait_for_selector("#imgDone .img-grid img", timeout=25000)
-                n = pg.eval_on_selector_all(
-                    "#imgDone .img-grid img", "e => e.length")
-                check(f"已缓存替身图片直接显示（{n} 张）", n > 0)
-                got_shot = True
-            except Exception:
-                check("已缓存替身图片直接显示", False,
-                      "等 25 秒仍未出现")
+            # ★★ M63：**没有图片缓存时，这一项的前置条件不成立** ★★
+            #   实测：GitHub Actions 上这条一直红（"等 25 秒仍未出现"），
+            #   而本地全过 —— 因为 `images/` 在 .gitignore 里（约 400MB），
+            #   CI checkout 是空的：既没有 `_images.json` 清单，也没有图文件，
+            #   于是走的是"后台抓取中"分支（#imgPending + 轮询），
+            #   而抓取在 CI 上又远慢于 25 秒。
+            #   ★ 语义上这条断言只检查「**已缓存**的图会立刻出」——
+            #     没有缓存就没有可检查的东西 → 跳过（不算失败）。
+            #   ★ 与「数据库前置检查」同一套处理：缺前置条件就跳过。
+            _cache_ok = any(IMG_ROOT.glob("*/_images.json"))
+            got_shot = False          # ★ M63：先在分支外初始化，
+                                      #   否则跳过分支后下面的 `if got_shot` 会
+                                      #   UnboundLocalError（实测踩过）
+            if not _cache_ok:
+                print("  ⏭ 已跳过（环境不满足）：本地没有图片缓存"
+                      "（images/ 被 .gitignore，CI checkout 是空的）")
+                print("     本断言只检查「已缓存的图立刻出」，无缓存则无可检查项")
+                print("     本地跑：python dataset/sources/images/"
+                      "fetch_stand_images.py --from-stands")
+            else:
+                got_shot = False
+                try:
+                    pg.wait_for_selector("#imgDone .img-grid img", timeout=25000)
+                    n = pg.eval_on_selector_all(
+                        "#imgDone .img-grid img", "e => e.length")
+                    check(f"已缓存替身图片直接显示（{n} 张）", n > 0)
+                    got_shot = True
+                except Exception:
+                    check("已缓存替身图片直接显示", False,
+                          "等 25 秒仍未出现")
             # 实际加载成功（不是 broken image）
             if got_shot:
                 # ★★ 必须先把图片滚进视口 ★★

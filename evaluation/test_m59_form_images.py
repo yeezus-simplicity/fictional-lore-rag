@@ -94,6 +94,19 @@ def main() -> int:
     fs = load_fetcher()
     src = HTML.read_text(encoding="utf-8")
     media = MEDIA.read_text(encoding="utf-8")
+    # ★★ M63：CI / 新克隆没有图片缓存 → 本测试无可检查项 ★★
+    #   `images/` 在 .gitignore 里（约 400MB），GitHub Actions 的 checkout 是空的。
+    #   这些测试逐条核对的正是"抓取产物"（缩略图高度 / 形态专属图），
+    #   没有缓存就没有可检查的东西 → **跳过不算失败**（与 DB 前置检查同一套处理）。
+    #   本地抓图：python dataset/sources/images/fetch_stand_images.py --from-stands
+    if not any(IMG.glob("*/_images.json")):
+        print("=" * 74)
+        print("⏭ 已跳过（环境不满足）：本地没有图片缓存（images/ 被 .gitignore）")
+        print("    本测试逐条核对抓取产物，无缓存则无可检查项")
+        print("    抓图：python dataset/sources/images/fetch_stand_images.py --from-stands")
+        print("=" * 74)
+        return 0
+
 
     print("=" * 74)
     print("M59：形态（ACT）要有自己的图")

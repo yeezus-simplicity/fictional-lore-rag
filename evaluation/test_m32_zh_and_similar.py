@@ -76,10 +76,19 @@ def main() -> int:
                 print(f"      卡片内容: {txt[:110].strip()}")
                 check("卡片含中文名「白金之星」", "白金之星" in txt, txt[:60])
                 check("卡片含日文原名", "スタープラチナ" in txt, txt[:60])
-                check("卡片含六维中文等级",
-                      "破坏力" in txt and "速度" in txt, txt[:60])
                 check("卡片含使用者", "Jotaro" in txt or "承太郎" in txt,
                       txt[:60])
+                # ★ M62：六维等级**不在 .zh-card-inner 里**了 ——
+                #   M52 把原来的「六维」一行换成了六维明细网格 `.zc-dimgrid`，
+                #   它是档案卡的**兄弟节点**（在同一张卡的范围内，但不在 inner 里）。
+                #   → 这里读整张「替身资料」卡的文本，而不是 inner 的。
+                panel_txt = pg.evaluate("""() => {
+                    const p = document.querySelector('.stand-panel');
+                    return p ? p.textContent : '';
+                }""")
+                check("卡片含六维中文等级（在六维明细网格里）",
+                      "破坏力" in panel_txt and "速度" in panel_txt,
+                      panel_txt[:70])
 
             print("\n[1b] 布局：档案与六维同卡、答案在其下（M36）")
             n_panel = pg.eval_on_selector_all(
@@ -95,15 +104,22 @@ def main() -> int:
                 check("六维雷达在档案卡内部", same, "雷达不在合并卡内")
                 order = pg.evaluate("""() => {
                     const kids = [...document.querySelectorAll('#ans > *')];
+                    // ★ M62：`.stand-panel` 从 M57 起是**卡内的行容器**，
+                    //   外层卡片才是板块 → 必须用 :scope > 找直接子元素。
                     const iPanel = kids.findIndex(
-                        e => e.classList.contains('stand-panel'));
-                    const iAns = kids.findIndex((e, i) => i > 0
-                        && e.querySelector('h3')
-                        && e.querySelector('h3').textContent.includes('答案'));
+                        e => e.querySelector(':scope > .stand-panel'));
+                    // ★ M57 起**答案卡被有意放到最上面**（用户要求
+                    //   「一眼就能看到答案」），所以这里不再限定 i > 0。
+                    const iAns = kids.findIndex(e => {
+                        const h = e.querySelector(':scope > h3');
+                        return h && h.textContent.includes('答案');
+                    });
                     return {iPanel, iAns};
                 }""")
-                check("答案卡排在档案卡之后",
-                      order["iPanel"] >= 0 and order["iAns"] > order["iPanel"],
+                # ★ 期望方向在 M57 变了：答案卡应在档案卡**之前**
+                check("答案卡排在档案卡之前（M57 的设计：答案置顶）",
+                      order["iPanel"] >= 0 and order["iAns"] >= 0
+                      and order["iAns"] < order["iPanel"],
                       str(order))
             n_old = pg.eval_on_selector_all(".zh-card", "els=>els.length")
             check("旧类名 .zh-card 已不再使用", n_old == 0, f"仍有 {n_old}")

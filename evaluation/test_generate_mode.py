@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import socket
 import subprocess
 import sys
@@ -90,6 +91,37 @@ def main() -> int:
         h = json.loads(urllib.request.urlopen(
             base + "/health", timeout=15).read())
         print(f"  ✓ status={h['status']}")
+
+        # ---------- M62：生成模型是否已在本机 ----------
+        #   实测踩坑：这台机器**没有本地模型缓存** → 第一次跑要现下 ~3 GB，
+        #   远超单次请求超时 → 报「TimeoutError: timed out」，
+        #   看起来像功能坏了，其实只是环境没准备好（第二次跑命中缓存，8 秒过）。
+        #   与数据库同款处理：缺前置条件 → **跳过**（不算失败）。
+        #   需严格时：--require-model（或 CI=true）。
+        # ★ 判据必须和 `services/generator.py` 用的**同一处**：
+        #   它加载的是**项目内**的 models/Qwen_Qwen2.5-1.5B-Instruct
+        #   （由 fetch_model.py 下载），不是 HF 缓存 ——
+        #   我第一版去查 ~/.cache/huggingface/hub → 永远"没有"→ 误跳过。
+        #   （那里只有嵌入模型 models--BAAI--bge-m3。）
+        _mdir = ROOT / "models" / "Qwen_Qwen2.5-1.5B-Instruct"
+        _hit = (_mdir / "config.json").exists()
+        if not _hit:
+            _strict = ("--require-model" in sys.argv) or \
+                (os.environ.get("CI") == "true")
+            print("=" * 70)
+            print("⏭ 已跳过（环境不满足）：本机没有 Qwen2.5-1.5B 的本地缓存")
+            print(f"    查了：{_mdir}")
+            print("    首次运行会现下 ~3 GB（远超单次请求超时）→ 先跑一次：")
+            print("           python dataset/pipeline/fetch_model.py")
+            print("           （下完再跑本测试）")
+            if _strict:
+                print("    （--require-model / CI=true：缺模型视为失败）")
+                print("=" * 70)
+                return 1
+            print("    （未开 --require-model，按「跳过」处理，不计失败）")
+            print("=" * 70)
+            return 0
+        print("  ✓ 生成模型本地缓存已就绪")
 
         # ---------- 抽取式必须无变化 ----------
         print("\n[2] 抽取式行为不受影响（★ 最重要）")

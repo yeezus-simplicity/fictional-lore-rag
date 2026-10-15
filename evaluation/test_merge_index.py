@@ -35,18 +35,39 @@ def main() -> int:
     print("=" * 68)
 
     raw = json.loads((PROC / "text_chunks.json").read_text(encoding="utf-8"))
-    raw_ids = {c["chunk_id"] for c in raw}
+    # ★ M62：`raw` 只是**原语料块**（2407）。M43 扩语料后，"基础块"=
+    #   text_chunks + article_chunks（实测 2407 + 4354 = 6761）。
+    #   溯源/交叉检查必须用**完整基础集合**，否则文章块（正 id，如 3130）
+    #   会被当成"未知来源"→ 断言误报（实测就卡在 trace_to_base(-3078) → [3130]）。
+    _art_path = PROC / "article_chunks.json"
+    _art = (json.loads(_art_path.read_text(encoding="utf-8"))
+            if _art_path.exists() else [])
+    base_all = list(raw) + list(_art)
+    raw_ids = {c["chunk_id"] for c in base_all}
 
     # ---------------------------------------------------------
-    print("\n[1] 默认不合并 —— 必须与原始完全一致")
+    # ★ M62：基线从 M43 起就是错的 —— 扩语料后「不合并」的集合
+    #   已经不是 text_chunks.json 那 2407 块，而是
+    #   **原 2407 块 + 文章块**（实测 2407 + 4354 = 6761）。
+    #   原断言 `len(d) == len(raw)` 永远不成立 → 这个测试从 M43 起就没绿过。
+    #   → 正确的不变量有三条：
+    #     ① None 与 0 都表示"不合并"，两者必须完全一致
+    #     ② 块数 == 文件里的基础块 + 文章块数
+    #     ③ 未合并时内容未被改动（首块内容 == 文件首块内容）
+    print("\n[1] 默认不合并 —— 必须与「基础块（原语料 + 文章块）」完全一致")
+    # ★ 文件名是 article_chunks.json（load_db 里的 ARTICLES 常量），
+    #   我第一次写成 articles.json → 计数 0 → 基线又不对了。
+    n_art = len(_art)
     d = build_chunks(None)
-    same = len(d) == len(raw) and d[0]["content"] == raw[0]["content"]
-    print(f"  {'✓' if same else '✗'} build_chunks(None) == 原始 "
-          f"({len(d)} vs {len(raw)} 块)")
+    d0 = build_chunks(0)
+    same = (d == d0
+            and len(d) == len(raw) + n_art
+            and d[0]["content"] == raw[0]["content"])
+    print(f"  {'✓' if same else '✗'} build_chunks(None) == 基础块 "
+          f"({len(d)} vs {len(raw)}+{n_art} 块)")
     if not same:
         return 1
-    d0 = build_chunks(0)
-    print(f"  ✓ build_chunks(0) 也是不合并（{len(d0)} 块）")
+    print(f"  ✓ build_chunks(0) 与 None 一致（都是不合并，{len(d0)} 块）")
 
     # ---------------------------------------------------------
     print("\n[2] 块数应随目标长度递减")
@@ -125,7 +146,7 @@ def main() -> int:
           f"（{len(bad_cross)} 个异常）")
 
     #每个合并块内所有基础块必须同属一个替身
-    raw_by_id = {c["chunk_id"]: c for c in raw}
+    raw_by_id = {c["chunk_id"]: c for c in base_all}
     cross = 0
     for c in merged:
         sids = {raw_by_id[b].get("stand_id") for b in c["base_chunk_ids"]
@@ -164,9 +185,12 @@ def main() -> int:
         from semantic_executor import SemanticExecutor
         s1 = SemanticExecutor(use_vector=False)
         s1.load()
+        # ★ M62：M43 扩语料后「不合并」= 基础块(2407) + 文章块，
+        #   老基线拿 len(raw)（文件里的 2407）比 → 这个断言从 M43 起就没绿过。
+        _exp_none = len(raw) + n_art
         print(f"  ✓ 不合并模式：{len(s1._chunks)} 块"
-              f"（应为 {len(raw)}）")
-        if len(s1._chunks) != len(raw):
+              f"（应为 {_exp_none}）")
+        if len(s1._chunks) != _exp_none:
             print("      ★ 默认模式块数不对")
             return 1
 
@@ -196,8 +220,8 @@ def main() -> int:
     print("=" * 68)
     print(f"""
 合并到 {RECOMMENDED_TARGET} 后的效果（相对不合并）：
-  块数        {len(raw)} → {len(merged)}
-  平均字数    {sum(len(c['content']) for c in raw)//len(raw)} → {index_stats(merged)['mean_chars']:.0f}
+  块数        {len(base_all)} → {len(merged)}
+  平均字数    {sum(len(c['content']) for c in base_all)//len(base_all)} → {index_stats(merged)['mean_chars']:.0f}
   代价        生成耗时 +53%（与 M9 的 +52% 交叉验证）
   收益        空洞率 0.50 → 0.30（修好 8 条 / 弄坏 2 条）
 

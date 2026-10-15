@@ -123,11 +123,19 @@ def main() -> int:
                       not wide or h_tall > h_wide,
                       "竖图没有被区别对待")
             # ★ 横图不该被撑出大片空白：高度不应远大于其按比例应得的
+            #   ★ M62：这里原来直接拿 `d["want"]` 比，**忘了算上下限** ——
+            #   而 applyShotHeights 有 `Math.max(96, Math.min(420, …))`：
+            #   400×125 这种极宽的横图按比例只有 45px，会被**下限抬到 96**
+            #   （刻意的：再薄图 + 题注就挤不下了）。
+            #   → 期望值必须与上面那条断言用同一套夹取，否则同一个下限
+            #     在一处算、一处不算，必然自相矛盾。
             if wide:
                 waste = [d for d in wide
-                         if d["want"] > 0 and d["cssH"] > d["want"] + 24]
-                check("横图无多余留白（高度≈按比例）", not waste,
-                      "; ".join(f"{d['src']}(期望{d['want']} "
+                         if d["want"] > 0
+                         and d["cssH"] > max(LOW, min(HIGH, d["want"])) + 24]
+                check("横图无多余留白（高度≈按比例，且不低于下限）", not waste,
+                      "; ".join(f"{d['src']}(期望"
+                                f"{max(LOW, min(HIGH, d['want']))} "
                                 f"实际{d['cssH']})" for d in waste[:3]))
 
             # ③ 完整性：图片实际渲染区域应等于 contain 后的可见尺寸

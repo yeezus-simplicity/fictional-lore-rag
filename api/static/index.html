@@ -753,9 +753,13 @@ $('#bi').addEventListener('keydown', e => {
 
 // ★ M25：同一个教训 —— 新加的按钮必须绑事件
 $('#newChat').onclick = () => resetSession();
-$('#qi').addEventListener('keydown', e => {
-  if(e.key === 'Enter') ask();
-});
+// ★ M60：这里原来又给 #qi 绑了一次回车 —— 加上 M18 那次和下面的 onkeydown，
+//   **同一个输入框上叠了 3 个 Enter 监听**，按一次回车会连发 3 个相同请求。
+//   实测（test_gui_e2e 抓包）：一次回车 → 3 条 POST /query。
+//   后果：① 白白多打两倍后端算力；② 三个响应竞速渲染，
+//   最后落地的那一个可能不是用户看到的中间态；③ 语料/图片接口被重复触发。
+//   → 只保留 M18 那处（含 preventDefault，唯一且正确）。
+//   绑定统一放在下面的 M18 段里，新增监听前先搜一下有没有绑过。
 
 // ---------- 模式切换（M11）----------
 let MODE = 'extract';
@@ -866,8 +870,8 @@ document.querySelectorAll('nav button').forEach(b=>{
     if(b.dataset.v==='s') loadS();
   };
 });
-$('#qi').onkeydown = e => { if(e.key==='Enter') ask(); };
-$('#bi').onkeydown = e => { if(e.key==='Enter') askB(); };
+// ★ M60：这一处也是重复绑定（与上面 M18 段那处）→ 已删，Enter 只有一个监听。
+//   （保留 #bi → askB 的绑定：那是数据浏览视图自己的输入框，不冲突）
 
 // ---------- 问答 ----------
 // ---------- M25：多轮会话 ----------

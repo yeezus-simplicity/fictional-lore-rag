@@ -833,6 +833,20 @@ def re_split_paren(s: str) -> str:
     return re.sub(r"\s*\([^)]*\)", "", s).strip()
 
 
+def _loc_id(title: str) -> str:
+    """★ M65：地点 id。
+
+    ★★ 与替身不同：**必须保留括号** ★★
+      jojowiki 上 `Morioh` 与 `Morioh (JoJolion)` 是**两个不同的地点**
+      （第 4 部 vs 第 8 部的同名城镇），`Higashikata Residence (JoJolion)` 同理。
+      替身的 `make_stand_id` 会剥括号 —— 那正是「跨部同名 id 冲突」
+      这个已知待办的成因（`Killer Queen (JoJolion)` 撞第 4 部）。
+      **地点不能重蹈**：直接走 `_char_id` 的规则（非字母数字一律变 `_`），
+      `Morioh` → `morioh`、`Morioh (JoJolion)` → `morioh_jojolion`，天然区分。
+    """
+    return _char_id(title)
+
+
 # 角色名首部大写、后续可小写（人名）；用于从粘连串里切分
 _NAME_TOKEN = re.compile(r"[A-Z][a-z]+(?:['’][A-Za-z]+)?")
 # 明确的分隔标记

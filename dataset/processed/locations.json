@@ -1,0 +1,5417 @@
+{
+ "n_source_pages": 159,
+ "n_included": 113,
+ "n_excluded": 46,
+ "exclude_stats": {
+  "kept": 113,
+  "ns": 1,
+  "lang": 2,
+  "other": 14,
+  "no_md": 29
+ },
+ "_note": "用户口径：只保留 9 部正传漫画。`part_basis` 记录判据、`exclude_reason` 记录排除原因，均可复核。★ mangadebut 只记首次出场 → 跨部地点只算最早部（Naples/Rome/Venice 记在第 2 部，故第 5 部偏少）。",
+ "locations": [
+  {
+   "location_id": "air_supplena_island",
+   "title": "Air Supplena Island",
+   "name_ja": "エア・サプレーナ島",
+   "name_romaji": "Ea Sapurēna-tō",
+   "type": "Venetian island",
+   "types": [
+    "Venetian island"
+   ],
+   "place_raw": "[[Venice (BT)|Venice]], [[Italy]] {{Flag|Italy2}}",
+   "place_paths": [
+    [
+     "Venice",
+     "Italy"
+    ]
+   ],
+   "place_chain": [
+    "Venice",
+    "Italy"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 72",
+   "mangadebuts": [
+    "Chapter 72"
+   ],
+   "animedebut": "Episode 16",
+   "animedebuts": [
+    "Episode 16"
+   ],
+   "n_infobox_fields": 14,
+   "part": 2,
+   "part_basis": "Chapter 72",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "air_supplena_island_fr",
+   "title": "Air Supplena Island/fr",
+   "name_ja": "エア・サプレーナ島",
+   "name_romaji": "Ea Sapurēna Tou",
+   "type": "Île",
+   "types": [
+    "Île"
+   ],
+   "place_raw": "{{W|Venise|lang=fr}}, {{W|Italie|lang=fr}}",
+   "place_paths": [
+    [
+     "Venise",
+     "Italie"
+    ]
+   ],
+   "place_chain": [
+    "Venise",
+    "Italie"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 72",
+   "mangadebuts": [
+    "Chapter 72"
+   ],
+   "animedebut": "Episode 16",
+   "animedebuts": [
+    "Episode 16"
+   ],
+   "n_infobox_fields": 11,
+   "part": null,
+   "part_basis": "",
+   "included": false,
+   "exclude_reason": "语言子页"
+  },
+  {
+   "location_id": "amazon_rainforest",
+   "title": "Amazon Rainforest",
+   "name_ja": "アマゾン熱帯雨林",
+   "name_romaji": "Amazon Nettaiurin",
+   "type": "Tropical rainforest",
+   "types": [
+    "Tropical rainforest"
+   ],
+   "place_raw": "{{W|Peru}} {{Flag|Peru}}",
+   "place_paths": [
+    [
+     "Peru"
+    ]
+   ],
+   "place_chain": [
+    "Peru"
+   ],
+   "residents": [],
+   "mangadebut": null,
+   "mangadebuts": [],
+   "animedebut": null,
+   "animedebuts": [],
+   "n_infobox_fields": 8,
+   "part": null,
+   "part_basis": "无 mangadebut",
+   "included": false,
+   "exclude_reason": "无正传漫画出场"
+  },
+  {
+   "location_id": "angelo_rock",
+   "title": "Angelo Rock",
+   "name_ja": "アンジェロ岩",
+   "name_romaji": "Anjero Iwa",
+   "type": "Neighborhood landmark",
+   "types": [
+    "Neighborhood landmark"
+   ],
+   "place_raw": "[[Jozenji]], [[Morioh]], Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Jozenji",
+     "Morioh",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Jozenji",
+    "Morioh",
+    "Japan"
+   ],
+   "residents": [
+    "Anjuro Katagiri"
+   ],
+   "mangadebut": "Chapter 272",
+   "mangadebuts": [
+    "Chapter 272"
+   ],
+   "animedebut": "DU Episode 2",
+   "animedebuts": [
+    "DU Episode 2"
+   ],
+   "n_infobox_fields": 12,
+   "part": 4,
+   "part_basis": "Chapter 272",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "antigua",
+   "title": "Antigua",
+   "name_ja": "アンティグア",
+   "name_romaji": "Antigua",
+   "type": "City",
+   "types": [
+    "City"
+   ],
+   "place_raw": "[[Guatemala]], Central America {{Flag|Guatemala}}",
+   "place_paths": [
+    [
+     "Guatemala",
+     "Central America"
+    ]
+   ],
+   "place_chain": [
+    "Guatemala",
+    "Central America"
+   ],
+   "residents": [],
+   "mangadebut": null,
+   "mangadebuts": [],
+   "animedebut": null,
+   "animedebuts": [],
+   "n_infobox_fields": 8,
+   "part": null,
+   "part_basis": "无 mangadebut",
+   "included": false,
+   "exclude_reason": "无正传漫画出场"
+  },
+  {
+   "location_id": "arabian_peninsula",
+   "title": "Arabian Peninsula",
+   "name_ja": "アラビア半島",
+   "name_romaji": "Arabia Hantō",
+   "type": "Peninsula",
+   "types": [
+    "Peninsula"
+   ],
+   "place_raw": "{{W|Western Asia}} {{Flag|Arabic}}",
+   "place_paths": [
+    [
+     "Western Asia"
+    ]
+   ],
+   "place_chain": [
+    "Western Asia"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 166",
+   "mangadebuts": [
+    "Chapter 166"
+   ],
+   "animedebut": "SC Episode 18",
+   "animedebuts": [
+    "SC Episode 18"
+   ],
+   "n_infobox_fields": 10,
+   "part": 3,
+   "part_basis": "Chapter 166",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "arizona_desert",
+   "title": "Arizona Desert",
+   "name_ja": "アリゾナ砂漠",
+   "name_romaji": "Arizona Sabaku",
+   "type": "Desert",
+   "types": [
+    "Desert"
+   ],
+   "place_raw": "{{W|Arizona}}, United States {{Flag|USA}}",
+   "place_paths": [
+    [
+     "Arizona",
+     "United States"
+    ]
+   ],
+   "place_chain": [
+    "Arizona",
+    "United States"
+   ],
+   "residents": [],
+   "mangadebut": "SBR Chapter 1",
+   "mangadebuts": [
+    "SBR Chapter 1"
+   ],
+   "animedebut": "SBR Episode 1",
+   "animedebuts": [
+    "SBR Episode 1"
+   ],
+   "n_infobox_fields": 13,
+   "part": 7,
+   "part_basis": "SBR Chapter 1",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "arj_n_s_factory",
+   "title": "Arjón's Factory",
+   "name_ja": null,
+   "name_romaji": null,
+   "type": "Basement of a Grand Mansion",
+   "types": [
+    "Basement of a Grand Mansion"
+   ],
+   "place_raw": "Salvador, Brazil {{Flag|Brazil}}",
+   "place_paths": [
+    [
+     "Salvador",
+     "Brazil"
+    ]
+   ],
+   "place_chain": [
+    "Salvador",
+    "Brazil"
+   ],
+   "residents": [],
+   "mangadebut": null,
+   "mangadebuts": [],
+   "animedebut": null,
+   "animedebuts": [],
+   "n_infobox_fields": 7,
+   "part": null,
+   "part_basis": "无 mangadebut",
+   "included": false,
+   "exclude_reason": "无正传漫画出场"
+  },
+  {
+   "location_id": "beauty_salon_cinderella",
+   "title": "Beauty Salon Cinderella",
+   "name_ja": "シンデレラ",
+   "name_romaji": "Shinderera",
+   "type": null,
+   "types": [],
+   "place_raw": "[[Morioh]], Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Morioh",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Morioh",
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 348",
+   "mangadebuts": [
+    "Chapter 348"
+   ],
+   "animedebut": "DU Episode 20",
+   "animedebuts": [
+    "DU Episode 20"
+   ],
+   "n_infobox_fields": 12,
+   "part": 4,
+   "part_basis": "Chapter 348",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "boyoyoing_cape",
+   "title": "Boyoyoing Cape",
+   "name_ja": "ボヨヨン岬",
+   "name_romaji": "Boyoyon Misaki",
+   "type": null,
+   "types": [],
+   "place_raw": "[[Morioh]], Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Morioh",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Morioh",
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 297",
+   "mangadebuts": [
+    "Chapter 297"
+   ],
+   "animedebut": "DU Episode 8",
+   "animedebuts": [
+    "DU Episode 8"
+   ],
+   "n_infobox_fields": 11,
+   "part": 4,
+   "part_basis": "Chapter 297",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "british_museum",
+   "title": "British Museum",
+   "name_ja": "大英博物館",
+   "name_romaji": "Daiei Hakubutsukan",
+   "type": "Museum",
+   "types": [
+    "Museum"
+   ],
+   "place_raw": "[[London]], [[England]], [[United Kingdom]] {{Flag|UK}}",
+   "place_paths": [
+    [
+     "London",
+     "England",
+     "United Kingdom"
+    ]
+   ],
+   "place_chain": [
+    "London",
+    "England",
+    "United Kingdom"
+   ],
+   "residents": [],
+   "mangadebut": "Cool Shock High School Student B.T.",
+   "mangadebuts": [
+    "Cool Shock High School Student B.T."
+   ],
+   "animedebut": null,
+   "animedebuts": [],
+   "n_infobox_fields": 12,
+   "part": null,
+   "part_basis": "其它作品: Cool Shock High School Student B.T.",
+   "included": false,
+   "exclude_reason": "其它作品: Cool Shock High School Student B.T."
+  },
+  {
+   "location_id": "budogaoka_bank",
+   "title": "Budogaoka Bank",
+   "name_ja": "ぶどうヶ丘銀行",
+   "name_romaji": "Budōgaoka Ginkō",
+   "type": "Bank",
+   "types": [
+    "Bank"
+   ],
+   "place_raw": "[[Morioh]], Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Morioh",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Morioh",
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 338",
+   "mangadebuts": [
+    "Chapter 338"
+   ],
+   "animedebut": "DU Episode 13",
+   "animedebuts": [
+    "DU Episode 13",
+    "DU Episode 19"
+   ],
+   "n_infobox_fields": 13,
+   "part": 4,
+   "part_basis": "Chapter 338",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "budogaoka_general_hospital",
+   "title": "Budogaoka General Hospital",
+   "name_ja": "ぶどうヶ丘総合病院",
+   "name_romaji": "Budōgaoka Sōgō Byōin",
+   "type": "Hospital",
+   "types": [
+    "Hospital"
+   ],
+   "place_raw": "[[Morioh]], Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Morioh",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Morioh",
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 388",
+   "mangadebuts": [
+    "Chapter 388",
+    "Chapter 390"
+   ],
+   "animedebut": "DU Episode 29",
+   "animedebuts": [
+    "DU Episode 29"
+   ],
+   "n_infobox_fields": 13,
+   "part": 4,
+   "part_basis": "Chapter 388",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "budogaoka_high_school",
+   "title": "Budogaoka High School",
+   "name_ja": "ぶどうヶ丘高校",
+   "name_romaji": "Budōgaoka Kōkō",
+   "type": "小中高一貫校",
+   "types": [
+    "小中高一貫校"
+   ],
+   "place_raw": "[[Morioh]], Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Morioh",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Morioh",
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 267",
+   "mangadebuts": [
+    "Chapter 267"
+   ],
+   "animedebut": "DU Episode 1",
+   "animedebuts": [
+    "DU Episode 1"
+   ],
+   "n_infobox_fields": 13,
+   "part": 4,
+   "part_basis": "Chapter 267",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "building_gap",
+   "title": "Building Gap",
+   "name_ja": null,
+   "name_romaji": null,
+   "type": "Gap between two buildings",
+   "types": [
+    "Gap between two buildings"
+   ],
+   "place_raw": "Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": null,
+   "mangadebuts": [],
+   "animedebut": null,
+   "animedebuts": [],
+   "n_infobox_fields": 6,
+   "part": null,
+   "part_basis": "无 mangadebut",
+   "included": false,
+   "exclude_reason": "无正传漫画出场"
+  },
+  {
+   "location_id": "caf_deux_magots",
+   "title": "Café Deux Magots",
+   "name_ja": "カフェ・ドゥ・マゴ",
+   "name_romaji": "Kafe Du Mago",
+   "type": "Café",
+   "types": [
+    "Café"
+   ],
+   "place_raw": "[[Morioh]], Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Morioh",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Morioh",
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 303",
+   "mangadebuts": [
+    "Chapter 303",
+    "Chapter 347"
+   ],
+   "animedebut": "DU Episode 13",
+   "animedebuts": [
+    "DU Episode 13",
+    "DU Episode 20"
+   ],
+   "n_infobox_fields": 13,
+   "part": 4,
+   "part_basis": "Chapter 303",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "cairo",
+   "title": "Cairo",
+   "name_ja": "カイロ",
+   "name_romaji": "Kairo",
+   "type": "Capital City",
+   "types": [
+    "Capital City"
+   ],
+   "place_raw": "[[Egypt]] {{Flag|Egypt}}",
+   "place_paths": [
+    [
+     "Egypt"
+    ]
+   ],
+   "place_chain": [
+    "Egypt"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 117",
+   "mangadebuts": [
+    "Chapter 117",
+    "Chapter 122"
+   ],
+   "animedebut": "SC Episode 1",
+   "animedebuts": [
+    "SC Episode 1",
+    "SC Episode 3"
+   ],
+   "n_infobox_fields": 12,
+   "part": 3,
+   "part_basis": "Chapter 117",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "capri",
+   "title": "Capri",
+   "name_ja": "カプリ島",
+   "name_romaji": "Kapuri-tō",
+   "type": "Island",
+   "types": [
+    "Island"
+   ],
+   "place_raw": "[[Italy]] {{Flag|Italy}}",
+   "place_paths": [
+    [
+     "Italy"
+    ]
+   ],
+   "place_chain": [
+    "Italy"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 457",
+   "mangadebuts": [
+    "Chapter 457",
+    "Chapter 462"
+   ],
+   "animedebut": "GW Episode 5",
+   "animedebuts": [
+    "GW Episode 5",
+    "GW Episode 7"
+   ],
+   "n_infobox_fields": 13,
+   "part": 5,
+   "part_basis": "Chapter 457",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "collyer_residence",
+   "title": "Collyer Residence",
+   "name_ja": "コリヤー邸",
+   "name_romaji": "Koriyā-tei",
+   "type": "Mansion",
+   "types": [
+    "Mansion"
+   ],
+   "place_raw": "2078 {{W|Fifth Avenue}},<ref name=\"address\">{{Ch|Eccentrics Episode 3}}, page 42</ref> [[Harlem]], [[New York City|New York]] {{Flag|USA}}",
+   "place_paths": [
+    [
+     "2078 Fifth Avenue",
+     "Harlem",
+     "New York"
+    ]
+   ],
+   "place_chain": [
+    "2078 Fifth Avenue",
+    "Harlem",
+    "New York"
+   ],
+   "residents": [],
+   "mangadebut": "Eccentrics Episode 3",
+   "mangadebuts": [
+    "Eccentrics Episode 3"
+   ],
+   "animedebut": null,
+   "animedebuts": [],
+   "n_infobox_fields": 10,
+   "part": null,
+   "part_basis": "其它作品: Eccentrics Episode 3",
+   "included": false,
+   "exclude_reason": "其它作品: Eccentrics Episode 3"
+  },
+  {
+   "location_id": "colosseum",
+   "title": "Colosseum",
+   "name_ja": "コロッセオ",
+   "name_romaji": "Korosseo",
+   "type": "Amphitheatre",
+   "types": [
+    "Amphitheatre",
+    "Exhibit"
+   ],
+   "place_raw": "[[Rome]], [[Italy]] {{Flag|Italy}}",
+   "place_paths": [
+    [
+     "Rome",
+     "Italy"
+    ]
+   ],
+   "place_chain": [
+    "Rome",
+    "Italy"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 62",
+   "mangadebuts": [
+    "Chapter 62"
+   ],
+   "animedebut": "Episode 14",
+   "animedebuts": [
+    "Episode 14"
+   ],
+   "n_infobox_fields": 13,
+   "part": 2,
+   "part_basis": "Chapter 62",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "courtyard",
+   "title": "Courtyard",
+   "name_ja": "中庭",
+   "name_romaji": "Nakaniwa",
+   "type": "Courtyard",
+   "types": [
+    "Courtyard"
+   ],
+   "place_raw": "[[Green Dolphin Street Prison]], [[Florida]], United States {{Flag|USA}}",
+   "place_paths": [
+    [
+     "Green Dolphin Street Prison",
+     "Florida",
+     "United States"
+    ]
+   ],
+   "place_chain": [
+    "Green Dolphin Street Prison",
+    "Florida",
+    "United States"
+   ],
+   "residents": [],
+   "mangadebut": "SO Chapter 40",
+   "mangadebuts": [
+    "SO Chapter 40",
+    "SO Chapter 47"
+   ],
+   "animedebut": "SO Episode 10",
+   "animedebuts": [
+    "SO Episode 10",
+    "SO Episode 12"
+   ],
+   "n_infobox_fields": 10,
+   "part": 6,
+   "part_basis": "SO Chapter 40",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "dio_s_mansion",
+   "title": "DIO's Mansion",
+   "name_ja": "DIOの館",
+   "name_romaji": "DIO no Yakata",
+   "type": "Fatimid architecture personal estate",
+   "types": [
+    "Fatimid architecture personal estate"
+   ],
+   "place_raw": "{{W|Islamic Cairo|Historic Cairo}}, [[Cairo]], [[Egypt]] {{Flag|Egypt}}<ref name=C222>{{Ch|Chapter 222}}</ref>",
+   "place_paths": [
+    [
+     "Islamic Cairo",
+     "Cairo",
+     "Egypt"
+    ]
+   ],
+   "place_chain": [
+    "Islamic Cairo",
+    "Cairo",
+    "Egypt"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 210",
+   "mangadebuts": [
+    "Chapter 210"
+   ],
+   "animedebut": "SC Episode 33",
+   "animedebuts": [
+    "SC Episode 33",
+    "SC Episode 36"
+   ],
+   "n_infobox_fields": 10,
+   "part": 3,
+   "part_basis": "Chapter 210",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "dio_s_mansion_fr",
+   "title": "DIO's Mansion/fr",
+   "name_ja": "DIOの館",
+   "name_romaji": "DIO no Yakata",
+   "type": "Manoir du style Fatimid architecture",
+   "types": [
+    "Manoir du style Fatimid architecture"
+   ],
+   "place_raw": "{{W|Islamic Cairo|Vieux quartier}} du {{W|Le Caire|Caire|lang=fr}}, {{W|Egypte|lang=fr}}<ref name=C222>{{Ch|Chapter 222}}</ref>",
+   "place_paths": [
+    [
+     "Islamic Cairo du Le Caire",
+     "Egypte"
+    ]
+   ],
+   "place_chain": [
+    "Islamic Cairo du Le Caire",
+    "Egypte"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 218",
+   "mangadebuts": [
+    "Chapter 218"
+   ],
+   "animedebut": "SC Episode 36",
+   "animedebuts": [
+    "SC Episode 36"
+   ],
+   "n_infobox_fields": 11,
+   "part": null,
+   "part_basis": "",
+   "included": false,
+   "exclude_reason": "语言子页"
+  },
+  {
+   "location_id": "damokan_cleaning",
+   "title": "Damokan Cleaning",
+   "name_ja": "ダモカンクリーニング",
+   "name_romaji": "Damokan Kurīningu",
+   "type": "Business",
+   "types": [
+    "Business"
+   ],
+   "place_raw": "[[Morioh (JoJolion)|Morioh]], Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Morioh",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Morioh",
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": "JJL Chapter 58",
+   "mangadebuts": [
+    "JJL Chapter 58"
+   ],
+   "animedebut": "|colors     = JoJolion",
+   "animedebuts": [
+    "|colors     = JoJolion"
+   ],
+   "n_infobox_fields": 15,
+   "part": 8,
+   "part_basis": "JJL Chapter 58",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "devil_s_palm",
+   "title": "Devil's Palm",
+   "name_ja": "悪魔の手のひら",
+   "name_romaji": "Akuma no Tenohira",
+   "type": "Supernatural Landform",
+   "types": [
+    "Supernatural Landform"
+   ],
+   "place_raw": "{{W|United States}} {{Flag|USA}}<br />[[Morioh (JoJolion)|Morioh]] {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "United States"
+    ],
+    [
+     "Morioh"
+    ]
+   ],
+   "place_chain": [
+    "United States"
+   ],
+   "residents": [],
+   "mangadebut": "SBR Chapter 13",
+   "mangadebuts": [
+    "SBR Chapter 13",
+    "SBR Chapter 18"
+   ],
+   "animedebut": "SBR Episode 2",
+   "animedebuts": [
+    "SBR Episode 2",
+    "SBR Episode 3",
+    "SBR Episode 4"
+   ],
+   "n_infobox_fields": 9,
+   "part": 7,
+   "part_basis": "SBR Chapter 13",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "dio_s_castle",
+   "title": "Dio's Castle",
+   "name_ja": "ディオの館",
+   "name_romaji": "Dio no Yakata",
+   "type": "Mansion",
+   "types": [
+    "Mansion"
+   ],
+   "place_raw": "[[Windknight's Lot]], [[England]] {{Flag|UK}}",
+   "place_paths": [
+    [
+     "Windknight's Lot",
+     "England"
+    ]
+   ],
+   "place_chain": [
+    "Windknight's Lot",
+    "England"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 21",
+   "mangadebuts": [
+    "Chapter 21"
+   ],
+   "animedebut": "Episode 7",
+   "animedebuts": [
+    "Episode 7"
+   ],
+   "n_infobox_fields": 12,
+   "part": 1,
+   "part_basis": "Chapter 21",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "egypt",
+   "title": "Egypt",
+   "name_ja": "エジプト",
+   "name_romaji": "Ejiputo",
+   "type": "Country",
+   "types": [
+    "Country"
+   ],
+   "place_raw": "{{W|Africa}}<br />{{W|Asia}}",
+   "place_paths": [
+    [
+     "Africa"
+    ],
+    [
+     "Asia"
+    ]
+   ],
+   "place_chain": [
+    "Africa"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 121",
+   "mangadebuts": [
+    "Chapter 121",
+    "Chapter 182"
+   ],
+   "animedebut": "SC Episode 3",
+   "animedebuts": [
+    "SC Episode 3",
+    "SC Episode 24"
+   ],
+   "n_infobox_fields": 11,
+   "part": 3,
+   "part_basis": "Chapter 121",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "england",
+   "title": "England",
+   "name_ja": "イングランド",
+   "name_romaji": "Ingurando",
+   "type": "Country",
+   "types": [
+    "Country"
+   ],
+   "place_raw": "{{W|United Kingdom}} {{Flag|UK}}",
+   "place_paths": [
+    [
+     "United Kingdom"
+    ]
+   ],
+   "place_chain": [
+    "United Kingdom"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 1",
+   "mangadebuts": [
+    "Chapter 1"
+   ],
+   "animedebut": "Episode 1",
+   "animedebuts": [
+    "Episode 1"
+   ],
+   "n_infobox_fields": 13,
+   "part": 1,
+   "part_basis": "Chapter 1",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "everglades",
+   "title": "Everglades",
+   "name_ja": "湿地帯",
+   "name_romaji": "Shitchi-tai",
+   "type": "Farmlands",
+   "types": [
+    "Farmlands",
+    "Swamp"
+   ],
+   "place_raw": "[[Green Dolphin Street Prison]], [[Florida]], United States {{Flag|USA}}",
+   "place_paths": [
+    [
+     "Green Dolphin Street Prison",
+     "Florida",
+     "United States"
+    ]
+   ],
+   "place_chain": [
+    "Green Dolphin Street Prison",
+    "Florida",
+    "United States"
+   ],
+   "residents": [],
+   "mangadebut": "SO Chapter 4",
+   "mangadebuts": [
+    "SO Chapter 4"
+   ],
+   "animedebut": "SO Episode 7",
+   "animedebuts": [
+    "SO Episode 7"
+   ],
+   "n_infobox_fields": 11,
+   "part": 6,
+   "part_basis": "SO Chapter 4",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "execution_chamber",
+   "title": "Execution Chamber",
+   "name_ja": "処刑室",
+   "name_romaji": "Shokei-shitsu",
+   "type": "Prison Cell",
+   "types": [
+    "Prison Cell",
+    "Execution Room"
+   ],
+   "place_raw": null,
+   "place_paths": [],
+   "place_chain": [],
+   "residents": [],
+   "mangadebut": "Under Execution, Under Jailbreak (One-Shot)",
+   "mangadebuts": [
+    "Under Execution, Under Jailbreak (One-Shot)"
+   ],
+   "animedebut": null,
+   "animedebuts": [],
+   "n_infobox_fields": 9,
+   "part": null,
+   "part_basis": "其它作品: Under Execution, Under Jailbreak (One-Sh",
+   "included": false,
+   "exclude_reason": "其它作品: Under Execution, Under Jailbreak (One-Sh"
+  },
+  {
+   "location_id": "express_train",
+   "title": "Express Train",
+   "name_ja": "超特急",
+   "name_romaji": "Chōtokkyū",
+   "type": "Train",
+   "types": [
+    "Train"
+   ],
+   "place_raw": "[[Italy]] {{Flag|Italy}}",
+   "place_paths": [
+    [
+     "Italy"
+    ]
+   ],
+   "place_chain": [
+    "Italy"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 486",
+   "mangadebuts": [
+    "Chapter 486"
+   ],
+   "animedebut": "GW Episode 14",
+   "animedebuts": [
+    "GW Episode 14"
+   ],
+   "n_infobox_fields": 10,
+   "part": 5,
+   "part_basis": "Chapter 486",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "female_wing",
+   "title": "Female Wing",
+   "name_ja": "女子監",
+   "name_romaji": "Joshi-kan",
+   "type": null,
+   "types": [],
+   "place_raw": "[[Green Dolphin Street Prison]], [[Florida]], United States {{Flag|USA}}",
+   "place_paths": [
+    [
+     "Green Dolphin Street Prison",
+     "Florida",
+     "United States"
+    ]
+   ],
+   "place_chain": [
+    "Green Dolphin Street Prison",
+    "Florida",
+    "United States"
+   ],
+   "residents": [],
+   "mangadebut": "SO Chapter 4",
+   "mangadebuts": [
+    "SO Chapter 4"
+   ],
+   "animedebut": "SO Episode 1",
+   "animedebuts": [
+    "SO Episode 1"
+   ],
+   "n_infobox_fields": 10,
+   "part": 6,
+   "part_basis": "SO Chapter 4",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "five_bedroom_house_with_heaven",
+   "title": "Five-Bedroom House with Heaven",
+   "name_ja": "5LDK・天国つき",
+   "name_romaji": "Go Eru-Dī-Kē Tengoku-tsuki",
+   "type": "House",
+   "types": [
+    "House"
+   ],
+   "place_raw": "[[Morioh]], Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Morioh",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Morioh",
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": null,
+   "mangadebuts": [],
+   "animedebut": null,
+   "animedebuts": [],
+   "n_infobox_fields": 9,
+   "part": null,
+   "part_basis": "无 mangadebut",
+   "included": false,
+   "exclude_reason": "无正传漫画出场"
+  },
+  {
+   "location_id": "florida",
+   "title": "Florida",
+   "name_ja": "フロリダ州",
+   "name_romaji": "Furorida-shū",
+   "type": null,
+   "types": [],
+   "place_raw": "{{W|United States}} {{flag|USA}}",
+   "place_paths": [
+    [
+     "United States"
+    ]
+   ],
+   "place_chain": [
+    "United States"
+   ],
+   "residents": [],
+   "mangadebut": "SO Chapter 1",
+   "mangadebuts": [
+    "SO Chapter 1"
+   ],
+   "animedebut": "SO Episode 1",
+   "animedebuts": [
+    "SO Episode 1"
+   ],
+   "n_infobox_fields": 9,
+   "part": 6,
+   "part_basis": "SO Chapter 1",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "foggy_town_hotel",
+   "title": "Foggy Town Hotel",
+   "name_ja": "霧深い町のホテル",
+   "name_romaji": "Kirifukai Machi no Hoteru",
+   "type": "Hotel",
+   "types": [
+    "Hotel"
+   ],
+   "place_raw": "[[Pakistan]] {{Flag|Pakistan}}<br />[[Saudi Arabia]] {{Flag|Saudi Arabia}} {{S|[[JoJo's Bizarre Adventure (OVA)|OVA]]}}",
+   "place_paths": [
+    [
+     "Pakistan"
+    ],
+    [
+     "Saudi Arabia"
+    ]
+   ],
+   "place_chain": [
+    "Pakistan"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 156",
+   "mangadebuts": [
+    "Chapter 156"
+   ],
+   "animedebut": "SC Episode 14",
+   "animedebuts": [
+    "SC Episode 14"
+   ],
+   "n_infobox_fields": 11,
+   "part": 3,
+   "part_basis": "Chapter 156",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "foreign_residence_film_set",
+   "title": "Foreign Residence Film Set",
+   "name_ja": null,
+   "name_romaji": null,
+   "type": "Film Set",
+   "types": [
+    "Film Set"
+   ],
+   "place_raw": "Western Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Western Japan"
+    ]
+   ],
+   "place_chain": [
+    "Western Japan"
+   ],
+   "residents": [],
+   "mangadebut": null,
+   "mangadebuts": [],
+   "animedebut": null,
+   "animedebuts": [],
+   "n_infobox_fields": 6,
+   "part": null,
+   "part_basis": "无 mangadebut",
+   "included": false,
+   "exclude_reason": "无正传漫画出场"
+  },
+  {
+   "location_id": "futatsumori_tunnel",
+   "title": "Futatsumori Tunnel",
+   "name_ja": "二つ杜トンネル",
+   "name_romaji": "Futatsu Mori-Tonneru",
+   "type": "Tunnel",
+   "types": [
+    "Tunnel"
+   ],
+   "place_raw": "[[Morioh]], Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Morioh",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Morioh",
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 384",
+   "mangadebuts": [
+    "Chapter 384"
+   ],
+   "animedebut": "DU Episode 28",
+   "animedebuts": [
+    "DU Episode 28"
+   ],
+   "n_infobox_fields": 13,
+   "part": 4,
+   "part_basis": "Chapter 384",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "germany",
+   "title": "Germany",
+   "name_ja": "ドイツ",
+   "name_romaji": "Doitsu",
+   "type": "Country",
+   "types": [
+    "Country"
+   ],
+   "place_raw": "{{W|Central Europe}}",
+   "place_paths": [
+    [
+     "Central Europe"
+    ]
+   ],
+   "place_chain": [
+    "Central Europe"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 52",
+   "mangadebuts": [
+    "Chapter 52",
+    "JJL Chapter 57"
+   ],
+   "animedebut": "Episode 11",
+   "animedebuts": [
+    "Episode 11"
+   ],
+   "n_infobox_fields": 13,
+   "part": 2,
+   "part_basis": "Chapter 52",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "gessler_s_hotel",
+   "title": "Gessler's Hotel",
+   "name_ja": "ゲスラーのホテル",
+   "name_romaji": "Gesurā no Hoteru",
+   "type": "Hotel",
+   "types": [
+    "Hotel"
+   ],
+   "place_raw": "[[St. Moritz]], [[Switzerland]] {{Flag|Switzerland}}",
+   "place_paths": [
+    [
+     "St. Moritz",
+     "Switzerland"
+    ]
+   ],
+   "place_chain": [
+    "St. Moritz",
+    "Switzerland"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 88",
+   "mangadebuts": [
+    "Chapter 88"
+   ],
+   "animedebut": "Episode 19",
+   "animedebuts": [
+    "Episode 19"
+   ],
+   "n_infobox_fields": 15,
+   "part": 2,
+   "part_basis": "Chapter 88",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "gettysburg",
+   "title": "Gettysburg",
+   "name_ja": "ゲティスバーグ",
+   "name_romaji": "Getisubāgu",
+   "type": "Town",
+   "types": [
+    "Town"
+   ],
+   "place_raw": "Pennsylvania, United States {{Flag|USA}}",
+   "place_paths": [
+    [
+     "Pennsylvania",
+     "United States"
+    ]
+   ],
+   "place_chain": [
+    "Pennsylvania",
+    "United States"
+   ],
+   "residents": [],
+   "mangadebut": "SBR Chapter 56",
+   "mangadebuts": [
+    "SBR Chapter 56"
+   ],
+   "animedebut": "|colors     = SteelBallRun",
+   "animedebuts": [
+    "|colors     = SteelBallRun"
+   ],
+   "n_infobox_fields": 12,
+   "part": 7,
+   "part_basis": "SBR Chapter 56",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "ghost_girl_s_alley",
+   "title": "Ghost Girl's Alley",
+   "name_ja": "少女の幽霊に会える小道",
+   "name_romaji": "Shoujo no Yuurei ni Aeru Komichi",
+   "type": "Alleyway",
+   "types": [
+    "Alleyway"
+   ],
+   "place_raw": "[[Morioh]], Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Morioh",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Morioh",
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 330",
+   "mangadebuts": [
+    "Chapter 330"
+   ],
+   "animedebut": "DU Episode 17",
+   "animedebuts": [
+    "DU Episode 17"
+   ],
+   "n_infobox_fields": 11,
+   "part": 4,
+   "part_basis": "Chapter 330",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "gokedani",
+   "title": "Gokedani",
+   "name_ja": "五ケ谷",
+   "name_romaji": null,
+   "type": "Village",
+   "types": [
+    "Village"
+   ],
+   "place_raw": "Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": null,
+   "mangadebuts": [],
+   "animedebut": null,
+   "animedebuts": [],
+   "n_infobox_fields": 8,
+   "part": null,
+   "part_basis": "无 mangadebut",
+   "included": false,
+   "exclude_reason": "无正传漫画出场"
+  },
+  {
+   "location_id": "gozan_s_house",
+   "title": "Gozan's House",
+   "name_ja": null,
+   "name_romaji": null,
+   "type": "House",
+   "types": [
+    "House"
+   ],
+   "place_raw": "Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": null,
+   "mangadebuts": [],
+   "animedebut": null,
+   "animedebuts": [],
+   "n_infobox_fields": 8,
+   "part": null,
+   "part_basis": "无 mangadebut",
+   "included": false,
+   "exclude_reason": "无正传漫画出场"
+  },
+  {
+   "location_id": "great_tree_of_sugar_mountain",
+   "title": "Great Tree of Sugar Mountain",
+   "name_ja": "シュガーマウンテンの大木",
+   "name_romaji": "Shugā Maunten no Taiboku",
+   "type": "Supernatural Landform",
+   "types": [
+    "Supernatural Landform"
+   ],
+   "place_raw": "{{W|Milwaukee}}, {{W|Wisconsin}}, United States {{Flag|USA}}",
+   "place_paths": [
+    [
+     "Milwaukee",
+     "Wisconsin",
+     "United States"
+    ]
+   ],
+   "place_chain": [
+    "Milwaukee",
+    "Wisconsin",
+    "United States"
+   ],
+   "residents": [],
+   "mangadebut": "SBR Chapter 45",
+   "mangadebuts": [
+    "SBR Chapter 45"
+   ],
+   "animedebut": "|colors     = SteelBallRun",
+   "animedebuts": [
+    "|colors     = SteelBallRun"
+   ],
+   "n_infobox_fields": 11,
+   "part": 7,
+   "part_basis": "SBR Chapter 45",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "green_dolphin_street_prison",
+   "title": "Green Dolphin Street Prison",
+   "name_ja": "グリーン・ドルフィン・ストリート刑務所",
+   "name_romaji": "Gurīn Dorufin Sutorīto Keimusho",
+   "type": "Maximum security prison",
+   "types": [
+    "Maximum security prison",
+    "Detention center"
+   ],
+   "place_raw": "[[Florida]], {{W|United States}} {{Flag|USA}}",
+   "place_paths": [
+    [
+     "Florida",
+     "United States"
+    ]
+   ],
+   "place_chain": [
+    "Florida",
+    "United States"
+   ],
+   "residents": [],
+   "mangadebut": "SO Chapter 1",
+   "mangadebuts": [
+    "SO Chapter 1"
+   ],
+   "animedebut": "SO Episode 1",
+   "animedebuts": [
+    "SO Episode 1"
+   ],
+   "n_infobox_fields": 13,
+   "part": 6,
+   "part_basis": "SO Chapter 1",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "guatemala",
+   "title": "Guatemala",
+   "name_ja": "グアテマラ",
+   "name_romaji": "Guatemara",
+   "type": "Country",
+   "types": [
+    "Country"
+   ],
+   "place_raw": "Northern Central America {{Flag|Guatemala}}",
+   "place_paths": [
+    [
+     "Northern Central America"
+    ]
+   ],
+   "place_chain": [
+    "Northern Central America"
+   ],
+   "residents": [],
+   "mangadebut": null,
+   "mangadebuts": [],
+   "animedebut": null,
+   "animedebuts": [],
+   "n_infobox_fields": 8,
+   "part": null,
+   "part_basis": "无 mangadebut",
+   "included": false,
+   "exclude_reason": "无正传漫画出场"
+  },
+  {
+   "location_id": "happeita_s_house",
+   "title": "Happeita's House",
+   "name_ja": null,
+   "name_romaji": null,
+   "type": "House",
+   "types": [
+    "House"
+   ],
+   "place_raw": "[[Morioh]], Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Morioh",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Morioh",
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": null,
+   "mangadebuts": [],
+   "animedebut": null,
+   "animedebuts": [],
+   "n_infobox_fields": 8,
+   "part": null,
+   "part_basis": "无 mangadebut",
+   "included": false,
+   "exclude_reason": "无正传漫画出场"
+  },
+  {
+   "location_id": "happygaoka",
+   "title": "Happygaoka",
+   "name_ja": "ハッピーヶ丘",
+   "name_romaji": "Happīgaoka",
+   "type": "Neighborhood",
+   "types": [
+    "Neighborhood"
+   ],
+   "place_raw": "Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": null,
+   "mangadebuts": [],
+   "animedebut": null,
+   "animedebuts": [],
+   "n_infobox_fields": 11,
+   "part": null,
+   "part_basis": "无 mangadebut",
+   "included": false,
+   "exclude_reason": "无正传漫画出场"
+  },
+  {
+   "location_id": "hasekura_academy_elementary_school",
+   "title": "Hasekura Academy Elementary School",
+   "name_ja": "支倉学園小等部",
+   "name_romaji": "Hasekura Gakuen-shō-tō-bu",
+   "type": "School",
+   "types": [
+    "School",
+    "Scouts"
+   ],
+   "place_raw": "[[Morioh (JoJolion)|Morioh]], Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Morioh",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Morioh",
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": "JJL Chapter 64",
+   "mangadebuts": [
+    "JJL Chapter 64",
+    "JJL Chapter 83"
+   ],
+   "animedebut": "|colors     = JoJolion",
+   "animedebuts": [
+    "|colors     = JoJolion"
+   ],
+   "n_infobox_fields": 11,
+   "part": 8,
+   "part_basis": "JJL Chapter 64",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "hawaii",
+   "title": "Hawaii",
+   "name_ja": "ハワイ州",
+   "name_romaji": "Hawai-shū",
+   "type": "Subtropical islands",
+   "types": [
+    "Subtropical islands",
+    "U.S. state",
+    "Kingdom"
+   ],
+   "place_raw": "{{W|Pacific Ocean}}",
+   "place_paths": [
+    [
+     "Pacific Ocean"
+    ]
+   ],
+   "place_chain": [
+    "Pacific Ocean"
+   ],
+   "residents": [],
+   "mangadebut": "TJL Chapter 1",
+   "mangadebuts": [
+    "TJL Chapter 1"
+   ],
+   "animedebut": null,
+   "animedebuts": [],
+   "n_infobox_fields": 12,
+   "part": 9,
+   "part_basis": "TJL Chapter 1",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "hawaii_state_land_registry_office",
+   "title": "Hawaii State Land Registry Office",
+   "name_ja": "ハワイ州土地登記所",
+   "name_romaji": "Hawai-shū Tochi Tōkijo",
+   "type": "Land Registry Office",
+   "types": [
+    "Land Registry Office"
+   ],
+   "place_raw": "{{W|Honolulu}}, [[Hawaii]] {{Flag|Hawaii}}",
+   "place_paths": [
+    [
+     "Honolulu",
+     "Hawaii"
+    ]
+   ],
+   "place_chain": [
+    "Honolulu",
+    "Hawaii"
+   ],
+   "residents": [],
+   "mangadebut": "TJL Chapter 14",
+   "mangadebuts": [
+    "TJL Chapter 14"
+   ],
+   "animedebut": null,
+   "animedebuts": [],
+   "n_infobox_fields": 12,
+   "part": 9,
+   "part_basis": "TJL Chapter 14",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "higashikata_fruit_parlor",
+   "title": "Higashikata Fruit Parlor",
+   "name_ja": "東方フルーツパーラー",
+   "name_romaji": "Higashikata Furūtsu Pārā",
+   "type": "Shop",
+   "types": [
+    "Shop"
+   ],
+   "place_raw": "[[Morioh (JoJolion)|Morioh]], Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Morioh",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Morioh",
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": "JJL Chapter 7",
+   "mangadebuts": [
+    "JJL Chapter 7",
+    "JJL Chapter 33"
+   ],
+   "animedebut": null,
+   "animedebuts": [],
+   "n_infobox_fields": 18,
+   "part": 8,
+   "part_basis": "JJL Chapter 7",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "higashikata_residence",
+   "title": "Higashikata Residence",
+   "name_ja": "東方邸",
+   "name_romaji": "Higashikata-tei",
+   "type": null,
+   "types": [],
+   "place_raw": "[[Jozenji|Jozenji 1-6]], [[Morioh]], Japan {{Flag|Japan}}<ref name=\"C266P6\">{{Ch|Chapter 266}}, p.6</ref>",
+   "place_paths": [
+    [
+     "Jozenji 1-6",
+     "Morioh",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Jozenji 1-6",
+    "Morioh",
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 269",
+   "mangadebuts": [
+    "Chapter 269"
+   ],
+   "animedebut": "DU Episode 1",
+   "animedebuts": [
+    "DU Episode 1"
+   ],
+   "n_infobox_fields": 12,
+   "part": 4,
+   "part_basis": "Chapter 269",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "higashikata_residence_jojolion",
+   "title": "Higashikata Residence (JoJolion)",
+   "name_ja": "東方邸",
+   "name_romaji": "Higashikata-tei",
+   "type": "Japanese contemporary-style villa",
+   "types": [
+    "Japanese contemporary-style villa"
+   ],
+   "place_raw": "[[Morioh (JoJolion)|Morioh]], Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Morioh",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Morioh",
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": "JJL Chapter 7",
+   "mangadebuts": [
+    "JJL Chapter 7"
+   ],
+   "animedebut": "|gamedebut  = Eyes of Heaven",
+   "animedebuts": [
+    "|gamedebut  = Eyes of Heaven"
+   ],
+   "n_infobox_fields": 17,
+   "part": 8,
+   "part_basis": "JJL Chapter 7",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "hirose_residence",
+   "title": "Hirose Residence",
+   "name_ja": "広瀬邸",
+   "name_romaji": "Hirose-tei",
+   "type": null,
+   "types": [],
+   "place_raw": "[[Morioh]], Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Morioh",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Morioh",
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 286",
+   "mangadebuts": [
+    "Chapter 286"
+   ],
+   "animedebut": "DU Episode 6",
+   "animedebuts": [
+    "DU Episode 6"
+   ],
+   "n_infobox_fields": 12,
+   "part": 4,
+   "part_basis": "Chapter 286",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "hong_kong",
+   "title": "Hong Kong",
+   "name_ja": "香港",
+   "name_romaji": "Honkon",
+   "type": "Special Administrative Region",
+   "types": [
+    "Special Administrative Region",
+    "City"
+   ],
+   "place_raw": "{{W|China}} {{Flag|China}}",
+   "place_paths": [
+    [
+     "China"
+    ]
+   ],
+   "place_chain": [
+    "China"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 124",
+   "mangadebuts": [
+    "Chapter 124"
+   ],
+   "animedebut": "SC Episode 4",
+   "animedebuts": [
+    "SC Episode 4"
+   ],
+   "n_infobox_fields": 15,
+   "part": 3,
+   "part_basis": "Chapter 124",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "hotel_mondo_aria",
+   "title": "Hotel Mondo Aria",
+   "name_ja": "モンド・アーリア",
+   "name_romaji": "Mondo Āria",
+   "type": "Hotel",
+   "types": [
+    "Hotel"
+   ],
+   "place_raw": "[[Venice]], [[Italy]] {{Flag|Italy}}",
+   "place_paths": [
+    [
+     "Venice",
+     "Italy"
+    ]
+   ],
+   "place_chain": [
+    "Venice",
+    "Italy"
+   ],
+   "residents": [],
+   "mangadebut": null,
+   "mangadebuts": [],
+   "animedebut": null,
+   "animedebuts": [],
+   "n_infobox_fields": 9,
+   "part": null,
+   "part_basis": "无 mangadebut",
+   "included": false,
+   "exclude_reason": "无正传漫画出场"
+  },
+  {
+   "location_id": "howler_s_megayacht",
+   "title": "Howler's Megayacht",
+   "name_ja": "ハウラーのメガヨット",
+   "name_romaji": "Haurā no Megayotto",
+   "type": "Yacht",
+   "types": [
+    "Yacht"
+   ],
+   "place_raw": "Aloha Tower Pier,<ref>{{Ch|TJL Chapter 34}}, p.31</ref> O'ahu, [[Hawaii]] {{Flag|Hawaii}}",
+   "place_paths": [
+    [
+     "Aloha Tower Pier",
+     "Oahu",
+     "Hawaii"
+    ]
+   ],
+   "place_chain": [
+    "Aloha Tower Pier",
+    "Oahu",
+    "Hawaii"
+   ],
+   "residents": [],
+   "mangadebut": "TJL Chapter 22",
+   "mangadebuts": [
+    "TJL Chapter 22"
+   ],
+   "animedebut": null,
+   "animedebuts": [],
+   "n_infobox_fields": 11,
+   "part": 9,
+   "part_basis": "TJL Chapter 22",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "hualalai",
+   "title": "Hualalai",
+   "name_ja": "フアラライ山",
+   "name_romaji": "Fuararai-san",
+   "type": "Volcano",
+   "types": [
+    "Volcano"
+   ],
+   "place_raw": "Hawaii Island, [[Hawaii]] {{Flag|Hawaii}}",
+   "place_paths": [
+    [
+     "Hawaii Island",
+     "Hawaii"
+    ]
+   ],
+   "place_chain": [
+    "Hawaii Island",
+    "Hawaii"
+   ],
+   "residents": [],
+   "mangadebut": "TJL Chapter 12",
+   "mangadebuts": [
+    "TJL Chapter 12"
+   ],
+   "animedebut": null,
+   "animedebuts": [],
+   "n_infobox_fields": 13,
+   "part": 9,
+   "part_basis": "TJL Chapter 12",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "hyogara_rocks",
+   "title": "Hyogara Rocks",
+   "name_ja": "ヒョウガラ列岩",
+   "name_romaji": "Hyōgara Retsugan",
+   "type": "Natural reef",
+   "types": [
+    "Natural reef"
+   ],
+   "place_raw": "[[Morioh]], Japan {{Flag|Japan}}<hr />[[Morioh (JoJolion)|Morioh]], Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Morioh",
+     "Japan <hr />Morioh",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Morioh",
+    "Japan <hr />Morioh",
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": "TSKR Episode 6<hr />JJL Chapter 52",
+   "mangadebuts": [
+    "TSKR Episode 6<hr />JJL Chapter 52"
+   ],
+   "animedebut": "|livedebut  = TSKR Episode 9 (TV Drama)",
+   "animedebuts": [
+    "|livedebut  = TSKR Episode 9 (TV Drama)"
+   ],
+   "n_infobox_fields": 19,
+   "part": null,
+   "part_basis": "其它作品: TSKR Episode 6<hr />JJL Chapter 52",
+   "included": false,
+   "exclude_reason": "其它作品: TSKR Episode 6<hr />JJL Chapter 52"
+  },
+  {
+   "location_id": "iko_iko",
+   "title": "IKO IKO",
+   "name_ja": "アイコアイコ",
+   "name_romaji": "Aiko Aiko",
+   "type": null,
+   "types": [],
+   "place_raw": "{{W|Kalihi}}, {{W|Honolulu}}, {{W|Oahu}}, [[Hawaii]], {{W|United States}} {{Flag|USA}}<ref name=TJL1P58>{{Ch|TJL Chapter 1}}, p.58</ref>",
+   "place_paths": [
+    [
+     "Kalihi",
+     "Honolulu",
+     "Oahu",
+     "Hawaii",
+     "United States"
+    ]
+   ],
+   "place_chain": [
+    "Kalihi",
+    "Honolulu",
+    "Oahu",
+    "Hawaii",
+    "United States"
+   ],
+   "residents": [],
+   "mangadebut": "TJL Chapter 1",
+   "mangadebuts": [
+    "TJL Chapter 1"
+   ],
+   "animedebut": null,
+   "animedebuts": [],
+   "n_infobox_fields": 9,
+   "part": 9,
+   "part_basis": "TJL Chapter 1",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "india",
+   "title": "India",
+   "name_ja": "インド",
+   "name_romaji": "Indo",
+   "type": "Country",
+   "types": [
+    "Country"
+   ],
+   "place_raw": "{{W|Asia}}",
+   "place_paths": [
+    [
+     "Asia"
+    ]
+   ],
+   "place_chain": [
+    "Asia"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 17",
+   "mangadebuts": [
+    "Chapter 17",
+    "Chapter 140"
+   ],
+   "animedebut": "SC Episode 9",
+   "animedebuts": [
+    "SC Episode 9"
+   ],
+   "n_infobox_fields": 12,
+   "part": 1,
+   "part_basis": "Chapter 17",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "italy",
+   "title": "Italy",
+   "name_ja": "イタリア",
+   "name_romaji": "Itaria",
+   "type": "Country",
+   "types": [
+    "Country"
+   ],
+   "place_raw": "{{W|Europe}}",
+   "place_paths": [
+    [
+     "Europe"
+    ]
+   ],
+   "place_chain": [
+    "Europe"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 62",
+   "mangadebuts": [
+    "Chapter 62"
+   ],
+   "animedebut": "Episode 14",
+   "animedebuts": [
+    "Episode 14"
+   ],
+   "n_infobox_fields": 12,
+   "part": 2,
+   "part_basis": "Chapter 62",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "jingi_in_university",
+   "title": "Jingi'in University",
+   "name_ja": "神祇院大学",
+   "name_romaji": "Jingīn Daigaku",
+   "type": "University",
+   "types": [
+    "University"
+   ],
+   "place_raw": "Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": null,
+   "mangadebuts": [],
+   "animedebut": null,
+   "animedebuts": [],
+   "n_infobox_fields": 10,
+   "part": null,
+   "part_basis": "无 mangadebut",
+   "included": false,
+   "exclude_reason": "无正传漫画出场"
+  },
+  {
+   "location_id": "jojo_wiki_location_page_layout",
+   "title": "JoJo Wiki:Location Page Layout",
+   "name_ja": null,
+   "name_romaji": null,
+   "type": null,
+   "types": [],
+   "place_raw": null,
+   "place_paths": [],
+   "place_chain": [],
+   "residents": [],
+   "mangadebut": null,
+   "mangadebuts": [],
+   "animedebut": null,
+   "animedebuts": [],
+   "n_infobox_fields": 2,
+   "part": null,
+   "part_basis": "",
+   "included": false,
+   "exclude_reason": "命名空间页"
+  },
+  {
+   "location_id": "joestar_jizo",
+   "title": "Joestar Jizo",
+   "name_ja": "ジョースター地蔵",
+   "name_romaji": "Jōsutā Jizō",
+   "type": "Jizo statue",
+   "types": [
+    "Jizo statue"
+   ],
+   "place_raw": "[[Mutsu-kabe Promenade]], {{Morioh8}}, Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Mutsu-kabe Promenade",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Mutsu-kabe Promenade",
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": "JJL Chapter 21",
+   "mangadebuts": [
+    "JJL Chapter 21"
+   ],
+   "animedebut": "|colors     = JoJolion",
+   "animedebuts": [
+    "|colors     = JoJolion"
+   ],
+   "n_infobox_fields": 13,
+   "part": 8,
+   "part_basis": "JJL Chapter 21",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "joestar_mansion",
+   "title": "Joestar Mansion",
+   "name_ja": "ジョースター邸",
+   "name_romaji": "Jōsutā-tei",
+   "type": "Queen Anne style architecture",
+   "types": [
+    "Queen Anne style architecture"
+   ],
+   "place_raw": "{{W|Liverpool}}, {{W|England}} {{Flag|UK}}<ref name=\"ch01\">{{Ch|Chapter 1}}</ref>",
+   "place_paths": [
+    [
+     "Liverpool",
+     "England"
+    ]
+   ],
+   "place_chain": [
+    "Liverpool",
+    "England"
+   ],
+   "residents": [
+    "Joestar Family"
+   ],
+   "mangadebut": "Chapter 1",
+   "mangadebuts": [
+    "Chapter 1"
+   ],
+   "animedebut": "Episode 1",
+   "animedebuts": [
+    "Episode 1"
+   ],
+   "n_infobox_fields": 12,
+   "part": 1,
+   "part_basis": "Chapter 1",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "kameyu_market",
+   "title": "Kameyu Market",
+   "name_ja": "亀友マーケット",
+   "name_romaji": "Kameyū Māketto",
+   "type": "Department store",
+   "types": [
+    "Department store"
+   ],
+   "place_raw": "[[Morioh]], Japan {{Flag|Japan}} {{S|Part 4}}<hr />{{Morioh8}}, Japan {{Flag|Japan}} {{S|Part 8}}",
+   "place_paths": [
+    [
+     "Morioh",
+     "Japan  <hr />",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Morioh",
+    "Japan  <hr />",
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 336<hr />JJL Chapter 62",
+   "mangadebuts": [
+    "Chapter 336<hr />JJL Chapter 62"
+   ],
+   "animedebut": "DU Episode 1",
+   "animedebuts": [
+    "DU Episode 1",
+    "DU Episode 18"
+   ],
+   "n_infobox_fields": 20,
+   "part": 4,
+   "part_basis": "Chapter 336",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "kansas_city",
+   "title": "Kansas City",
+   "name_ja": "カンザス・シティ",
+   "name_romaji": "Kanzasu Shiti",
+   "type": "City",
+   "types": [
+    "City"
+   ],
+   "place_raw": "Missouri, United States {{Flag|USA}}",
+   "place_paths": [
+    [
+     "Missouri",
+     "United States"
+    ]
+   ],
+   "place_chain": [
+    "Missouri",
+    "United States"
+   ],
+   "residents": [],
+   "mangadebut": "SBR Chapter 36",
+   "mangadebuts": [
+    "SBR Chapter 36"
+   ],
+   "animedebut": "|colors     = SteelBallRun",
+   "animedebuts": [
+    "|colors     = SteelBallRun"
+   ],
+   "n_infobox_fields": 12,
+   "part": 7,
+   "part_basis": "SBR Chapter 36",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "kawajiri_residence",
+   "title": "Kawajiri Residence",
+   "name_ja": "川尻邸",
+   "name_romaji": "Kawajiri-tei",
+   "type": null,
+   "types": [],
+   "place_raw": "[[Morioh]], Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Morioh",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Morioh",
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 369",
+   "mangadebuts": [
+    "Chapter 369"
+   ],
+   "animedebut": "DU Episode 25",
+   "animedebuts": [
+    "DU Episode 25"
+   ],
+   "n_infobox_fields": 12,
+   "part": 4,
+   "part_basis": "Chapter 369",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "kennedy_space_center",
+   "title": "Kennedy Space Center",
+   "name_ja": "ケネディ宇宙センター",
+   "name_romaji": "Kenedi Uchū Sentā",
+   "type": "NASA facilities",
+   "types": [
+    "NASA facilities"
+   ],
+   "place_raw": "{{W|Merritt Island, Florida|Merritt Island}}, [[Florida]], {{W|United States}} {{S|{{W|Cape Canaveral}}}} {{Flag|USA}}",
+   "place_paths": [
+    [
+     "Merritt Island",
+     "Florida",
+     "Florida",
+     "United States"
+    ]
+   ],
+   "place_chain": [
+    "Merritt Island",
+    "Florida",
+    "Florida",
+    "United States"
+   ],
+   "residents": [],
+   "mangadebut": "SO Chapter 138",
+   "mangadebuts": [
+    "SO Chapter 138"
+   ],
+   "animedebut": "SO Episode 33",
+   "animedebuts": [
+    "SO Episode 33"
+   ],
+   "n_infobox_fields": 11,
+   "part": 6,
+   "part_basis": "SO Chapter 138",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "kingdom_of_naples",
+   "title": "Kingdom of Naples",
+   "name_ja": "ネアポリス王国",
+   "name_romaji": "Neaporisu Ōkoku",
+   "type": "Kingdom",
+   "types": [
+    "Kingdom"
+   ],
+   "place_raw": "{{W|Italian Peninsula}}",
+   "place_paths": [
+    [
+     "Italian Peninsula"
+    ]
+   ],
+   "place_chain": [
+    "Italian Peninsula"
+   ],
+   "residents": [],
+   "mangadebut": "SBR Chapter 20",
+   "mangadebuts": [
+    "SBR Chapter 20"
+   ],
+   "animedebut": "|colors     = SteelBallRun",
+   "animedebuts": [
+    "|colors     = SteelBallRun"
+   ],
+   "n_infobox_fields": 15,
+   "part": 7,
+   "part_basis": "SBR Chapter 20",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "kira_residence",
+   "title": "Kira Residence",
+   "name_ja": "吉良邸",
+   "name_romaji": "Kira-tei",
+   "type": "Sukiya-zukuri",
+   "types": [
+    "Sukiya-zukuri"
+   ],
+   "place_raw": "[[Jozenji|Jozenji 1-128]], [[Morioh]], Japan {{Flag|Japan}} {{S|Manga}}<ref name=\"C364\">{{Ch|Chapter 364}}</ref><br />[[Kotodai|Kotodai 1-128]], [[Morioh]], Japan {{Flag|Japan}} {{S|Anime}}<ref name=\"DU24\">{{Ep|DU Episode 24}}</ref>",
+   "place_paths": [
+    [
+     "Jozenji 1-128",
+     "Morioh",
+     "Japan"
+    ],
+    [
+     "Kotodai 1-128",
+     "Morioh",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Jozenji 1-128",
+    "Morioh",
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 334",
+   "mangadebuts": [
+    "Chapter 334"
+   ],
+   "animedebut": "DU Episode 17",
+   "animedebuts": [
+    "DU Episode 17"
+   ],
+   "n_infobox_fields": 14,
+   "part": 4,
+   "part_basis": "Chapter 334",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "kujo_mansion",
+   "title": "Kujo Mansion",
+   "name_ja": "空条邸",
+   "name_romaji": "Kūjō-tei",
+   "type": "Minka-style mansion",
+   "types": [
+    "Minka-style mansion"
+   ],
+   "place_raw": "[[Tokyo]], Japan {{J}}",
+   "place_paths": [
+    [
+     "Tokyo",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Tokyo",
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 120",
+   "mangadebuts": [
+    "Chapter 120"
+   ],
+   "animedebut": "SC Episode 2",
+   "animedebuts": [
+    "SC Episode 2"
+   ],
+   "n_infobox_fields": 13,
+   "part": 3,
+   "part_basis": "Chapter 120",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "lake_titicaca",
+   "title": "Lake Titicaca",
+   "name_ja": "チチカカ湖",
+   "name_romaji": "Chichikaka-ko",
+   "type": "Alpine lake",
+   "types": [
+    "Alpine lake"
+   ],
+   "place_raw": "Between {{W|Peru}} and {{W|Bolivia}} {{Flag|Peru}}",
+   "place_paths": [
+    [
+     "Between Peru and Bolivia"
+    ]
+   ],
+   "place_chain": [
+    "Between Peru and Bolivia"
+   ],
+   "residents": [],
+   "mangadebut": null,
+   "mangadebuts": [],
+   "animedebut": null,
+   "animedebuts": [],
+   "n_infobox_fields": 9,
+   "part": null,
+   "part_basis": "无 mangadebut",
+   "included": false,
+   "exclude_reason": "无正传漫画出场"
+  },
+  {
+   "location_id": "libeccio",
+   "title": "Libeccio",
+   "name_ja": null,
+   "name_romaji": null,
+   "type": "Restaurant",
+   "types": [
+    "Restaurant"
+   ],
+   "place_raw": "[[Naples]], [[Italy]] {{Flag|Italy}}",
+   "place_paths": [
+    [
+     "Naples",
+     "Italy"
+    ]
+   ],
+   "place_chain": [
+    "Naples",
+    "Italy"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 456",
+   "mangadebuts": [
+    "Chapter 456"
+   ],
+   "animedebut": "GW Episode 4",
+   "animedebuts": [
+    "GW Episode 4"
+   ],
+   "n_infobox_fields": 10,
+   "part": 5,
+   "part_basis": "Chapter 456",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "lima",
+   "title": "Lima",
+   "name_ja": "リマ",
+   "name_romaji": "Rima",
+   "type": "Capital City",
+   "types": [
+    "Capital City"
+   ],
+   "place_raw": "{{W|Peru}}, South America {{Flag|Peru}}",
+   "place_paths": [
+    [
+     "Peru",
+     "South America"
+    ]
+   ],
+   "place_chain": [
+    "Peru",
+    "South America"
+   ],
+   "residents": [],
+   "mangadebut": null,
+   "mangadebuts": [],
+   "animedebut": null,
+   "animedebuts": [],
+   "n_infobox_fields": 8,
+   "part": null,
+   "part_basis": "无 mangadebut",
+   "included": false,
+   "exclude_reason": "无正传漫画出场"
+  },
+  {
+   "location_id": "louvre",
+   "title": "Louvre",
+   "name_ja": "ルーヴル美獣姦",
+   "name_romaji": "Rūvuru Bijūkan",
+   "type": "Museum",
+   "types": [
+    "Museum"
+   ],
+   "place_raw": "{{W|Paris}}, {{W|France}} {{Flag|France}}",
+   "place_paths": [
+    [
+     "Paris",
+     "France"
+    ]
+   ],
+   "place_chain": [
+    "Paris",
+    "France"
+   ],
+   "residents": [],
+   "mangadebut": "Rohan au Louvre",
+   "mangadebuts": [
+    "Rohan au Louvre"
+   ],
+   "animedebut": null,
+   "animedebuts": [],
+   "n_infobox_fields": 14,
+   "part": null,
+   "part_basis": "其它作品: Rohan au Louvre",
+   "included": false,
+   "exclude_reason": "其它作品: Rohan au Louvre"
+  },
+  {
+   "location_id": "mexico",
+   "title": "Mexico",
+   "name_ja": "メキシコ",
+   "name_romaji": "Mekishiko",
+   "type": "Country",
+   "types": [
+    "Country"
+   ],
+   "place_raw": "{{W|North America}}",
+   "place_paths": [
+    [
+     "North America"
+    ]
+   ],
+   "place_chain": [
+    "North America"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 1",
+   "mangadebuts": [
+    "Chapter 1"
+   ],
+   "animedebut": "Episode 11",
+   "animedebuts": [
+    "Episode 11"
+   ],
+   "n_infobox_fields": 11,
+   "part": 1,
+   "part_basis": "Chapter 1",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "millionaire_village_location",
+   "title": "Millionaire Village (Location)",
+   "name_ja": "富豪村",
+   "name_romaji": "Fugō-mura",
+   "type": "Village",
+   "types": [
+    "Village"
+   ],
+   "place_raw": "M Prefecture, Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "M Prefecture",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "M Prefecture",
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": "Rohan au Louvre",
+   "mangadebuts": [
+    "Rohan au Louvre"
+   ],
+   "animedebut": null,
+   "animedebuts": [],
+   "n_infobox_fields": 12,
+   "part": null,
+   "part_basis": "其它作品: Rohan au Louvre",
+   "included": false,
+   "exclude_reason": "其它作品: Rohan au Louvre"
+  },
+  {
+   "location_id": "morioh",
+   "title": "Morioh",
+   "name_ja": "杜王町",
+   "name_romaji": "Moriō-chō",
+   "type": "Town",
+   "types": [
+    "Town"
+   ],
+   "place_raw": "S City, M Prefecture, {{W|Japan}} {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "S City",
+     "M Prefecture",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "S City",
+    "M Prefecture",
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 266",
+   "mangadebuts": [
+    "Chapter 266"
+   ],
+   "animedebut": "DU Episode 1",
+   "animedebuts": [
+    "DU Episode 1"
+   ],
+   "n_infobox_fields": 14,
+   "part": 4,
+   "part_basis": "Chapter 266",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "morioh_jorge_joestar",
+   "title": "Morioh (JORGE JOESTAR)",
+   "name_ja": "杜王町",
+   "name_romaji": "Moriō-chō",
+   "type": "Japanese Town",
+   "types": [
+    "Japanese Town"
+   ],
+   "place_raw": "S City, M Prefecture, {{W|Japan}} {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "S City",
+     "M Prefecture",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "S City",
+    "M Prefecture",
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": null,
+   "mangadebuts": [],
+   "animedebut": null,
+   "animedebuts": [],
+   "n_infobox_fields": 10,
+   "part": null,
+   "part_basis": "无 mangadebut",
+   "included": false,
+   "exclude_reason": "无正传漫画出场"
+  },
+  {
+   "location_id": "morioh_jojolion",
+   "title": "Morioh (JoJolion)",
+   "name_ja": "杜王町",
+   "name_romaji": "Moriō-chō",
+   "type": "Town",
+   "types": [
+    "Town"
+   ],
+   "place_raw": "Momiji Ward, S City, M Prefecture,<ref name=\"jjl1p5\">{{Ch|JJL Chapter 1}}, p.5</ref> {{W|Japan}} {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Momiji Ward",
+     "S City",
+     "M Prefecture",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Momiji Ward",
+    "S City",
+    "M Prefecture",
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": "JJL Chapter 1",
+   "mangadebuts": [
+    "JJL Chapter 1"
+   ],
+   "animedebut": "|namedebut  = JJL Chapter 1",
+   "animedebuts": [
+    "|namedebut  = JJL Chapter 1"
+   ],
+   "n_infobox_fields": 14,
+   "part": 8,
+   "part_basis": "JJL Chapter 1",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "morioh_arcade",
+   "title": "Morioh Arcade",
+   "name_ja": null,
+   "name_romaji": null,
+   "type": null,
+   "types": [],
+   "place_raw": "[[Morioh (JoJolion)|Morioh]], Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Morioh",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Morioh",
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": "JJL Chapter 33",
+   "mangadebuts": [
+    "JJL Chapter 33"
+   ],
+   "animedebut": "|colors     = JoJolion",
+   "animedebuts": [
+    "|colors     = JoJolion"
+   ],
+   "n_infobox_fields": 9,
+   "part": 8,
+   "part_basis": "JJL Chapter 33",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "morioh_grand_hotel",
+   "title": "Morioh Grand Hotel",
+   "name_ja": "杜王グランドホテル",
+   "name_romaji": "Moriō Gurando Hoteru",
+   "type": "Hotel",
+   "types": [
+    "Hotel"
+   ],
+   "place_raw": "[[Morioh]], Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Morioh",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Morioh",
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 269",
+   "mangadebuts": [
+    "Chapter 269",
+    "Chapter 284"
+   ],
+   "animedebut": "DU Episode 1",
+   "animedebuts": [
+    "DU Episode 1",
+    "DU Episode 5"
+   ],
+   "n_infobox_fields": 11,
+   "part": 4,
+   "part_basis": "Chapter 269",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "morioh_itc_university",
+   "title": "Morioh ITC University",
+   "name_ja": "杜王情報通信大学",
+   "name_romaji": "Moriō Jōhō Tsūshin Daigaku",
+   "type": "University",
+   "types": [
+    "University"
+   ],
+   "place_raw": "[[Morioh]], Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Morioh",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Morioh",
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": null,
+   "mangadebuts": [],
+   "animedebut": null,
+   "animedebuts": [],
+   "n_infobox_fields": 8,
+   "part": null,
+   "part_basis": "无 mangadebut",
+   "included": false,
+   "exclude_reason": "无正传漫画出场"
+  },
+  {
+   "location_id": "morioh_park",
+   "title": "Morioh Park",
+   "name_ja": null,
+   "name_romaji": null,
+   "type": "Park",
+   "types": [
+    "Park"
+   ],
+   "place_raw": "[[Morioh]], Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Morioh",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Morioh",
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": null,
+   "mangadebuts": [],
+   "animedebut": null,
+   "animedebuts": [],
+   "n_infobox_fields": 6,
+   "part": null,
+   "part_basis": "无 mangadebut",
+   "included": false,
+   "exclude_reason": "无正传漫画出场"
+  },
+  {
+   "location_id": "morioh_port",
+   "title": "Morioh Port",
+   "name_ja": "杜王港",
+   "name_romaji": "Moriō-kō",
+   "type": "Seaport",
+   "types": [
+    "Seaport"
+   ],
+   "place_raw": "[[Morioh]], Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Morioh",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Morioh",
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 308",
+   "mangadebuts": [
+    "Chapter 308",
+    "Chapter 311"
+   ],
+   "animedebut": "DU Episode 8",
+   "animedebuts": [
+    "DU Episode 8",
+    "DU Episode 12"
+   ],
+   "n_infobox_fields": 11,
+   "part": 4,
+   "part_basis": "Chapter 308",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "morioh_port_jojolion",
+   "title": "Morioh Port (JoJolion)",
+   "name_ja": "杜王港",
+   "name_romaji": "Moriō-kō",
+   "type": "Seaport",
+   "types": [
+    "Seaport"
+   ],
+   "place_raw": "{{Morioh8}}, Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": "JJL Chapter 43",
+   "mangadebuts": [
+    "JJL Chapter 43",
+    "JJL Chapter 49"
+   ],
+   "animedebut": "|colors     = JoJolion",
+   "animedebuts": [
+    "|colors     = JoJolion"
+   ],
+   "n_infobox_fields": 10,
+   "part": 8,
+   "part_basis": "JJL Chapter 43",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "morioh_public_library",
+   "title": "Morioh Public Library",
+   "name_ja": "杜王町立図書館",
+   "name_romaji": "Moriō-chō Ritsu Toshokan",
+   "type": "Library",
+   "types": [
+    "Library"
+   ],
+   "place_raw": "[[Morioh]], Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Morioh",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Morioh",
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 409",
+   "mangadebuts": [
+    "Chapter 409",
+    "The Book Chapter 1"
+   ],
+   "animedebut": "DU Episode 33",
+   "animedebuts": [
+    "DU Episode 33"
+   ],
+   "n_infobox_fields": 11,
+   "part": 4,
+   "part_basis": "Chapter 409",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "morioh_stadium",
+   "title": "Morioh Stadium",
+   "name_ja": "杜王スタジアム",
+   "name_romaji": "Moriō Sutajiamu",
+   "type": null,
+   "types": [],
+   "place_raw": "[[Morioh (JoJolion)|Morioh]], Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Morioh",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Morioh",
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": "JJL Chapter 39",
+   "mangadebuts": [
+    "JJL Chapter 39"
+   ],
+   "animedebut": "|colors     = JoJolion",
+   "animedebuts": [
+    "|colors     = JoJolion"
+   ],
+   "n_infobox_fields": 13,
+   "part": 8,
+   "part_basis": "JJL Chapter 39",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "morioh_station",
+   "title": "Morioh Station",
+   "name_ja": "杜王駅",
+   "name_romaji": "Moriō-eki",
+   "type": "Station",
+   "types": [
+    "Station"
+   ],
+   "place_raw": "[[Morioh]], Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Morioh",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Morioh",
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 266",
+   "mangadebuts": [
+    "Chapter 266"
+   ],
+   "animedebut": "DU Episode 1",
+   "animedebuts": [
+    "DU Episode 1"
+   ],
+   "n_infobox_fields": 12,
+   "part": 4,
+   "part_basis": "Chapter 266",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "mount_hananero",
+   "title": "Mount Hananero",
+   "name_ja": "鼻炉山",
+   "name_romaji": "Hananero-yama",
+   "type": "Ski resort",
+   "types": [
+    "Ski resort",
+    "Orchard"
+   ],
+   "place_raw": "M Prefecture, Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "M Prefecture",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "M Prefecture",
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": "JJL Chapter 63",
+   "mangadebuts": [
+    "JJL Chapter 63",
+    "JJL Chapter 64"
+   ],
+   "animedebut": "|colors     = JoJolion",
+   "animedebuts": [
+    "|colors     = JoJolion"
+   ],
+   "n_infobox_fields": 13,
+   "part": 8,
+   "part_basis": "JJL Chapter 63",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "mukade_shoe_store",
+   "title": "Mukade Shoe Store",
+   "name_ja": "靴のムカデ屋",
+   "name_romaji": "Kutsu no Mukade-ya",
+   "type": "Shoe store",
+   "types": [
+    "Shoe store"
+   ],
+   "place_raw": "[[Morioh]], Japan {{Flag|Japan}} {{S|Part 4}}<hr />{{Morioh8}}, Japan {{Flag|Japan}} {{S|Part 8}}",
+   "place_paths": [
+    [
+     "Morioh",
+     "Japan  <hr />",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Morioh",
+    "Japan  <hr />",
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 336<hr />JJL Chapter 62",
+   "mangadebuts": [
+    "Chapter 336<hr />JJL Chapter 62"
+   ],
+   "animedebut": "DU Episode 1",
+   "animedebuts": [
+    "DU Episode 1",
+    "DU Episode 18"
+   ],
+   "n_infobox_fields": 19,
+   "part": 4,
+   "part_basis": "Chapter 336",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "mutsu_kabe_hill_location",
+   "title": "Mutsu-kabe Hill (Location)",
+   "name_ja": "六壁坂",
+   "name_romaji": "Mutsukabe-zaka",
+   "type": "Mountain slope <hr />Mountain",
+   "types": [
+    "Mountain slope <hr />Mountain"
+   ],
+   "place_raw": "Japan {{Flag|Japan}} {{S|TSKR #2}}<hr />{{Morioh8}}, Japan {{Flag|Japan}} {{S|Part 8}}<hr />[[Morioh]], Japan {{Flag|Japan}} {{S|TSKR #10}}",
+   "place_paths": [
+    [
+     "Japan  <hr />",
+     "Japan  <hr />Morioh",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Japan  <hr />",
+    "Japan  <hr />Morioh",
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": "TSKR Episode 2<hr />JJL Chapter 62 <hr />TSKR Episode 10",
+   "mangadebuts": [
+    "TSKR Episode 2<hr />JJL Chapter 62 <hr />TSKR Episode 10"
+   ],
+   "animedebut": null,
+   "animedebuts": [],
+   "n_infobox_fields": 16,
+   "part": null,
+   "part_basis": "其它作品: TSKR Episode 2<hr />JJL Chapter 62 <hr /",
+   "included": false,
+   "exclude_reason": "其它作品: TSKR Episode 2<hr />JJL Chapter 62 <hr /"
+  },
+  {
+   "location_id": "mutsu_kabe_shrine",
+   "title": "Mutsu-kabe Shrine",
+   "name_ja": "六壁神社",
+   "name_romaji": "Mutsukabe Jinja",
+   "type": "Japanese traditional Shinto shrine",
+   "types": [
+    "Japanese traditional Shinto shrine"
+   ],
+   "place_raw": "[[Morioh (JoJolion)|Morioh]], Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Morioh",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Morioh",
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": "JJL Chapter 13",
+   "mangadebuts": [
+    "JJL Chapter 13"
+   ],
+   "animedebut": "|namedebut  = JJL Chapter 12",
+   "animedebuts": [
+    "|namedebut  = JJL Chapter 12"
+   ],
+   "n_infobox_fields": 14,
+   "part": 8,
+   "part_basis": "JJL Chapter 13",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "mutsu_kabe_shrine_tskr",
+   "title": "Mutsu-kabe Shrine (TSKR)",
+   "name_ja": "六壁神社",
+   "name_romaji": "Mutsukabe Jinja",
+   "type": "Japanese traditional Shinto shrine",
+   "types": [
+    "Japanese traditional Shinto shrine"
+   ],
+   "place_raw": "[[Morioh]], Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Morioh",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Morioh",
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": "TSKR Episode 10",
+   "mangadebuts": [
+    "TSKR Episode 10"
+   ],
+   "animedebut": "|livedebut  = TSKR Episode 7 (TV Drama)",
+   "animedebuts": [
+    "|livedebut  = TSKR Episode 7 (TV Drama)"
+   ],
+   "n_infobox_fields": 14,
+   "part": null,
+   "part_basis": "其它作品: TSKR Episode 10",
+   "included": false,
+   "exclude_reason": "其它作品: TSKR Episode 10"
+  },
+  {
+   "location_id": "naples",
+   "title": "Naples",
+   "name_ja": "ネアポリス",
+   "name_romaji": "Neaporisu",
+   "type": "City",
+   "types": [
+    "City"
+   ],
+   "place_raw": "Southern [[Italy]]<ref name=\"440p4\">{{Ch|Chapter 440}}, p.4</ref> {{Flag|Italy}}",
+   "place_paths": [
+    [
+     "Southern Italy"
+    ]
+   ],
+   "place_chain": [
+    "Southern Italy"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 89",
+   "mangadebuts": [
+    "Chapter 89",
+    "Chapter 440"
+   ],
+   "animedebut": "Episode 20",
+   "animedebuts": [
+    "Episode 20",
+    "GW Episode 1"
+   ],
+   "n_infobox_fields": 13,
+   "part": 2,
+   "part_basis": "Chapter 89",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "naples_station",
+   "title": "Naples Station",
+   "name_ja": "ネアポリス駅",
+   "name_romaji": "Neaporisu Eki",
+   "type": "Train station",
+   "types": [
+    "Train station"
+   ],
+   "place_raw": "[[Naples]], [[Italy]] {{Flag|Italy}}",
+   "place_paths": [
+    [
+     "Naples",
+     "Italy"
+    ]
+   ],
+   "place_chain": [
+    "Naples",
+    "Italy"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 486",
+   "mangadebuts": [
+    "Chapter 486"
+   ],
+   "animedebut": "GW Episode 14",
+   "animedebuts": [
+    "GW Episode 14"
+   ],
+   "n_infobox_fields": 12,
+   "part": 5,
+   "part_basis": "Chapter 486",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "neapolitan_trattoria",
+   "title": "Neapolitan Trattoria",
+   "name_ja": null,
+   "name_romaji": null,
+   "type": "Restaurant",
+   "types": [
+    "Restaurant"
+   ],
+   "place_raw": "[[Naples]], [[Italy]] {{Flag|Italy}}",
+   "place_paths": [
+    [
+     "Naples",
+     "Italy"
+    ]
+   ],
+   "place_chain": [
+    "Naples",
+    "Italy"
+   ],
+   "residents": [],
+   "mangadebut": null,
+   "mangadebuts": [],
+   "animedebut": null,
+   "animedebuts": [],
+   "n_infobox_fields": 6,
+   "part": null,
+   "part_basis": "无 mangadebut",
+   "included": false,
+   "exclude_reason": "无正传漫画出场"
+  },
+  {
+   "location_id": "nero_nero_island",
+   "title": "Nero Nero Island",
+   "name_ja": "ネーロネーロ島",
+   "name_romaji": "Nēro Nēro-tō",
+   "type": "Island",
+   "types": [
+    "Island"
+   ],
+   "place_raw": "South of {{W|Sardinia}}, {{W|Italy}} {{Flag|Italy}}",
+   "place_paths": [
+    [
+     "South of Sardinia",
+     "Italy"
+    ]
+   ],
+   "place_chain": [
+    "South of Sardinia",
+    "Italy"
+   ],
+   "residents": [],
+   "mangadebut": null,
+   "mangadebuts": [],
+   "animedebut": null,
+   "animedebuts": [],
+   "n_infobox_fields": 10,
+   "part": null,
+   "part_basis": "无 mangadebut",
+   "included": false,
+   "exclude_reason": "无正传漫画出场"
+  },
+  {
+   "location_id": "new_jersey",
+   "title": "New Jersey",
+   "name_ja": "ニュージャージー州",
+   "name_romaji": "Nyūjājī-shū",
+   "type": "State",
+   "types": [
+    "State"
+   ],
+   "place_raw": "United States {{Flag|USA}}",
+   "place_paths": [
+    [
+     "United States"
+    ]
+   ],
+   "place_chain": [
+    "United States"
+   ],
+   "residents": [],
+   "mangadebut": "SBR Chapter 77",
+   "mangadebuts": [
+    "SBR Chapter 77"
+   ],
+   "animedebut": "|colors     = SteelBallRun",
+   "animedebuts": [
+    "|colors     = SteelBallRun"
+   ],
+   "n_infobox_fields": 12,
+   "part": 7,
+   "part_basis": "SBR Chapter 77",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "new_york_city",
+   "title": "New York City",
+   "name_ja": "ニューヨーク市",
+   "name_romaji": "Nyūyōku-shi",
+   "type": "City",
+   "types": [
+    "City"
+   ],
+   "place_raw": "New York, United States {{Flag|USA}}",
+   "place_paths": [
+    [
+     "New York",
+     "United States"
+    ]
+   ],
+   "place_chain": [
+    "New York",
+    "United States"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 45<hr />SBR Chapter 1",
+   "mangadebuts": [
+    "Chapter 45<hr />SBR Chapter 1",
+    "SBR Chapter 91"
+   ],
+   "animedebut": "Episode 10",
+   "animedebuts": [
+    "Episode 10"
+   ],
+   "n_infobox_fields": 13,
+   "part": 2,
+   "part_basis": "Chapter 45",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "nightmare_world",
+   "title": "Nightmare World",
+   "name_ja": "悪夢世界",
+   "name_romaji": "Naitomea Wārudo",
+   "type": "Dreamscape",
+   "types": [
+    "Dreamscape"
+   ],
+   "place_raw": null,
+   "place_paths": [],
+   "place_chain": [],
+   "residents": [],
+   "mangadebut": "Chapter 168",
+   "mangadebuts": [
+    "Chapter 168"
+   ],
+   "animedebut": "SC Episode 19",
+   "animedebuts": [
+    "SC Episode 19"
+   ],
+   "n_infobox_fields": 10,
+   "part": 3,
+   "part_basis": "Chapter 168",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "nijimura_residence",
+   "title": "Nijimura Residence",
+   "name_ja": "虹村邸",
+   "name_romaji": "Nijimura-tei",
+   "type": "Victorian-style house",
+   "types": [
+    "Victorian-style house"
+   ],
+   "place_raw": "[[Jozenji|Jozenji 4-1280]], [[Morioh]], Japan {{Flag|Japan}}<ref name=\"C414P8\">{{Ch|Chapter 414}}, p.8</ref>",
+   "place_paths": [
+    [
+     "Jozenji 4-1280",
+     "Morioh",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Jozenji 4-1280",
+    "Morioh",
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 269",
+   "mangadebuts": [
+    "Chapter 269"
+   ],
+   "animedebut": "DU Episode 1",
+   "animedebuts": [
+    "DU Episode 1",
+    "DU Episode 3"
+   ],
+   "n_infobox_fields": 13,
+   "part": 4,
+   "part_basis": "Chapter 269",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "nine_pyramids_lounge",
+   "title": "Nine Pyramids Lounge",
+   "name_ja": "ナイン・ピラミッズ・ ラウンジ",
+   "name_romaji": "Nain Piramizzu Raunji",
+   "type": "Café",
+   "types": [
+    "Café"
+   ],
+   "place_raw": "[[Giza]], [[Egypt]] {{Flag|Egypt}}",
+   "place_paths": [
+    [
+     "Giza",
+     "Egypt"
+    ]
+   ],
+   "place_chain": [
+    "Giza",
+    "Egypt"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 211",
+   "mangadebuts": [
+    "Chapter 211"
+   ],
+   "animedebut": "SC Episode 34",
+   "animedebuts": [
+    "SC Episode 34"
+   ],
+   "n_infobox_fields": 12,
+   "part": 3,
+   "part_basis": "Chapter 211",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "ocean_liner_to_america",
+   "title": "Ocean Liner to America",
+   "name_ja": "アメリカ行き客船",
+   "name_romaji": "Amerika-iki Kyakusen",
+   "type": "Steamship",
+   "types": [
+    "Steamship"
+   ],
+   "place_raw": "Atlantic Ocean<ref name=\"42p2\">{{Ch|Chapter 42}}, p.2</ref><br />Pacific Ocean {{S|[[Phantom Blood (Film)|Film]]}}",
+   "place_paths": [
+    [
+     "Atlantic Ocean"
+    ],
+    [
+     "Pacific Ocean"
+    ]
+   ],
+   "place_chain": [
+    "Atlantic Ocean"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 41",
+   "mangadebuts": [
+    "Chapter 41"
+   ],
+   "animedebut": "Episode 9",
+   "animedebuts": [
+    "Episode 9"
+   ],
+   "n_infobox_fields": 13,
+   "part": 1,
+   "part_basis": "Chapter 41",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "ogre_street",
+   "title": "Ogre Street",
+   "name_ja": "食屍鬼街",
+   "name_romaji": "Ōgā Sutorīto",
+   "type": "Rookery (slum)",
+   "types": [
+    "Rookery (slum)"
+   ],
+   "place_raw": "[[London]], [[England]] {{Flag|UK}}",
+   "place_paths": [
+    [
+     "London",
+     "England"
+    ]
+   ],
+   "place_chain": [
+    "London",
+    "England"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 7",
+   "mangadebuts": [
+    "Chapter 7"
+   ],
+   "animedebut": "Episode 2",
+   "animedebuts": [
+    "Episode 2"
+   ],
+   "n_infobox_fields": 11,
+   "part": 1,
+   "part_basis": "Chapter 7",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "orlando_state_hospital",
+   "title": "Orlando State Hospital",
+   "name_ja": "オーランド州立病院",
+   "name_romaji": "Ōrando Shūritsu Byōin",
+   "type": "Hospital",
+   "types": [
+    "Hospital"
+   ],
+   "place_raw": "[[Orlando]], [[Florida]], United States {{Flag|USA}}",
+   "place_paths": [
+    [
+     "Orlando",
+     "Florida",
+     "United States"
+    ]
+   ],
+   "place_chain": [
+    "Orlando",
+    "Florida",
+    "United States"
+   ],
+   "residents": [],
+   "mangadebut": "SO Chapter 103",
+   "mangadebuts": [
+    "SO Chapter 103"
+   ],
+   "animedebut": "SO Episode 25",
+   "animedebuts": [
+    "SO Episode 25"
+   ],
+   "n_infobox_fields": 10,
+   "part": 6,
+   "part_basis": "SO Chapter 103",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "owson",
+   "title": "Owson",
+   "name_ja": "オーソン",
+   "name_romaji": "Ōson",
+   "type": "Convenience store",
+   "types": [
+    "Convenience store"
+   ],
+   "place_raw": "[[Morioh]], Japan {{Flag|Japan}} {{S|Part 4}}<hr />{{Morioh8}}, Japan {{Flag|Japan}} {{S|Part 8}}",
+   "place_paths": [
+    [
+     "Morioh",
+     "Japan  <hr />",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Morioh",
+    "Japan  <hr />",
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 330<hr />JJL Chapter 6",
+   "mangadebuts": [
+    "Chapter 330<hr />JJL Chapter 6",
+    "JJL Chapter 18"
+   ],
+   "animedebut": "DU Episode 12",
+   "animedebuts": [
+    "DU Episode 12"
+   ],
+   "n_infobox_fields": 19,
+   "part": 4,
+   "part_basis": "Chapter 330",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "pakistan",
+   "title": "Pakistan",
+   "name_ja": "パキスタン",
+   "name_romaji": "Pakisutan",
+   "type": "Country",
+   "types": [
+    "Country"
+   ],
+   "place_raw": "{{W|Asia}}",
+   "place_paths": [
+    [
+     "Asia"
+    ]
+   ],
+   "place_chain": [
+    "Asia"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 154",
+   "mangadebuts": [
+    "Chapter 154"
+   ],
+   "animedebut": "SC Episode 14",
+   "animedebuts": [
+    "SC Episode 14"
+   ],
+   "n_infobox_fields": 12,
+   "part": 3,
+   "part_basis": "Chapter 154",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "pearl_general_hospital",
+   "title": "Pearl General Hospital",
+   "name_ja": "パール総合病院",
+   "name_romaji": "Pāru Sōgō Byōin",
+   "type": "Hospital",
+   "types": [
+    "Hospital"
+   ],
+   "place_raw": "{{W|Honolulu}}, [[Hawaii]] {{Flag|Hawaii}}",
+   "place_paths": [
+    [
+     "Honolulu",
+     "Hawaii"
+    ]
+   ],
+   "place_chain": [
+    "Honolulu",
+    "Hawaii"
+   ],
+   "residents": [],
+   "mangadebut": "TJL Chapter 16",
+   "mangadebuts": [
+    "TJL Chapter 16"
+   ],
+   "animedebut": null,
+   "animedebuts": [],
+   "n_infobox_fields": 11,
+   "part": 9,
+   "part_basis": "TJL Chapter 16",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "pepsi_sign_street",
+   "title": "Pepsi Sign Street",
+   "name_ja": "ペプシの看板のある通り",
+   "name_romaji": "Pepushi no kanban no aru tōri",
+   "type": "Mixed-use street",
+   "types": [
+    "Mixed-use street"
+   ],
+   "place_raw": "[[Morioh]], Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Morioh",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Morioh",
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 419",
+   "mangadebuts": [
+    "Chapter 419"
+   ],
+   "animedebut": "DU Episode 35",
+   "animedebuts": [
+    "DU Episode 35"
+   ],
+   "n_infobox_fields": 9,
+   "part": 4,
+   "part_basis": "Chapter 419",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "philadelphia",
+   "title": "Philadelphia",
+   "name_ja": "フィラデルフィア",
+   "name_romaji": "Firaderufia",
+   "type": "City",
+   "types": [
+    "City",
+    "Capital City"
+   ],
+   "place_raw": "Pennsylvania, United States {{Flag|USA}}",
+   "place_paths": [
+    [
+     "Pennsylvania",
+     "United States"
+    ]
+   ],
+   "place_chain": [
+    "Pennsylvania",
+    "United States"
+   ],
+   "residents": [],
+   "mangadebut": "SBR Chapter 60",
+   "mangadebuts": [
+    "SBR Chapter 60"
+   ],
+   "animedebut": "|colors     = SteelBallRun",
+   "animedebuts": [
+    "|colors     = SteelBallRun"
+   ],
+   "n_infobox_fields": 12,
+   "part": 7,
+   "part_basis": "SBR Chapter 60",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "pompeii",
+   "title": "Pompeii",
+   "name_ja": "ポンペイ",
+   "name_romaji": "Ponpei",
+   "type": "Ruins",
+   "types": [
+    "Ruins",
+    "Exhibit"
+   ],
+   "place_raw": "[[Italy]] {{Flag|Italy}}",
+   "place_paths": [
+    [
+     "Italy"
+    ]
+   ],
+   "place_chain": [
+    "Italy"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 478",
+   "mangadebuts": [
+    "Chapter 478"
+   ],
+   "animedebut": "GW Episode 12",
+   "animedebuts": [
+    "GW Episode 12"
+   ],
+   "n_infobox_fields": 14,
+   "part": 5,
+   "part_basis": "Chapter 478",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "radio_gaga_incident_orchard",
+   "title": "Radio Gaga Incident Orchard",
+   "name_ja": "ラヂオ・ガガ事件の果樹園",
+   "name_romaji": "Rajio Gaga Jiken no Kaju-en",
+   "type": "Orchard",
+   "types": [
+    "Orchard"
+   ],
+   "place_raw": "[[Morioh (JoJolion)|Morioh]], Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Morioh",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Morioh",
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": "JJL Chapter 109",
+   "mangadebuts": [
+    "JJL Chapter 109"
+   ],
+   "animedebut": "|colors     = JoJolion",
+   "animedebuts": [
+    "|colors     = JoJolion"
+   ],
+   "n_infobox_fields": 9,
+   "part": 8,
+   "part_basis": "JJL Chapter 109",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "red_sea",
+   "title": "Red Sea",
+   "name_ja": "紅海",
+   "name_romaji": "Kōkai",
+   "type": "Sea Inlet",
+   "types": [
+    "Sea Inlet"
+   ],
+   "place_raw": "[[Arabia|Arabian Peninsula]]",
+   "place_paths": [
+    [
+     "Arabian Peninsula"
+    ]
+   ],
+   "place_chain": [
+    "Arabian Peninsula"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 174",
+   "mangadebuts": [
+    "Chapter 174"
+   ],
+   "animedebut": "SC Episode 21",
+   "animedebuts": [
+    "SC Episode 21"
+   ],
+   "n_infobox_fields": 11,
+   "part": 3,
+   "part_basis": "Chapter 174",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "rocky_mountain_village",
+   "title": "Rocky Mountain Village",
+   "name_ja": "ロッキー山脈麓の村",
+   "name_romaji": "Rokkī-sanmyaku Fumoto no Mura",
+   "type": "Village",
+   "types": [
+    "Village"
+   ],
+   "place_raw": "[[Rocky Mountains]], {{W|Colorado}}, United States {{Flag|USA}}",
+   "place_paths": [
+    [
+     "Rocky Mountains",
+     "Colorado",
+     "United States"
+    ]
+   ],
+   "place_chain": [
+    "Rocky Mountains",
+    "Colorado",
+    "United States"
+   ],
+   "residents": [],
+   "mangadebut": "SBR Chapter 28",
+   "mangadebuts": [
+    "SBR Chapter 28"
+   ],
+   "animedebut": "|gamedebut  = Eyes of Heaven",
+   "animedebuts": [
+    "|gamedebut  = Eyes of Heaven"
+   ],
+   "n_infobox_fields": 12,
+   "part": 7,
+   "part_basis": "SBR Chapter 28",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "rohan_s_house",
+   "title": "Rohan's House",
+   "name_ja": "岸辺露伴の家",
+   "name_romaji": "Kishibe Rohan no Ie",
+   "type": "Queen-Anne style house",
+   "types": [
+    "Queen-Anne style house"
+   ],
+   "place_raw": "[[Morioh]], Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Morioh",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Morioh",
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 318",
+   "mangadebuts": [
+    "Chapter 318"
+   ],
+   "animedebut": "DU Episode 14",
+   "animedebuts": [
+    "DU Episode 14"
+   ],
+   "n_infobox_fields": 14,
+   "part": 4,
+   "part_basis": "Chapter 318",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "rohan_s_house_tskr",
+   "title": "Rohan's House (TSKR)",
+   "name_ja": "岸辺露伴の家",
+   "name_romaji": "Kishibe Rohan no Ie",
+   "type": null,
+   "types": [],
+   "place_raw": "[[Morioh]], Japan {{Flag|Japan}}<hr />{{Morioh8}}, Japan {{Flag|Japan}}<ref name=\"nmt\">''[[Hirohiko Araki's New Manga Techniques]]''</ref>",
+   "place_paths": [
+    [
+     "Morioh",
+     "Japan <hr />",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Morioh",
+    "Japan <hr />",
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": "TSKR Episode 10<hr />TJL Chapter 33",
+   "mangadebuts": [
+    "TSKR Episode 10<hr />TJL Chapter 33"
+   ],
+   "animedebut": "|livedebut  = TSKR Episode 1 (TV Drama)",
+   "animedebuts": [
+    "|livedebut  = TSKR Episode 1 (TV Drama)"
+   ],
+   "n_infobox_fields": 11,
+   "part": null,
+   "part_basis": "其它作品: TSKR Episode 10<hr />TJL Chapter 33",
+   "included": false,
+   "exclude_reason": "其它作品: TSKR Episode 10<hr />TJL Chapter 33"
+  },
+  {
+   "location_id": "rohan_s_villa",
+   "title": "Rohan's Villa",
+   "name_ja": null,
+   "name_romaji": null,
+   "type": "Plantation-style",
+   "types": [
+    "Plantation-style"
+   ],
+   "place_raw": "{{w|Hawaii (island)|Hawaiʻi}}, [[Hawaii]], {{W|United States}} {{Flag|USA}}",
+   "place_paths": [
+    [
+     "Hawaii (island)",
+     "Hawaii",
+     "United States"
+    ]
+   ],
+   "place_chain": [
+    "Hawaii (island)",
+    "Hawaii",
+    "United States"
+   ],
+   "residents": [],
+   "mangadebut": "TJL Chapter 2<hr />TSKR Episode 12",
+   "mangadebuts": [
+    "TJL Chapter 2<hr />TSKR Episode 12"
+   ],
+   "animedebut": null,
+   "animedebuts": [],
+   "n_infobox_fields": 7,
+   "part": 9,
+   "part_basis": "TJL Chapter 2",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "rome",
+   "title": "Rome",
+   "name_ja": "ローマ",
+   "name_romaji": "Rōma",
+   "type": "Capital",
+   "types": [
+    "Capital",
+    "City"
+   ],
+   "place_raw": "[[Italy]] {{Flag|Italy}}",
+   "place_paths": [
+    [
+     "Italy"
+    ]
+   ],
+   "place_chain": [
+    "Italy"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 61",
+   "mangadebuts": [
+    "Chapter 61"
+   ],
+   "animedebut": "Episode 14",
+   "animedebuts": [
+    "Episode 14"
+   ],
+   "n_infobox_fields": 17,
+   "part": 2,
+   "part_basis": "Chapter 61",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "rossi_s_mansion",
+   "title": "Rossi's Mansion",
+   "name_ja": null,
+   "name_romaji": null,
+   "type": "Mansion",
+   "types": [
+    "Mansion"
+   ],
+   "place_raw": "[[Italy]] {{Flag|Italy}}",
+   "place_paths": [
+    [
+     "Italy"
+    ]
+   ],
+   "place_chain": [
+    "Italy"
+   ],
+   "residents": [],
+   "mangadebut": null,
+   "mangadebuts": [],
+   "animedebut": null,
+   "animedebuts": [],
+   "n_infobox_fields": 7,
+   "part": null,
+   "part_basis": "无 mangadebut",
+   "included": false,
+   "exclude_reason": "无正传漫画出场"
+  },
+  {
+   "location_id": "s_city_library",
+   "title": "S City Library",
+   "name_ja": null,
+   "name_romaji": null,
+   "type": "Library",
+   "types": [
+    "Library"
+   ],
+   "place_raw": "Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": null,
+   "mangadebuts": [],
+   "animedebut": null,
+   "animedebuts": [],
+   "n_infobox_fields": 6,
+   "part": null,
+   "part_basis": "无 mangadebut",
+   "included": false,
+   "exclude_reason": "无正传漫画出场"
+  },
+  {
+   "location_id": "sbr_hat_shop",
+   "title": "SBR Hat Shop",
+   "name_ja": "SBR帽子店",
+   "name_romaji": "SBR Bōshiten",
+   "type": null,
+   "types": [],
+   "place_raw": "[[Morioh (JoJolion)|Morioh]], Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Morioh",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Morioh",
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": "JJL Chapter 2",
+   "mangadebuts": [
+    "JJL Chapter 2"
+   ],
+   "animedebut": "|colors     = JoJolion",
+   "animedebuts": [
+    "|colors     = JoJolion"
+   ],
+   "n_infobox_fields": 13,
+   "part": 8,
+   "part_basis": "JJL Chapter 2",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "sakamochi",
+   "title": "Sakamochi",
+   "name_ja": "坂持",
+   "name_romaji": null,
+   "type": "Town",
+   "types": [
+    "Town"
+   ],
+   "place_raw": "T Prefecture, Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "T Prefecture",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "T Prefecture",
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": null,
+   "mangadebuts": [],
+   "animedebut": null,
+   "animedebuts": [],
+   "n_infobox_fields": 8,
+   "part": null,
+   "part_basis": "无 mangadebut",
+   "included": false,
+   "exclude_reason": "无正传漫画出场"
+  },
+  {
+   "location_id": "san_diego_beach",
+   "title": "San Diego Beach",
+   "name_ja": "サンディエゴビーチ",
+   "name_romaji": "San Diego Bīchi",
+   "type": "Beach",
+   "types": [
+    "Beach"
+   ],
+   "place_raw": "{{W|San Diego}}, United States {{Flag|USA}}",
+   "place_paths": [
+    [
+     "San Diego",
+     "United States"
+    ]
+   ],
+   "place_chain": [
+    "San Diego",
+    "United States"
+   ],
+   "residents": [],
+   "mangadebut": "SBR Chapter 1",
+   "mangadebuts": [
+    "SBR Chapter 1"
+   ],
+   "animedebut": "SBR Episode 1",
+   "animedebuts": [
+    "SBR Episode 1"
+   ],
+   "n_infobox_fields": 12,
+   "part": 7,
+   "part_basis": "SBR Chapter 1",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "san_giorgio_maggiore",
+   "title": "San Giorgio Maggiore",
+   "name_ja": "サン・ジョルジョ・マッジョーレ島",
+   "name_romaji": "San Jorujo Majjōre-tō",
+   "type": "Church",
+   "types": [
+    "Church",
+    "Island"
+   ],
+   "place_raw": "[[Venice (VA)|Venice]], [[Italy]] {{Flag|Italy}}",
+   "place_paths": [
+    [
+     "Venice",
+     "Italy"
+    ]
+   ],
+   "place_chain": [
+    "Venice",
+    "Italy"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 516",
+   "mangadebuts": [
+    "Chapter 516"
+   ],
+   "animedebut": "GW Episode 20",
+   "animedebuts": [
+    "GW Episode 20"
+   ],
+   "n_infobox_fields": 11,
+   "part": 5,
+   "part_basis": "Chapter 516",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "sanriku_coast_laboratory",
+   "title": "Sanriku Coast Laboratory",
+   "name_ja": "三陸海岸研究所",
+   "name_romaji": "Sanriku Kaigan Kenkyū-jo",
+   "type": "Research facility",
+   "types": [
+    "Research facility"
+   ],
+   "place_raw": "{{W|Sanriku Coast}}, {{W|Japan}} {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Sanriku Coast",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Sanriku Coast",
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": "Baoh Chapter 9",
+   "mangadebuts": [
+    "Baoh Chapter 9"
+   ],
+   "animedebut": null,
+   "animedebuts": [],
+   "n_infobox_fields": 11,
+   "part": null,
+   "part_basis": "非正传前缀 Baoh",
+   "included": false,
+   "exclude_reason": "非正传前缀 Baoh"
+  },
+  {
+   "location_id": "sardinia",
+   "title": "Sardinia",
+   "name_ja": "サルデーニャ島",
+   "name_romaji": "Sarudēnya-tō",
+   "type": "Island",
+   "types": [
+    "Island"
+   ],
+   "place_raw": "Tyrrhenian Sea, [[Italy]] {{Flag|Italy}}",
+   "place_paths": [
+    [
+     "Tyrrhenian Sea",
+     "Italy"
+    ]
+   ],
+   "place_chain": [
+    "Tyrrhenian Sea",
+    "Italy"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 541",
+   "mangadebuts": [
+    "Chapter 541"
+   ],
+   "animedebut": "GW Episode 26",
+   "animedebuts": [
+    "GW Episode 26"
+   ],
+   "n_infobox_fields": 13,
+   "part": 5,
+   "part_basis": "Chapter 541",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "satoru_nakae_s_apartment",
+   "title": "Satoru Nakae's Apartment",
+   "name_ja": null,
+   "name_romaji": null,
+   "type": "Apartment",
+   "types": [
+    "Apartment"
+   ],
+   "place_raw": "[[Morioh]], Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Morioh",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Morioh",
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 410",
+   "mangadebuts": [
+    "Chapter 410"
+   ],
+   "animedebut": "DU Episode 34",
+   "animedebuts": [
+    "DU Episode 34"
+   ],
+   "n_infobox_fields": 7,
+   "part": 4,
+   "part_basis": "Chapter 410",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "setagaya",
+   "title": "Setagaya",
+   "name_ja": "世田谷",
+   "name_romaji": null,
+   "type": "City",
+   "types": [
+    "City"
+   ],
+   "place_raw": "[[Tokyo]], Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Tokyo",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Tokyo",
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": null,
+   "mangadebuts": [],
+   "animedebut": null,
+   "animedebuts": [],
+   "n_infobox_fields": 9,
+   "part": null,
+   "part_basis": "无 mangadebut",
+   "included": false,
+   "exclude_reason": "无正传漫画出场"
+  },
+  {
+   "location_id": "shakedown_road",
+   "title": "Shakedown Road",
+   "name_ja": "カツアゲロード",
+   "name_romaji": "Katsuage Rōdo",
+   "type": "Car-free road",
+   "types": [
+    "Car-free road"
+   ],
+   "place_raw": "[[Morioh (JoJolion)|Morioh]], Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Morioh",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Morioh",
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": "JJL Chapter 18",
+   "mangadebuts": [
+    "JJL Chapter 18"
+   ],
+   "animedebut": "|colors     = JoJolion",
+   "animedebuts": [
+    "|colors     = JoJolion"
+   ],
+   "n_infobox_fields": 12,
+   "part": 8,
+   "part_basis": "JJL Chapter 18",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "sicily",
+   "title": "Sicily",
+   "name_ja": "シチリア島",
+   "name_romaji": "Sichiria-tō",
+   "type": "Region",
+   "types": [
+    "Region"
+   ],
+   "place_raw": "[[Italy]] {{Flag|Italy}}",
+   "place_paths": [
+    [
+     "Italy"
+    ]
+   ],
+   "place_chain": [
+    "Italy"
+   ],
+   "residents": [],
+   "mangadebut": null,
+   "mangadebuts": [],
+   "animedebut": null,
+   "animedebuts": [],
+   "n_infobox_fields": 8,
+   "part": null,
+   "part_basis": "无 mangadebut",
+   "included": false,
+   "exclude_reason": "无正传漫画出场"
+  },
+  {
+   "location_id": "singapore",
+   "title": "Singapore",
+   "name_ja": "シンガポ",
+   "name_romaji": "Shingapo",
+   "type": "Country",
+   "types": [
+    "Country"
+   ],
+   "place_raw": "{{W|Asia}}",
+   "place_paths": [
+    [
+     "Asia"
+    ]
+   ],
+   "place_chain": [
+    "Asia"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 127",
+   "mangadebuts": [
+    "Chapter 127",
+    "Chapter 133"
+   ],
+   "animedebut": "SC Episode 7",
+   "animedebuts": [
+    "SC Episode 7"
+   ],
+   "n_infobox_fields": 14,
+   "part": 3,
+   "part_basis": "Chapter 127",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "skeleton_heel_stone",
+   "title": "Skeleton Heel Stone",
+   "name_ja": "骸骨の踵石",
+   "name_romaji": "Gaikotsu no Kakato Ishi",
+   "type": "Gladiator/Chariot racing coliseum ruins",
+   "types": [
+    "Gladiator/Chariot racing coliseum ruins"
+   ],
+   "place_raw": "{{W|Rhaetian Alps}}, [[Switzerland]] {{Flag|Switzerland}}",
+   "place_paths": [
+    [
+     "Rhaetian Alps",
+     "Switzerland"
+    ]
+   ],
+   "place_chain": [
+    "Rhaetian Alps",
+    "Switzerland"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 96",
+   "mangadebuts": [
+    "Chapter 96"
+   ],
+   "animedebut": "Episode 21",
+   "animedebuts": [
+    "Episode 21"
+   ],
+   "n_infobox_fields": 10,
+   "part": 2,
+   "part_basis": "Chapter 96",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "soldier_s_mansion",
+   "title": "Soldier's Mansion",
+   "name_ja": "軍人の家",
+   "name_romaji": "Gunjin no Ie",
+   "type": "Ghost house",
+   "types": [
+    "Ghost house"
+   ],
+   "place_raw": "Katahira,<ref name=\"2p15\" /> [[Morioh]], Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Katahira",
+     "Morioh",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Katahira",
+    "Morioh",
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": "Deadmans Questions Chapter 2",
+   "mangadebuts": [
+    "Deadmans Questions Chapter 2"
+   ],
+   "animedebut": "|colors      = UEUJ",
+   "animedebuts": [
+    "|colors      = UEUJ"
+   ],
+   "n_infobox_fields": 14,
+   "part": null,
+   "part_basis": "非正传前缀 Deadmans Questions",
+   "included": false,
+   "exclude_reason": "非正传前缀 Deadmans Questions"
+  },
+  {
+   "location_id": "south_china_sea",
+   "title": "South China Sea",
+   "name_ja": "南シナ海",
+   "name_romaji": "Minami Shina Kai",
+   "type": "Marginal Sea",
+   "types": [
+    "Marginal Sea"
+   ],
+   "place_raw": "{{W|Asia}}",
+   "place_paths": [
+    [
+     "Asia"
+    ]
+   ],
+   "place_chain": [
+    "Asia"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 124",
+   "mangadebuts": [
+    "Chapter 124"
+   ],
+   "animedebut": "SC Episode 4",
+   "animedebuts": [
+    "SC Episode 4"
+   ],
+   "n_infobox_fields": 11,
+   "part": 3,
+   "part_basis": "Chapter 124",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "st_gentleman",
+   "title": "St. Gentleman",
+   "name_ja": "サンジェルマン",
+   "name_romaji": "Sanjeruman",
+   "type": "Bakery",
+   "types": [
+    "Bakery"
+   ],
+   "place_raw": "[[Morioh]], Japan {{Flag|Japan}} {{S|Part 4}}<hr />[[Hawaii]], USA {{Flag|USA}} {{S|Part 9}}",
+   "place_paths": [
+    [
+     "Morioh",
+     "Japan  <hr />Hawaii",
+     "USA"
+    ]
+   ],
+   "place_chain": [
+    "Morioh",
+    "Japan  <hr />Hawaii",
+    "USA"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 342<hr />TJL Chapter 33",
+   "mangadebuts": [
+    "Chapter 342<hr />TJL Chapter 33"
+   ],
+   "animedebut": "DU Episode 21",
+   "animedebuts": [
+    "DU Episode 21"
+   ],
+   "n_infobox_fields": 14,
+   "part": 4,
+   "part_basis": "Chapter 342",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "st_mark_s_basilica",
+   "title": "St. Mark's Basilica",
+   "name_ja": "サン・マルコ寺院",
+   "name_romaji": "San Maruko jiin",
+   "type": "Chapel",
+   "types": [
+    "Chapel"
+   ],
+   "place_raw": "[[Venice]], [[Italy]] {{Flag|Italy}}",
+   "place_paths": [
+    [
+     "Venice",
+     "Italy"
+    ]
+   ],
+   "place_chain": [
+    "Venice",
+    "Italy"
+   ],
+   "residents": [],
+   "mangadebut": null,
+   "mangadebuts": [],
+   "animedebut": null,
+   "animedebuts": [],
+   "n_infobox_fields": 8,
+   "part": null,
+   "part_basis": "无 mangadebut",
+   "included": false,
+   "exclude_reason": "无正传漫画出场"
+  },
+  {
+   "location_id": "switzerland",
+   "title": "Switzerland",
+   "name_ja": "スイス",
+   "name_romaji": "Suisu",
+   "type": "Country",
+   "types": [
+    "Country"
+   ],
+   "place_raw": "{{W|Europe}}",
+   "place_paths": [
+    [
+     "Europe"
+    ]
+   ],
+   "place_chain": [
+    "Europe"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 83",
+   "mangadebuts": [
+    "Chapter 83",
+    "Chapter 84"
+   ],
+   "animedebut": "Episode 18",
+   "animedebuts": [
+    "Episode 18"
+   ],
+   "n_infobox_fields": 11,
+   "part": 2,
+   "part_basis": "Chapter 83",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "tg_university_hospital",
+   "title": "TG University Hospital",
+   "name_ja": "TG 大学病院",
+   "name_romaji": "Tī Jī Daigaku Byōin",
+   "type": "Hospital",
+   "types": [
+    "Hospital"
+   ],
+   "place_raw": "{{Morioh8}}, Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": "JJL Chapter 13",
+   "mangadebuts": [
+    "JJL Chapter 13"
+   ],
+   "animedebut": "|colors     = JoJolion",
+   "animedebuts": [
+    "|colors     = JoJolion"
+   ],
+   "n_infobox_fields": 14,
+   "part": 8,
+   "part_basis": "JJL Chapter 13",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "telence_t_d_arby_s_island",
+   "title": "Telence T. D'Arby's Island",
+   "name_ja": "テレンス・T.・ダービー島",
+   "name_romaji": "Terensu Tī Dābī-tō",
+   "type": "Illusion",
+   "types": [
+    "Illusion"
+   ],
+   "place_raw": "[[DIO's Mansion]], [[Egypt]] {{Flag|Egypt}}",
+   "place_paths": [
+    [
+     "DIO's Mansion",
+     "Egypt"
+    ]
+   ],
+   "place_chain": [
+    "DIO's Mansion",
+    "Egypt"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 228",
+   "mangadebuts": [
+    "Chapter 228"
+   ],
+   "animedebut": "SC Episode 40",
+   "animedebuts": [
+    "SC Episode 40"
+   ],
+   "n_infobox_fields": 10,
+   "part": 3,
+   "part_basis": "Chapter 228",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "thieves_market",
+   "title": "Thieves' Market",
+   "name_ja": "泥棒市",
+   "name_romaji": "Dōbō Ichi",
+   "type": "Market",
+   "types": [
+    "Market"
+   ],
+   "place_raw": "[[Italy]] {{Flag|Italy}}",
+   "place_paths": [
+    [
+     "Italy"
+    ]
+   ],
+   "place_chain": [
+    "Italy"
+   ],
+   "residents": [],
+   "mangadebut": null,
+   "mangadebuts": [],
+   "animedebut": null,
+   "animedebuts": [],
+   "n_infobox_fields": 8,
+   "part": null,
+   "part_basis": "无 mangadebut",
+   "included": false,
+   "exclude_reason": "无正传漫画出场"
+  },
+  {
+   "location_id": "tibetan_temple",
+   "title": "Tibetan Temple",
+   "name_ja": "チベットの寺院",
+   "name_romaji": "Chibetto no Jiin",
+   "type": "Monastery#Trends_in_Buddhist_monasticism",
+   "types": [
+    "Monastery#Trends_in_Buddhist_monasticism"
+   ],
+   "place_raw": "{{W|Tibet}} {{Flag|Tibet}}",
+   "place_paths": [
+    [
+     "Tibet"
+    ]
+   ],
+   "place_chain": [
+    "Tibet"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 32",
+   "mangadebuts": [
+    "Chapter 32"
+   ],
+   "animedebut": "Episode 6",
+   "animedebuts": [
+    "Episode 6"
+   ],
+   "n_infobox_fields": 9,
+   "part": 1,
+   "part_basis": "Chapter 32",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "tokyo",
+   "title": "Tokyo",
+   "name_ja": "東京都",
+   "name_romaji": "Tōkyō-to",
+   "type": "Capital City",
+   "types": [
+    "Capital City"
+   ],
+   "place_raw": "{{W|Japan}} {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 113",
+   "mangadebuts": [
+    "Chapter 113",
+    "Chapter 114"
+   ],
+   "animedebut": "SC Episode 1",
+   "animedebuts": [
+    "SC Episode 1"
+   ],
+   "n_infobox_fields": 14,
+   "part": 2,
+   "part_basis": "Chapter 113",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "trattoria_trussardi",
+   "title": "Trattoria Trussardi",
+   "name_ja": "イタリア料理「トラサルディー」",
+   "name_romaji": "Itaria Ryōri Torasarudī",
+   "type": null,
+   "types": [],
+   "place_raw": "[[Morioh]], Japan {{Flag|Japan}}<hr />[[Morioh (JoJolion)|Morioh]], Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Morioh",
+     "Japan <hr />Morioh",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Morioh",
+    "Japan <hr />Morioh",
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 303<hr />JJL Chapter 72",
+   "mangadebuts": [
+    "Chapter 303<hr />JJL Chapter 72"
+   ],
+   "animedebut": "DU Episode 10",
+   "animedebuts": [
+    "DU Episode 10"
+   ],
+   "n_infobox_fields": 18,
+   "part": 4,
+   "part_basis": "Chapter 303",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "tsutsujigaoka",
+   "title": "Tsutsujigaoka",
+   "name_ja": "つつじヶ丘",
+   "name_romaji": "Tsutsujigaoka",
+   "type": "Apartment Building",
+   "types": [
+    "Apartment Building"
+   ],
+   "place_raw": "{{Morioh8}}, Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": "JJL Chapter 2",
+   "mangadebuts": [
+    "JJL Chapter 2"
+   ],
+   "animedebut": "|colors     = JoJolion",
+   "animedebuts": [
+    "|colors     = JoJolion"
+   ],
+   "n_infobox_fields": 13,
+   "part": 8,
+   "part_basis": "JJL Chapter 2",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "tuscany",
+   "title": "Tuscany",
+   "name_ja": "トスカーナ州",
+   "name_romaji": "Tosukāna-shū",
+   "type": "Region",
+   "types": [
+    "Region"
+   ],
+   "place_raw": "Central [[Italy]] {{Flag|Italy}}",
+   "place_paths": [
+    [
+     "Central Italy"
+    ]
+   ],
+   "place_chain": [
+    "Central Italy"
+   ],
+   "residents": [],
+   "mangadebut": "Kishibe Rohan Meets Gucci",
+   "mangadebuts": [
+    "Kishibe Rohan Meets Gucci"
+   ],
+   "animedebut": null,
+   "animedebuts": [],
+   "n_infobox_fields": 10,
+   "part": null,
+   "part_basis": "其它作品: Kishibe Rohan Meets Gucci",
+   "included": false,
+   "exclude_reason": "其它作品: Kishibe Rohan Meets Gucci"
+  },
+  {
+   "location_id": "twin_pines",
+   "title": "Twin Pines",
+   "name_ja": "二本松",
+   "name_romaji": "Nihonmatsu",
+   "type": "Tree",
+   "types": [
+    "Tree"
+   ],
+   "place_raw": "{{Morioh8}}, Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": "JJL Chapter 17",
+   "mangadebuts": [
+    "JJL Chapter 17"
+   ],
+   "animedebut": "|colors     = JoJolion",
+   "animedebuts": [
+    "|colors     = JoJolion"
+   ],
+   "n_infobox_fields": 10,
+   "part": 8,
+   "part_basis": "JJL Chapter 17",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "ultra_security_house_unit",
+   "title": "Ultra Security House Unit",
+   "name_ja": "厳正懲罰隔離房",
+   "name_romaji": "Urutora Sekyuriti Hausu Yunitto",
+   "type": "Security Unit",
+   "types": [
+    "Security Unit"
+   ],
+   "place_raw": "[[Green Dolphin Street Prison]], [[Florida]], United States {{Flag|USA}}",
+   "place_paths": [
+    [
+     "Green Dolphin Street Prison",
+     "Florida",
+     "United States"
+    ]
+   ],
+   "place_chain": [
+    "Green Dolphin Street Prison",
+    "Florida",
+    "United States"
+   ],
+   "residents": [],
+   "mangadebut": "SO Chapter 58",
+   "mangadebuts": [
+    "SO Chapter 58"
+   ],
+   "animedebut": "SO Episode 13",
+   "animedebuts": [
+    "SO Episode 13"
+   ],
+   "n_infobox_fields": 11,
+   "part": 6,
+   "part_basis": "SO Chapter 58",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "venice",
+   "title": "Venice",
+   "name_ja": "ヴェネツィア",
+   "name_romaji": "Venetsia",
+   "type": "City",
+   "types": [
+    "City",
+    "Fortress",
+    "Republic"
+   ],
+   "place_raw": "[[Italy]] {{Flag|Italy}}",
+   "place_paths": [
+    [
+     "Italy"
+    ]
+   ],
+   "place_chain": [
+    "Italy"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 71",
+   "mangadebuts": [
+    "Chapter 71"
+   ],
+   "animedebut": "Episode 16",
+   "animedebuts": [
+    "Episode 16"
+   ],
+   "n_infobox_fields": 18,
+   "part": 2,
+   "part_basis": "Chapter 71",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "village_of_gleanings",
+   "title": "Village of Gleanings",
+   "name_ja": null,
+   "name_romaji": null,
+   "type": "Village",
+   "types": [
+    "Village"
+   ],
+   "place_raw": "Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": null,
+   "mangadebuts": [],
+   "animedebut": null,
+   "animedebuts": [],
+   "n_infobox_fields": 6,
+   "part": null,
+   "part_basis": "无 mangadebut",
+   "included": false,
+   "exclude_reason": "无正传漫画出场"
+  },
+  {
+   "location_id": "wall_eyes",
+   "title": "Wall Eyes",
+   "name_ja": "壁の目",
+   "name_romaji": "Kabe no Me",
+   "type": "Supernatural Landform",
+   "types": [
+    "Supernatural Landform"
+   ],
+   "place_raw": "{{Morioh8}}, Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": "JJL Chapter 1",
+   "mangadebuts": [
+    "JJL Chapter 1"
+   ],
+   "animedebut": "|namedebut  = JJL Chapter 1",
+   "animedebuts": [
+    "|namedebut  = JJL Chapter 1"
+   ],
+   "n_infobox_fields": 11,
+   "part": 8,
+   "part_basis": "JJL Chapter 1",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "winchester_mystery_house_location",
+   "title": "Winchester Mystery House (Location)",
+   "name_ja": "ウィンチェスター・ミステリー・ハウス",
+   "name_romaji": "Winchesutā Misuterī Hausu",
+   "type": "Mansion, Attraction",
+   "types": [
+    "Mansion, Attraction"
+   ],
+   "place_raw": "525 South Winchester Boulevard, {{W|San Jose, California}}, 95128 {{Flag|USA}}",
+   "place_paths": [
+    [
+     "525 South Winchester Boulevard",
+     "San Jose",
+     "California",
+     "95128"
+    ]
+   ],
+   "place_chain": [
+    "525 South Winchester Boulevard",
+    "San Jose",
+    "California",
+    "95128"
+   ],
+   "residents": [],
+   "mangadebut": "Eccentrics Episode 5",
+   "mangadebuts": [
+    "Eccentrics Episode 5"
+   ],
+   "animedebut": null,
+   "animedebuts": [],
+   "n_infobox_fields": 14,
+   "part": null,
+   "part_basis": "其它作品: Eccentrics Episode 5",
+   "included": false,
+   "exclude_reason": "其它作品: Eccentrics Episode 5"
+  },
+  {
+   "location_id": "windknight_s_lot",
+   "title": "Windknight's Lot",
+   "name_ja": "風の騎士たちの町",
+   "name_romaji": "Uindonaitsu Rotto",
+   "type": "Hamlet (place)",
+   "types": [
+    "Hamlet (place)"
+   ],
+   "place_raw": "South of [[London]], [[England]] {{Flag|UK}}",
+   "place_paths": [
+    [
+     "South of London",
+     "England"
+    ]
+   ],
+   "place_chain": [
+    "South of London",
+    "England"
+   ],
+   "residents": [],
+   "mangadebut": "Chapter 21",
+   "mangadebuts": [
+    "Chapter 21"
+   ],
+   "animedebut": "Episode 5",
+   "animedebuts": [
+    "Episode 5"
+   ],
+   "n_infobox_fields": 13,
+   "part": 1,
+   "part_basis": "Chapter 21",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "yasuho_s_house",
+   "title": "Yasuho's House",
+   "name_ja": "広瀬康穂の家",
+   "name_romaji": "Hirose Yasuho no Ie",
+   "type": "Townhouse with English basement",
+   "types": [
+    "Townhouse with English basement"
+   ],
+   "place_raw": "{{Morioh8}}, Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": "JJL Chapter 8",
+   "mangadebuts": [
+    "JJL Chapter 8"
+   ],
+   "animedebut": "|colors     = JoJolion",
+   "animedebuts": [
+    "|colors     = JoJolion"
+   ],
+   "n_infobox_fields": 10,
+   "part": 8,
+   "part_basis": "JJL Chapter 8",
+   "included": true,
+   "exclude_reason": null
+  },
+  {
+   "location_id": "yu_s_inn",
+   "title": "Yu's Inn",
+   "name_ja": null,
+   "name_romaji": null,
+   "type": "Inn",
+   "types": [
+    "Inn"
+   ],
+   "place_raw": "[[Morioh]], Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Morioh",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Morioh",
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": "Rohan au Louvre",
+   "mangadebuts": [
+    "Rohan au Louvre"
+   ],
+   "animedebut": null,
+   "animedebuts": [],
+   "n_infobox_fields": 8,
+   "part": null,
+   "part_basis": "其它作品: Rohan au Louvre",
+   "included": false,
+   "exclude_reason": "其它作品: Rohan au Louvre"
+  },
+  {
+   "location_id": "yuyanagidai_location",
+   "title": "Yuyanagidai (Location)",
+   "name_ja": "夕柳台",
+   "name_romaji": "Yūyanagidai",
+   "type": "Town",
+   "types": [
+    "Town"
+   ],
+   "place_raw": "[[Morioh]], Japan {{Flag|Japan}}",
+   "place_paths": [
+    [
+     "Morioh",
+     "Japan"
+    ]
+   ],
+   "place_chain": [
+    "Morioh",
+    "Japan"
+   ],
+   "residents": [],
+   "mangadebut": null,
+   "mangadebuts": [],
+   "animedebut": null,
+   "animedebuts": [],
+   "n_infobox_fields": 9,
+   "part": null,
+   "part_basis": "无 mangadebut",
+   "included": false,
+   "exclude_reason": "无正传漫画出场"
+  }
+ ]
+}

@@ -54,6 +54,41 @@ _OPENER = urllib.request.build_opener(
 _OPENER.addheaders = [("User-Agent", UA)]
 
 
+def _api_json(params: dict) -> dict:
+    u = API + "?" + urllib.parse.urlencode(params)
+    return json.loads(_OPENER.open(u, timeout=60).read())
+
+
+def fetch_location_titles() -> list[str]:
+    """★ M65：地点清单 —— 反查所有用了 `{{Location Infobox}}` 的页面。
+
+    为什么不用分类：实测 `Category:Locations` 只有 **30** 个成员，
+    且几乎全是 `User:.../Sandbox` 与 `File:` —— **分类不可用**
+    （`Category:Part 1 Locations` 11 个、`Part 3 Locations` 20 个，
+    而 `Steel Ball Run Locations` / `JoJolion Locations` 均为 **0**）。
+    → 用模板反查（`list=embeddedin`）能拿到完整清单：
+      实测 177 项，剔除沙盒/模板/文件后 **159 个正文条目**。
+
+    ★ 与替身/角色不同：地点名**带括号**（`Morioh (JoJolion)`），
+      且括号是**区分同名不同地点的唯一依据** → 必须原样保留
+      （见 `load_db._loc_id` 的说明）。
+    """
+    titles: list[str] = []
+    cont: dict = {}
+    while True:
+        p = {"action": "query", "list": "embeddedin",
+             "eititle": "Template:Location Infobox", "eilimit": "500",
+             "format": "json", "formatversion": "2"}
+        p.update(cont)
+        d = _api_json(p)
+        titles += [x["title"] for x in d.get("query", {}).get("embeddedin", [])]
+        cont = d.get("continue") or {}
+        if not cont:
+            break
+    bad = ("User:", "Template:", "Category:", "Talk:", "File:", "Module:", "Help:")
+    return sorted({t for t in titles if not t.startswith(bad)})
+
+
 def fetch_wikitext(title: str, retries: int = 2) -> str | None:
     """取单个页面的 wikitext。页面不存在返回 None。"""
     u = (f"{API}?action=parse&prop=wikitext&redirects=1"
@@ -86,7 +121,7 @@ def build_targets() -> list[dict]:
     #   → 改用与 characters 表**完全相同**的 `_char_id(split_owner_names(...))`，
     #     否则生成的 id 对不上外键，入库会被拒。
     sys.path.insert(0, str(ROOT / "database"))
-    from load_db import _char_id, split_owner_names      # noqa: E402
+    from load_db import _char_id, _loc_id, split_owner_names   # noqa: E402
 
     targets: list[dict] = []
     seen: set[tuple] = set()
@@ -110,6 +145,23 @@ def build_targets() -> list[dict]:
             seen.add(("character", o))
             targets.append({"title": o, "kind": "character",
                             "entity_id": _char_id(o)})
+
+    # ★ M65：地点页 —— 这是「第 1、2 部也能有内容」的关键。
+    #   替身天然只覆盖第 3–9 部（第 1、2 部是波纹时代，**没有替身**，
+    #   `stands.part` 实测第 1/2 部各 0 个），而第 1、2 部**有地点**
+    #   （Ogre Street / Joestar Mansion / Air Supplena Island …）。
+    try:
+        locs = fetch_location_titles()
+    except Exception as e:                                    # noqa: BLE001
+        print(f"  ⚠ 地点清单获取失败（{type(e).__name__}），本次跳过地点："
+              f"{str(e)[:60]}")
+        locs = []
+    for t in locs:
+        if ("location", t) in seen:
+            continue
+        seen.add(("location", t))
+        targets.append({"title": t, "kind": "location",
+                        "entity_id": _loc_id(t)})
     return targets
 
 
@@ -142,7 +194,8 @@ def main() -> int:
     todo = [t for t in targets if t["title"] not in done]
     print(f"待抓 {len(todo)} / 共 {len(targets)} 页"
           f"（替身 {sum(1 for t in targets if t['kind']=='stand')} / "
-          f"角色 {sum(1 for t in targets if t['kind']=='character')}）\n")
+          f"角色 {sum(1 for t in targets if t['kind']=='character')} / "
+          f"地点 {sum(1 for t in targets if t['kind']=='location')}）\n")
 
     ok = miss = err = 0
     t0 = time.time()

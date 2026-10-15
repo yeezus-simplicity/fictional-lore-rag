@@ -180,8 +180,23 @@ def _init_state(use_vector: bool = True,
 
     # --- 路由器（M4）---
     from conflict_resolver import Router
+    # ★★ M65：地点名单独一份传给路由器 ★★
+    #   为什么不并进 known_entities：地名**不能**被当成替身名。
+    #   若混在一起，「安杰罗岩」会被判成「锚定替身」→ 走 entity_semantic
+    #   → 拿一个不存在的 stand_id 去检索原文（返回无关内容）。
+    known_locations: set = set()
+    try:
+        from locations import all_names as _loc_names
+        known_locations = set(_loc_names())
+        print(f"[api] 地点维度：{len(known_locations)} 个写法"
+              f"（{__import__('locations').n_locations()} 个正传地点）")
+    except Exception as e:  # noqa: BLE001
+        print(f"[api] ⚠ 地点维度不可用（{type(e).__name__}）："
+              f"地点类问题将按普通语义处理")
+    STATE["known_locations"] = known_locations
     STATE["router"] = Router(known_stands=known_stands,
-                             known_entities=known_entities)
+                             known_entities=known_entities,
+                             known_locations=known_locations)
     STATE["known"] = known_stands
     # ---- name → id 映射（★ M14：全量别名，不只英文名）----
     #实测问题：用户问「黄金体验的能力」，而 name2id 只有英文名
@@ -337,6 +352,8 @@ class Evidence(BaseModel):
     tables: Optional[list[str]] = None
     field: Optional[str] = None
     stand_id: Optional[str] = None
+    # ★ M65：地点证据要能指出是哪个地点（否则「提到了谁」缺少主语）
+    location_id: Optional[str] = None
     chunk_id: Optional[int] = None
     stand_name: Optional[str] = None
     part: Optional[int] = None
@@ -404,6 +421,15 @@ class QueryResponse(BaseModel):
     forms: Optional[list] = Field(
         None, description=("形态链：[{form_id, name, label, type, stand_id, current}]"
                             "；stand_id 为该形态对应的替身条目（可直接点进去）"))
+    # ★★ M65：地点档案卡 ★★
+    #   用户要的「安杰罗岩 / 勒索之路 / 恶魔掌心」这类地点。
+    #   ★ 关联实体只给**强证据**（地点条目正文里写到过谁）；
+    #     弱证据只给数量 —— 泛地名（Morioh 173 条）全列出来反而误导。
+    #   ★ 字段缺就留 None，前端照实写「源站未提供」，**不填 0**。
+    location_card: Optional[dict] = Field(
+        None, description=("地点档案：{location_id, name_zh, name_en, name_ja, "
+                           "types, part, place_paths, mangadebuts, "
+                           "stands, characters, weak_count, missing}"))
 
 
 class HealthResponse(BaseModel):
@@ -705,6 +731,8 @@ def query(
     stand_imgs: Optional[dict] = None
     # ★★ M32：中文摘要卡（认得出替身时填）—— 缓解「答案全是英文」的观感
     zh_card: Optional[dict] = None
+    # ★★ M65：地点档案卡（route=location 时填）
+    location_card: Optional[dict] = None
 
     # ---------- M25：指代消解（必须最早做）----------
     # ★ 时机很关键：必须在 router.route() 之前。
@@ -760,6 +788,26 @@ def query(
         answer_type = "abstain"
         evidence.append({"type": "note",
                          "note": f"路由判定：{decision.reason}"})
+
+    # ---------- location（M65）----------
+    #   ★ 读完 JSON 就能答，**不依赖数据库** —— 与语义检索一致，
+    #     所以降级模式下地点问题仍然可用。
+    elif route == "location":
+        try:
+            from locations import answer as _loc_answer
+            _ans, _ev, location_card = _loc_answer(resolved_q, top_k=top_k)
+            answer = _ans
+            answer_type = _ans.get("type", "location_fact")
+            evidence.extend(_ev)
+            evidence.append({
+                "type": "note",
+                "note": "地点数据来自 jojowiki 的 {{Location Infobox}}"
+                        "（113 个正传地点；归属层级取 place 字段原文）",
+            })
+        except Exception as e:  # noqa: BLE001
+            answer = {"note": f"地点模块出错：{type(e).__name__}: {e}"}
+            answer_type = "none"
+            location_card = None
 
     # ---------- structured ----------
     elif route in ("structured", "hybrid"):
@@ -1127,6 +1175,8 @@ def query(
         # ★★ M32：中文摘要卡（名称/使用者/分部/六维中文等级）
         #   —— 与英文原文并列，不替换它（证据链保持可追溯）
         "zh_card": zh_card,
+        # ★★ M65：地点档案卡（route=location 时才有）
+        "location_card": location_card,
         # ★★ M25：指代消解信息（发生替换时才有）
         "coref": coref_info,
     }
@@ -1778,8 +1828,8 @@ def _meta_to_dict(meta) -> Optional[dict]:
 
 
 # Evidence 模型的字段类型（用于入参校验）
-_EVIDENCE_STR_FIELDS = ("type", "table", "field", "stand_id", "chunk_type",
-                        "section", "content", "source_url", "note")
+_EVIDENCE_STR_FIELDS = ("type", "table", "field", "stand_id", "location_id",
+                        "chunk_type", "section", "content", "source_url", "note")
 
 
 def _valid_evidence(e: dict) -> bool:

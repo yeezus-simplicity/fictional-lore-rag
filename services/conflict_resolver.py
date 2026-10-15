@@ -363,7 +363,7 @@ class ConflictResolver:
 class RouteDecision:
     """一次路由决策（可解释）。"""
 
-    route: str# structured / semantic / hybrid / abstain
+    route: str# structured / semantic / hybrid / abstain / entity_semantic / location
     reason: str
     signals: dict = field(default_factory=dict)
 
@@ -559,8 +559,27 @@ class Router:
         # 数据集专有概念
         r"(替身|stand|觉醒|能力值|必杀|替身能力)", re.I)
 
+    # ★★ M65：地点意图 ★★
+    #   背景：库里新增 113 个正传地点。用户会问
+    #     「安杰罗岩是什么地方」「杜王町有哪些地点」「恶魔掌心在哪里」。
+    #   ★ 为什么必须单独一条：这些问句 **不命中 DOMAIN_HINT 里的任何一项**
+    #     （没有六维词、没有"替身"），若不识别就会被当成无关问句拒答 ——
+    #     而库里**确实有**这个地点。
+    #   ★ 刻意不把「地点」这种宽词单独作为路由依据：
+    #     只问「地点」但抽不到地名时（如「华盛顿在哪里」），
+    #     应当仍走原来的拒答逻辑，不能凭空造出答案（M21 守门测试的教训）。
+    LOCATION_ASK = re.compile(
+        r"(是什么地方|什么地方|什么地点|哪些地点|有哪些地点|"
+        r"有哪些场所|有哪些场所|在哪儿|在哪里|在哪|位于|"
+        r"哪个国家|哪个城市|属于哪|地理|所在|场所|"
+        r"location\b|where\s+is)", re.I)
+
+    # 部数（用于「第 X 部有哪些地点」，与 OUT_OF_RANGE_PART 互补）
+    PART_ANY = re.compile(r"第\s*[0-9一二三四五六七八九]+\s*部")
+
     def __init__(self, known_stands: Optional[set[str]] = None,
-                 known_entities: Optional[set[str]] = None):
+                 known_entities: Optional[set[str]] = None,
+                 known_locations: Optional[set[str]] = None):
         """
         Args:
             known_stands: 替身名集合（判定的基准）
@@ -570,6 +589,10 @@ class Router:
                   「Stardust Crusaders（第3部）」「Giorno Giovanna（使用者）」
                   这类真实存在的实体误判为编造实体，
                   导致 T2 掉 20%、T3 掉 40%。
+            known_locations: **地点名**（M65）—— 中/英/日三种写法。
+                ★ 它必须与 known_entities 分开传：地名要参与「这是不是地点问句」
+                  的判定，而 **不能**被当成替身名（否则「安杰罗岩」会被判成
+                  锚定替身 → 走 entity_semantic → 去检索一个不存在的地点的原文）。
         """
         self.known = {s.lower() for s in (known_stands or set())}
         all_known = set(self.known)
@@ -579,6 +602,11 @@ class Router:
         self.known_all = all_known
         # 替身名单独保留（用于「这是替身吗」的判断）
         self.known_stands = self.known
+        # ★ M65：地点名单独一份（既参与「已知」判定，又要与替身名区分开）
+        #   ★ 地名要并进 known_all —— 否则「安杰罗岩是什么地方」会因
+        #     _is_known 返回 False 被判成**编造实体**直接拒答。
+        self.known_locations = {x.lower() for x in (known_locations or set())}
+        self.known_all |= self.known_locations
 
     def _is_known(self, cand: str) -> bool:
         """判断候选实体是否已知。
@@ -758,9 +786,19 @@ class Router:
         stand_hit = next(
             (c for c in candidates
              if c.lower() in self.known_all
-             and c.lower() not in self.DIMENSION_WORDS),
+             and c.lower() not in self.DIMENSION_WORDS
+             # ★ M65：地名**不算**替身锚定 —— 否则「安杰罗岩」会被判成
+             #   锚定替身 → 走 entity_semantic → 拿一个不存在的 stand_id
+             #   去检索，返回与问题无关的原文。
+             and c.lower() not in self.known_locations),
             None)
         signals["stand_entity"] = stand_hit
+
+        # ★ M65：地点锚定（与 stand_hit 同构，只是查另一张名单）
+        location_hit = next(
+            (c for c in candidates if c.lower() in self.known_locations),
+            None)
+        signals["location_entity"] = location_hit
 
         # ★★ M14 前置：领域相关性检查（放在所有意图判定之前）
         #   没有领域信号 → 明确拒答，而不是强行匹配某个意图
@@ -789,6 +827,26 @@ class Router:
                 "abstain",
                 f"{hit} → 数据集中不存在，应拒答",
                 signals)
+
+        # ---------- 2′. 地点意图（M65）----------
+        #   判据（两者取一）：
+        #     ① 抽到了**已知地名** —— 「安杰罗岩是什么地方」「恶魔掌心在哪里」
+        #     ② 问句在问「某部的地点」但没有具体地名 —— 「第 1 部有哪些地点」
+        #   ★ 刻意**不**把「只提到地点词、没抽到地名」也放进来：
+        #     「华盛顿在哪里」会因此变成有答案的问句，而库里没有华盛顿
+        #     → 那等于凭空作答（M21 「无关问句必须拒答」的守门测试会挂）。
+        #   ★ 与替身名的关系：若同句锚定了替身且**没问地点**，
+        #     仍按替身走（例：「Tusk 的破坏力」），不能被地名抢走。
+        loc_ask = bool(self.LOCATION_ASK.search(q))
+        if location_hit or (loc_ask and self.PART_ANY.search(q)):
+            if not (stand_hit and not loc_ask):
+                return RouteDecision(
+                    "location",
+                    (f"识别到地点「{location_hit}」→ 查地点维度"
+                     "（M65：否则会因没有六维/替身词被当成无关问句拒答）"
+                     if location_hit else
+                     "问句按「第 X 部 + 地点」提问 → 列出该部地点"),
+                    signals)
 
         # ---------- 2. 混合意图判定（M2 的 T5 全错点） ----------
         # 特征：同时出现「结构化问法」与「语义问法」

@@ -537,6 +537,27 @@ td.num { font-family: var(--mono); font-size: 12px; text-align: right; }
   color: var(--text); border-color: var(--accent);
   background: var(--accent-dim); cursor: default;
 }
+/* ============ M65：地点卡 ============
+   ★ 只加样式，不改既有类 —— 地点卡复用 .zc-row/.zc-k/.zc-v/.tag，
+     保证两张卡在视觉上是一套东西（用户不必重新学怎么读）。 */
+.lc-na { color: var(--text-faint); font-style: italic; }
+.lc-path { display: inline-block; margin: 1px 0; }
+.lc-arr { color: var(--text-faint); padding: 0 2px; }
+.lc-line { margin: 3px 0 8px; font-size: 13px; color: var(--text-dim);
+  line-height: 1.7; }
+.lc-note { margin-top: 10px; padding: 8px 10px; font-size: 12px;
+  line-height: 1.7; color: var(--text-dim); background: var(--bg-hover);
+  border-radius: 6px; }
+.lc-weak { margin-top: 8px; }
+/* 关联标签可点（点开看语料原文），所以要有可点的样子 */
+.tag.lc-rel { cursor: pointer; }
+.tag.lc-rel:hover { color: var(--text); border-color: var(--accent); }
+.lc-p { color: var(--text-faint); font-size: 10px; margin-left: 4px; }
+.lc-ev { margin-top: 6px; border-left: 3px solid var(--warn);
+  padding: 6px 10px; background: var(--bg-hover); border-radius: 6px; }
+.lc-ev-h { font-size: 12px; color: var(--text-dim); margin-bottom: 4px; }
+.lc-ev-b { font-size: 12.5px; line-height: 1.7; color: var(--text);
+  white-space: pre-wrap; word-break: break-word; }
 .zc-form.no-link { cursor: default; opacity: .65; }
 .zc-form-arrow { color: var(--text-faint); font-size: 11px; }
 @media (max-width: 560px) {
@@ -731,6 +752,8 @@ const SAMPLES = [
   'Tusk 的射程是多少？',
   '使用者 Giorno Giovanna 有哪些替身？',
   'Anubis 的外观形态方面有哪些描述？',
+  // ★ M65：地点是新维度，示例里必须有一个 —— 否则用户不知道能这么问
+  '安杰罗岩是什么地方',
   'Star Platinum Ultimate 的能力值是多少？'
 ];
 $('.samples').insertAdjacentHTML('beforeend',
@@ -1098,6 +1121,103 @@ function renderZhCard(zc, forms){
   </div>${dimGrid}`;
 }
 
+// ★★ M65：地点档案卡（安杰罗岩 / 杜王町 / 恶魔掌心 这类）★★
+//   三条设计原则（都是本项目的既有硬规则，不是新发明）：
+//     ① **只显示强证据**：关联的替身/角色必须是「该地点条目正文里写到过谁」。
+//        弱证据（实体页提到该地名）只给数量 —— 泛地名会爆炸
+//        （实测 Morioh 173 条 / Egypt 151 条），全列出来等于没信息。
+//     ② **源站没填的字段照实写「源站未提供」**，不填 0、不猜。
+//        地点 Infobox 的 residents 实测只有 2% 填充率，界面不能显示成「无居住者」。
+//     ③ 归属层级用 `→` 串起来，且**允许一条地点有多条路径**
+//        （源站用换行表示「并列的第二处归属」，不是同一条路径的分隔）。
+// ★★ 地点卡关联证据的存放处 ★★
+//   为什么不把 JSON 直接内联进 onclick（我第一版就是这么写的，实测失效）：
+//     onclick="showLocEvidence(${JSON.stringify(x)})"
+//   → JSON 里的**双引号会提前闭合 HTML 属性** → onclick 变成
+//     `showLocEvidence({` 这种半截代码 → 点标签**毫无反应**
+//     （不报错、不跳转，最难查的那一类）。
+//   ★ 既有的 ask('...') 之所以没事，是因为它用的是**单引号属性**；
+//     但内容里一旦出现撇号（英文原文很常见）同样会坏 → 所以统一改成
+//     **按索引引用**，HTML 里只放一个数字，彻底绕开引号问题。
+let LOC_EV = [];
+
+// 点地点关联标签 → 展示该条证据的原文片段（证据可追溯，不是"我说的"）
+function showLocEvidence(i){
+  const box = document.getElementById('locEv');
+  const x = LOC_EV[i];
+  if(!box || !x) return;
+  box.innerHTML = `<div class="lc-ev">
+    <div class="lc-ev-h">原文证据 · 语料块 #${esc(String(x.chunk_id))}
+      （命中「${esc(x.matched_term||'')}」）</div>
+    <div class="lc-ev-b">${esc(x.snippet||'（无片段）')}</div>
+  </div>`;
+  box.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+function renderLocationPanel(d){
+  LOC_EV = [];                 // 每次重渲染都重置（索引与下面的 push 一一对应）
+  const lc = d.location_card;
+  if(!lc) return '';
+  const rows = [];
+  const sub = [lc.name_en, lc.name_ja, lc.name_romaji].filter(Boolean);
+  rows.push(`<div class="zc-row"><span class="zc-k">名称</span>
+    <span class="zc-v"><b>${esc(lc.name_zh || lc.name_en || '—')}</b>
+    ${sub.length? `<span class="zc-sub">${esc(sub.join(' · '))}</span>`:''}
+    ${lc.name_zh_source? `<span class="zc-lv" title="中文名来源：${esc(lc.name_zh_evidence||'')}">${
+      lc.name_zh_source==='manual' ? '人工确认' :
+      lc.name_zh_source==='generic_zh' ? '通行译名' : '萌娘条目'}</span>`:''}
+    </span></div>`);
+  rows.push(`<div class="zc-row"><span class="zc-k">类型</span>
+    <span class="zc-v">${(lc.types||[]).length
+      ? (lc.types||[]).map(t=>`<span class="tag">${esc(t)}</span>`).join('')
+      : '<span class="lc-na">源站未提供</span>'}</span></div>`);
+  rows.push(`<div class="zc-row"><span class="zc-k">登场</span>
+    <span class="zc-v">${lc.part? `第 ${esc(String(lc.part))} 部` :
+      '<span class="lc-na">源站未提供</span>'}</span></div>`);
+  // ★ 归属路径：源站 place 字段原文的层级（可多条 —— 见上方原则③）
+  const paths = (lc.place_paths||[]).filter(p=>p && p.length);
+  rows.push(`<div class="zc-row"><span class="zc-k">归属</span>
+    <span class="zc-v">${paths.length
+      ? paths.map(p=>`<span class="lc-path">${p.map(esc).join(' <span class="lc-arr">→</span> ')}</span>`).join('<br>')
+      : '<span class="lc-na">源站未提供</span>'}</span></div>`);
+  // ★ 首次出场：漫画 / 动画分开写，多值不合并（Cairo 有 Chapter 117 与 122 两次）
+  const md = lc.mangadebuts||[], ad = lc.animedebuts||[];
+  if(md.length || ad.length){
+    rows.push(`<div class="zc-row"><span class="zc-k">首次出场</span>
+      <span class="zc-v">${md.length? `漫画：${md.map(esc).join('、')}` : ''}
+      ${ad.length? `${md.length?'　':''}动画：${ad.map(esc).join('、')}` : ''}</span></div>`);
+  }
+  // ★ 强证据：该地点条目正文里写到的替身/角色（每条都能点开看原文块）
+  const tagOf = (x, kind) => {
+    const i = LOC_EV.push(x) - 1;        // ★ 只把**索引**放进 HTML（见上方说明）
+    return `<span class="tag lc-rel" role="button" tabindex="0"
+      title="${esc(x.name_en||'')}${x.name_en?' · ':''}证据：语料第 ${esc(String(x.chunk_id))} 块命中「${esc(x.matched_term||'')}」"
+      onclick="showLocEvidence(${i})">${esc(x.name)}</span>`;
+  };
+  if((lc.stands||[]).length){
+    rows.push(`<div class="zc-row"><span class="zc-k">相关替身</span>
+      <span class="zc-v">${lc.stands.map(x=>tagOf(x,'stand')).join('')}</span></div>`);
+  }
+  if((lc.characters||[]).length){
+    rows.push(`<div class="zc-row"><span class="zc-k">相关角色</span>
+      <span class="zc-v">${lc.characters.map(x=>tagOf(x,'character')).join('')}</span></div>`);
+  }
+  // ★ 弱证据只给数量并说明口径 —— 不混进上面的列表
+  const weak = lc.weak_count||0;
+  const weakNote = `<div class="lc-note">关联口径：上面列的是
+    <b>该地点条目正文里写到过</b>的替身/角色（强证据，点标签可看原文）。
+    ${weak? `另有 <b>${weak}</b> 条是这些条目里提到过本地名（弱证据）——
+      泛地名时会很多（如 Morioh 173 条），故不展开。` : ''}
+    ${(lc.missing||[]).length? `<br>源站未提供：${esc((lc.missing||[]).join('、'))}
+      —— 按原样留空，<b>不填 0</b>。` : ''}</div>`;
+  return `<div class="card" data-sec="sec-loc" data-secname="地点资料">
+    <h3>地点资料 <span class="h3n">数据来自 jojowiki 的地点条目 · 可用中文名/英文名/日文名提问</span></h3>
+    <div class="zh-card-inner">${rows.join('')}</div>
+    <div class="lc-weak"><span id="locEv"></span></div>
+    ${weakNote}
+  </div>`;
+}
+
 // ★★ M36：替身档案 + 六维雷达合并成一张卡 ★★
 //   之前是三张独立卡片（档案 / 答案 / 雷达），六维明明是档案的一部分，
 //   却夹在答案和图片中间，读起来割裂。
@@ -1234,6 +1354,7 @@ function renderAnswer(d){
   if(d.generation) html += renderGeneration(d.generation, d.faithfulness);
   html += '</div>';
   html += renderStandPanel(d);          // ② 替身资料
+  html += renderLocationPanel(d);       // ②′ 地点资料（M65，只在 route=location 时出现）
   // ③ 检索过程 —— ★ M57：从"页顶的折叠块"变成**正式板块**（可被左侧索引到）
   //    证据（原文）也归这里：它就是这条答案的出处
   html += `<div class="card" data-sec="sec-proc" data-secname="检索过程">
@@ -1463,6 +1584,48 @@ function renderStructured(a){
     return `<div style="color:var(--warn)">${esc(a.note)}</div>` +
            (a.hint? `<div class="meta" style="margin-top:8px">${
              esc(a.hint)}</div>` : '');
+  }
+  // ★★ M65：地点类答案（route=location）★★
+  //   完整档案在上方「地点资料」卡里，这里只给**一句话结论**，
+  //   避免同一份信息在屏幕上出现两次。
+  if(t==='location_fact'){
+    const nm = esc(a.name_zh || a.name_en || '—');
+    const path = (a.place_paths||[]).filter(p=>p&&p.length)
+      .map(p=>p.join(' → ')).join(' ／ ');
+    const ps = a.part? `第 ${esc(String(a.part))} 部` : '部数未知';
+    const types = (a.types||[]).slice(0,4);
+    return `<div style="margin-bottom:8px"><b style="font-size:20px">${nm}</b>
+        <span class="zc-sub">${esc(a.name_en||'')}</span></div>
+      <div class="lc-line">${ps}${types.length? ' · '+types.map(esc).join('／') : ''}
+        ${path? ` · 位于 <b>${esc(path)}</b>` : ' · <span class="lc-na">源站未提供归属</span>'}</div>
+      ${(a.related_stands||[]).length? `<div class="lc-line">相关替身：
+        ${a.related_stands.slice(0,8).map(x=>`<span class="tag">${esc(x)}</span>`).join('')}
+        ${a.related_stands.length>8? `<span class="meta">…共 ${a.related_stands.length} 个</span>`:''}
+      </div>`:''}`;
+  }
+  if(t==='location_list'){
+    const items = a.items||[];
+    return `<div style="margin-bottom:8px">${esc(a.scope||'')} 共
+        <b>${esc(String(a.count))}</b> 个地点</div>
+      <div>${items.map(x=>`<span class="tag lc-rel" role="button" tabindex="0"
+        onclick='ask(${JSON.stringify((x.name||x.name_en)+" 是什么地方")})'
+        >${esc(x.name||x.name_en)}${x.part? `<span class="lc-p">第${esc(String(x.part))}部</span>`:''}</span>`).join('')}</div>
+      ${a.note? `<div class="meta" style="margin-top:8px">${esc(a.note)}</div>`:''}`;
+  }
+  if(t==='location_related'){
+    const loc = a.location||{};
+    const list = (arr,cls) => (arr||[]).length
+      ? `<div class="lc-line">${cls}：${arr.map(x=>`<span class="tag">${esc(x.name)}</span>`).join('')}</div>`
+      : '';
+    return `<div style="margin-bottom:8px"><b>${esc(loc.name||'')}</b>
+        <span class="zc-sub">${esc(loc.name_en||'')}</span> —— 该地点条目正文里写到的：</div>
+      ${list(a.stands,'相关替身')}${list(a.characters,'相关角色')}
+      ${(!(a.stands||[]).length && !(a.characters||[]).length)
+        ? '<div>该地点条目正文里没有写到具体替身或角色。</div>' : ''}
+      ${a.note? `<div class="meta" style="margin-top:8px">${esc(a.note)}</div>`:''}`;
+  }
+  if(t==='location_hint'){
+    return `<div>${esc(a.note)}</div>`;
   }
   if(t==='fact'){
     // ★★ M38：条件值提示 ★★

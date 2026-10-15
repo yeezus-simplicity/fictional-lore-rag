@@ -142,8 +142,19 @@ def clean_text(s: str | None) -> str | None:
 
 
 def field(ib: str, key: str) -> str | None:
-    """取 Infobox 内的单个字段值（在**已截范围**的文本上搜）。"""
-    m = re.search(r"^\|\s*%s\s*=\s*(.+)$" % re.escape(key), ib, re.M)
+    """取 Infobox 内的单个字段值（在**已截范围**的文本上搜）。
+
+    ★★ 空白类必须是 [^\\S\\n]（**不含换行**），不能用 \\s ★★
+      实测踩坑（真 bug，25 个地点的 `animedebut` 全被污染成另一字段）：
+        `|animedebut = `   ← 空值，行尾就是换行
+        `|colors     = JoJolion`
+      而 `\\s*` 会**吃掉换行**，于是 `(.+)` 把**下一行整行**当成了这个字段的值
+      → 页面上出现「动画：]colors = JoJolion」这种东西。
+      ★ 它是"看着有值、其实是脏的"那一类：不报错，只是安静地把 A 字段
+        写进了 B 字段（同 §5 的四个坑同一个家族）。
+    """
+    m = re.search(r"^\|[^\S\n]*%s[^\S\n]*=[^\S\n]*(.+)$"
+                  % re.escape(key), ib, re.M)
     return m.group(1).strip() if m else None
 
 

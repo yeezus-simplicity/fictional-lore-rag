@@ -118,6 +118,49 @@ def collect_entities(chunks: list[dict]) -> dict[tuple, dict]:
     return ents
 
 
+def drop_shadowed(hits: list, text: str) -> list:
+    """去掉「被更长的名字完全遮住」的命中。
+
+    ★★ 为什么必须做（M65 实测到的真误匹配）★★
+      第 7 部地点 Devil's Palm 的页面里有：
+        "…Hot Pants admits to have gained **Cream Starter** from the area as well."
+      → `Cream`（**第 3 部**那只吸血鬼化的替身）也被判成命中，
+        因为词边界 `(?![A-Za-z0-9])` 只挡住 `Creamy` 这种**紧贴**的字母，
+        而 "Cream" 后面跟的是**空格**（"Cream Starter"）→ 照样通过。
+      → 结果「恶魔掌心 ↔ Cream」这条**有证据外壳、结论却是错的**关联被写进库。
+        （与 M65 早先 `Forever` 被 "town forever" 误命中同一类，但成因不同：
+          那次是**实义词撞常用词**，这次是**短名是长名的一部分**。）
+
+    ★ 判据刻意严：只有当短名的**每一次**出现都落在长名的某次出现**之内**时，
+      才丢掉它。若短名在文中还有独立出现，它就是个**真命中**，必须保留。
+      （例：整段只写 "Cream Starter" → 丢 `Cream`；
+        另一段写了 "…and Cream appears" → 保留。）
+    """
+    def _spans(term: str) -> list[tuple[int, int]]:
+        return [(m.start(), m.end())
+                for m in re.finditer(re.escape(term), text, re.I)]
+
+    drops: set[int] = set()
+    for i, h in enumerate(hits):
+        ti = h[3]
+        for j, o in enumerate(hits):
+            if i == j:
+                continue
+            tj = o[3]
+            # 只比「不同实体」且「另一个名字更长且包含它」
+            if (h[0], h[1]) == (o[0], o[1]):
+                continue
+            if len(tj) <= len(ti) or ti.lower() not in tj.lower():
+                continue
+            spans = _spans(tj)
+            occ = _spans(ti)
+            if occ and spans and all(
+                    any(s <= a and b <= e for s, e in spans) for a, b in occ):
+                drops.add(i)
+                break
+    return [h for i, h in enumerate(hits) if i not in drops]
+
+
 def main() -> int:
     for f in (CHUNKS, LOCATIONS):
         if not f.exists():
@@ -192,13 +235,17 @@ def main() -> int:
             lid = c.get("location_id")
             if not lid:
                 continue
+            hits: list = []
             for ek, eid, pats in ent_pats:
                 for mk, term, p in pats:
                     m = p.search(text)
                     if m:
-                        add(lid, cid, ek, eid, "location_page", mk, term,
-                            snippet_of(text, m))
+                        hits.append((ek, eid, mk, term, m))
                         break        # 同一实体同一块只记一次（最强的那次）
+            # ★ 去掉被更长名字遮住的命中（见 drop_shadowed 的说明）
+            for ek, eid, mk, term, m in drop_shadowed(hits, text):
+                add(lid, cid, ek, eid, "location_page", mk, term,
+                    snippet_of(text, m))
         elif kind in ("stand", "character"):
             # B) 弱证据：替身/角色页正文 → 提到了哪些地点
             ek = kind

@@ -73,6 +73,9 @@ def collect_m1() -> dict:
     #     否则「79.87% → 65.78%」看着像退步，实际是覆盖面变大。
     n_any = sum(1 for s in stats if (s.get("missing_count") or 0) < 6)
     art_chunks = _load("article_chunks.json") or []
+    # ★ M65：地点（正传 9 部）
+    _loc = _load("locations.json") or {}
+    n_locations = _loc.get("n_included") or 0
     n_base_chunks = chunks.get("n_chunks") or 0
     part_of = {s["stand_id"]: s.get("part") for s in stand}
     by_part: dict = {}
@@ -91,6 +94,7 @@ def collect_m1() -> dict:
         "n_chunks": chunks.get("n_chunks"),
         "n_chunks_article": len(art_chunks),
         "n_chunks_total": n_base_chunks + len(art_chunks),
+        "n_locations": n_locations,
         "n_stands_covered": chunks.get("n_stands_covered"),
         "total_chars": chunks.get("total_chars"),
         "chunk_type_dist": chunks.get("type_distribution", {}),
@@ -504,7 +508,9 @@ PUBLIC_NUMBERS = {
     "数据.形态数": ("M1", "n_forms", 153),
     "数据.基础块数": ("M1", "n_chunks", 2407),
     # ★ 需要完整语料（含 article_chunks.json）；CI 的合成语料环境不适用本表
-    "数据.语料总量": ("M1", "n_chunks_total", 6761),
+    "数据.语料总量": ("M1", "n_chunks_total", 7940),
+    # ★ M65 新增：正传地点（含语料块）
+    "数据.地点数": ("M1", "n_locations", 113),
     # ★ 六维齐全率下降是**覆盖面变大**，不是数据变差 —— 见 collect_m1 的注释
     "数据.六维齐全率": ("M1", "completeness_ratio", 0.6578),
     "数据.六维非全空率": ("M1", "completeness_any_ratio", 0.8075),

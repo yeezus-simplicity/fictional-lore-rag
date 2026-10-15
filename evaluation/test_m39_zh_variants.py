@@ -34,6 +34,26 @@ import urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+
+# ★★ M64：访问**本机服务**必须显式绕过代理 ★★
+#   实测：本机环境带 http_proxy=127.0.0.1:54302（Clash 类），
+#   而 `urllib.request.urlopen` **默认读代理环境变量** ——
+#   连 127.0.0.1:PORT 的请求也会走它。短请求看不出差别，
+#   长请求或多次请求序列会随机挂起（表现成「服务好像卡住了」）。
+#   → 回环地址一律走 _opener()。
+_OPENER = None
+
+
+def _opener():
+    # ★ import 放在函数内：这几个测试的 `urllib.request` 是在**函数内**
+    #   才导入的，模块级调用会 NameError（且被 except 吞掉 → 表现为
+    #   "服务启动超时"，与真实原因完全无关）。
+    global _OPENER
+    if _OPENER is None:
+        import urllib.request as _u
+        _OPENER = _u.build_opener(_u.ProxyHandler({}))
+    return _OPENER
+
 PORT = 8789
 OUT = ROOT / ".tmp_preview"
 PY = sys.executable
@@ -67,7 +87,7 @@ def api(port: int, q: str) -> dict:
     url = (f"http://127.0.0.1:{port}/query?"
            + urllib.parse.urlencode({"q": q, "mode": "extract"}))
     req = urllib.request.Request(url, method="POST")
-    with urllib.request.urlopen(req, timeout=30) as r:
+    with _opener().open(req, timeout=30) as r:
         return json.loads(r.read().decode("utf-8"))
 
 

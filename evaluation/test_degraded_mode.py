@@ -38,6 +38,26 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 
+# ★★ M64：访问**本机服务**必须显式绕过代理 ★★
+#   实测：本机环境带 http_proxy=127.0.0.1:54302（Clash 类），
+#   而 `urllib.request.urlopen` **默认读代理环境变量** ——
+#   连 127.0.0.1:PORT 的请求也会走它。短请求看不出差别，
+#   长请求或多次请求序列会随机挂起（表现成「服务好像卡住了」）。
+#   → 回环地址一律走 _opener()。
+_OPENER = None
+
+
+def _opener():
+    # ★ import 放在函数内：这几个测试的 `urllib.request` 是在**函数内**
+    #   才导入的，模块级调用会 NameError（且被 except 吞掉 → 表现为
+    #   "服务启动超时"，与真实原因完全无关）。
+    global _OPENER
+    if _OPENER is None:
+        import urllib.request as _u
+        _OPENER = _u.build_opener(_u.ProxyHandler({}))
+    return _OPENER
+
+
 
 def _free_port() -> int:
     with socket.socket() as sk:
@@ -45,35 +65,47 @@ def _free_port() -> int:
         return int(sk.getsockname()[1])
 
 
+# ★ M64：服务端输出写**文件**，不用不读的 PIPE（同 test_generate_mode）
+LOG = ROOT / ".tmp_preview" / "degraded_server.log"
+
+
+def _read_log(tail: int = 1500) -> str:
+    try:
+        return LOG.read_text(encoding="utf-8", errors="replace")[-tail:]
+    except Exception:
+        return "（读不到服务端日志）"
+
+
 def _start(port: int, env: dict, timeout: int = 70):
     """起服务并等它就绪。返回 None 表示失败。"""
     base = f"http://127.0.0.1:{port}"
+    LOG.parent.mkdir(parents=True, exist_ok=True)
+    _logf = open(LOG, "w", encoding="utf-8", errors="replace")
     proc = subprocess.Popen(
         [sys.executable, str(ROOT / "api" / "main.py"),
          "--port", str(port), "--no-vector"],
-        env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+        env=env, stdout=_logf, stderr=subprocess.STDOUT,
         text=True, encoding="utf-8", errors="replace")
     for _ in range(timeout):
         time.sleep(1)
         try:
-            urllib.request.urlopen(base + "/health", timeout=3)
+            _opener().open(base + "/health", timeout=3)
             return proc
         except Exception:
             if proc.poll() is not None:
-                out = proc.stdout.read()[-1200:] if proc.stdout else ""
-                print("✗ 服务进程退出：\n" + out)
+                print("✗ 服务进程退出：\n" + _read_log())
                 return None
     return None
 
 
 def _get(base: str, ep: str):
-    return json.loads(urllib.request.urlopen(base + ep, timeout=25).read())
+    return json.loads(_opener().open(base + ep, timeout=25).read())
 
 
 def _post(base: str, q: str, **kw):
     url = base + "/query?" + urllib.parse.urlencode({"q": q, **kw})
     r = urllib.request.Request(url, method="POST")
-    return json.loads(urllib.request.urlopen(r, timeout=50).read())
+    return json.loads(_opener().open(r, timeout=50).read())
 
 
 def _stop(proc) -> None:
@@ -109,7 +141,7 @@ def main() -> int:
 
         print("\n[2] 网页界面可访问（DB挂了也要能打开）")
         try:
-            r = urllib.request.urlopen(base + "/", timeout=20)
+            r = _opener().open(base + "/", timeout=20)
             html = r.read().decode("utf-8")
             # ★ 原来断言 "rag-kb" in html —— 但本测试要验证的是
             #   「DB 挂了首页仍能打开」，**不该绑定项目名**
@@ -170,7 +202,7 @@ def main() -> int:
         print("\n[5] 静态资源")
         for ep in ["/docs", "/openapi.json"]:
             try:
-                r = urllib.request.urlopen(base + ep, timeout=15)
+                r = _opener().open(base + ep, timeout=15)
                 print(f"  ✓ {ep:16s} {r.status}")
             except Exception as e:
                 print(f"  ✗ {ep:16s} {type(e).__name__}")

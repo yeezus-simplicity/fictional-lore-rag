@@ -22,6 +22,26 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+
+# ★★ M64：访问**本机服务**必须显式绕过代理 ★★
+#   实测：本机环境带 http_proxy=127.0.0.1:54302（Clash 类），
+#   而 `urllib.request.urlopen` **默认读代理环境变量** ——
+#   连 127.0.0.1:PORT 的请求也会走它。短请求看不出差别，
+#   长请求或多次请求序列会随机挂起（表现成「服务好像卡住了」）。
+#   → 回环地址一律走 _opener()。
+_OPENER = None
+
+
+def _opener():
+    # ★ import 放在函数内：这几个测试的 `urllib.request` 是在**函数内**
+    #   才导入的，模块级调用会 NameError（且被 except 吞掉 → 表现为
+    #   "服务启动超时"，与真实原因完全无关）。
+    global _OPENER
+    if _OPENER is None:
+        import urllib.request as _u
+        _OPENER = _u.build_opener(_u.ProxyHandler({}))
+    return _OPENER
+
 for sub in ("services", "retrieval", "database"):
     sys.path.insert(0, str(ROOT / sub))
 
@@ -262,7 +282,7 @@ def main() -> int:
         for _ in range(60):
             time.sleep(1)
             try:
-                urllib.request.urlopen(base + "/health", timeout=3)
+                _opener().open(base + "/health", timeout=3)
                 break
             except Exception:
                 pass
@@ -273,7 +293,7 @@ def main() -> int:
         def post(q, **kw):
             url = base + "/query?" + urllib.parse.urlencode({"q": q, **kw})
             r = urllib.request.Request(url, method="POST")
-            return _json.loads(urllib.request.urlopen(r, timeout=60).read())
+            return _json.loads(_opener().open(r, timeout=60).read())
 
         # 6a. note 类型不符时不能 500
         try:
@@ -300,7 +320,7 @@ def main() -> int:
         print(f"  ✓ Evidence 含合并字段 {list(need)}")
 
         # 6c. 健康检查报告索引配置
-        h = _json.loads(urllib.request.urlopen(base + "/health", timeout=15).read())
+        h = _json.loads(_opener().open(base + "/health", timeout=15).read())
         print(f"  ✓ /health 正常（status={h['status']}）")
     finally:
         proc.terminate()

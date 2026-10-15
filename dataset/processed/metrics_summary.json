@@ -1,8 +1,10 @@
 {
   "M1": {
-    "n_stands": 154,
-    "n_forms": 146,
+    "n_stands": 187,
+    "n_forms": 153,
     "n_chunks": 2407,
+    "n_chunks_article": 4354,
+    "n_chunks_total": 6761,
     "n_stands_covered": 148,
     "total_chars": 696201,
     "chunk_type_dist": {
@@ -29,7 +31,51 @@
       "max": 2174
     },
     "n_with_complete_stats": 123,
-    "completeness_ratio": 0.7987,
+    "completeness_ratio": 0.6578,
+    "n_with_any_stats": 151,
+    "completeness_any_ratio": 0.8075,
+    "completeness_by_part": {
+      "3": {
+        "n": 33,
+        "n_complete": 33,
+        "ratio": 1.0
+      },
+      "4": {
+        "n": 28,
+        "n_complete": 23,
+        "ratio": 0.8214
+      },
+      "5": {
+        "n": 27,
+        "n_complete": 22,
+        "ratio": 0.8148
+      },
+      "6": {
+        "n": 25,
+        "n_complete": 14,
+        "ratio": 0.56
+      },
+      "7": {
+        "n": 25,
+        "n_complete": 19,
+        "ratio": 0.76
+      },
+      "8": {
+        "n": 26,
+        "n_complete": 5,
+        "ratio": 0.1923
+      },
+      "None": {
+        "n": 10,
+        "n_complete": 7,
+        "ratio": 0.7
+      },
+      "9": {
+        "n": 13,
+        "n_complete": 0,
+        "ratio": 0.0
+      }
+    },
     "n_conflicts": 28,
     "n_conflict_pending": 16,
     "n_forms_unresolved": null,
@@ -428,6 +474,76 @@
     "hedging_reduction_pp": 20.0,
     "_source_files": [
       "dataset/processed/m9_index_verify.json"
+    ]
+  },
+  "M13": {
+    "n_queries": 4,
+    "method": {
+      "retrieval": "BM25（--no-vector）",
+      "n_queries": 4,
+      "warmup": "先跑一题预热模型（★ 第一轮没预热，算出错误的 +4%）",
+      "metric": "generation.elapsed_ms（口径与 M9 的 avg_gen_ms 一致）",
+      "compare": "python -m ... 起子进程服务，两组独立端口"
+    },
+    "base": {
+      "chunk_merge_target": null,
+      "n_chunks": 2407,
+      "avg_gen_ms": 6620.0,
+      "avg_prompt_tokens": 441.0,
+      "avg_gen_tokens": 72.0,
+      "avg_evidence_chars": 1233.0
+    },
+    "merged_512": {
+      "chunk_merge_target": 512,
+      "n_chunks": 1986,
+      "avg_gen_ms": 10158.0,
+      "avg_prompt_tokens": 532.0,
+      "avg_gen_tokens": 103.0,
+      "avg_evidence_chars": 1623.0
+    },
+    "delta_pct": {
+      "gen_ms": 53.4,
+      "prompt_tokens": 20.6,
+      "gen_tokens": 43.1,
+      "evidence_chars": 31.6,
+      "n_chunks": -17.5
+    },
+    "cross_check_with_m9": {
+      "m9_latency_pct": 52.4,
+      "note": "★ 两次独立测量（不同检索配置、不同题集、不同时间）互相印证"
+    },
+    "hedging_mechanism": {
+      "note": "★ M13 的 8 题样本太小抓不到，用 M9 的 30 题记录查清了机制",
+      "base_hedging": 15,
+      "merged_hedging": 9,
+      "both": 7,
+      "fixed_by_merge": 8,
+      "broken_by_merge": 2,
+      "newly_broken_questions": [
+        "Ebony Devil 的破坏力是几级？",
+        "Echoes (ACT3) 的速度是几级？"
+      ],
+      "conclusion": "★ 合并不是纯赚：修好 8 条、弄坏 2 条，净+6"
+    },
+    "self_correction": {
+      "first_round_pct": 4,
+      "why_wrong": [
+        "样本太小（8 题）且未预热 → 噪声往相反方向偏",
+        "口径混用：拿端到端 HTTP 延迟比 M9 的 avg_gen_ms"
+      ],
+      "correct_pct": 53.4,
+      "lesson": "★ 单次小样本测量不能用来推翻或确认另一个测量，只能质疑它"
+    },
+    "invariants": {
+      "n_base_ids_total": 2407,
+      "n_traceable": 2407,
+      "merged_ids_unique": true,
+      "merged_ids_conflict_with_base": false,
+      "eval_refs_total": 55,
+      "eval_refs_broken": 0
+    },
+    "_source_files": [
+      "dataset/processed/m13_merge_apply.json"
     ]
   }
 }

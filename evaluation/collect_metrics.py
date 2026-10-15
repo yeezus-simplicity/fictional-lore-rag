@@ -63,10 +63,34 @@ def collect_m1() -> dict:
     # 完整度：有 composite 的比例
     n_complete = sum(1 for s in stats if s.get("composite") is not None)
 
+    # ★★ M63：补两个更细的口径，避免「完整度 65.78%」被误读成「数据变差了」★★
+    #   实测根因：M39–M45 把第 8/9 部补进库后（154 → 187），
+    #   **六维齐全的替身数没变（123）**，变的是分母。
+    #   按部实测齐全率：第3部 100% / 第4部 97% / 第5部 91% /
+    #   第6部 72% / 第7部 90% —— 而**第8部 24%、第9部 0%**：
+    #   第 9 部 13 个替身、78 个槽位**全空**，是数据源本身不提供六维。
+    #   → 对外必须同时给「齐全率」与「按部齐全率」，
+    #     否则「79.87% → 65.78%」看着像退步，实际是覆盖面变大。
+    n_any = sum(1 for s in stats if (s.get("missing_count") or 0) < 6)
+    art_chunks = _load("article_chunks.json") or []
+    n_base_chunks = chunks.get("n_chunks") or 0
+    part_of = {s["stand_id"]: s.get("part") for s in stand}
+    by_part: dict = {}
+    for s in stats:
+        d = by_part.setdefault(str(part_of.get(s["stand_id"])),
+                               {"n": 0, "n_complete": 0})
+        d["n"] += 1
+        if s.get("composite") is not None:
+            d["n_complete"] += 1
+    for d in by_part.values():
+        d["ratio"] = round(d["n_complete"] / d["n"], 4) if d["n"] else None
+
     return {
         "n_stands": n_stand,
         "n_forms": len(forms),
         "n_chunks": chunks.get("n_chunks"),
+        "n_chunks_article": len(art_chunks),
+        "n_chunks_total": n_base_chunks + len(art_chunks),
         "n_stands_covered": chunks.get("n_stands_covered"),
         "total_chars": chunks.get("total_chars"),
         "chunk_type_dist": chunks.get("type_distribution", {}),
@@ -75,6 +99,10 @@ def collect_m1() -> dict:
         "n_with_complete_stats": n_complete,
         "completeness_ratio": (round(n_complete / n_stand, 4)
                                if n_stand else None),
+        "n_with_any_stats": n_any,
+        "completeness_any_ratio": (round(n_any / n_stand, 4)
+                                   if n_stand else None),
+        "completeness_by_part": by_part,
         "n_conflicts": len(conflicts),
         "n_conflict_pending": sum(
             1 for c in conflicts if c.get("resolved_value") is None),
@@ -460,13 +488,28 @@ def self_check(m: dict) -> list[dict]:
 #   这个检查是「对外表达」的质量闸门：
 #   报告里的数字若与产物脱节，面试一问就穿帮。
 #   →每次改报告后跑一次 --check，确保没有虚数。
+#
+# ★★★ M63：本表只校验「**当前**对外数字」（必须 == 现在的产物）★★★
+#   里程碑时点的历史数字另放 HISTORICAL_NUMBERS —— 它们是「当时的结论」，
+#   不该被后续补数据判成错误。
+#
+#   ★ 为什么必须分开（实测踩过）：
+#     M39–M45 把第 8/9 部补进库（替身 154 → 187）后，
+#     本表里 M1 的旧值（154 / 146 / 79.87%）**一直报 error**：
+#       ✗ M1.替身数: 对外写 154，产物是 187
+#     而它们**不是错**，是"当时的基线"。混在一起会让这道闸门变成
+#     「狼来了」—— 真出现脱节时反而没人看。
 PUBLIC_NUMBERS = {
-    "M1.替身数": ("M1", "n_stands", 154),
-    "M1.形态数": ("M1", "n_forms", 146),
-    "M1.文本块数": ("M1", "n_chunks", 2407),
-    "M1.完整度": ("M1", "completeness_ratio", 0.7987),
-    "M1.冲突数": ("M1", "n_conflicts", 28),
-    "M1.待消解": ("M1", "n_conflict_pending", 16),
+    "数据.替身数": ("M1", "n_stands", 187),
+    "数据.形态数": ("M1", "n_forms", 153),
+    "数据.基础块数": ("M1", "n_chunks", 2407),
+    # ★ 需要完整语料（含 article_chunks.json）；CI 的合成语料环境不适用本表
+    "数据.语料总量": ("M1", "n_chunks_total", 6761),
+    # ★ 六维齐全率下降是**覆盖面变大**，不是数据变差 —— 见 collect_m1 的注释
+    "数据.六维齐全率": ("M1", "completeness_ratio", 0.6578),
+    "数据.六维非全空率": ("M1", "completeness_any_ratio", 0.8075),
+    "数据.冲突数": ("M1", "n_conflicts", 28),
+    "数据.待消解": ("M1", "n_conflict_pending", 16),
     "M2.评测集": ("M2", "n_eval", 176),
     "M3.混合recall@5": ("M3", "hybrid_vs_bm25/hybrid/recall@5", 0.625),
     "M4.路由前": ("M4", "routing/overall_before", 0.8352),
@@ -484,6 +527,18 @@ PUBLIC_NUMBERS = {
     "M13.prompt_token增幅": ("M13", "delta_pct/prompt_tokens", 20.6),
     "M13.M9交叉验证": ("M13", "cross_check_with_m9/m9_latency_pct", 52.4),
     "M13.评测引用失效": ("M13", "invariants/eval_refs_broken", 0),
+}
+
+# 里程碑时点的历史数字（**不参与校验**，仅供对照与溯源）。
+# ★ 用途：报告里写「M1 时 154 替身」时，读者能确认它与当前值的差
+#   是"补了数据"，而不是"当时就写错了"。
+HISTORICAL_NUMBERS = {
+    "M1 数据层（时点基线）": {
+        "替身数": 154, "形态数": 146, "文本块数": 2407,
+        "六维齐全率": 0.7987,
+        "note": ("M39–M45 补第 8/9 部后为 187 替身 / 153 形态 / 6761 块；"
+                 "六维齐全数**未变**（123），齐全率下降源于分母变大"),
+    },
 }
 
 
@@ -549,7 +604,20 @@ def main() -> int:
     m1, m3, m4, m6, m7 = (metrics["M1"], metrics["M3"], metrics["M4"],
                           metrics["M6"], metrics["M7"])
     print(f"  M1 替身 {m1['n_stands']} / 形态 {m1['n_forms']} / "
-          f"文本块 {m1['n_chunks']} / 完整度 {m1['completeness_ratio']}")
+          f"语料 {m1.get('n_chunks_total') or m1['n_chunks']} 块 "
+          f"(基础 {m1['n_chunks']} + 文章 {m1.get('n_chunks_article')})")
+    print(f"     六维齐全 {m1.get('n_with_complete_stats')}/{m1['n_stands']} "
+          f"= {m1['completeness_ratio']:.1%}"
+          f" ｜ 至少一维有值 {m1['completeness_any_ratio']:.1%}")
+    # ★ M63：完整度变化必须带上"按部"解释，否则 79.87% → 65.78% 看着像退步
+    _bp = m1.get("completeness_by_part") or {}
+    _bptxt = " ".join(
+        ("未标部" if k == "None" else f"第{k}部") + f" {(v.get('ratio') or 0):.0%}"
+        for k, v in sorted(_bp.items(), key=lambda x: x[0]) if v.get("n"))
+    if _bptxt:
+        print(f"     按部齐全率：{_bptxt}")
+        print("     ★ 第8/9部低是**数据源不提供六维**（第9部 78 槽位全空），"
+              "不是抓取或编码问题")
     print(f"     冲突 {m1['n_conflicts']}（待消解 {m1['n_conflict_pending']}）"
           f" / 数据源 {m1['n_sources']} 个")
     print(f"  M2 评测集 {metrics['M2']['n_eval']} 条 / 题型 "

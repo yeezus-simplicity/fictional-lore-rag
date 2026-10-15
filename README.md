@@ -3,7 +3,7 @@
 [![tests](https://github.com/yeezus-simplicity/fictional-lore-rag/actions/workflows/tests.yml/badge.svg)](https://github.com/yeezus-simplicity/fictional-lore-rag/actions/workflows/tests.yml)
 
 > **JoJo 替身数据混合检索系统** —— 从多源数据清洗到生成式问答的完整链路
-> 156 替身 / 144 角色 / 2407 文本块 / 混合检索 +18.5% / 证据有效性 88.1pp
+> 187 替身 / 6761 文本块 / 1057 别名 / 混合检索 +18.5% / 证据有效性 88.1pp
 
 一个把「数据质量 → 检索 → 路由 → 冲突消解 → 生成评测」串起来的可运行系统。
 **最有价值的产出不是那些数字，而是三个可迁移的方法论发现**（见下文「三个发现」）。
@@ -53,13 +53,17 @@ python evaluation/collect_metrics.py --check
 | 缺失内容 | 是什么 | 重建方式 |
 |---|---|---|
 | `dataset/sources/rendered/` | 渲染后的详情页 JSON（**切块的输入**） | 渲染抓取（见下） |
-| `dataset/processed/text_chunks.json` | 2407 个文本块（**检索语料**） | 同上，自动切块 |
+| `dataset/processed/text_chunks.json` | 2407 个**基础**文本块（原语料） | 同上，自动切块 |
+| `dataset/processed/article_chunks.json` | 4354 个**文章块**（M43 扩语料） | 同上，自动切块 |
 | `models/` | bge-m3 等权重（约 7.3 GB） | `retrieval/fetch_model.py` |
 | `index/` | embedding 缓存（199 MB） | **自动生成**，无需手动 |
 
+★ **检索语料 = 基础块 + 文章块 = 6761 块**（355.9 万字符）。
+两个文件都在 `.gitignore` 里，clone 后需重建。
+
 ★ **已提交的结构化数据不用重抓**（`stands.json` / `details.json` /
 `stand_stats.json` / 两个 CSV 都在仓库里），所以**不要加 `--refetch`**
-——那会重新抓 154 个详情页、白等约 10 分钟。
+——那会重新抓 187 个详情页、白等十几分钟。
 
 ```bash
 # 1) 渲染抓取依赖（只做一次）：需要 Node.js 18+
@@ -81,7 +85,8 @@ python dataset/pipeline/run_pipeline.py
 
 ## 测试与 CI
 
-CI（GitHub Actions）在每次 push / PR 时跑 8 套回归测试，**不需要下载 7 GB 模型**：
+**本地全套 28 个回归测试**（`evaluation/test_*.py`）；
+CI（GitHub Actions）在每次 push / PR 时跑其中 **8 套**，**不需要下载 7 GB 模型**：
 
 | 层 | 内容 |
 |---|---|
@@ -90,12 +95,35 @@ CI（GitHub Actions）在每次 push / PR 时跑 8 套回归测试，**不需要
 | 界面 | 冲突消解卡 / 多轮追问 UI / 端到端主流程（Playwright） |
 | 降级 | DB 不可用时的优雅降级（用 `PGPORT=1` 强制制造） |
 
+### ★ 环境前提缺失时「跳过」，而不是报错
+
+有三个测试依赖**不在版本库里的东西**，缺了会**明确跳过并说明原因**（退出码 0），
+而不是报一堆看着像"功能坏了"的失败：
+
+| 依赖 | 谁需要 | 缺了会怎样 |
+|---|---|---|
+| PostgreSQL（Docker） | m20 / m21 / m22 / m25 / m25_ui / gui_e2e | 打印起库命令后跳过 |
+| 生成模型（`models/Qwen…`） | generate_mode | 打印下载命令后跳过 |
+| 图片缓存（`images/`，423 MB） | gui_e2e[4] / m19_thumbs / m59_form_images | 跳过（核对对象就是抓取产物）|
+
+★ **为什么这么做**：同一句 `FAIL 已缓存替身图片直接显示`，
+在本地可能是"Docker 没启动"，在 CI 则是"`images/` 被 .gitignore"——
+报错不区分这两类，每次排查都要从零开始（实测误判过两次）。
+
+跑测试前先自检环境：
+
+```bash
+python evaluation/check_env.py     # 数据库 / playwright / 网页服务
+```
+
+CI 用严格模式（缺前置即失败）：`CI=true python evaluation/test_gui_e2e.py`
+
 两个关键设计：
 
 - **跳过 torch**：CI 只装 `requirements-ci.txt`（服务层 + 数据层），
   所有测试以 `--no-vector` 启动（纯 BM25）。
   ★ 这反过来印证了「向量检索是可选增强，不是必需路径」。
-- **合成语料**：真实语料（2407 块描述原文）因版权不入库，
+- **合成语料**：真实语料（6761 块描述原文）因版权不入库，
   CI 里用 `evaluation/make_min_fixture.py` 从**仓库已有的结构化数据**
   现场合成一份最小语料（165 块），足够让服务启动并支撑流程测试。
 
@@ -186,7 +214,7 @@ curl -X POST "localhost:8765/query?q=那它的速度呢&session_id=demo"
 
 ### 为什么答案是英文？以及怎么处理的
 
-**不是 bug**：语料 2407 块**全部来自 jojowiki 英文站**，
+**不是 bug**：语料 6761 块**全部来自 jojowiki 英文站**，
 所以语义检索返回的自然是英文原文。
 
 ★ 我们**没有**用机器翻译把它变中文 —— 那会破坏「证据可追溯」，
@@ -253,9 +281,25 @@ GET /similar/star_platinum?k=5
 | **M6 生成** | **证据有效性** | **88.1pp** | `m6_faithfulness.json` |
 | | 指标敏感度 | 80.6pp | 同上 |
 | **M7 块大小** | 推荐块长 | 512（权衡分析后） | `m7_chunk_quality.json` |
+| **当前（M64）** | 替身 / 中文名覆盖 | 187 / **99.5%**（186） | `stand_name_zh.json` |
+| | 别名表 | **1057**（含形态名 12 种写法变体） | `aliases.build_alias_table()` |
+| | 检索语料 | 2407 → **6761 块**（355.9 万字符） | `article_chunks.json` |
+| | 图片 | 188 目录 / **2173 张** / 423 MB | `images/*/_images.json` |
+| | 回归测试 | **28 个**（本地全绿） | `evaluation/test_*.py` |
 
 ★ **注意 M3 有两个基准**：+18.5% 是 vs M2 原始默认参数，
 vs 仅 BM25 调参是 +5.4pp。**不可混用。**
+
+★ **注意「完整度」有两个口径，别混用**：
+
+| 口径 | 值 | 含义 |
+|---|---|---|
+| 六维**齐全**的替身占比 | **65.78%**（123/187） | 6 维全有值 |
+| 至少一维有值的占比 | 80.75% | 不是全空 |
+
+M1 报告里写的 79.87% 是**当时的**基线（154 个替身里 123 个齐全）——
+补进第 8/9 部后**分子没变**，是分母变大了（见 `--check` 的按部输出）。
+**第 9 部 13 个替身共 78 个槽位全空**，是源站本身不提供这两部的六维。
 
 ---
 
@@ -321,6 +365,8 @@ M3 用的检索指标**系统性偏好大块**（2048 时全1.0），
 | [docs/评测设计复盘.md](docs/评测设计复盘.md) | 两次「指标与目标脱钩」的排查 | 想学方法论 |
 | [docs/M6生成层报告.md](docs/M6生成层报告.md) | 忠实度四配置 + 11 轮指标修错 | 想看评测怎么设计 |
 | [docs/M7块大小实验报告.md](docs/M7块大小实验报告.md) | ★「单指标必然偏向」的论证 | 想学指标设计 |
+| **[docs/M39-M45补充报告.md](docs/M39-M45补充报告.md)** | ★ 从「数据在库里」到「用户查得到」 | 看数据可见性怎么修 |
+| **[docs/M46-M64补充报告.md](docs/M46-M64补充报告.md)** | ★ 从「我能跑通」到「用户真的看到」 | 看交付可信度怎么建 |
 | [docs/过程记录/](docs/过程记录/) | 走错的路（不读主线时不用看） | 深度挖掘 |
 | [docs/README.md](docs/README.md) | 全部文档索引 | 找特定内容 |
 
@@ -339,11 +385,22 @@ M3 用的检索指标**系统性偏好大块**（2048 时全1.0），
 
 | 局限 | 说明 |
 |---|---|
-| 六维完整度 79.87% | 20% 的替身有维度未知（数据源本身的不确定性） |
+| **六维齐全率 65.78%** | 补进第 8/9 部后**分母变大**（分子 123 未变）。**这两部源站不提供六维**（第9部 78 槽位全空）；第 3–7 部为 56–100% |
 | 路由满分 = 评测集饱和 | 问句程序化生成，真实输入更口语化 |
 | 1.5B 生成模型 | 绝对值不代表 SOTA，仅用于验证链路 |
 | M7 样本量 24 题 | 结论方向可靠，具体值置信区间较宽 |
+| **未部署** | 无鉴权 / 无压测 / 无容器化，单用户本地运行 |
+| **跨部同名 id 冲突** | `Killer Queen (JoJolion)` / `Heaven's Door (The JOJOLands)` 会与第 4 部撞 id（`make_stand_id` 剥括号）；改规则影响现有数据 |
+| **图片不随仓库分发** | `images/` 423 MB 在 `.gitignore`（CI 上相关断言自动跳过）；另**源站本身**有 79 组图被多个替身条目共用 |
+| 中文名残留 1 个 | 覆盖 186/187（99.5%），剩 1 个单字名替身需用英文名查 |
+
+> ★ 每条局限都有对应的**证据命令**：
+> `python evaluation/collect_metrics.py --check`（数字闸门）、
+> `python evaluation/verify_full_coverage.py`（逐替身可查性）、
+> `python evaluation/check_env.py`（环境前提）。
 
 ---
 
-*7062 字节的指标数据由 `collect_metrics.py` 自动汇总，非手抄*
+*本文所有指标由 `collect_metrics.py` 从产物**自动汇总**（`metrics_summary.json`，14,130 字节），
+非手抄。`python evaluation/collect_metrics.py --check` 是一道**对外数字闸门** ——
+会把本文与报告里引用的数字逐项与产物比对，脱节即报错（当前 23 项全绿）。*

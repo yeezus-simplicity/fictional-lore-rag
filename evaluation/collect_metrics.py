@@ -23,6 +23,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
 from typing import Any, Optional
@@ -48,6 +49,50 @@ def _load(name: str) -> Any:
 # 各阶段指标抽取
 # ==================================================================
 
+def _count_appearances() -> tuple[int, int]:
+    """(出场记录条数, 有出场记录的替身数) —— 从 rendered/ 快照统计。
+
+    ★ 不连数据库：与 load_db 的 collect_extras 走同一份 rendered/，
+      这样 CI 没有 DB 时也能算（项目「降级可用」的一贯要求）。
+    ★ 口径必须与 DB 一致：load_db 会先按 `stand_id IN stands` 过滤，
+      所以这里也要过一遍同一道 —— 否则闸门会和 DB 对不上
+      （实测不过滤时 2739 vs DB 的漫画口径、4902 vs 全 kind，
+       差的就是「不在 stands 表里的 stand_id」那批）。
+    ★ 统计**全部 kind**（漫画+动画），与 `SELECT count(*) FROM
+      stand_appearances` 同口径；漫画单列一并返回，便于分开看。
+    """
+    sys.path.insert(0, str(ROOT / "database"))
+    sys.path.insert(0, str(ROOT / "dataset" / "processed"))
+    try:
+        from collect_extras import collect as _collect
+        data = _collect()
+    except Exception as e:  # noqa: BLE001
+        print(f"  ⚠ 出场记录统计失败（{type(e).__name__}）：标 unavailable")
+        return None, None
+    try:
+        _stands = json.loads((ROOT / "dataset" / "processed" / "stands.json")
+                             .read_text(encoding="utf-8"))
+        _items = _stands["stands"] if isinstance(_stands, dict) else _stands
+        valid = {s["stand_id"] for s in _items}
+        # ★ 必须补上 load_db **现场合成**的聚合父记录（echoes / tusk）：
+        #   stands.json 里没有它们（M1 遗留的形态组未消解问题），
+        #   但 DB 的 stands 表有 → load_db 的 valid_ids 含它们
+        #   → 这里不补就会少数 2 个替身、96 条出场记录
+        #   （实测 4806 vs DB 4902、181 vs 182，差的就是这批）。
+        #   正则与 load_db 建聚合父记录用的**同一条**，两边规则一致。
+        for _sid in list(valid):
+            _m = re.match(r"^(echoes|tusk)_act\d+$", _sid)
+            if _m:
+                valid.add(_m.group(1))
+    except Exception:  # noqa: BLE001
+        valid = set()
+    apps = [a for a in (data.get("appearances") or [])
+            if not valid or a.get("stand_id") in valid]
+    n_manga = sum(1 for a in apps if a.get("kind") == "manga")
+    print(f"  出场记录：全部 {len(apps)}（漫画 {n_manga}）")
+    return len(apps), len({a.get("stand_id") for a in apps if a.get("stand_id")})
+
+
 def collect_m1() -> dict:
     """M1 数据层。"""
     rep = _load("validation_report.json") or {}
@@ -58,6 +103,11 @@ def collect_m1() -> dict:
     conflicts = _load("conflicts.json") or []
     normals = _load("normalizations.json") or {}
     merge = _load("merge_report.json") or {}
+    # ★ M71：出场记录覆盖 —— 从 rendered/ 快照算（与 load_db 同一数据源）。
+    #   这个数字必须进闸门：M71 之前它停在 4111/145 个替身，
+    #   因为 M39–M45 补了第 8/9 部替身后**从未重抓快照**
+    #   （下游产物没跟着上游数据重算，M68/M70 同族问题的第三次）。
+    _n_app, _stands_with_app = _count_appearances()
 
     n_stand = len(stand)
     # 完整度：有 composite 的比例
@@ -114,6 +164,8 @@ def collect_m1() -> dict:
         "n_chunks_article": len(art_chunks),
         "n_chunks_total": n_base_chunks + len(art_chunks),
         "n_locations": n_locations,
+        "n_appearances": _n_app,
+        "n_stands_with_appearances": _stands_with_app,
         "n_characters": n_characters,
         "n_char_bio": n_char_bio,
         "n_stand_types": n_type_total,
@@ -543,6 +595,11 @@ PUBLIC_NUMBERS = {
     #   用户实测「lisalisa 二乔的母亲」检索不到才暴露出来。
     "数据.角色数": ("M1", "n_characters", 376),
     "数据.角色简介覆盖": ("M1", "n_char_bio", 375),    # 376 个里 1 个无 lead
+    # ★ M71：出场记录覆盖。rendered/ 快照补齐后 4111→4902 条、
+    #   覆盖替身 145→182 个。这两个数字进闸门，防止再次出现
+    #   「上游数据增长、下游产物没重算」而没人发现。
+    "数据.出场记录数": ("M1", "n_appearances", 4902),
+    "数据.有出场记录的替身": ("M1", "n_stands_with_appearances", 182),
     # ★ M69 新增：替身类型结构化。
     #   n_stand_type_residual 必须恒为 0 —— 它是「词表能解释每一个字符」
     #   的硬判据。一涨就说明词表又不全了，对外「已结构化」的说法失效。

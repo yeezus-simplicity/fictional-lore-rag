@@ -1748,6 +1748,23 @@ function renderStructured(a){
   if(t==='location_hint'){
     return `<div>${esc(a.note)}</div>`;
   }
+  // ★★ M71：篇章口径（「这一段里有哪些替身」）★★
+  //   与 location_related 同构：只列有语料证据的，每条带话数。
+  if(t==='arc_fact'){
+    const arc=a.arc||{};
+    const head=`<div style="margin-bottom:8px"><b>篇章：${esc(arc.name||'')}</b>
+        ${arc.part?`<span class="lc-p">第${esc(String(arc.part))}部</span>`:''}
+        ${arc.chapters&&arc.chapters.length?`<span class="zc-sub">章节 ${esc(arc.chapters.join('、'))}</span>`:''}
+        —— 该篇章章节范围内出场的替身：</div>`;
+    const tags=(a.stands||[]).map(x=>`<span class="tag" title="${esc(x.snippet||'')}">
+        ${esc(x.name||'')}${x.n_forms>1?` <i style="opacity:.7;font-style:normal">×${esc(String(x.n_forms))}</i>`:''}
+        ${x.chapter?`<i style="opacity:.6;font-style:normal;font-size:11px"> ch${esc(String(x.chapter))}</i>`:''}
+      </span>`).join('');
+    const empty=(a.stands||[]).length
+      ? '' : '<div>该篇章范围内没有抓到替身出场记录。</div>';
+    return head + (tags?`<div class="lc-line">相关替身：${tags}</div>`:'') + empty
+      + (a.note?`<div class="meta" style="margin-top:8px">${esc(a.note)}</div>`:'');
+  }
   // ★★ M66：角色类答案（route=character）★★
   //   完整档案在上方「角色资料」卡里，这里只给**结论 + 首段简介**。
   if(t==='character_fact'){

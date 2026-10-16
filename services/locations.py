@@ -152,6 +152,13 @@ def load() -> dict:
             if nm:
                 arcs_by_name.setdefault(str(nm).strip().lower(), []).append(a)
 
+    # ---- ★ M71：篇章 ↔ 替身语料证据链 ----
+    am_raw = _read("arc_mentions.json") or {}
+    arc_mentions: dict[str, dict] = {}
+    for a in (am_raw.get("arcs") or []):
+        if a.get("arc_id"):
+            arc_mentions[a["arc_id"]] = a
+
     return {
         "by_id": by_id,
         "by_name": by_name,
@@ -161,6 +168,8 @@ def load() -> dict:
         "mentions": mentions,
         "arcs_by_id": arcs_by_id,
         "arcs_by_name": arcs_by_name,
+        "arc_mentions": arc_mentions,
+        "n_arcs_with_stands": am_raw.get("n_with_stands") or 0,
         "n_included": loc_raw.get("n_included") or len(by_id),
         "n_with_zh": zh_raw.get("n_with_zh") or 0,
         "n_mentions": len(men_raw.get("mentions") or []),
@@ -191,6 +200,97 @@ def find_arcs(name: str) -> list[dict]:
 
 def n_arcs() -> int:
     return load()["n_arcs"]
+
+
+# ---- M71：篇章口径的问答（「这一段里有哪些替身」）----
+#   M70 只把篇章做成地点答案里的**附属提示**，用户问篇章本身只能得到
+#   「没找到」。这一层补上：按名字找篇章 → 给该章范围的替身（带话数证据）。
+_ARC_ASK = re.compile(r"(篇章|故事|arc|段)", re.I)
+
+
+def find_arc_mention(name: str) -> dict | None:
+    """按名字查篇章证据链。"""
+    st = load()
+    key = (name or "").strip().lower().strip('"')
+    # 先精确匹配 arc_id / 显示名，再退化为包含匹配
+    for aid, a in st["arc_mentions"].items():
+        if key in (aid, (a.get("name") or "").strip().lower().strip('"')):
+            return a
+    for aid, a in st["arc_mentions"].items():
+        if key and (key in aid or key in (a.get("name") or "").lower()):
+            return a
+    return None
+
+
+def answer_arc_from_query(q: str) -> dict | None:
+    """问句里直接含篇章名 → 找篇章（M71）。
+
+    ★ 为什么需要：多数篇章**没有同名地点**（Anubis / Another One Bites
+    the Dust / 1st Stage …），而 `resolve()` 只建了地点名索引 →
+    这些篇章名在问句里根本抽不到，只能走这一路。
+
+    ★ 按**名字长度降序**匹配，避免「Anubis」被「Anubis (Story Arc)」
+    之类的短名抢先；同时要求匹配到词边界，防止把
+    「DIO」匹配进「DIO's World」这类子串误配。
+    """
+    st = load()
+    ql = (q or "").lower()
+    cands: list[tuple[str, dict]] = []
+    for aid, a in st["arc_mentions"].items():
+        for nm in (a.get("name"), aid):
+            if not nm:
+                continue
+            n = str(nm).strip().lower().strip('"')
+            if len(n) >= 3 and n in ql:
+                cands.append((n, a))
+    if not cands:
+        return None
+    cands.sort(key=lambda x: -len(x[0]))
+    a = cands[0][1]
+    return _arc_answer_dict(a)
+
+
+def answer_arc(name: str) -> dict | None:
+    """组织篇章答案：该章范围出场的替身（每条带话数 + 原文片段）。
+
+    ★ 与 M65 的 location_related 是同构的：都只答**有语料证据**的，
+      没有证据的一行都不列。
+    """
+    a = find_arc_mention(name)
+    if not a:
+        return None
+    return _arc_answer_dict(a)
+
+
+def _arc_answer_dict(a: dict) -> dict:
+    """篇章证据链 → 答案 dict（M71）。"""
+    stands = [{
+        "name": s.get("name_en"),
+        "stand_id": s.get("stand_id"),
+        "chapter": s.get("chapter"),
+        "snippet": s.get("snippet"),
+        "n_forms": s.get("n_forms", 1),
+    } for s in (a.get("stands") or [])]
+
+    return {
+        "type": "arc_fact",
+        "arc": {
+            "arc_id": a["arc_id"],
+            "name": a.get("name"),
+            "part": a.get("part"),
+            "chapters": a.get("chapters"),
+            "chapters_abs": a.get("chapters_abs"),
+        },
+        "count": len(stands),
+        "stands": stands,
+        "note": (
+            "以上是该**篇章章节范围**内、源站替身条目里记录到出场的替身，"
+            "每条标注了最早出场话数与原文，可回查。"
+            + ("★ 另有同名**地点**，口径不同（问地点请去掉「篇章」二字）。"
+               if a.get("location_id") else "")
+            + (a.get("note") or "")
+        ),
+    }
 
 
 def all_names() -> list[str]:
@@ -409,6 +509,22 @@ def answer(q: str, top_k: int = 3):
     part = _part_of(q)
     wants_list = bool(_LIST_ASK.search(q))
     wants_entity = bool(re.search(r"(替身|stand|角色|人物|使者)", q, re.I))
+
+    # ---- ⓿ ★ M71：问句显式提到「篇章」→ 走篇章口径 ----
+    #   必须排在最前：同名时（勒索之路）地点和篇章是两个东西，
+    #   用户明确说了「篇章」就该答篇章，不能被地点抢走。
+    #   ★ 只认「篇章」这个词，不靠猜 —— 没这个词就走原有地点口径。
+    if _ARC_ASK.search(q):
+        # ① 问句里的名字是**地点名**（同名篇章，如「篇章 勒索之路」）
+        arc_title = from_name[0].get("title") if from_name else None
+        arc_ans = answer_arc(arc_title) if arc_title else None
+        # ② 名字不是地点名 —— 直接按篇章名在问句里找
+        #    （Anubis / Another One Bites the Dust 这类篇章没有同名地点，
+        #     resolve() 只认地点名 → 必须另找一路）
+        if arc_ans is None:
+            arc_ans = answer_arc_from_query(q)
+        if arc_ans:
+            return (arc_ans, [], None)
 
     # ---- ① 「第X部有哪些地点」----
     if part and wants_list and not from_name:

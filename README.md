@@ -85,7 +85,7 @@ python dataset/pipeline/run_pipeline.py
 
 ## 测试与 CI
 
-**本地全套 34 个回归测试**（`evaluation/test_*.py`）；
+**本地全套 35 个回归测试**（`evaluation/test_*.py`）；
 CI（GitHub Actions）在每次 push / PR 时跑其中 **8 套**，**不需要下载 7 GB 模型**：
 
 | 层 | 内容 |
@@ -289,6 +289,7 @@ GET /similar/star_platinum?k=5
 | | **角色**（M66 新增）| **180 个**角色档案（简介 179 / 背景 114 / 性格 171） | `characters_ext.json` |
 | | 角色（库内行数） | **186 个角色**（M67 拆开 8 个粘连名） | `characters` 表 |
 | | **替身类型**（M69 新增） | **169 条类型全部结构化**（射程 / 体质 / 特性），未识别残余 **0** | `stand_type_ranges` / `_kinds` / `_extras` |
+| | **出场记录**（M71 补齐） | **4902 条 / 覆盖 182 个替身** | `stand_appearances` 表 |
 | | 回归测试 | **33 个**（本地全绿） | `evaluation/test_*.py` |
 
 ★ **注意 M3 有两个基准**：+18.5% 是 vs M2 原始默认参数，

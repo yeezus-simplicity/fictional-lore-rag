@@ -74,6 +74,25 @@ def load() -> dict:
                 continue
             by_name.setdefault(k, cid)
 
+    # ★★ M73：并上**别名表**（含唯一归属的简称）★★
+    #   为什么必须并：上面只收 characters_ext.json 的
+    #   `name_zh` / `name_zh_variants` —— 那是**全名**
+    #   （「布罗诺·布加拉提」）→ 用户打简称「布加拉提」时
+    #   `match()` 抽不到角色 → 「布加拉提是谁」返回
+    #   character_hint「没有识别出具体角色」（实测）。
+    #   而 `aliases.build_char_alias_table()` 里有简称
+    #   （M73 的 split_short_aliases 把「布罗诺·布加拉提」拆出「布加拉提」）。
+    #   ★ 同一个概念（「角色名有哪些写法」）维护两份必然漂移 ——
+    #     这个项目已在 M69/M70/M71/M72 栽过四次。→ 并集，单一来源。
+    #   ★ 只收 `by_id` 里真实存在的角色 id（防别名表里的陈旧键）。
+    try:
+        from aliases import build_char_alias_table as _alias_tbl
+        for nm, cid in _alias_tbl().items():
+            if cid in by_id:
+                by_name.setdefault(nm.strip().lower(), cid)
+    except Exception:  # noqa: BLE001
+        pass
+
     return {
         "by_id": by_id,
         "by_name": by_name,

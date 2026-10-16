@@ -1,20 +1,34 @@
 {
+ "a_phex_brothers": [
+  "艾菲克斯兄",
+  "艾菲克斯弟",
+  "艾·菲克斯兄弟"
+ ],
+ "aisho_dainenjiyama": [
+  "大年寺山爱唱"
+ ],
  "akira_otoishi": [
   "音石明"
  ],
  "alessi": [
   "阿雷西"
  ],
- "andre_boombooml_a_boomboom": [
-  "安得列·祊玢",
-  "L·A·祊玢"
+ "andre_boomboom": [
+  "安得列·祊玢"
  ],
  "angelica_attanasio": [
   "安洁莉卡·阿塔纳西欧"
  ],
+ "anjuro_katagiri": [
+  "片桐安十郎",
+  "安杰罗"
+ ],
  "arabia_fats": [
   "阿拉伯胖子",
   "多明诺"
+ ],
+ "arnold": [
+  "亚诺鲁特"
  ],
  "axl_ro": [
   "艾萨尔·RO"
@@ -23,18 +37,32 @@
   "辻彩",
   "陆彩"
  ],
+ "ayana_hirose": [
+  "广濑绫那"
+ ],
  "benjamin_boomboom": [
   "班杰明·祊玢"
  ],
  "blackmore": [
   "布拉克摩亚"
  ],
+ "bobby_jean": [
+  "波比·基恩"
+ ],
  "boingo": [
   "波因哥"
+ ],
+ "boomboom_family": [
+  "祊玢一家"
  ],
  "bruno_bucciarati": [
   "布罗诺·布加拉提",
   "布鲁诺·布加拉提"
+ ],
+ "caesar_anthonio_zeppeli": [
+  "西撒·A·齐贝林",
+  "西撒·齐贝林",
+  "西撒·安东尼·齐贝林"
  ],
  "cameo": [
   "卡梅欧"
@@ -42,13 +70,16 @@
  "cannolo_murolo": [
   "康诺罗·穆罗洛"
  ],
- "caravan_seraichakafour_unnamed_micekha_0b0ac773": [
+ "caravan_serai": [
   "理发厅老板康",
   "波鲁那雷夫"
  ],
  "carne": [
   "卡涅尔",
   "卡尔涅"
+ ],
+ "charming_man": [
+  "查明曼"
  ],
  "cioccolata": [
   "乔可拉特"
@@ -58,14 +89,19 @@
  ],
  "d_i_s_c_o": [
   "迪·斯·可",
-  "迪斯可",
-  "巧克力迪斯可"
+  "迪斯可"
  ],
  "daiya_higashikata": [
   "东方大弥"
  ],
  "daniel_j_d_arby": [
   "丹尼尔·J·达比"
+ ],
+ "danny": [
+  "丹尼"
+ ],
+ "dario_brando": [
+  "达利欧·布兰度"
  ],
  "devo_the_cursed": [
   "诅咒的迪波"
@@ -77,13 +113,36 @@
  "diego_brando": [
   "迪亚哥·布兰度"
  ],
+ "dio_brando": [
+  "迪奥·布兰度"
+ ],
+ "dire": [
+  "旦亚"
+ ],
+ "dolomite": [
+  "多洛米蒂"
+ ],
+ "donatella_una": [
+  "多娜提拉·乌纳"
+ ],
  "donatello_versus": [
   "唐那泰罗·凡赛思",
-  "恋人",
   "多纳提罗·凡苏斯"
+ ],
+ "donovan": [
+  "多罗温"
+ ],
+ "doobie": [
+  "嘟比·哇"
+ ],
+ "doremifasolati_do": [
+  "多雷米法索拉提·多"
  ],
  "dr_ferdinand": [
   "费迪南特博士"
+ ],
+ "dragona_joestar": [
+  "德拉歌娜·乔斯达"
  ],
  "eleven_men": [
   "神秘11人众"
@@ -98,8 +157,17 @@
  "enya_the_hag": [
   "恩亚婆婆"
  ],
+ "erina_pendleton": [
+  "艾莉娜·班鲁多",
+  "艾莉娜·彭德顿",
+  "艾莉娜·班德鲁顿"
+ ],
  "ermes_costello": [
   "艾梅斯·罗斯提罗"
+ ],
+ "esidisi": [
+  "艾特西",
+  "艾西迪西"
  ],
  "formaggio": [
   "霍尔马吉欧"
@@ -107,6 +175,16 @@
  "funny_valentine": [
   "法尼·瓦伦泰",
   "总统"
+ ],
+ "george_joestar_i": [
+  "乔治·乔斯达一世",
+  "乔治·乔斯达"
+ ],
+ "george_joestar_ii": [
+  "乔治·乔斯达二世"
+ ],
+ "george_joestar_iii": [
+  "乔治·乔斯达三世"
  ],
  "ghiaccio": [
   "加丘"
@@ -116,6 +194,9 @@
  ],
  "gray_fly": [
   "格雷普莱"
+ ],
+ "gregorio_zeppeli": [
+  "格雷戈里奥洛·齐贝林"
  ],
  "guccio": [
   "古奇"
@@ -130,12 +211,19 @@
  "gyro_zeppeli": [
   "杰洛·齐贝林"
  ],
+ "hato_higashikata": [
+  "东方鸠"
+ ],
  "hayato_kawajiri": [
   "川尻早人"
  ],
  "hol_horse": [
   "荷鲁·荷斯",
   "荷尔·荷斯"
+ ],
+ "holy_joestar_kira": [
+  "荷莉·乔斯达",
+  "吉良·荷莉·乔斯达"
  ],
  "hot_pants": [
   "赫特·潘兹"
@@ -152,15 +240,30 @@
  "j_geil": [
   "J·凯尔"
  ],
+ "jack_the_ripper": [
+  "开膛手杰克"
+ ],
  "jean_pierre_polnareff": [
   "J·P·波鲁那雷夫"
+ ],
+ "jobin_higashikata": [
+  "东方常敏"
+ ],
+ "jodio_joestar": [
+  "乔迪奥·乔斯达"
  ],
  "johngalli_a": [
   "约翰葛利·A",
   "约翰格里·A"
  ],
+ "johnny_joestar": [
+  "乔尼·乔斯达"
+ ],
  "jolyne_cujoh": [
   "空条徐伦"
+ ],
+ "jonathan_joestar": [
+  "乔纳森·乔斯达"
  ],
  "josefumi_kujo": [
   "空条仗世文"
@@ -178,6 +281,13 @@
  "jotaro_kujo": [
   "空条承太郎"
  ],
+ "karera_sakunami": [
+  "作并卡蕾拉"
+ ],
+ "kars": [
+  "卡兹",
+  "卡尔斯"
+ ],
  "kei_nijimura": [
   "虹村京"
  ],
@@ -190,6 +300,18 @@
  "kenny_g": [
   "肯尼G"
  ],
+ "key_west": [
+  "基·韦斯特"
+ ],
+ "koichi_hirose": [
+  "广濑康一"
+ ],
+ "l_a_boomboom": [
+  "L·A·祊玢"
+ ],
+ "laem_chabang": [
+  "莱姆·查邦"
+ ],
  "lang_rangler": [
   "朗库朗库拉",
   "朗库·朗库拉"
@@ -197,14 +319,33 @@
  "leone_abbacchio": [
   "雷奥·阿帕基"
  ],
+ "lisa_lisa": [
+  "莉莎莉莎",
+  "丽莎丽莎"
+ ],
+ "loggins": [
+  "罗吉兹"
+ ],
  "lucy_steel": [
   "露西·史提尔"
+ ],
+ "lulu": [
+  "露露"
+ ],
+ "marco": [
+  "马尔可"
  ],
  "mariah": [
   "玛拉雅"
  ],
+ "mario_zeppeli": [
+  "马力欧·齐贝林"
+ ],
  "mario_zucchero": [
   "马利欧·兹凯罗"
+ ],
+ "mark": [
+  "马克"
  ],
  "masazo_kinoto": [
   "乙雅三"
@@ -215,6 +356,9 @@
  "melone": [
   "梅洛尼"
  ],
+ "messina": [
+  "梅西奈"
+ ],
  "midler": [
   "蜜特拉"
  ],
@@ -223,6 +367,15 @@
  ],
  "mikitaka_hazekura": [
   "支仓未起隆"
+ ],
+ "minako_okura": [
+  "大仓美那子"
+ ],
+ "miraschon": [
+  "蜜拉休"
+ ],
+ "mitsuba_higashikata": [
+  "东方密叶"
  ],
  "miuccia_miuller": [
   "缪柯雅·缪拉",
@@ -247,8 +400,23 @@
  "nena": [
   "妮娜"
  ],
+ "nicholas_joestar": [
+  "尼可拉斯·乔斯达"
+ ],
  "noriaki_kakyoin": [
   "花京院典明"
+ ],
+ "norisuke_higashikata_i": [
+  "东方宪助"
+ ],
+ "norisuke_higashikata_iv": [
+  "第四代东方宪助"
+ ],
+ "nukesaku": [
+  "呆头鹅"
+ ],
+ "nunzio_pericolo": [
+  "努恩佐·贝利可罗"
  ],
  "oingo": [
   "欧因哥"
@@ -262,6 +430,9 @@
  "oyecomova": [
   "奥耶哥摩巴"
  ],
+ "paco_laburantes": [
+  "帕克·拉布兰特斯"
+ ],
  "pannacotta_fugo": [
   "潘纳科达·福葛"
  ],
@@ -271,11 +442,20 @@
  "pet_shop": [
   "佩特夏"
  ],
+ "poco": [
+  "波克"
+ ],
+ "poco_s_sister": [
+  "波克的姊姊"
+ ],
  "pocoloco": [
   "波克洛克"
  ],
  "polpo": [
   "波尔波"
+ ],
+ "poor_tom": [
+  "可怜虫汤姆"
  ],
  "pork_pie_hat_kid": [
   "波克派哈特小子",
@@ -284,8 +464,20 @@
  "prosciutto": [
   "普罗修特"
  ],
+ "radio_gaga": [
+  "嘎嘎电台"
+ ],
+ "rai_mamezuku": [
+  "豆铣礼"
+ ],
+ "reimi_sugimoto": [
+  "杉本铃美"
+ ],
  "rikiel": [
   "里奇艾尔"
+ ],
+ "rina_higashikata": [
+  "东方理那"
  ],
  "ringo_roadagain": [
   "林可·罗德艾根"
@@ -293,11 +485,20 @@
  "risotto_nero": [
   "里苏特·涅罗"
  ],
+ "robert_e_o_speedwagon": [
+  "罗伯特·E·O·史培顿"
+ ],
  "rohan_kishibe": [
   "岸边露伴"
  ],
+ "romeo_jisso": [
+  "罗密欧"
+ ],
  "rubber_soul": [
   "拉伐索尔"
+ ],
+ "rudol_von_stroheim": [
+  "鲁道尔·冯·斯特罗海姆"
  ],
  "sale": [
   "沙雷"
@@ -305,6 +506,15 @@
  "sandman": [
   "砂男",
   "音男"
+ ],
+ "santana": [
+  "桑塔纳"
+ ],
+ "satoru_nakae": [
+  "中江悟"
+ ],
+ "scarlet_valentine": [
+  "斯卡蕾特·瓦伦泰"
  ],
  "scolippi": [
   "史可里皮"
@@ -316,8 +526,31 @@
  "sheila_e": [
   "席菈·卡佩兹特"
  ],
+ "shigekiyo_yangu": [
+  "矢安宫重清",
+  "胖重"
+ ],
+ "shinobu_kawajiri": [
+  "川尻忍"
+ ],
  "shizuka_joestar": [
   "静·乔斯达"
+ ],
+ "silver_bullet": [
+  "银色子弹"
+ ],
+ "slow_dancer": [
+  "慢舞者"
+ ],
+ "smokey_brown": [
+  "史摩基·布朗"
+ ],
+ "sorbet_and_gelato": [
+  "索尔贝",
+  "杰拉德"
+ ],
+ "sports_maxx": [
+  "史波兹·马克思"
  ],
  "squalo": [
   "史克亚罗"
@@ -325,8 +558,25 @@
  "steely_dan": [
   "钢铁阿丹"
  ],
+ "straizo": [
+  "史特雷"
+ ],
+ "suzi_q": [
+  "丝吉Q",
+  "丝吉·Q·乔斯达"
+ ],
+ "tama": [
+  "猫草"
+ ],
+ "tamaki_damo": [
+  "田最环"
+ ],
  "tamami_kobayashi": [
   "小林玉美"
+ ],
+ "tarkus": [
+  "塔卡斯",
+  "塔鲁斯"
  ],
  "telence_t_d_arby": [
   "泰伦斯·T·达比",
@@ -339,12 +589,21 @@
   "绿色婴孩",
   "绿色婴儿"
  ],
+ "thunder_mcqueen": [
+  "桑达·麦奎恩"
+ ],
  "tizzano": [
   "提查诺"
+ ],
+ "tomoko_higashikata": [
+  "东方朋子"
  ],
  "tonio_trussardi": [
   "东尼欧·托拉萨迪",
   "托尼欧·托拉萨迪"
+ ],
+ "toru": [
+  "透龙"
  ],
  "toshikazu_hazamada": [
   "间田敏和"
@@ -365,6 +624,15 @@
  "unnamed_mountain_lodge_owner": [
   "古奇"
  ],
+ "urban_guerrilla": [
+  "都市游击队"
+ ],
+ "usagi_alohaoe": [
+  "乌萨奇·阿罗哈欧艾"
+ ],
+ "valkyrie": [
+  "瓦尔基里"
+ ],
  "vanilla_ice": [
   "瓦尼拉·艾斯"
  ],
@@ -378,18 +646,23 @@
  "vladimir_kocaqi": [
   "伍拉迪米尔·科加其"
  ],
- "whitesnake_s_unknown_victim_miraschon": [
-  "蜜拉休"
+ "wamuu": [
+  "瓦姆乌"
  ],
- "whitesnake_s_unknown_victim_sports_maxx": [
-  "史波兹·马克思"
+ "wang_chan": [
+  "温青"
  ],
- "whitesnake_s_unknown_victim_thunder_mcqueen": [
-  "桑达·麦奎恩",
-  "白蛇"
+ "wekapipo": [
+  "威卡毕博"
  ],
- "whitesnake_s_unknown_victim_viviano_westwood": [
-  "维瓦诺·魏斯伍德"
+ "wild_cat_size": [
+  "3只猫"
+ ],
+ "wilson_phillips": [
+  "威尔森·菲利浦斯"
+ ],
+ "wu_tomoki": [
+  "羽伴毅"
  ],
  "yasuho_hirose": [
   "广濑康穗",
@@ -401,103 +674,31 @@
  "yoshikage_kira": [
   "吉良吉影"
  ],
+ "yotsuyu_yagiyama": [
+  "八木山夜露"
+ ],
  "yukako_yamagishi": [
   "山岸由花子"
  ],
  "yuya_fungami": [
   "喷上裕也"
  ],
- "andre_boomboom": [
-  "安得列·祊玢"
- ],
- "l_a_boomboom": [
-  "L·A·祊玢"
- ],
- "thunder_mcqueen": [
-  "桑达·麦奎恩"
- ],
- "sports_maxx": [
-  "史波兹·马克思"
- ],
- "miraschon": [
-  "蜜拉休"
- ],
- "viviano_westwood": [
-  "维瓦诺·魏斯伍德"
- ],
- "lisa_lisa": [
-  "莉莎莉莎",
-  "丽莎丽莎"
- ],
- "jonathan_joestar": [
-  "乔纳森·乔斯达"
- ],
- "caesar_anthonio_zeppeli": [
-  "西撒·齐贝林",
-  "西撒·安东尼·齐贝林"
+ "zaihei_nigatake": [
+  "苦竹财平"
  ],
  "holy_kujo": [
   "空条荷莉",
   "荷莉·乔斯达",
   "霍莉·乔斯达"
  ],
- "dio_brando": [
-  "迪奥·布兰度",
-  "迪奥"
- ],
  "will_anthonio_zeppeli": [
   "威廉·A·齐贝林",
   "威廉·齐贝林"
  ],
- "erina_pendleton": [
-  "艾莉娜·彭德顿",
-  "艾莉娜·班德鲁顿"
- ],
- "george_joestar_i": [
-  "乔治·乔斯达一世"
- ],
- "george_joestar_ii": [
-  "乔治·乔斯达二世"
- ],
  "mary_joestar": [
   "玛丽·乔斯达"
  ],
- "suzi_q": [
-  "丝吉·Q·乔斯达"
- ],
  "mary_stuart": [
   "玛丽·斯图亚特"
- ],
- "robert_e_o_speedwagon": [
-  "罗伯特·E·O·史培顿"
- ],
- "rudol_von_stroheim": [
-  "鲁道尔·冯·斯特罗海姆"
- ],
- "wamuu": [
-  "瓦姆乌"
- ],
- "kars": [
-  "卡尔斯"
- ],
- "tarkus": [
-  "塔鲁斯"
- ],
- "esidisi": [
-  "艾西迪西"
- ],
- "santana": [
-  "桑塔纳"
- ],
- "anjuro_katagiri": [
-  "片桐安十郎",
-  "安杰罗"
- ],
- "shigekiyo_yangu": [
-  "矢安宫重清",
-  "胖重"
- ],
- "tama": [
-  "猫草"
  ]
 }

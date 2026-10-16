@@ -147,6 +147,10 @@ def collect_m1() -> dict:
     #     所以必须用入库那一侧；ext 的数字只作 facts 缺失时的兜底。
     n_characters = _facts.get("n_characters") or len(_chrs)
     n_char_bio = sum(1 for c in _chrs if c.get("bio"))
+    # ★ M73：中文名覆盖 —— 此前停在 154 个角色（脚本改进过但**从未重跑**），
+    #   连乔尼·乔斯达、乔鲁诺·乔巴拿这些主角都查不到。
+    #   重跑后 154 → 219。进闸门，防再次「下游产物没跟着重算」。
+    n_char_zh = sum(1 for c in _chrs if c.get("name_zh"))
     # ★ M69：替身类型结构化（射程/体质/特性）
     #   硬判据是「未识别残余为 0」—— 词表能解释每一个字符。
     #   这个数字必须进闸门：词表一改、残余一涨，对外结构化数字就失效了。
@@ -185,6 +189,7 @@ def collect_m1() -> dict:
         "n_stands_with_appearances": _stands_with_app,
         "n_characters": n_characters,
         "n_char_bio": n_char_bio,
+        "n_char_zh": n_char_zh,
         "_facts": _facts,
         "n_stand_types": n_type_total,
         "n_stand_type_residual": n_type_residual,
@@ -622,6 +627,8 @@ PUBLIC_NUMBERS = {
     #   → 见 dataset/pipeline/wiki_redirects.py（12 条手工确认表）。
     "数据.角色数": ("M1", "n_characters", 374),
     "数据.角色简介覆盖": ("M1", "n_char_bio", 367),
+    # ★ M73 新增：角色中文名覆盖（含简称扩展前的全名数）
+    "数据.角色中文名覆盖": ("M1", "n_char_zh", 219),
     # ★ M71：出场记录覆盖。rendered/ 快照补齐后 4111→4902 条、
     #   覆盖替身 145→182 个。这两个数字进闸门，防止再次出现
     #   「上游数据增长、下游产物没重算」而没人发现。

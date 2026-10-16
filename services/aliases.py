@@ -138,6 +138,9 @@ def expand_variants(text: str) -> set[str]:
 _PAREN = re.compile(r"[（(]([^（()）]+)[）)]")
 # 汉字（含日文汉字）
 _CJK = re.compile(r"[一-鿿]")
+# ★ M73：中文名里的**姓名间隔号**（中圆点 U+00B7 / 片假名中点 U+30FB）。
+#   中文维基的译名用它分隔名与姓：「布罗诺·布加拉提」。
+_SEP = re.compile(r"[·・]")
 # ★ M58：形态名模式（ACT1 / ACT 2 / Act 3）—— 用来自动生成空格/大小写变体
 _ACT_FORM = re.compile(r"[Aa][Cc][Tt]\s*(\d)")
 
@@ -221,13 +224,44 @@ def load_char_zh_map() -> dict[str, list[str]]:
         return {}
 
 
+def split_short_aliases(name: str) -> list[str]:
+    """从**含间隔号的全名**里拆出简称（M73）。
+
+    ★ 为什么需要：
+      中文维基给的是**全名带间隔号**（「布罗诺·布加拉提」、「纳鲁西索·安那苏」），
+      而用户几乎不这么打。实测：
+        「布加拉提的替身是什么」→ 查不到（库里只有「布罗诺·布加拉提」）
+        「东方仗助的替身是什么」→ 能查到（它本来就没间隔号）
+      → 同一个「XX的替身」句式，能不能答取决于名字里有没有间隔号，
+        这个差异对用户完全不可见。
+
+    ★ 只拆**含间隔号（·／・）**的名字：
+      日式无间隔号的名字（「空条徐伦」）**不拆** —— 拆成「空条」/「徐伦」
+      要分姓与名，中文与日文的分界规则不同（「东方仗助」姓东方、
+      「空条承太郎」姓空条，但「广濑康一」拆哪边？），误拆会把
+      「东方」这种**跨角色姓氏**当成某人的别名 → 抢匹配。
+    ★ 拆出的片段要求 ≥2 个汉字（与替身侧同口径，单字信息量太低）。
+    """
+    if not _SEP.search(name):
+        return []
+    parts = [p.strip() for p in _SEP.split(name)]
+    return [p for p in parts
+            if len(p) >= 2 and _CJK.search(p)]
+
+
 def build_char_alias_table() -> dict[str, str]:
     """构建 (角色中文名 → character_id)。
 
     ★ 同时收录简体形（用户一般输入简体）。
+    ★★ M73：再收录**唯一归属的简称**（见 split_short_aliases）。
+      歧义简称**一律不收录** —— 实测 10 个有歧义：
+        「齐贝林」→ 5 个角色、「乔斯达」→ 12 个角色、「布兰度」→ 3 个
+      这些是**姓氏**，收了只会让路由把「齐贝林的替身」答成某一位。
+      宁可漏一个简称，也不引入一个必然答错的名字。
     """
     out: dict[str, str] = {}
-    for cid, names in load_char_zh_map().items():
+    zh = load_char_zh_map()
+    for cid, names in zh.items():
         for n in names:
             if not n:
                 continue
@@ -235,6 +269,24 @@ def build_char_alias_table() -> dict[str, str]:
                 v = variant.strip()
                 if v:
                     out.setdefault(v, cid)
+
+    # ---- ★ M73：简称扩展（唯一归属才收）----
+    #   先统计每个简称候选被多少角色拥有，再决定收不收。
+    by_short: dict[str, set[str]] = {}
+    for cid, names in zh.items():
+        for n in names:
+            if not n:
+                continue
+            for variant in (n, simplify_zh(n)):
+                for s in split_short_aliases(variant.strip()):
+                    by_short.setdefault(s, set()).add(cid)
+
+    for s, cids in by_short.items():
+        if len(cids) != 1:          # 歧义 → 不收（见 docstring）
+            continue
+        if s in out:                # 已被某个全名占用 → 不动（全名优先）
+            continue
+        out[s] = next(iter(cids))
     return out
 
 

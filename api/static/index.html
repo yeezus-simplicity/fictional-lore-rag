@@ -1887,6 +1887,28 @@ function renderStructured(a){
         <b>${esc(a.count)}</b> 个替身</div>
       <div>${items.map(x=>`<span class="tag">${esc(x.name)}</span>`).join('')}</div>`;
   }
+  // ★★ M73：出场章节（M71 的 stand_appearances 的自然语言入口）★★
+  //   展示用 **源站原文**（`raw`，形如 "Stone Ocean Chapter 12: ..."），
+  //   因为章号是**部内相对**的（第 6–9 部从 1 起），单给 "ch12"
+  //   用户对不上漫画。悬停显示完整原文。
+  if(t==='appearance'){
+    const grp=(arr,label,unit)=>{
+      if(!arr||!arr.length) return '';
+      const shown=arr.slice(0,40);
+      const more=arr.length>shown.length
+        ? `<span class="zc-sub" style="margin-left:6px">… 共 ${esc(String(arr.length))} ${unit}</span>`:'';
+      return `<div style="margin-top:10px">
+          <div style="margin-bottom:5px"><b>${label}</b>
+            <span class="zc-sub">${esc(String(arr.length))} ${unit}</span></div>
+          ${shown.map(x=>`<span class="tag" title="${esc(x.raw||'')}">${
+            esc(x.raw||x.title||('ch'+x.chapter))}</span>`).join('')}${more}</div>`;
+    };
+    return `<div style="margin-bottom:6px"><b>${esc(a.stand_name||'')}</b>
+        ${a.part?`<span class="lc-p">第${esc(String(a.part))}部</span>`:''}
+        —— 出场记录</div>`
+      + grp(a.manga,'漫画','话') + grp(a.anime,'动画','集')
+      + (a.note?`<div class="meta" style="margin-top:8px">${esc(a.note)}</div>`:'');
+  }
   if(t==='owner'){
     return `<dl class="kv"><dt>替身</dt><dd>${esc(a.stand_name)}</dd>
       <dt>使用者</dt><dd><b>${esc(a.owner)}</b></dd></dl>`;

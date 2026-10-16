@@ -117,6 +117,18 @@ INTENT_AGG_GUARD = re.compile(
 INTENT_PART_LIST = re.compile(
     r"(有哪些|是哪些|都有(哪些|什么)|都是(什么|哪些)|列出|列一下|列表)")
 INTENT_FORMS = re.compile(r"(几个形态|有哪些形态|形态链)")
+# ★★ M73：出场章节意图 ★★
+#   M71 建了 `stand_appearances`（4902 条）与 `/appearances/{stand_id}` 端点，
+#   但**没有自然语言入口** —— 用户打「白金之星在哪些章节出场」得到的是
+#   一段原文片段（语义检索兜底），而库里明明有结构化的章节列表。
+#   ★ 判据必须同时含「出场语义」与「章节/话数」：
+#     只写「出场」会把「黄金体验的能力出场效果」之类误收；
+#     只写「章节」会抢走「第 4 部有哪些章节」这类篇章问句。
+INTENT_APPEARANCE = re.compile(
+    r"(在哪几话|哪几话|在哪几集|哪几集|哪些章节|哪些话|哪些集|"
+    r"(?:出场|登场|出现)\s*(?:记录|章节|话数|集数|在哪)|"
+    r"在哪些(?:章节|话|集|漫画)|"
+    r"的出场|出场记录|登场记录)")
 INTENT_EXTREME = re.compile(
     r"(最高|最大|最强|最低|最小|最弱|多少个|几个|排名|综合|总分|"
     r"所有替身|同时满足|达到)")
@@ -179,6 +191,9 @@ def detect_intent(question: str) -> str:
     """
     if INTENT_FORMS.search(question):
         return "forms"
+    # ★ M73：出场章节（M71 的 stand_appearances 的 NL 入口）
+    if INTENT_APPEARANCE.search(question):
+        return "appearance"
     # ★ 「第X部有哪些替身」→ 列表。必须放在 stand_of 之前：
     #   它含「替身」，若主体被当成部数名会诱使 stand_of 抢走。
     if INTENT_PART.search(question) and INTENT_PART_LIST.search(question) \
@@ -410,6 +425,8 @@ class StructuredExecutor:
             "stand_of": self._stand_of,
             # ★ 「第X部有哪些替身」列表
             "part_list": self._part_list,
+            # ★ M73：出场章节（M71 数据的自然语言入口）
+            "appearance": self._appearance,
         }.get(intent)
         # ★ M14：认不出意图时**明确说不知道**，不给无关答案
         if fn is None:
@@ -768,6 +785,58 @@ class StructuredExecutor:
         )
 
     # ---------------------------------------------------------
+    def _appearance(self, question: str, name2id: dict[str, str]):
+        """★ M73：某替身的**出场章节 / 剧集**。
+
+        M71 建了 `stand_appearances`（4902 条：漫画 2739 / 动画 1003 /
+        仅封面 1160），并开了 `/appearances/{stand_id}` 端点，但
+        **没有自然语言入口** —— 实测问「白金之星在哪些章节出场」会掉进
+        语义检索，拿回一段原文介绍，而库里明明有结构化的章节列表。
+
+        ★ 口径：
+          · 漫画（manga）与动画（anime）**分开列**，不混成一张表。
+          · `cover`（只出现在封面）**默认不列** —— 那不是"出场"，
+            列进去会让「出场章节」变成用户不认的东西。
+          · 章号是源站的**部内相对章号**（M71 的发现：第 6–9 部从 1 起），
+            所以每条都回传 `raw`（源站原文，形如
+            "Stone Ocean Chapter 12: The Visitor, Part 2"），
+            前端展示原文，避免用户拿着 "ch12" 对不上漫画。
+        """
+        sid = extract_stand_name(question, name2id)
+        if not sid:
+            return None, [{"note": "未能识别替身名 —— 出场记录按替身查，"
+                                   "例如「Star Platinum 在哪些章节出场」"}]
+        cur = self.conn.cursor()
+        cur.execute("SELECT name_en, part FROM stands WHERE stand_id = %s",
+                    (sid,))
+        head = cur.fetchone()
+        if not head:
+            return None, [{"note": f"{sid} 不在库中"}]
+        cur.execute("""
+            SELECT kind, chapter_no, episode_no, chapter_title, raw_text
+            FROM stand_appearances
+            WHERE stand_id = %s AND kind IN ('manga', 'anime')
+            ORDER BY kind, chapter_no NULLS LAST, episode_no
+        """, (sid,))
+        manga: list[dict] = []
+        anime: list[dict] = []
+        for kind, ch, ep, title, raw in cur.fetchall():
+            item = {"chapter": ch, "episode": ep,
+                    "title": title, "raw": (raw or "")[:180]}
+            (manga if kind == "manga" else anime).append(item)
+
+        note = ("出场章节取自源站替身条目的 Appearance 段；漫画列话数、"
+                "动画列集数，均附源站原文。「仅封面出场」不计入。")
+        if not manga and not anime:
+            note = "源站该替身条目里没有记录漫画/动画出场（只有封面出场或未列）。"
+        return (
+            {"type": "appearance", "stand_id": sid,
+             "stand_name": head[0], "part": head[1],
+             "n_manga": len(manga), "n_anime": len(anime),
+             "manga": manga, "anime": anime, "note": note},
+            [{"type": "database", "tables": ["stand_appearances"]}],
+        )
+
     def _owner(self, question: str, name2id: dict[str, str]):
         sid = extract_stand_name(question, name2id)
         cur = self.conn.cursor()

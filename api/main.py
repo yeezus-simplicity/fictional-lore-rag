@@ -203,8 +203,23 @@ def _init_state(use_vector: bool = True,
     char_part_map: dict = {}
     try:
         from characters import all_names as _char_names
-        known_characters = set(_char_names())
-        print(f"[api] 角色维度：{len(known_characters)} 个写法")
+        _ext_names = set(_char_names())
+        known_characters = set(_ext_names)
+        # ★★ M73：并上**别名表**（含唯一归属的简称）★★
+        #   为什么必须并：`characters.all_names()` 取自 characters_ext.json 的
+        #   `name_zh` / `name_zh_variants`，那里面**只有全名**
+        #   （「布罗诺·布加拉提」）→ 用户打简称「布加拉提」时 Router 抽不到
+        #   已知角色 → 对「布加拉提是谁」直接 abstain（实测）。
+        #   而 `aliases.build_char_alias_table()` 里**有**简称
+        #   （M73 的 split_short_aliases 会拆「布罗诺·布加拉提」→「布加拉提」）。
+        #   ★ 这两处本来是同一样东西（「角色名有哪些写法」），
+        #     各维护一份必然漂移 —— 这个项目已在 M69/M70/M71/M72 栽过四次。
+        #     → 用**并集**：ext 提供英/日名，别名表提供中文名与简称。
+        from aliases import build_char_alias_table as _char_alias
+        _al = set(_char_alias().keys())
+        known_characters |= _al
+        print(f"[api] 角色维度：{len(known_characters)} 个写法"
+              f"（角色表 {len(_ext_names)} + 中文别名/简称 {len(_al)}）")
     except Exception as e:  # noqa: BLE001
         print(f"[api] ⚠ 角色维度不可用（{type(e).__name__}）")
     if db_ok:

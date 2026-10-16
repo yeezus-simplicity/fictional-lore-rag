@@ -1,11 +1,11 @@
 {
- "n_source_pages": 159,
+ "n_source_pages": 157,
  "n_included": 113,
- "n_excluded": 46,
+ "n_excluded": 44,
  "exclude_stats": {
   "kept": 113,
   "ns": 1,
-  "lang": 2,
+  "lang": 0,
   "other": 14,
   "no_md": 29
  },
@@ -45,41 +45,6 @@
    "part_basis": "Chapter 72",
    "included": true,
    "exclude_reason": null
-  },
-  {
-   "location_id": "air_supplena_island_fr",
-   "title": "Air Supplena Island/fr",
-   "name_ja": "エア・サプレーナ島",
-   "name_romaji": "Ea Sapurēna Tou",
-   "type": "Île",
-   "types": [
-    "Île"
-   ],
-   "place_raw": "{{W|Venise|lang=fr}}, {{W|Italie|lang=fr}}",
-   "place_paths": [
-    [
-     "Venise",
-     "Italie"
-    ]
-   ],
-   "place_chain": [
-    "Venise",
-    "Italie"
-   ],
-   "residents": [],
-   "mangadebut": "Chapter 72",
-   "mangadebuts": [
-    "Chapter 72"
-   ],
-   "animedebut": "Episode 16",
-   "animedebuts": [
-    "Episode 16"
-   ],
-   "n_infobox_fields": 11,
-   "part": null,
-   "part_basis": "",
-   "included": false,
-   "exclude_reason": "语言子页"
   },
   {
    "location_id": "amazon_rainforest",
@@ -770,41 +735,6 @@
    "part_basis": "Chapter 210",
    "included": true,
    "exclude_reason": null
-  },
-  {
-   "location_id": "dio_s_mansion_fr",
-   "title": "DIO's Mansion/fr",
-   "name_ja": "DIOの館",
-   "name_romaji": "DIO no Yakata",
-   "type": "Manoir du style Fatimid architecture",
-   "types": [
-    "Manoir du style Fatimid architecture"
-   ],
-   "place_raw": "{{W|Islamic Cairo|Vieux quartier}} du {{W|Le Caire|Caire|lang=fr}}, {{W|Egypte|lang=fr}}<ref name=C222>{{Ch|Chapter 222}}</ref>",
-   "place_paths": [
-    [
-     "Islamic Cairo du Le Caire",
-     "Egypte"
-    ]
-   ],
-   "place_chain": [
-    "Islamic Cairo du Le Caire",
-    "Egypte"
-   ],
-   "residents": [],
-   "mangadebut": "Chapter 218",
-   "mangadebuts": [
-    "Chapter 218"
-   ],
-   "animedebut": "SC Episode 36",
-   "animedebuts": [
-    "SC Episode 36"
-   ],
-   "n_infobox_fields": 11,
-   "part": null,
-   "part_basis": "",
-   "included": false,
-   "exclude_reason": "语言子页"
   },
   {
    "location_id": "damokan_cleaning",

@@ -85,7 +85,7 @@ python dataset/pipeline/run_pipeline.py
 
 ## 测试与 CI
 
-**本地全套 35 个回归测试**（`evaluation/test_*.py`）；
+**本地全套 36 个回归测试**（`evaluation/test_*.py`）；
 CI（GitHub Actions）在每次 push / PR 时跑其中 **8 套**，**不需要下载 7 GB 模型**：
 
 | 层 | 内容 |
@@ -283,7 +283,7 @@ GET /similar/star_platinum?k=5
 | **M7 块大小** | 推荐块长 | 512（权衡分析后） | `m7_chunk_quality.json` |
 | **当前（M64）** | 替身 / 中文名覆盖 | 187 / **99.5%**（186） | `stand_name_zh.json` |
 | | 别名表 | **1057**（含形态名 12 种写法变体） | `aliases.build_alias_table()` |
-| | 检索语料 | 2407 → **10042 块**（556.3 万字符） | `article_chunks.json` |
+| | 检索语料 | 2407 → **10866 块**（605.2 万字符） | `article_chunks.json` |
 | | 图片 | 188 目录 / **2173 张** / 423 MB | `images/*/_images.json` |
 | | **地点**（M65 新增）| **113 个**正传地点（覆盖第 1–9 部） | `locations.json` |
 | | **角色**（M66 新增）| **180 个**角色档案（简介 179 / 背景 114 / 性格 171） | `characters_ext.json` |

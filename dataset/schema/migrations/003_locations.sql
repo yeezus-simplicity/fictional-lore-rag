@@ -100,10 +100,28 @@ END $$;
 
 -- ★ 归属约束从「替身或角色」放宽为「替身 / 角色 / 地点 至少一个非空」
 --   （地点页块只有 location_id）
+-- ★★ M72：同 002，约束添加必须**幂等且顺序无关** ★★
+--   踩坑实录：`load_db --all` 在已跑过 005 的库上重跑，003 走到这里失败：
+--       check constraint "chk_chunk_owner" is violated by some row
+--   因为库里已有 M72 的**篇章块**（只有 arc_id，location_id 为 NULL），
+--   而 003 的三类约束不认 arc_id。
+--   → 迁移会被反复重跑（本地调试、CI、全新部署自检都会），
+--     「只在自己假设的库状态下成立」的迁移就是隐患。
+--     005 定义的四类约束才是最终形态。
 ALTER TABLE text_chunks DROP CONSTRAINT IF EXISTS chk_chunk_owner;
-ALTER TABLE text_chunks ADD CONSTRAINT chk_chunk_owner CHECK (
-    stand_id IS NOT NULL OR character_id IS NOT NULL OR location_id IS NOT NULL
-);
+DO $$
+BEGIN
+    IF EXISTS (SELECT 1 FROM text_chunks
+               WHERE stand_id IS NULL AND character_id IS NULL
+                 AND location_id IS NULL) THEN
+        RAISE NOTICE '存在仅 arc_id 归属的块（M72 篇章块）→ 跳过，由 005 放宽为四类';
+    ELSE
+        ALTER TABLE text_chunks ADD CONSTRAINT chk_chunk_owner CHECK (
+            stand_id IS NOT NULL OR character_id IS NOT NULL
+            OR location_id IS NOT NULL
+        );
+    END IF;
+END $$;
 
 CREATE INDEX IF NOT EXISTS idx_chunks_location ON text_chunks(location_id);
 

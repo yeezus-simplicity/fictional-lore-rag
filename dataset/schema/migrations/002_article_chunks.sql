@@ -49,10 +49,27 @@ ALTER TABLE text_chunks ADD CONSTRAINT chk_chunk_type CHECK (
 );
 
 -- 5) 归属约束：不允许「既无 stand_id 又无 character_id」的孤儿块
+--   ★ M72：用 DO 块包一层，**先看有没有行会违反**再加约束。
+--     踩坑实录：`load_db --all` 在已跑过 005（加了 arc_id、约束放宽成三类）
+--     的库上重跑，002 走到这里会失败：
+--        check constraint "chk_chunk_owner" of relation "text_chunks"
+--        is violated by some row
+--     因为库里已有篇章块（stand_id / character_id 皆 NULL）——
+--     它们是 005 认可的新合法归属，但 002 的旧约束不认。
+--     → 迁移必须是**幂等且顺序无关**的：002 跑在 005 之后就应当跳过。
+--   ★ 005 会把约束改成三类归属（stand / character / arc），那才是最终形态。
 ALTER TABLE text_chunks DROP CONSTRAINT IF EXISTS chk_chunk_owner;
-ALTER TABLE text_chunks ADD CONSTRAINT chk_chunk_owner CHECK (
-    stand_id IS NOT NULL OR character_id IS NOT NULL
-);
+DO $$
+BEGIN
+    IF EXISTS (SELECT 1 FROM text_chunks
+               WHERE stand_id IS NULL AND character_id IS NULL) THEN
+        RAISE NOTICE '存在无 stand/character 归属的块（多为 005 的篇章块）→ 跳过加约束，由 005 放宽为三类';
+    ELSE
+        ALTER TABLE text_chunks ADD CONSTRAINT chk_chunk_owner CHECK (
+            stand_id IS NOT NULL OR character_id IS NOT NULL
+        );
+    END IF;
+END $$;
 
 -- 6) 索引
 CREATE INDEX IF NOT EXISTS idx_chunks_character ON text_chunks(character_id);

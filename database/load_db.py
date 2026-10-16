@@ -399,6 +399,28 @@ def load_data() -> bool:
     # owner_name 可能含多个角色（jojowiki 的 infobox 用 <br> 分隔多持有者，
     # 抓取时未拆开），需先拆分。实测 5 条超长样本，如：
     #   'Caravan SeraiChakaFour Unnamed miceKhanJean Pierre PolnareffUnnamed boyCow'
+    # ★★ M72：owner_name 里的重定向名要规范化成正文页名 ★★
+    #   源站在替身页把持有者写成**重定向名**（The World 的持有者写作 "DIO"，
+    #   而 DIO 重定向到 Dio Brando）→ `_char_id("DIO")` 造出 `dio` 行，
+    #   而分类名单那边是 `dio_brando` → 同一个角色两行。
+    #   → 先规范化再算 id，与抓取层用同一张表（wiki_redirects.py）。
+    #   ★ 只规范化、不重写 stands.json —— 那是源站原文，要留着可回溯。
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]
+                           / "dataset" / "pipeline"))
+    from wiki_redirects import canonical_name as _canon  # noqa: E402
+    n_owner_fixed = 0
+    for s in stands:
+        raw_owner = (s.get("owner_name") or "").strip()
+        if not raw_owner:
+            continue
+        fixed = ",".join(_canon(x) for x in raw_owner.split(","))
+        if fixed != raw_owner:
+            s["owner_name"] = fixed
+            n_owner_fixed += 1
+    if n_owner_fixed:
+        print(f"  ★ M72：{n_owner_fixed} 个替身的 owner_name 含重定向名，"
+              f"已规范化为正文页名（防同一角色两行）")
+
     owner_map: dict[str, dict] = {}
     multi_owner_stands = 0
 
@@ -476,6 +498,7 @@ def load_data() -> bool:
                 part     = EXCLUDED.part,
                 stand_ids= EXCLUDED.stand_ids
         """)
+    n_characters_rows = len(owner_map)
     n_with_part = sum(1 for c in owner_map.values() if c["part"] is not None)
     n_ja = sum(1 for c in owner_map.values() if c.get("name_ja"))
     print(f"  {len(owner_map)} 个角色（{n_with_part} 有部信息）")
@@ -485,6 +508,60 @@ def load_data() -> bool:
               f"  ← M45 从已抓的角色页 infobox 提取")
     if multi_owner_stands:
         print(f"  注：{multi_owner_stands} 个替身有多个持有者，已拆分为多条角色")
+
+    # ---------- M72：篇章（Story Arc）----------
+    #   M70 只把篇章写进 JSON；M72 落库，这样篇章块能挂 arc_id 外键，
+    #   也能按 SQL 查「这一篇章有哪些替身/角色」。
+    print("\n[1.5/9] story_arcs")
+    _arcs_path = PROC / "story_arcs.json"
+    n_arcs = 0
+    if _arcs_path.exists():
+        _arcs = json.loads(_arcs_path.read_text(encoding="utf-8")).get("arcs") or []
+        # ★★ M72：数组列必须传「分隔符字符串」，不能传 list ★★
+        #   （与 M69 的 stand_type_kinds 同一个坑，这是第二次）
+        #   psycopg2 把 Python list 渲染成裸数组字面量 `{"SC 86-91"}`，
+        #   而 PG 在 VALUES 列表里**推断不出它的类型** → 报
+        #   `syntax error at or near "{"`。
+        #   解法：传竖线/逗号分隔的字符串，SQL 侧 string_to_array 还原。
+        #   ★ 必须 coalesce：string_to_array(NULL) 返回 NULL，而这两列
+        #     是 NOT NULL DEFAULT '{}' —— 不包会撞约束。
+        _arc_rows = []
+        for a in _arcs:
+            ca = a.get("chapters_abs")
+            _arc_rows.append((
+                a["arc_id"], a.get("arc_title"),
+                a.get("name_display") or a.get("name_en"),
+                a.get("part"),
+                "|".join(a.get("chapters") or []),
+                (f"{int(ca[0])},{int(ca[1])}" if ca and len(ca) == 2 else None),
+                a.get("location_id"),
+                f"https://jojowiki.com/"
+                + (a.get("arc_title") or "").replace(" ", "_").replace('"', "%22"),
+                "jojowiki_story_arc",
+            ))
+        if _arc_rows:
+            cur.executemany("""
+                INSERT INTO story_arcs
+                    (arc_id, arc_title, name_en, part, chapters, chapters_abs,
+                     location_id, source_url, data_source)
+                VALUES (%s,%s,%s,%s,
+                        coalesce(string_to_array(%s,'|'),'{}'::text[]),
+                        string_to_array(%s,',')::int[],
+                        %s,%s,%s)
+                ON CONFLICT (arc_id) DO UPDATE SET
+                    arc_title=EXCLUDED.arc_title, name_en=EXCLUDED.name_en,
+                    part=EXCLUDED.part, chapters=EXCLUDED.chapters,
+                    chapters_abs=EXCLUDED.chapters_abs,
+                    location_id=EXCLUDED.location_id,
+                    source_url=EXCLUDED.source_url
+            """, _arc_rows)
+            conn.commit()
+            n_arcs = len(_arc_rows)
+        print(f"  {n_arcs} 个篇章"
+              f"（{sum(1 for a in _arcs if a.get('location_id'))} 个有同名地点，"
+              f"用于消歧）")
+    else:
+        print("  ⚠ story_arcs.json 缺失，跳过（先跑 build_locations.py）")
 
     # ---------- stands ----------
     print("\n[2/7] stands")
@@ -1004,7 +1081,7 @@ def load_data() -> bool:
         c.get("chunk_type"), c.get("content"), c.get("content_len"),
         c.get("section"), c.get("entity"), c.get("alias"), c.get("debut"),
         c.get("source_url"), c.get("data_source", "jojowiki_rendered"),
-        c.get("character_id"), c.get("location_id"),
+        c.get("character_id"), c.get("location_id"), c.get("arc_id"),
     ) for c in all_chunks]
     for i in range(0, len(chunk_rows), BATCH):
         batch = chunk_rows[i:i + BATCH]
@@ -1012,8 +1089,8 @@ def load_data() -> bool:
             INSERT INTO text_chunks
                 (chunk_id, stand_id, stand_name, part, chunk_type, content,
                  content_len, section, entity, alias, debut, source_url,
-                 data_source, character_id, location_id)
-            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                 data_source, character_id, location_id, arc_id)
+            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
             ON CONFLICT (chunk_id) DO UPDATE SET
                 stand_id=EXCLUDED.stand_id, stand_name=EXCLUDED.stand_name,
                 part=EXCLUDED.part, chunk_type=EXCLUDED.chunk_type,
@@ -1022,7 +1099,8 @@ def load_data() -> bool:
                 alias=EXCLUDED.alias, debut=EXCLUDED.debut,
                 source_url=EXCLUDED.source_url, data_source=EXCLUDED.data_source,
                 character_id=EXCLUDED.character_id,
-                location_id=EXCLUDED.location_id
+                location_id=EXCLUDED.location_id,
+                arc_id=EXCLUDED.arc_id
         """, batch)
         conn.commit()
         print(f"  {i + len(batch)}/{len(chunk_rows)}")
@@ -1093,9 +1171,76 @@ def load_data() -> bool:
           f"与「无来源」不同）")
     cur2.close()
 
+    # ★ M72：删掉「本次不再产生」的陈旧块。
+    #   为什么需要：`build_article_chunks.py` 是从 articles.json **全新构建**
+    #   的，删掉的页面其块就消失了；而 text_chunks 用的是
+    #   ON CONFLICT DO UPDATE —— 只增不删，旧块会一直留在库里。
+    #   实测后果：M72 删掉 12 个重定向副本页后，它们的块仍在 DB 里、
+    #   仍被 characters 行引用 → 「清理已不再产生的角色行」因有引用而删不掉
+    #   → 重定向副本（dio / anjuro_angelo_katagiri …）一直留在 characters 表。
+    #   → 同步语义：以本次 all_chunks 的 chunk_id 集合为准，多则删。
+    _keep = [c["chunk_id"] for c in all_chunks]
+    cur.execute("CREATE TEMP TABLE _keep_chunks (chunk_id BIGINT PRIMARY KEY)")
+    for i in range(0, len(_keep), 5000):
+        cur.executemany("INSERT INTO _keep_chunks (chunk_id) VALUES (%s)",
+                        [(x,) for x in _keep[i:i + 5000]])
+    cur.execute("""DELETE FROM text_chunks
+                   WHERE chunk_id NOT IN (SELECT chunk_id FROM _keep_chunks)""")
+    n_stale = cur.rowcount
+    if n_stale:
+        print(f"  清理陈旧块 {n_stale} 条（页面已删除，其块不再产生）")
+    cur.execute("DROP TABLE _keep_chunks")
+    conn.commit()
+
+    # ★ M72：数据填完后 Validate 归属约束。
+    #   005 里是 `ADD CONSTRAINT ... NOT VALID`（迁移跑在数据之前，
+    #   那时 arc_id 还是 NULL，扫全表必然失败）。
+    #   现在 arc_id 已填好，才真正校验 —— 这才是约束生效的时刻。
+    #   ★ 必须在 cur.close() **之前**：游标关掉再 execute 会报
+    #     InterfaceError: cursor already closed（实测踩过）。
+    try:
+        cur.execute("ALTER TABLE text_chunks VALIDATE CONSTRAINT chk_chunk_owner")
+        conn.commit()
+        print("  ✓ chk_chunk_owner 已校验通过（四类归属无一为空）")
+    except Exception as e:  # noqa: BLE001
+        conn.rollback()
+        print(f"  ✗ chk_chunk_owner 校验失败：{e}")
+
     cur.close()
     conn.close()
     print(f"\n  总耗时 {time.time() - t_all:.1f}s")
+
+    # ★★ M72：把**实际入库的行数**写成 data_facts.json ★★
+    #   为什么需要：`collect_metrics.py` 的对外数字闸门原本各自去数
+    #   dataset/processed/*.json，而 `characters` 表是
+    #   「owner_map ∪ characters_ext」的并集 —— 两边数量**本来就不相等**
+    #   （实测 ext 368 vs DB 380，差的是只出现在 owner_name 里的角色）。
+    #   闸门因此连续报「对外写 X，产物是 Y」，而两边都不是错的，
+    #   只是**同一个概念有两个来源**。
+    #   → 单一来源：loader 是唯一知道"到底入库了多少行"的人，
+    #     由它写权威计数，闸门改读这个文件。
+    #   （这个项目已经在「两份规则各写各的」上栽过四次，
+    #     见 M69 词表 / M70 抓取名单 / M71 出场记录口径 / 本次角色数。）
+    try:
+        facts = {
+            "_note": ("M72：由 load_db 在入库后写出的**权威计数**。"
+                      "collect_metrics 的对外数字闸门读这个文件，"
+                      "不再自己数 processed/*.json —— "
+                      "characters 表是 owner_map ∪ characters_ext 的并集，"
+                      "两个来源的数量本来就不相等。"),
+            "n_characters": n_characters_rows,
+            "n_stands": len(stands),
+            "n_text_chunks": len(all_chunks),
+            "n_appearances": len(apps),
+            "n_moves": len(mvs),
+        }
+        (PROC / "data_facts.json").write_text(
+            json.dumps(facts, ensure_ascii=False, indent=1), encoding="utf-8")
+        print(f"  → data_facts.json（权威计数：角色 {n_characters_rows} / "
+              f"替身 {len(stands)} / 块 {len(all_chunks)}）")
+    except Exception as e:  # noqa: BLE001
+        print(f"  ⚠ data_facts.json 写出失败（不影响入库）：{type(e).__name__}")
+
     return True
 
 

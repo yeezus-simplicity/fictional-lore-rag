@@ -1755,14 +1755,22 @@ function renderStructured(a){
     const head=`<div style="margin-bottom:8px"><b>篇章：${esc(arc.name||'')}</b>
         ${arc.part?`<span class="lc-p">第${esc(String(arc.part))}部</span>`:''}
         ${arc.chapters&&arc.chapters.length?`<span class="zc-sub">章节 ${esc(arc.chapters.join('、'))}</span>`:''}
-        —— 该篇章章节范围内出场的替身：</div>`;
-    const tags=(a.stands||[]).map(x=>`<span class="tag" title="${esc(x.snippet||'')}">
+        —— 该篇章章节范围内的出场：</div>`;
+    // 替身：带形态倍数字
+    const standTags=(a.stands||[]).map(x=>`<span class="tag" title="${esc(x.snippet||'')}">
         ${esc(x.name||'')}${x.n_forms>1?` <i style="opacity:.7;font-style:normal">×${esc(String(x.n_forms))}</i>`:''}
         ${x.chapter?`<i style="opacity:.6;font-style:normal;font-size:11px"> ch${esc(String(x.chapter))}</i>`:''}
       </span>`).join('');
-    const empty=(a.stands||[]).length
-      ? '' : '<div>该篇章范围内没有抓到替身出场记录。</div>';
-    return head + (tags?`<div class="lc-line">相关替身：${tags}</div>`:'') + empty
+    // ★ M72：角色（与替身同构，悬停同样显示原文）
+    const charTags=(a.characters||[]).map(x=>`<span class="tag" title="${esc(x.snippet||'')}">
+        ${esc(x.name||'')}
+        ${x.chapter?`<i style="opacity:.6;font-style:normal;font-size:11px"> ch${esc(String(x.chapter))}</i>`:''}
+      </span>`).join('');
+    const noStand=(a.stands||[]).length?'':'<div>该篇章范围内没有抓到替身出场记录。</div>';
+    const noChar=(a.characters||[]).length?'':'<div>该篇章范围内没有角色出场记录。</div>';
+    return head
+      + (standTags?`<div class="lc-line">相关替身：${standTags}</div>`:'') + noStand
+      + (charTags?`<div class="lc-line">相关角色：${charTags}</div>`:'') + noChar
       + (a.note?`<div class="meta" style="margin-top:8px">${esc(a.note)}</div>`:'');
   }
   // ★★ M66：角色类答案（route=character）★★

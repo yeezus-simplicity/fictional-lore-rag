@@ -103,6 +103,16 @@ def collect_m1() -> dict:
     conflicts = _load("conflicts.json") or []
     normals = _load("normalizations.json") or {}
     merge = _load("merge_report.json") or {}
+    # ★★ M72：**权威计数**来自 load_db 写出的 data_facts.json ★★
+    #   原先这里各自数 dataset/processed/*.json，而 characters 表是
+    #   「owner_map ∪ characters_ext」的并集 —— 两个来源的数量本来就不相等
+    #   （实测 ext 368 vs DB 380，差的是只出现在 owner_name 里的角色）。
+    #   闸门因此反复报「对外写 X，产物是 Y」，而两边都不是错的，
+    #   只是同一个概念有两个来源。
+    #   → 单一来源：loader 是唯一知道"到底入库多少行"的人。
+    _facts = _load("data_facts.json") or {}
+    n_chunks_total = _facts.get("n_text_chunks")
+
     # ★ M71：出场记录覆盖 —— 从 rendered/ 快照算（与 load_db 同一数据源）。
     #   这个数字必须进闸门：M71 之前它停在 4111/145 个替身，
     #   因为 M39–M45 补了第 8/9 部替身后**从未重抓快照**
@@ -129,7 +139,13 @@ def collect_m1() -> dict:
     # ★ M66：角色（人物背景）—— 有简介的角色数也要能被闸门校验
     _chr = _load("characters_ext.json") or {}
     _chrs = _chr.get("characters") or []
-    n_characters = len(_chrs)
+    # ★ M72：角色数优先取 data_facts.json（load_db 的权威计数）。
+    #   characters_ext 只有 368 个，而 DB 的 characters 表是
+    #   「owner_map ∪ characters_ext」= 380 —— 差的是只出现在
+    #   owner_name 里、没有独立角色页的角色。
+    #   ★ 闸门测的是「对外说的数字 vs 实际入库的数字」，
+    #     所以必须用入库那一侧；ext 的数字只作 facts 缺失时的兜底。
+    n_characters = _facts.get("n_characters") or len(_chrs)
     n_char_bio = sum(1 for c in _chrs if c.get("bio"))
     # ★ M69：替身类型结构化（射程/体质/特性）
     #   硬判据是「未识别残余为 0」—— 词表能解释每一个字符。
@@ -162,12 +178,14 @@ def collect_m1() -> dict:
         "n_forms": len(forms),
         "n_chunks": chunks.get("n_chunks"),
         "n_chunks_article": len(art_chunks),
-        "n_chunks_total": n_base_chunks + len(art_chunks),
+        "n_chunks_total": n_chunks_total if n_chunks_total is not None
+                          else n_base_chunks + len(art_chunks),
         "n_locations": n_locations,
         "n_appearances": _n_app,
         "n_stands_with_appearances": _stands_with_app,
         "n_characters": n_characters,
         "n_char_bio": n_char_bio,
+        "_facts": _facts,
         "n_stand_types": n_type_total,
         "n_stand_type_residual": n_type_residual,
         "n_stands_covered": chunks.get("n_stands_covered"),
@@ -583,8 +601,11 @@ PUBLIC_NUMBERS = {
     "数据.形态数": ("M1", "n_forms", 153),
     "数据.基础块数": ("M1", "n_chunks", 2407),
     # ★ 需要完整语料（含 article_chunks.json）；CI 的合成语料环境不适用本表
-    # ★ M70：8042 → 10042（补抓 196 个「非持有者」角色 + 189 个篇章页）
-    "数据.语料总量": ("M1", "n_chunks_total", 10042),
+    # ★ M72：10042 → 10866（篇章块 1062 进库，又清掉 12 个重定向副本的块）。
+    #   M70 抓了篇章页但**没重跑 build_article_chunks** → 1062 个篇章块
+    #   一直没进检索库（又一个「下游产物没跟着重算」）。
+    #   另：清掉 7 个重定向副本 + 4 个语言子页（角色 382→380）。
+    "数据.语料总量": ("M1", "n_chunks_total", 10866),
     # ★ M65 新增：正传地点（含语料块）
     "数据.地点数": ("M1", "n_locations", 113),
     # ★ M66 新增：角色维度（人物背景）
@@ -593,8 +614,14 @@ PUBLIC_NUMBERS = {
     #   于是**不是任何替身持有者的角色从来不会进队列** ——
     #   第 1、2 部（没有替身）的角色几乎全军覆没。
     #   用户实测「lisalisa 二乔的母亲」检索不到才暴露出来。
-    "数据.角色数": ("M1", "n_characters", 376),
-    "数据.角色简介覆盖": ("M1", "n_char_bio", 375),    # 376 个里 1 个无 lead
+    # ★ M72：376 → 374。
+    #   ★ 这一版的跳变是**清重定向副本**：源站有 12 个页面是重定向，
+    #     而 fetch_wikitext 用 redirects=1 → 抓重定向名会得到正文页的副本。
+    #     两条路都中招：分类名单同时列重定向和目标（同一角色两行），
+    #     且替身页的 owner_name 用的是重定向名（The World 的持有者写作 "DIO"）。
+    #   → 见 dataset/pipeline/wiki_redirects.py（12 条手工确认表）。
+    "数据.角色数": ("M1", "n_characters", 374),
+    "数据.角色简介覆盖": ("M1", "n_char_bio", 367),
     # ★ M71：出场记录覆盖。rendered/ 快照补齐后 4111→4902 条、
     #   覆盖替身 145→182 个。这两个数字进闸门，防止再次出现
     #   「上游数据增长、下游产物没重算」而没人发现。

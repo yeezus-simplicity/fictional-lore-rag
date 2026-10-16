@@ -92,6 +92,12 @@ def main() -> int:
                 "stand_id": eid if kind == "stand" else None,
                 "character_id": eid if kind == "character" else None,
                 "location_id": eid if kind == "location" else None,
+                # ★ M72：篇章页给 arc_id —— 第三类归属。
+                #   不填就会撞 chk_chunk_owner（stand/character/location 全空），
+                #   而篇章块**已经**在检索库里（merging.py 运行时合并
+                #   article_chunks.json）→ DB 不入会造成
+                #   「检索能命中、SQL 查不到、证据回查失败」的分裂状态。
+                "arc_id": eid if kind == "arc" else None,
                 "stand_name": p["title"],
                 "part": part,
                 "chunk_type": CHUNK_TYPE,

@@ -59,99 +59,14 @@ ROOT = Path(__file__).resolve().parents[3]
 PROC = ROOT / "dataset" / "processed"
 SRC = ROOT / "dataset" / "sources" / "jojowiki" / "articles.json"
 
-# ---- 部内相对 → 绝对章号 的偏移（第 1–5 部）----
-# ★ 判据见模块 docstring；第 6–9 部不在此表（两边都部内相对）。
-PART_OFFSET = {1: 0, 2: 44, 3: 113, 4: 265, 5: 439}
-
-# 篇章章节前缀 → 部号
-ARC_PREFIX_PART = {"SC": 3, "DU": 4, "VA": 5, "SO": 6,
-                   "SBR": 7, "JJL": 8, "TJL": 9, "BT": 2}
-
-# 出场记录 raw_text 的作品名 → 部号（第 6–9 部带作品名；第 1–5 部无前缀）
-# ★ 只收**正传 9 部**。外传（Crazy Heartbreakers 等）刻意不收 ——
-#   它们章号各自从 1 起，不排除会与正传撞车。
-WORK_PART = {
-    "phantom blood": 1, "battle tendency": 2, "stardust crusaders": 3,
-    "diamond is unbreakable": 4, "golden wind": 5, "stone ocean": 6,
-    "steel ball run": 7, "jojolion": 8, "the jojolands": 9,
-    # 缩写（实测源站混用全称与缩写）
-    "sbr": 7, "jjl": 8, "tjl": 9, "so": 6, "du": 4, "va": 5, "sc": 3,
-    "bt": 2, "pb": 1,
-}
-
-_ARC_CH_RE = re.compile(r"^([A-Z]+)\s+(\d+)(?:\s*-\s*(\d+))?$")
-_ARC_ABS_RE = re.compile(r"^Chapters\s+(\d+)\s*-\s*(\d+)$")
-_WORK_RE = re.compile(r"^([A-Za-z'’ .]+?)\s+Chapter\s+(\d+)")
-_CH_ONLY_RE = re.compile(r"^Chapter\s+(\d+)")
-
-
-def parse_arc_chapters(chapters: list[str]) -> tuple[int | None, int | None, int | None]:
-    """篇章章节 → (部号, 绝对章号下界, 绝对章号上界)。
-
-    返回 (None, None, None) 表示判不出（调用方据此跳过，不猜）。
-    """
-    if not chapters:
-        return None, None, None
-    txt = chapters[0].strip()
-
-    # ① 带前缀：`JJL 18-22`（部内相对 → 换算成绝对）
-    m = _ARC_CH_RE.match(txt)
-    if m:
-        part = ARC_PREFIX_PART.get(m.group(1))
-        if part is None:
-            return None, None, None
-        lo, hi = int(m.group(2)), int(m.group(3) or m.group(2))
-        off = PART_OFFSET.get(part, 0)
-        return part, lo + off, hi + off
-
-    # ② 无前缀：`Chapters 6 - 7`（第 1/2 部，本身就是绝对章号）
-    m = _ARC_ABS_RE.match(txt)
-    if m:
-        lo, hi = int(m.group(1)), int(m.group(2))
-        # 部号由区间判（与 build_locations 同一套区间）
-        part = None
-        for blo, bhi, bp in ((1, 44, 1), (45, 113, 2), (114, 265, 3),
-                             (266, 439, 4), (440, 594, 5), (595, 752, 6)):
-            if blo <= lo <= bhi:
-                part = bp
-                break
-        return part, lo, hi
-
-    return None, None, None
-
-
-def appearance_part(raw_text: str) -> tuple[int | None, int | None]:
-    """出场记录原文 → (部号, 章号)。
-
-    ★ 章号的口径由**作品名有无**决定：
-        有作品名（"JoJolion Chapter 22"）→ 第 6–9 部，章号是**部内相对**
-        无作品名（"Chapter 419"）        → 第 1–5 部，章号是**绝对**
-    → 为了和篇章的绝对章号比较，这里把第 6–9 部的相对章号**换算成绝对**。
-    """
-    t = (raw_text or "").strip()
-
-    m = _WORK_RE.match(t)
-    if m:
-        part = WORK_PART.get(m.group(1).strip().lower())
-        no = int(m.group(2))
-        if part is None:
-            return None, None          # 外传/衍生作品 → 排除
-        if part in PART_OFFSET and PART_OFFSET[part]:
-            no += PART_OFFSET[part]
-        return part, no
-
-    m = _CH_ONLY_RE.match(t)
-    if m:
-        no = int(m.group(1))
-        part = None
-        for blo, bhi, bp in ((1, 44, 1), (45, 113, 2), (114, 265, 3),
-                             (266, 439, 4), (440, 594, 5), (595, 752, 6)):
-            if blo <= no <= bhi:
-                part = bp
-                break
-        return part, no
-
-    return None, None
+# ★ M72：章号归一化抽到共享模块 `dataset/pipeline/chapter_numbers.py`。
+#   原来这里自己维护一份常量+两个解析函数，M72（角色 ↔ 篇章）又要用同一套
+#   → 重复规则的教训这个项目已经栽过三次（M69 词表两份 / M70 抓取名单两份 /
+#     M71 出场记录与闸门口径两份），每次都表现为「一边修了另一边没修」。
+sys.path.insert(0, str(Path(__file__).resolve().parents[3] / "dataset" / "pipeline"))
+from chapter_numbers import (          # noqa: E402
+    normalize_appearance, parse_arc_range, PART_OFFSET, WORK_PART,
+)
 
 
 def main() -> int:
@@ -210,7 +125,7 @@ def main() -> int:
     by_part: dict[int, list[tuple]] = defaultdict(list)
     n_dropped = 0
     for sid, ch_no, raw, title in apps:
-        part, no = appearance_part(raw or "")
+        part, no = normalize_appearance(raw or "")
         if part is None or no is None:
             n_dropped += 1
             continue
@@ -220,7 +135,7 @@ def main() -> int:
     n_no_range = 0
     n_empty = 0
     for a in arcs:
-        part, lo, hi = parse_arc_chapters(a.get("chapters") or [])
+        part, lo, hi = parse_arc_range(a.get("chapters") or [])
         rec = {
             "arc_id": a["arc_id"],
             "name": a.get("name_display") or a.get("name_en"),

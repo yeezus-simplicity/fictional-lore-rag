@@ -152,8 +152,66 @@ def fetch_character_titles() -> list[str]:
         # ① 列表页：斜杠形如 `Minor Characters/Part 1`
         if "/" in t and t.split("/")[-1].strip().startswith("Part"):
             continue
+        # ② ★ M72：语言子页（`Urmd Avdul/fr`、`Gray Fly/es`）
+        #    源站的 Part N Characters 分类里混着语言子页，实测 2 个。
+        #    build_locations 早就有 LANG_SUFFIX 过滤，角色侧漏了。
+        if LANG_SUFFIX.search(t):
+            continue
+        # ③ ★ M72：重定向页 —— 见下面 _redirect_targets() 的说明
+        if t in _redirect_targets():
+            continue
         out.add(t)
     return sorted(out)
+
+
+# 语言子页后缀（与 build_locations.LANG_SUFFIX 同一套，不另写一份）
+LANG_SUFFIX = re.compile(r"/(fr|zh|es|de|it|ja|pt|ru|pl|ko)$", re.I)
+
+
+def _redirect_targets() -> set[str]:
+    """M72：已知的**重定向**标题集合 —— 它们会被抓成正文的副本。
+
+    ★ 为什么会有重定向混进名单：
+      `fetch_wikitext()` 用 `redirects=1`，所以抓 `DIO` 会得到
+      `Dio Brando` 的**正文**（125,941 字符，一模一样）。
+      而源站的 `Category:Part N Characters` **同时列了重定向和它的目标**
+      → 同一个角色被抓成两条，`characters` 表里出现
+        `dio` 和 `dio_brando` 两行、篇章答案里同一个角色出现两次。
+
+    实测 7 组 16 个页面，其中 12 个是重定向：
+        DIO                        → Dio Brando
+        Anjuro "Angelo" Katagiri   → Anjuro Katagiri
+        Shigekiyo "Shigechi" Yangu → Shigekiyo Yangu
+        Former Tama                → Tama
+        Elder A. Phex Brother      → A. Phex Brothers
+        Younger A. Phex Brother    → A. Phex Brothers
+        Holy Joestar               → Holy Kujo
+        Star Platinum: The World   → Star Platinum（段落锚点）
+        Tusk ACT1/ACT2/ACT3/ACT4   → Tusk
+
+    ★ 后 5 个是**替身**而不是角色 —— 它们的重复来自另一条路：
+      `build_targets` 把 stands.json 里每个替身名都加成 target，
+      而 Tusk ACT1-4 是 M1 遗留的「形态组未消解」问题
+      （load_db 里为此专门建了聚合父记录）。
+      → 替身本身仍按 M1 的模型登记（那是另一个问题），
+        但**不该抓 5 份一模一样的页面**。
+
+    ★ 判定方法：`action=query&prop=revisions` 拿**未经重定向解析**的原文，
+      以 `#REDIRECT` 开头即为重定向。
+      （★ 不要用 `action=parse` 判：它对 `redirects` 参数的行为不一致，
+       实测同一个 `Holy Joestar` 两次调用返回不同 title。）
+    ★ 只列**实测确认过**的，不做"猜哪个是规范名"的自动判断 ——
+     宁可漏一个重定向，也不要把正文页误判成重定向而丢掉真数据。
+    """
+    return {
+        # 角色侧（来自 Category:Part N Characters）
+        "DIO", 'Anjuro "Angelo" Katagiri', 'Shigekiyo "Shigechi" Yangu',
+        "Former Tama", "Elder A. Phex Brother",
+        "Younger A. Phex Brother", "Holy Joestar",
+        # 替身侧（来自 stands.json 的形态组，M1 遗留）
+        "Star Platinum: The World",
+        "Tusk ACT1", "Tusk ACT2", "Tusk ACT3", "Tusk ACT4",
+    }
 
 
 def fetch_arc_titles() -> list[str]:

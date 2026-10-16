@@ -159,6 +159,15 @@ def load() -> dict:
         if a.get("arc_id"):
             arc_mentions[a["arc_id"]] = a
 
+    # ---- ★ M72：篇章 ↔ 角色语料证据链 ----
+    #   M71 只做了替身侧；用户问「这一段有谁」时更常问的是**角色**。
+    #   数据源是角色页的 {{Appearance}} 模板（355/368 个角色页有）。
+    ac_raw = _read("arc_characters.json") or {}
+    arc_characters: dict[str, dict] = {}
+    for a in (ac_raw.get("arcs") or []):
+        if a.get("arc_id"):
+            arc_characters[a["arc_id"]] = a
+
     return {
         "by_id": by_id,
         "by_name": by_name,
@@ -169,7 +178,9 @@ def load() -> dict:
         "arcs_by_id": arcs_by_id,
         "arcs_by_name": arcs_by_name,
         "arc_mentions": arc_mentions,
+        "arc_characters": arc_characters,
         "n_arcs_with_stands": am_raw.get("n_with_stands") or 0,
+        "n_arcs_with_characters": ac_raw.get("n_with_characters") or 0,
         "n_included": loc_raw.get("n_included") or len(by_id),
         "n_with_zh": zh_raw.get("n_with_zh") or 0,
         "n_mentions": len(men_raw.get("mentions") or []),
@@ -262,6 +273,13 @@ def answer_arc(name: str) -> dict | None:
     return _arc_answer_dict(a)
 
 
+def arc_characters_of(arc_id: str | None) -> dict:
+    """按 arc_id 取该篇章的角色出场（M72）。没有则返回空壳。"""
+    if not arc_id:
+        return {}
+    return load()["arc_characters"].get(arc_id) or {}
+
+
 def _arc_answer_dict(a: dict) -> dict:
     """篇章证据链 → 答案 dict（M71）。"""
     stands = [{
@@ -271,6 +289,14 @@ def _arc_answer_dict(a: dict) -> dict:
         "snippet": s.get("snippet"),
         "n_forms": s.get("n_forms", 1),
     } for s in (a.get("stands") or [])]
+
+    # ★ M72：同一篇章的角色出场（与替身并列，口径完全一样）
+    chars = [{
+        "name": c.get("name_en"),
+        "character_id": c.get("character_id"),
+        "chapter": c.get("chapter"),
+        "snippet": c.get("snippet"),
+    } for c in (arc_characters_of(a.get("arc_id")).get("characters") or [])]
 
     return {
         "type": "arc_fact",
@@ -283,9 +309,12 @@ def _arc_answer_dict(a: dict) -> dict:
         },
         "count": len(stands),
         "stands": stands,
+        "characters": chars,
+        "n_characters": len(chars),
         "note": (
-            "以上是该**篇章章节范围**内、源站替身条目里记录到出场的替身，"
-            "每条标注了最早出场话数与原文，可回查。"
+            "以上是该**篇章章节范围**内的出场记录：替身取自源站替身条目的 "
+            "Appearance 段，角色取自源站角色页的 {{Appearance}} 模板；"
+            "每条都标注了最早出场话数与原文，可回查。"
             + ("★ 另有同名**地点**，口径不同（问地点请去掉「篇章」二字）。"
                if a.get("location_id") else "")
             + (a.get("note") or "")

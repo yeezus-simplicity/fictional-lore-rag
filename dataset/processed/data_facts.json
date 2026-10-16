@@ -1,0 +1,8 @@
+{
+ "_note": "M72：由 load_db 在入库后写出的**权威计数**。collect_metrics 的对外数字闸门读这个文件，不再自己数 processed/*.json —— characters 表是 owner_map ∪ characters_ext 的并集，两个来源的数量本来就不相等。",
+ "n_characters": 374,
+ "n_stands": 187,
+ "n_text_chunks": 10866,
+ "n_appearances": 4902,
+ "n_moves": 23
+}

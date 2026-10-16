@@ -1,5 +1,5 @@
 {
- "n_arcs": 189,
+ "n_arcs": 188,
  "n_linked_to_location": 2,
  "_note": "M70：篇章（Story Arc）维度。源站用 hatnote 在同名地点/篇章之间互相指路（实测 116 个 hatnote 里只有 2 个是 location↔arc：Shakedown Road、San Diego Beach）。★ 只认指向 `(Story Arc)` 页的消歧，不泛化 —— `Foo Fighters` ↔ `Foo Fighters (Stand)` 那类角色↔替身关系与地点无关，硬套会造出无意义关联。",
  "arcs": [
@@ -1555,18 +1555,6 @@
   {
    "arc_title": "Spice Girl (Story Arc)",
    "arc_id": "spice_girl",
-   "name_en": "Spice Girl",
-   "name_display": "Spice Girl",
-   "location_title": null,
-   "location_id": null,
-   "part": null,
-   "chapters": [
-    "VA 100-101"
-   ]
-  },
-  {
-   "arc_title": "Spice Girl (Story Arc)/fr",
-   "arc_id": "spice_girl_story_arc_fr",
    "name_en": "Spice Girl",
    "name_display": "Spice Girl",
    "location_title": null,

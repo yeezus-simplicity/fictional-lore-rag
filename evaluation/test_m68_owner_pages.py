@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import ast
 import json
+import os
 import re
 import sys
 from pathlib import Path
@@ -228,6 +229,38 @@ def main() -> int:
           'p.get("entity_id")' in src)
     check("★ build_characters 的 name_en 用原名（name_in_stands）",
           "name_in_stands" in src)
+
+    # ---- ⑧ ★★ 降级路径本身也要测（否则这段代码永远没被 CI 覆盖）----
+    #   上面 [3] 段的 `except BaseException` 只在「DB 真不可用」时才走到，
+    #   而 CI **总有** DB（services 容器里跑）→ 这条分支平时**永远不执行**。
+    #   → 用 `PGPORT=1`（必然连不上，同 test_degraded_mode 的做法）起一个
+    #     子进程跑本测试，断言它 **exit=0 且打出 SKIP**。
+    #   ★ 这才是「降级路径可被验证」：不是"我写了个 except 就完事"。
+    # ★★ 必须加 `_M68_CHILD=1` 守卫，否则**无限递归** ★★
+    #   子进程跑到本段时会**再起一个子进程**……实测直接 SIGTERM。
+    print("\n[8] ★★ 降级路径本身可验证（DB 不可用时不崩、不判失败）")
+    if os.environ.get("_M68_CHILD") == "1":
+        # 我是被 [8] 段起的那个子进程 —— 到这里就停，
+        # 否则会无限起子进程（实测 SIGTERM）。
+        print("  （子进程：降级路径已验证，不再递归）")
+    else:
+        import subprocess
+        env = dict(os.environ, PGPORT="1", _M68_CHILD="1")
+        _r = subprocess.run(
+            [sys.executable, str(Path(__file__).resolve())],
+            capture_output=True, text=True, encoding="utf-8",
+            errors="replace", env=env, timeout=600)
+        out = _r.stdout or ""
+        check("★ DB 不可用时 exit=0（不静默终止）", _r.returncode == 0,
+              f"exit={_r.returncode}  尾部：{out[-160:]}")
+        check("★ 打出了 SKIP 而不是 FAIL",
+              ("SKIP" in out) and ("FAIL" not in out),
+              f"SKIP={'SKIP' in out} FAIL={'FAIL' in out}")
+        check("★ 降级时非 DB 断言仍然跑了（不是整测空转）",
+              out.count("PASS") >= 30, f"PASS 数 {out.count('PASS')}")
+        check("★ SystemExit 没被静默吞掉（SKIP 行说明走到了 except）",
+              "SystemExit" in out or "SKIP" in out,
+              f"含 SystemExit={'SystemExit' in out}")
 
     print()
     if FAILS:

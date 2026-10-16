@@ -1776,29 +1776,48 @@ def get_stats():
 #   stands.stand_type 是从 infobox 多项**直接拼接**来的，实测值形如：
 #     "Close-RangeRange Irrelevant (Star Platinum: The World)ReconnaissanceNatural Humanoid"
 #   （没有分隔符、还夹着括号注记）—— 直接显示没法看。
-#   → 按已知类型词提取、译成中文、用「·」连接；识别不出就返回 None。
-_STAND_TYPE_CN: tuple[tuple[str, str], ...] = (
-    ("Close-Range", "近距离型"), ("Long-Range", "远距离型"),
-    ("Range Irrelevant", "射程无关"), ("Reconnaissance", "侦查型"),
-    ("Natural Humanoid", "自然人型"), ("Artificial Humanoid", "人造人型"),
-    ("Automatic", "自动操纵型"), ("Colony", "群体型"), ("Bound", "依附型"),
-    ("Integrated", "一体型"), ("Wearable", "穿戴型"), ("Tool", "道具型"),
-    ("Materialized", "物质化型"), ("Phenomenon", "现象型"),
-    ("Spirit", "精神型"), ("Psychic", "超能力型"),
-)
-_TYPE_NOTE_RE = re.compile(r"\([^)]*\)")
+#
+# ★ M69：这段逻辑已下沉到 `dataset/pipeline/stand_type_parts.py`，
+#   与 load_db 写库的词表**同源**。原来这里自己维护一份 15 词表，
+#   漏掉了语料里真实出现的 `Natural Non-Humanoid` / `Psychological Assault` /
+#   `Sentient` / `Multi-Unit` / `Foresight` / `Evolved`，
+#   而且 `Natural Humanoid` 是 `Natural Non-Humanoid` 的子串 → 会切错。
+#   两份词表各切各的，是比词表不全更隐蔽的一类不一致。
+try:
+    import sys as _sys
+    _sys.path.insert(0, str(Path(__file__).resolve().parents[1]
+                            / "dataset" / "pipeline"))
+    from stand_type_parts import readable_cn as _st_readable_cn  # type: ignore
+except Exception:      # 词表模块缺失 → 退回旧的本地词表，服务不崩
+    _STAND_TYPE_CN: tuple[tuple[str, str], ...] = (
+        ("Close-Range", "近距离型"), ("Long-Range", "远距离型"),
+        ("Range Irrelevant", "射程无关"), ("Reconnaissance", "侦查型"),
+        ("Natural Humanoid", "自然人型"), ("Artificial Humanoid", "人造人型"),
+        ("Automatic", "自动操纵型"), ("Colony", "群体型"), ("Bound", "依附型"),
+        ("Integrated", "一体型"), ("Wearable", "穿戴型"), ("Tool", "道具型"),
+        ("Materialized", "物质化型"), ("Phenomenon", "现象型"),
+        ("Spirit", "精神型"), ("Psychic", "超能力型"),
+    )
+    _TYPE_NOTE_RE = re.compile(r"\([^)]*\)")
+
+    def _st_readable_cn(raw: Optional[str]) -> Optional[str]:
+        if not raw:
+            return None
+        t = _TYPE_NOTE_RE.sub(" ", str(raw))
+        hits: list[str] = []
+        for en, cn in _STAND_TYPE_CN:
+            if en.lower() in t.lower() and cn not in hits:
+                hits.append(cn)
+        return " · ".join(hits) if hits else None
 
 
 def _clean_stand_type(raw: Optional[str]) -> Optional[str]:
-    """把拼接的类型串清成「近距离型 · 自然人型」；识别不出返回 None。"""
-    if not raw:
-        return None
-    t = _TYPE_NOTE_RE.sub(" ", str(raw))     # 去掉括号里的注记
-    hits: list[str] = []
-    for en, cn in _STAND_TYPE_CN:
-        if en.lower() in t.lower() and cn not in hits:
-            hits.append(cn)
-    return " · ".join(hits) if hits else None
+    """把拼接的类型串清成「近距离型 · 自然人型」；识别不出返回 None。
+
+    ★ M69：优先用 DB 里已落库的结构化列（stand_type_cn），
+       没有才现算 —— 避免同一份数据有两种算法。
+    """
+    return _st_readable_cn(raw)
 
 
 def _display_name_of(q: str, state: dict) -> Optional[str]:

@@ -81,6 +81,20 @@ def collect_m1() -> dict:
     _chrs = _chr.get("characters") or []
     n_characters = len(_chrs)
     n_char_bio = sum(1 for c in _chrs if c.get("bio"))
+    # ★ M69：替身类型结构化（射程/体质/特性）
+    #   硬判据是「未识别残余为 0」—— 词表能解释每一个字符。
+    #   这个数字必须进闸门：词表一改、残余一涨，对外结构化数字就失效了。
+    sys.path.insert(0, str(ROOT / "dataset" / "pipeline"))
+    try:
+        from stand_type_parts import audit as _st_audit  # type: ignore
+        _st = _st_audit(stand)
+        n_type_total = _st["n_with_type"]
+        n_type_residual = _st["n_incomplete"]
+    except Exception as e:            # 模块缺失 → 标 unavailable，不填 0
+        print(f"  ⚠ 替身类型切分不可用（{type(e).__name__}）："
+              f"类型结构化数字标 unavailable")
+        n_type_total = None
+        n_type_residual = None
     n_base_chunks = chunks.get("n_chunks") or 0
     part_of = {s["stand_id"]: s.get("part") for s in stand}
     by_part: dict = {}
@@ -102,6 +116,8 @@ def collect_m1() -> dict:
         "n_locations": n_locations,
         "n_characters": n_characters,
         "n_char_bio": n_char_bio,
+        "n_stand_types": n_type_total,
+        "n_stand_type_residual": n_type_residual,
         "n_stands_covered": chunks.get("n_stands_covered"),
         "total_chars": chunks.get("total_chars"),
         "chunk_type_dist": chunks.get("type_distribution", {}),
@@ -521,6 +537,11 @@ PUBLIC_NUMBERS = {
     # ★ M66 新增：角色维度（人物背景）
     "数据.角色数": ("M1", "n_characters", 180),        # M68：补抓 12 个
     "数据.角色简介覆盖": ("M1", "n_char_bio", 179),    # M68：180 个里 1 个无 lead
+    # ★ M69 新增：替身类型结构化。
+    #   n_stand_type_residual 必须恒为 0 —— 它是「词表能解释每一个字符」
+    #   的硬判据。一涨就说明词表又不全了，对外「已结构化」的说法失效。
+    "数据.替身类型可切分数": ("M1", "n_stand_types", 168),
+    "数据.替身类型残余": ("M1", "n_stand_type_residual", 0),
     # ★ 六维齐全率下降是**覆盖面变大**，不是数据变差 —— 见 collect_m1 的注释
     "数据.六维齐全率": ("M1", "completeness_ratio", 0.6578),
     "数据.六维非全空率": ("M1", "completeness_any_ratio", 0.8075),

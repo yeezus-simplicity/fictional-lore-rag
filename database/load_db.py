@@ -47,6 +47,43 @@ MIGRATIONS_DIR = ROOT / "dataset" / "schema" / "migrations"
 # ★ B 方案：文章块语料（若有则追加；缺失时行为与以前完全一致）
 ARTICLES = PROC / "article_chunks.json"
 
+# ★ M69：替身类型串切分（dataset/pipeline/stand_type_parts.py）
+#   与 api/main.py 共用同一份词表 → 展示层与底层不会再各切各的。
+sys.path.insert(0, str(ROOT / "dataset" / "pipeline"))
+try:
+    from stand_type_parts import (  # type: ignore
+        is_aggregate as _st_is_aggregate,
+        split_stand_type as _st_split,
+    )
+except ImportError:  # 词表模块缺失 → 不阻断装载，只跳过派生列
+    _st_split = None
+
+    def _st_is_aggregate(raw: Any) -> bool:
+        return False
+
+
+def _stand_type_cols(raw: Optional[str]) -> tuple:
+    """返回 (range, kinds, extras, residual, is_agg, cn)。
+
+    ★ 派生列缺失时返回全空 —— 让旧 schema 也能跑（向后兼容）。
+    """
+    if _st_split is None:
+        return (None, None, None, None, "", False, None)
+    if _st_is_aggregate(raw):
+        return (None, None, None, None, "", True, None)
+    p = _st_split(raw)
+    cn = p.readable_cn() if p.all_en() else None
+    # ★ 数组列传「竖线分隔的字符串」，由 SQL 侧 string_to_array(..., '|') 还原。
+    #   不能直接传 list（psycopg2 adapter 渲染 AsIs('{"a"}')，
+    #   裸数组字面量在 SELECT/VALUES 里无法推断类型 → 报
+    #   `syntax error at or near "{"`，实测 ARRAY['a'] 也不行）；
+    #   也不能用 array_literal()（它是给**内联进 SQL 字符串**用的，
+    #   走占位符会被整体加引号）。
+    #   用 '|' 而非 ','：词表里没有竖线，而 type 串里出现过逗号。
+    return (p.range_type, "|".join(p.ranges) or None,
+            "|".join(p.kinds) or None, "|".join(p.extras) or None,
+            p.residual, False, cn)
+
 
 def migrations() -> list[Path]:
     """按文件名排序返回全部 migration。
@@ -490,7 +527,7 @@ def load_data() -> bool:
             _form_n.get(s["stand_id"], s.get("form_count", 1)),
             s.get("main_table_registrations", 1),
             s.get("detail_url"), s.get("owner_name"),
-        ))
+        ) + _stand_type_cols(s.get("stand_type")))
     # 聚合父记录（owner_id 留空，形态成员各有持有者）
     for a in agg_records:
         stand_rows.append((
@@ -499,25 +536,87 @@ def load_data() -> bool:
             a["stand_type"], None, None, None,
             a["form_count"], len(a["member_ids"]),
             a["detail_url"], None,
-        ))
+        ) + _stand_type_cols(a.get("stand_type")))
 
-    cur.executemany("""
-        INSERT INTO stands
-            (stand_id, name_en, name_ja, owner_id, part, part_name_en,
-             stand_type, reference, manga_debut, anime_debut,
-             form_count, main_table_registrations, detail_url, owner_name_raw)
-        VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
-        ON CONFLICT (stand_id) DO UPDATE SET
-            name_en=EXCLUDED.name_en, name_ja=EXCLUDED.name_ja,
-            owner_id=EXCLUDED.owner_id, part=EXCLUDED.part,
-            part_name_en=EXCLUDED.part_name_en, stand_type=EXCLUDED.stand_type,
-            reference=EXCLUDED.reference, manga_debut=EXCLUDED.manga_debut,
-            anime_debut=EXCLUDED.anime_debut, form_count=EXCLUDED.form_count,
-            main_table_registrations=EXCLUDED.main_table_registrations,
-            detail_url=EXCLUDED.detail_url, owner_name_raw=EXCLUDED.owner_name_raw
-    """, stand_rows)
+    # ★ M69：派生列可能不存在（老 schema）→ 先探测再决定是否写入。
+    _has_type_cols = True
+    try:
+        cur.execute("""
+            SELECT column_name FROM information_schema.columns
+            WHERE table_name = 'stands'
+              AND column_name = 'stand_type_ranges'
+        """)
+        _has_type_cols = cur.fetchone() is not None
+    except Exception:
+        conn.rollback()
+        _has_type_cols = False
+
+    if _has_type_cols:
+        cur.executemany("""
+            INSERT INTO stands
+                (stand_id, name_en, name_ja, owner_id, part, part_name_en,
+                 stand_type, reference, manga_debut, anime_debut,
+                 form_count, main_table_registrations, detail_url, owner_name_raw,
+                 stand_type_range, stand_type_ranges, stand_type_kinds,
+                 stand_type_extras, stand_type_residual,
+                 stand_type_aggregate, stand_type_cn)
+            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,
+                    %s,coalesce(string_to_array(%s,'|'),'{}'::text[]),
+                    coalesce(string_to_array(%s,'|'),'{}'::text[]),
+                    coalesce(string_to_array(%s,'|'),'{}'::text[]),
+                    %s,%s,%s)
+            ON CONFLICT (stand_id) DO UPDATE SET
+                name_en=EXCLUDED.name_en, name_ja=EXCLUDED.name_ja,
+                owner_id=EXCLUDED.owner_id, part=EXCLUDED.part,
+                part_name_en=EXCLUDED.part_name_en, stand_type=EXCLUDED.stand_type,
+                reference=EXCLUDED.reference, manga_debut=EXCLUDED.manga_debut,
+                anime_debut=EXCLUDED.anime_debut, form_count=EXCLUDED.form_count,
+                main_table_registrations=EXCLUDED.main_table_registrations,
+                detail_url=EXCLUDED.detail_url, owner_name_raw=EXCLUDED.owner_name_raw,
+                stand_type_range=EXCLUDED.stand_type_range,
+                stand_type_ranges=EXCLUDED.stand_type_ranges,
+                stand_type_kinds=EXCLUDED.stand_type_kinds,
+                stand_type_extras=EXCLUDED.stand_type_extras,
+                stand_type_residual=EXCLUDED.stand_type_residual,
+                stand_type_aggregate=EXCLUDED.stand_type_aggregate,
+                stand_type_cn=EXCLUDED.stand_type_cn
+        """, stand_rows)
+    else:
+        # 老 schema：只写原有 14 列（派生列由 migration 004 补齐后重跑）
+        cur.executemany("""
+            INSERT INTO stands
+                (stand_id, name_en, name_ja, owner_id, part, part_name_en,
+                 stand_type, reference, manga_debut, anime_debut,
+                 form_count, main_table_registrations, detail_url, owner_name_raw)
+            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+            ON CONFLICT (stand_id) DO UPDATE SET
+                name_en=EXCLUDED.name_en, name_ja=EXCLUDED.name_ja,
+                owner_id=EXCLUDED.owner_id, part=EXCLUDED.part,
+                part_name_en=EXCLUDED.part_name_en, stand_type=EXCLUDED.stand_type,
+                reference=EXCLUDED.reference, manga_debut=EXCLUDED.manga_debut,
+                anime_debut=EXCLUDED.anime_debut, form_count=EXCLUDED.form_count,
+                main_table_registrations=EXCLUDED.main_table_registrations,
+                detail_url=EXCLUDED.detail_url, owner_name_raw=EXCLUDED.owner_name_raw
+        """, [r[:14] for r in stand_rows])
+        print("  ⚠ 未找到 stand_type_range 列：跳过 M69 派生列"
+              "（先跑 migration 004 再重跑 load_db）")
     n_owner = sum(1 for r in stand_rows if r[3])
     print(f"  {len(stand_rows)} 个替身（{n_owner} 个已关联主持有者）")
+    # 派生列布局（下标）：14=range 15=ranges 16=kinds 17=extras
+    #                   18=residual 19=aggregate 20=cn
+    # ★ 这里硬编码下标很脆（我第一次就写成了 17 → 把 extras 当 residual，
+    #   报出「残余 106」这种看着像真问题的假警报）。
+    #   → 用 tuple unpack 拿，名字对不上就会立刻报错而不是静默算错。
+    _n_res = 0
+    for _r in stand_rows:
+        (_sid, _en, _ja, _oid, _pt, _ptn, _st, _ref, _md, _ad,
+         _fc, _mtr, _du, _own,
+         _rng, _rngs, _kinds, _extras, _res, _agg, _cn) = _r
+        if _res:
+            _n_res += 1
+    if _has_type_cols:
+        print(f"  M69 类型切分：{len(stand_rows)} 条"
+              f"（未识别残余 {_n_res} 条）")
 
     # ---------- ★★ 清掉本轮不再产生的角色行 ★★ ----------
     #   `ON CONFLICT (character_id) DO UPDATE` 只更新/插入，**从不删除** ——

@@ -1730,11 +1730,19 @@ function renderStructured(a){
     const list = (arr,cls) => (arr||[]).length
       ? `<div class="lc-line">${cls}：${arr.map(x=>`<span class="tag">${esc(x.name)}</span>`).join('')}</div>`
       : '';
+    // ★ M70 同名消歧：这个名字既是地点也是篇章时，明确说清口径
+    const arc = a.also_story_arc;
+    const arcBox = arc ? `<div class="lc-line" style="margin-top:10px;padding:8px 10px;border-left:3px solid #d4a017;background:rgba(212,160,23,.08)">
+        <b>⚠ 同名歧义</b>：${esc(arc.note)}
+        ${arc.name? `<div style="margin-top:4px;font-size:12px;opacity:.85">
+          篇章：${esc(arc.name)}${arc.part?`（第 ${esc(String(arc.part))} 部）`:''}${arc.chapters&&arc.chapters.length?` · 章节 ${esc(arc.chapters.join('、'))}`:''}</div>`:''}
+      </div>` : '';
     return `<div style="margin-bottom:8px"><b>${esc(loc.name||'')}</b>
         <span class="zc-sub">${esc(loc.name_en||'')}</span> —— 该地点条目正文里写到的：</div>
       ${list(a.stands,'相关替身')}${list(a.characters,'相关角色')}
       ${(!(a.stands||[]).length && !(a.characters||[]).length)
         ? '<div>该地点条目正文里没有写到具体替身或角色。</div>' : ''}
+      ${arcBox}
       ${a.note? `<div class="meta" style="margin-top:8px">${esc(a.note)}</div>`:''}`;
   }
   if(t==='location_hint'){

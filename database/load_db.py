@@ -422,6 +422,40 @@ def load_data() -> bool:
                 }
             owner_map[cid]["stand_ids"].append(s["stand_id"])
 
+    # ★★ M70：`characters` 表**不能只从 owner_map 构建**。
+    #   owner_map = 「替身持有者」，而 `text_chunks.character_id` 的外键
+    #   指向的是**语料块归属的角色**，两者不是同一集合：
+    #   M70 补抓了 196 个「分类里有、但不是任何替身持有者」的角色
+    #   （`Lisa Lisa` / `Jonathan Joestar` / `Caesar Anthonio Zeppeli` …），
+    #   它们的语料块存在、但表里没有行 → 直接撞外键约束
+    #   `text_chunks_character_id_fkey`（实测 Key (memetaa_frog) is not present）。
+    #   → 这里 union 上 characters_ext.json 的全量角色；
+    #     stand_ids 仍只填 owner_map 里有的（没有替身就是空数组，不编造）。
+    _ext_path = PROC / "characters_ext.json"
+    _ext: list[dict] = []
+    if _ext_path.exists():
+        try:
+            _ext = json.loads(_ext_path.read_text(encoding="utf-8")).get(
+                "characters") or []
+        except Exception:
+            _ext = []
+    n_added = 0
+    for c in _ext:
+        cid = c.get("character_id")
+        if not cid or cid in owner_map:
+            continue
+        owner_map[cid] = {
+            "character_id": cid,
+            "name_en": c.get("name_en") or c.get("title") or cid,
+            "name_ja": c.get("name_ja"),
+            "part": c.get("part"),
+            "stand_ids": [],
+        }
+        n_added += 1
+    if n_added:
+        print(f"  M70 并入 characters_ext 的 {n_added} 个非持有者角色"
+              f"（否则其语料块会撞外键）")
+
     #★ TEXT[] 列不能用占位符传list（psycopg2 会当字符串加引号 → 语法错误），
     #   必须把数组字面量直接拼进 SQL
     char_values = []

@@ -71,10 +71,20 @@ def main() -> int:
     #   （`Unnamed Mountain Lodge Owner` → `Mountain Lodge Owner`，数量不变）
     check(f"角色 target {len(chars)} 个（≥180）", len(chars) >= 180,
           f"实际 {len(chars)}")
+    # ★ M70：判据要**剥掉作品后缀**再判粘连。
+    #   源站用括号标注同名角色属于哪一部 —— `(JoJolion)` / `(Steel Ball Run)`
+    #   是**作品名**，不是人名；`JoJolion` 的 `oJ` 会被 `[a-z][A-Z]` 判成两角色粘连。
+    #   实测 M70 引入后误报 4 条（Joseph/Josuke/Tomoko/Kira 的 JoJolion 版），
+    #   与 M67「不用驼峰边界判 owner 粘连」是同一条教训：
+    #   **任何"看起来像两个东西"的规则，都要先在真实数据上跑一遍。**
+    #   这里刻意复用 build_characters._strip_work_suffix 的口径，两处保持一致。
+    def _no_arc_suffix(t: str) -> str:
+        return re.sub(r"\s*\([^)]*\)\s*$", "", t).strip()
+
     glued = [t["title"] for t in chars
-             if re.search(r"[a-z][A-Z]", t["title"])
-             and not re.search(r"(Mc|Mac)[A-Z]", t["title"])]
-    check("★ 名单里没有粘连名（排除 Mc/Mac 误报）", not glued, f"{glued}")
+             if re.search(r"[a-z][A-Z]", _no_arc_suffix(t["title"]))
+             and not re.search(r"(Mc|Mac)[A-Z]", _no_arc_suffix(t["title"]))]
+    check("★ 名单里没有粘连名（排除 Mc/Mac 与作品后缀误报）", not glued, f"{glued}")
     check("★ M66/M67 报告里那 3 个长粘连名已消失",
           not any("BoomboomL.A." in t or "SeraiChaka" in t
                   or "Victim Thunder" in t for t in titles),

@@ -1,0 +1,2274 @@
+{
+ "n_arcs": 189,
+ "n_linked_to_location": 2,
+ "_note": "M70：篇章（Story Arc）维度。源站用 hatnote 在同名地点/篇章之间互相指路（实测 116 个 hatnote 里只有 2 个是 location↔arc：Shakedown Road、San Diego Beach）。★ 只认指向 `(Story Arc)` 页的消歧，不泛化 —— `Foo Fighters` ↔ `Foo Fighters (Stand)` 那类角色↔替身关系与地点无关，硬套会造出无意义关联。",
+ "arcs": [
+  {
+   "arc_title": "\"Bastet\" Mariah (Story Arc)",
+   "arc_id": "bastet_mariah",
+   "name_en": "\"Bastet\" Mariah",
+   "name_display": "\"Bastet\" Mariah",
+   "location_title": null,
+   "location_id": null,
+   "part": 3,
+   "chapters": [
+    "SC 86-91"
+   ]
+  },
+  {
+   "arc_title": "\"Green Day\" and \"Oasis\" (Story Arc)",
+   "arc_id": "green_day_and_oasis",
+   "name_en": "Green Day\" and \"Oasis",
+   "name_display": "Green Day\" and \"Oasis",
+   "location_title": null,
+   "location_id": null,
+   "part": null,
+   "chapters": [
+    "VA 114-128"
+   ]
+  },
+  {
+   "arc_title": "\"I Am a Rock\" (Story Arc)",
+   "arc_id": "i_am_a_rock",
+   "name_en": "I Am a Rock",
+   "name_display": "I Am a Rock",
+   "location_title": null,
+   "location_id": null,
+   "part": 8,
+   "chapters": [
+    "JJL 31-32"
+   ]
+  },
+  {
+   "arc_title": "\"Khnum\" Oingo and \"Tohth\" Boingo (Story Arc)",
+   "arc_id": "khnum_oingo_and_tohth_boingo",
+   "name_en": "\"Khnum\" Oingo and \"Tohth\" Boingo",
+   "name_display": "\"Khnum\" Oingo and \"Tohth\" Boingo",
+   "location_title": null,
+   "location_id": null,
+   "part": 3,
+   "chapters": [
+    "SC 76-79"
+   ]
+  },
+  {
+   "arc_title": "\"Paisley Park\" and \"Born This Way\" (Story Arc)",
+   "arc_id": "paisley_park_and_born_this_way",
+   "name_en": "Paisley Park\" and \"Born This Way",
+   "name_display": "Paisley Park\" and \"Born This Way",
+   "location_title": null,
+   "location_id": null,
+   "part": 8,
+   "chapters": [
+    "JJL 11-17"
+   ]
+  },
+  {
+   "arc_title": "\"Sethan\" Alessi (Story Arc)",
+   "arc_id": "sethan_alessi",
+   "name_en": "\"Sethan\" Alessi",
+   "name_display": "\"Sethan\" Alessi",
+   "location_title": null,
+   "location_id": null,
+   "part": 3,
+   "chapters": [
+    "SC 92-97"
+   ]
+  },
+  {
+   "arc_title": "\"Shakedown Road\" (Story Arc)",
+   "arc_id": "shakedown_road",
+   "name_en": "Shakedown Road",
+   "name_display": "Shakedown Road",
+   "location_title": "Shakedown Road",
+   "location_id": "shakedown_road",
+   "part": 8,
+   "chapters": [
+    "JJL 18-22"
+   ]
+  },
+  {
+   "arc_title": "\"The Fool\" Iggy and \"Geb\" N'Doul (Story Arc)",
+   "arc_id": "the_fool_iggy_and_geb_n_doul",
+   "name_en": "\"The Fool\" Iggy and \"Geb\" NDoul",
+   "name_display": "\"The Fool\" Iggy and \"Geb\" NDoul",
+   "location_title": null,
+   "location_id": null,
+   "part": 3,
+   "chapters": [
+    "SC 70-75"
+   ]
+  },
+  {
+   "arc_title": "1st Stage (Story Arc)",
+   "arc_id": "1st_stage",
+   "name_en": "1st Stage",
+   "name_display": "1st Stage",
+   "location_title": null,
+   "location_id": null,
+   "part": 7,
+   "chapters": [
+    "SBR 5-12"
+   ]
+  },
+  {
+   "arc_title": "200 Balloons and Lyin' Eyes (Story Arc)",
+   "arc_id": "200_balloons_and_lyin_eyes",
+   "name_en": "200 Balloons and Lyin Eyes",
+   "name_display": "200 Balloons and Lyin Eyes",
+   "location_title": null,
+   "location_id": null,
+   "part": 9,
+   "chapters": [
+    "TJL 21-27"
+   ]
+  },
+  {
+   "arc_title": "A Letter from the Past (Story Arc)",
+   "arc_id": "a_letter_from_the_past",
+   "name_en": "A Letter from the Past",
+   "name_display": "A Letter from the Past",
+   "location_title": null,
+   "location_id": null,
+   "part": 1,
+   "chapters": [
+    "Chapters 6 - 7"
+   ]
+  },
+  {
+   "arc_title": "Across the Arizona Desert (Story Arc)",
+   "arc_id": "across_the_arizona_desert",
+   "name_en": "Across the Arizona Desert",
+   "name_display": "Across the Arizona Desert",
+   "location_title": null,
+   "location_id": null,
+   "part": 7,
+   "chapters": [
+    "SBR 13-14"
+   ]
+  },
+  {
+   "arc_title": "Aim for That Fifty Billion Dollars (Story Arc)",
+   "arc_id": "aim_for_that_fifty_billion_dollars",
+   "name_en": "Aim for That Fifty Billion Dollars",
+   "name_display": "Aim for That Fifty Billion Dollars",
+   "location_title": null,
+   "location_id": null,
+   "part": 9,
+   "chapters": [
+    "TJL 12-15"
+   ]
+  },
+  {
+   "arc_title": "Another One Bites the Dust (Story Arc)",
+   "arc_id": "another_one_bites_the_dust",
+   "name_en": "Another One Bites the Dust",
+   "name_display": "Another One Bites the Dust",
+   "location_title": null,
+   "location_id": null,
+   "part": 4,
+   "chapters": [
+    "DU 153-162"
+   ]
+  },
+  {
+   "arc_title": "Anubis (Story Arc)",
+   "arc_id": "anubis",
+   "name_en": "Anubis",
+   "name_display": "Anubis",
+   "location_title": null,
+   "location_id": null,
+   "part": 3,
+   "chapters": [
+    "SC 80-85"
+   ]
+  },
+  {
+   "arc_title": "Atom Heart Father (Story Arc)",
+   "arc_id": "atom_heart_father",
+   "name_en": "Atom Heart Father",
+   "name_display": "Atom Heart Father",
+   "location_title": null,
+   "location_id": null,
+   "part": 4,
+   "chapters": [
+    "DU 100-104"
+   ]
+  },
+  {
+   "arc_title": "Awaken (Story Arc)",
+   "arc_id": "awaken",
+   "name_en": "Awaken",
+   "name_display": "Awaken",
+   "location_title": null,
+   "location_id": null,
+   "part": 6,
+   "chapters": [
+    "SO 85-88"
+   ]
+  },
+  {
+   "arc_title": "Baby Face (Story Arc)",
+   "arc_id": "baby_face",
+   "name_en": "Baby Face",
+   "name_display": "Baby Face",
+   "location_title": null,
+   "location_id": null,
+   "part": null,
+   "chapters": [
+    "VA 61-68"
+   ]
+  },
+  {
+   "arc_title": "Ball Breaker (Story Arc)",
+   "arc_id": "ball_breaker",
+   "name_en": "Ball Breaker",
+   "name_display": "Ball Breaker",
+   "location_title": null,
+   "location_id": null,
+   "part": 7,
+   "chapters": [
+    "SBR 83-87"
+   ]
+  },
+  {
+   "arc_title": "Birth of the \"Green\" (Story Arc)",
+   "arc_id": "birth_of_the_green",
+   "name_en": "Birth of the \"Green\"",
+   "name_display": "Birth of the \"Green\"",
+   "location_title": null,
+   "location_id": null,
+   "part": 6,
+   "chapters": [
+    "SO 75-77"
+   ]
+  },
+  {
+   "arc_title": "Bohemian Rhapsody (Story Arc)",
+   "arc_id": "bohemian_rhapsody",
+   "name_en": "Bohemian Rhapsody",
+   "name_display": "Bohemian Rhapsody",
+   "location_title": null,
+   "location_id": null,
+   "part": 6,
+   "chapters": [
+    "SO 103-110"
+   ]
+  },
+  {
+   "arc_title": "Both Sides Now (Story Arc)",
+   "arc_id": "both_sides_now",
+   "name_en": "Both Sides Now",
+   "name_display": "Both Sides Now",
+   "location_title": null,
+   "location_id": null,
+   "part": 7,
+   "chapters": [
+    "SBR 60-62"
+   ]
+  },
+  {
+   "arc_title": "Break My Heart, Break Your Heart (Story Arc)",
+   "arc_id": "break_my_heart_break_your_heart",
+   "name_en": "Break My Heart, Break Your Heart",
+   "name_display": "Break My Heart, Break Your Heart",
+   "location_title": null,
+   "location_id": null,
+   "part": 7,
+   "chapters": [
+    "SBR 88-89"
+   ]
+  },
+  {
+   "arc_title": "Bucciarati is Coming (Story Arc)",
+   "arc_id": "bucciarati_is_coming",
+   "name_en": "Bucciarati is Coming",
+   "name_display": "Bucciarati is Coming",
+   "location_title": null,
+   "location_id": null,
+   "part": null,
+   "chapters": [
+    "VA 4-8"
+   ]
+  },
+  {
+   "arc_title": "C-MOON (Story Arc)",
+   "arc_id": "c_moon",
+   "name_en": "C-MOON",
+   "name_display": "C-MOON",
+   "location_title": null,
+   "location_id": null,
+   "part": 6,
+   "chapters": [
+    "SO 141-148"
+   ]
+  },
+  {
+   "arc_title": "Caesar: A Lonely Youth (Story Arc)",
+   "arc_id": "caesar_a_lonely_youth",
+   "name_en": "Caesar: A Lonely Youth",
+   "name_display": "Caesar: A Lonely Youth",
+   "location_title": null,
+   "location_id": null,
+   "part": 2,
+   "chapters": [
+    "BT 44-49"
+   ]
+  },
+  {
+   "arc_title": "California King Bed (Story Arc)",
+   "arc_id": "california_king_bed",
+   "name_en": "California King Bed",
+   "name_display": "California King Bed",
+   "location_title": null,
+   "location_id": null,
+   "part": 8,
+   "chapters": [
+    "JJL 7-10"
+   ]
+  },
+  {
+   "arc_title": "Catch the Rainbow (On a Stormy Night...) (Story Arc)",
+   "arc_id": "catch_the_rainbow_on_a_stormy_night",
+   "name_en": "Catch the Rainbow (On a Stormy Night...)",
+   "name_display": "Catch the Rainbow (On a Stormy Night...)",
+   "location_title": null,
+   "location_id": null,
+   "part": 7,
+   "chapters": [
+    "SBR 38-39"
+   ]
+  },
+  {
+   "arc_title": "Cats Love Yoshikage Kira (Story Arc)",
+   "arc_id": "cats_love_yoshikage_kira",
+   "name_en": "Cats Love Yoshikage Kira",
+   "name_display": "Cats Love Yoshikage Kira",
+   "location_title": null,
+   "location_id": null,
+   "part": 4,
+   "chapters": [
+    "DU 127-132"
+   ]
+  },
+  {
+   "arc_title": "Cheap Trick (Story Arc)",
+   "arc_id": "cheap_trick",
+   "name_en": "Cheap Trick",
+   "name_display": "Cheap Trick",
+   "location_title": null,
+   "location_id": null,
+   "part": 4,
+   "chapters": [
+    "DU 147-152"
+   ]
+  },
+  {
+   "arc_title": "Chocolate Disco (Story Arc)",
+   "arc_id": "chocolate_disco",
+   "name_en": "Chocolate Disco",
+   "name_display": "Chocolate Disco",
+   "location_title": null,
+   "location_id": null,
+   "part": 7,
+   "chapters": [
+    "SBR 63-65"
+   ]
+  },
+  {
+   "arc_title": "Civil War (Story Arc)",
+   "arc_id": "civil_war",
+   "name_en": "Civil War",
+   "name_display": "Civil War",
+   "location_title": null,
+   "location_id": null,
+   "part": 7,
+   "chapters": [
+    "SBR 56-59"
+   ]
+  },
+  {
+   "arc_title": "Clash and Talking Head (Story Arc)",
+   "arc_id": "clash_and_talking_head",
+   "name_en": "Clash and Talking Head",
+   "name_display": "Clash and Talking Head",
+   "location_title": null,
+   "location_id": null,
+   "part": null,
+   "chapters": [
+    "VA 85-92"
+   ]
+  },
+  {
+   "arc_title": "Crazy Diamond is Unbreakable (Story Arc)",
+   "arc_id": "crazy_diamond_is_unbreakable",
+   "name_en": "Crazy Diamond is Unbreakable",
+   "name_display": "Crazy Diamond is Unbreakable",
+   "location_title": null,
+   "location_id": null,
+   "part": 4,
+   "chapters": [
+    "DU 163-174"
+   ]
+  },
+  {
+   "arc_title": "D'Arby the Gambler (Story Arc)",
+   "arc_id": "d_arby_the_gambler",
+   "name_en": "DArby the Gambler",
+   "name_display": "DArby the Gambler",
+   "location_title": null,
+   "location_id": null,
+   "part": 3,
+   "chapters": [
+    "SC 98-103"
+   ]
+  },
+  {
+   "arc_title": "D'Arby the Player (Story Arc)",
+   "arc_id": "d_arby_the_player",
+   "name_en": "DArby the Player",
+   "name_display": "DArby the Player",
+   "location_title": null,
+   "location_id": null,
+   "part": 3,
+   "chapters": [
+    "SC 114-124"
+   ]
+  },
+  {
+   "arc_title": "D4C (Story Arc)",
+   "arc_id": "d4c",
+   "name_en": "D4C",
+   "name_display": "D4C",
+   "location_title": null,
+   "location_id": null,
+   "part": 7,
+   "chapters": [
+    "SBR 66-70",
+    "SBR 73-82"
+   ]
+  },
+  {
+   "arc_title": "DIO's World (Story Arc)",
+   "arc_id": "dio_s_world",
+   "name_en": "DIOs World",
+   "name_display": "DIOs World",
+   "location_title": null,
+   "location_id": null,
+   "part": 3,
+   "chapters": [
+    "SC 134-152"
+   ]
+  },
+  {
+   "arc_title": "Dark Blue Moon (Story Arc)",
+   "arc_id": "dark_blue_moon",
+   "name_en": "Dark Blue Moon",
+   "name_display": "Dark Blue Moon",
+   "location_title": null,
+   "location_id": null,
+   "part": 3,
+   "chapters": [
+    "SC 14-16"
+   ]
+  },
+  {
+   "arc_title": "Death Thirteen (Story Arc)",
+   "arc_id": "death_thirteen",
+   "name_en": "Death Thirteen",
+   "name_display": "Death Thirteen",
+   "location_title": null,
+   "location_id": null,
+   "part": 3,
+   "chapters": [
+    "SC 55-60"
+   ]
+  },
+  {
+   "arc_title": "Debt Collector Marilyn Manson (Story Arc)",
+   "arc_id": "debt_collector_marilyn_manson",
+   "name_en": "Debt Collector Marilyn Manson",
+   "name_display": "Debt Collector Marilyn Manson",
+   "location_title": null,
+   "location_id": null,
+   "part": 6,
+   "chapters": [
+    "SO 34-39"
+   ]
+  },
+  {
+   "arc_title": "Devil (Story Arc)",
+   "arc_id": "devil",
+   "name_en": "Devil",
+   "name_display": "Devil",
+   "location_title": null,
+   "location_id": null,
+   "part": 3,
+   "chapters": [
+    "SC 20-22"
+   ]
+  },
+  {
+   "arc_title": "Diavolo Surfaces (Story Arc)",
+   "arc_id": "diavolo_surfaces",
+   "name_en": "Diavolo Surfaces",
+   "name_display": "Diavolo Surfaces",
+   "location_title": null,
+   "location_id": null,
+   "part": null,
+   "chapters": [
+    "VA 141-145"
+   ]
+  },
+  {
+   "arc_title": "Dio Brando the Invader (Story Arc)",
+   "arc_id": "dio_brando_the_invader",
+   "name_en": "Dio Brando the Invader",
+   "name_display": "Dio Brando the Invader",
+   "location_title": null,
+   "location_id": null,
+   "part": 1,
+   "chapters": [
+    "Chapters 1 - 5"
+   ]
+  },
+  {
+   "arc_title": "Doctor Wu and Awaking 3 Leaves (Story Arc)",
+   "arc_id": "doctor_wu_and_awaking_3_leaves",
+   "name_en": "Doctor Wu and Awaking 3 Leaves",
+   "name_display": "Doctor Wu and Awaking 3 Leaves",
+   "location_title": null,
+   "location_id": null,
+   "part": 8,
+   "chapters": [
+    "JJL 77-82"
+   ]
+  },
+  {
+   "arc_title": "Dolomite's Blue Lagoon (Story Arc)",
+   "arc_id": "dolomite_s_blue_lagoon",
+   "name_en": "Dolomites Blue Lagoon",
+   "name_display": "Dolomites Blue Lagoon",
+   "location_title": null,
+   "location_id": null,
+   "part": 8,
+   "chapters": [
+    "JJL 58-63"
+   ]
+  },
+  {
+   "arc_title": "Doobie Wah (Story Arc)",
+   "arc_id": "doobie_wah",
+   "name_en": "Doobie Wah",
+   "name_display": "Doobie Wah",
+   "location_title": null,
+   "location_id": null,
+   "part": 8,
+   "chapters": [
+    "JJL 39-42"
+   ]
+  },
+  {
+   "arc_title": "Emperor and Hanged Man (Story Arc)",
+   "arc_id": "emperor_and_hanged_man",
+   "name_en": "Emperor and Hanged Man",
+   "name_display": "Emperor and Hanged Man",
+   "location_title": null,
+   "location_id": null,
+   "part": 3,
+   "chapters": [
+    "SC 27-32"
+   ]
+  },
+  {
+   "arc_title": "Empress (Story Arc)",
+   "arc_id": "empress",
+   "name_en": "Empress",
+   "name_display": "Empress",
+   "location_title": null,
+   "location_id": null,
+   "part": 3,
+   "chapters": [
+    "SC 33-36"
+   ]
+  },
+  {
+   "arc_title": "Enigma Boy (Story Arc)",
+   "arc_id": "enigma_boy",
+   "name_en": "Enigma Boy",
+   "name_display": "Enigma Boy",
+   "location_title": null,
+   "location_id": null,
+   "part": 4,
+   "chapters": [
+    "DU 139-144"
+   ]
+  },
+  {
+   "arc_title": "Enter the Dragon's Dream (Story Arc)",
+   "arc_id": "enter_the_dragon_s_dream",
+   "name_en": "Enter the Dragons Dream",
+   "name_display": "Enter the Dragons Dream",
+   "location_title": null,
+   "location_id": null,
+   "part": 6,
+   "chapters": [
+    "SO 67-74"
+   ]
+  },
+  {
+   "arc_title": "Ermes's Stickers (Story Arc)",
+   "arc_id": "ermes_s_stickers",
+   "name_en": "Ermess Stickers",
+   "name_display": "Ermess Stickers",
+   "location_title": null,
+   "location_id": null,
+   "part": 6,
+   "chapters": [
+    "SO 21-25"
+   ]
+  },
+  {
+   "arc_title": "Express Train to Florence (Story Arc)",
+   "arc_id": "express_train_to_florence",
+   "name_en": "Express Train to Florence",
+   "name_display": "Express Train to Florence",
+   "location_title": null,
+   "location_id": null,
+   "part": null,
+   "chapters": [
+    "VA 47-48"
+   ]
+  },
+  {
+   "arc_title": "F.F. - The Witness (Story Arc)",
+   "arc_id": "f_f_the_witness",
+   "name_en": "F.F. - The Witness",
+   "name_display": "F.F. - The Witness",
+   "location_title": null,
+   "location_id": null,
+   "part": 6,
+   "chapters": [
+    "SO 83-84"
+   ]
+  },
+  {
+   "arc_title": "Fire and Ice, Jonathan and Dio (Story Arc)",
+   "arc_id": "fire_and_ice_jonathan_and_dio",
+   "name_en": "Fire and Ice, Jonathan and Dio",
+   "name_display": "Fire and Ice, Jonathan and Dio",
+   "location_title": null,
+   "location_id": null,
+   "part": 1,
+   "chapters": [
+    "Chapters 39 - 44"
+   ]
+  },
+  {
+   "arc_title": "Flame Mode Esidisi (Story Arc)",
+   "arc_id": "flame_mode_esidisi",
+   "name_en": "Flame Mode Esidisi",
+   "name_display": "Flame Mode Esidisi",
+   "location_title": null,
+   "location_id": null,
+   "part": 2,
+   "chapters": [
+    "BT 33-36"
+   ]
+  },
+  {
+   "arc_title": "Foo Fighters (Story Arc)",
+   "arc_id": "foo_fighters",
+   "name_en": "Foo Fighters",
+   "name_display": "Foo Fighters",
+   "location_title": null,
+   "location_id": null,
+   "part": 6,
+   "chapters": [
+    "SO 30-33"
+   ]
+  },
+  {
+   "arc_title": "Go Beyond (Story Arc)",
+   "arc_id": "go_beyond",
+   "name_en": "Go Beyond",
+   "name_display": "Go Beyond",
+   "location_title": null,
+   "location_id": null,
+   "part": 8,
+   "chapters": [
+    "JJL 105-108"
+   ]
+  },
+  {
+   "arc_title": "Gold Experience (Story Arc)",
+   "arc_id": "gold_experience",
+   "name_en": "Gold Experience",
+   "name_display": "Gold Experience",
+   "location_title": null,
+   "location_id": null,
+   "part": null,
+   "chapters": [
+    "VA 1-3"
+   ]
+  },
+  {
+   "arc_title": "Gold Experience Requiem (Story Arc)",
+   "arc_id": "gold_experience_requiem",
+   "name_en": "Gold Experience Requiem",
+   "name_display": "Gold Experience Requiem",
+   "location_title": null,
+   "location_id": null,
+   "part": null,
+   "chapters": [
+    "VA 146-150"
+   ]
+  },
+  {
+   "arc_title": "Gravity of the New Moon (Story Arc)",
+   "arc_id": "gravity_of_the_new_moon",
+   "name_en": "Gravity of the New Moon",
+   "name_display": "Gravity of the New Moon",
+   "location_title": null,
+   "location_id": null,
+   "part": 6,
+   "chapters": [
+    "SO 138-140"
+   ]
+  },
+  {
+   "arc_title": "Gyro Zeppeli's Destiny (Story Arc)",
+   "arc_id": "gyro_zeppeli_s_destiny",
+   "name_en": "Gyro Zeppelis Destiny",
+   "name_display": "Gyro Zeppelis Destiny",
+   "location_title": null,
+   "location_id": null,
+   "part": 7,
+   "chapters": [
+    "SBR 20-21"
+   ]
+  },
+  {
+   "arc_title": "Hato Brought Her Boyfriend Home (Story Arc)",
+   "arc_id": "hato_brought_her_boyfriend_home",
+   "name_en": "Hato Brought Her Boyfriend Home",
+   "name_display": "Hato Brought Her Boyfriend Home",
+   "location_title": null,
+   "location_id": null,
+   "part": 8,
+   "chapters": [
+    "JJL 47-49"
+   ]
+  },
+  {
+   "arc_title": "Heavy Weather (Story Arc)",
+   "arc_id": "heavy_weather",
+   "name_en": "Heavy Weather",
+   "name_display": "Heavy Weather",
+   "location_title": null,
+   "location_id": null,
+   "part": 6,
+   "chapters": [
+    "SO 125-137"
+   ]
+  },
+  {
+   "arc_title": "High Priestess (Story Arc)",
+   "arc_id": "high_priestess",
+   "name_en": "High Priestess",
+   "name_display": "High Priestess",
+   "location_title": null,
+   "location_id": null,
+   "part": 3,
+   "chapters": [
+    "SC 66-69"
+   ]
+  },
+  {
+   "arc_title": "High Voltage (Story Arc)",
+   "arc_id": "high_voltage",
+   "name_en": "High Voltage",
+   "name_display": "High Voltage",
+   "location_title": null,
+   "location_id": null,
+   "part": 7,
+   "chapters": [
+    "SBR 90-93"
+   ]
+  },
+  {
+   "arc_title": "Highway Star (Story Arc)",
+   "arc_id": "highway_star",
+   "name_en": "Highway Star",
+   "name_display": "Highway Star",
+   "location_title": null,
+   "location_id": null,
+   "part": 4,
+   "chapters": [
+    "DU 119-126"
+   ]
+  },
+  {
+   "arc_title": "His Name is Diavolo (Story Arc)",
+   "arc_id": "his_name_is_diavolo",
+   "name_en": "His Name is Diavolo",
+   "name_display": "His Name is Diavolo",
+   "location_title": null,
+   "location_id": null,
+   "part": null,
+   "chapters": [
+    "VA 129-132"
+   ]
+  },
+  {
+   "arc_title": "Hol Horse and Boingo (Story Arc)",
+   "arc_id": "hol_horse_and_boingo",
+   "name_en": "Hol Horse and Boingo",
+   "name_display": "Hol Horse and Boingo",
+   "location_title": null,
+   "location_id": null,
+   "part": 3,
+   "chapters": [
+    "SC 104-108"
+   ]
+  },
+  {
+   "arc_title": "Hualalai - Cat Size (Story Arc)",
+   "arc_id": "hualalai_cat_size",
+   "name_en": "Hualalai - Cat Size",
+   "name_display": "Hualalai - Cat Size",
+   "location_title": null,
+   "location_id": null,
+   "part": 9,
+   "chapters": [
+    "TJL 6-8"
+   ]
+  },
+  {
+   "arc_title": "I'm an Alien (Story Arc)",
+   "arc_id": "i_m_an_alien",
+   "name_en": "Im an Alien",
+   "name_display": "Im an Alien",
+   "location_title": null,
+   "location_id": null,
+   "part": 4,
+   "chapters": [
+    "DU 113-118"
+   ]
+  },
+  {
+   "arc_title": "It's a Summer Vacation Everyday (Story Arc)",
+   "arc_id": "it_s_a_summer_vacation_everyday",
+   "name_en": "Its a Summer Vacation Everyday",
+   "name_display": "Its a Summer Vacation Everyday",
+   "location_title": null,
+   "location_id": null,
+   "part": 8,
+   "chapters": [
+    "JJL 33-38"
+   ]
+  },
+  {
+   "arc_title": "Jack the Ripper and Zeppeli the Strange (Story Arc)",
+   "arc_id": "jack_the_ripper_and_zeppeli_the_strange",
+   "name_en": "Jack the Ripper and Zeppeli the Strange",
+   "name_display": "Jack the Ripper and Zeppeli the Strange",
+   "location_title": null,
+   "location_id": null,
+   "part": 1,
+   "chapters": [
+    "Chapters 18 - 22"
+   ]
+  },
+  {
+   "arc_title": "Jail House Lock! (Story Arc)",
+   "arc_id": "jail_house_lock",
+   "name_en": "Jail House Lock!",
+   "name_display": "Jail House Lock!",
+   "location_title": null,
+   "location_id": null,
+   "part": 6,
+   "chapters": [
+    "SO 96-102"
+   ]
+  },
+  {
+   "arc_title": "JoJo: The Final Ripple (Story Arc)",
+   "arc_id": "jojo_the_final_ripple",
+   "name_en": "JoJo: The Final Ripple",
+   "name_display": "JoJo: The Final Ripple",
+   "location_title": null,
+   "location_id": null,
+   "part": 2,
+   "chapters": [
+    "BT 63-64"
+   ]
+  },
+  {
+   "arc_title": "Joining the Gang (Story Arc)",
+   "arc_id": "joining_the_gang",
+   "name_en": "Joining the Gang",
+   "name_display": "Joining the Gang",
+   "location_title": null,
+   "location_id": null,
+   "part": null,
+   "chapters": [
+    "VA 11-16"
+   ]
+  },
+  {
+   "arc_title": "Joseph Joestar of New York (Story Arc)",
+   "arc_id": "joseph_joestar_of_new_york",
+   "name_en": "Joseph Joestar of New York",
+   "name_display": "Joseph Joestar of New York",
+   "location_title": null,
+   "location_id": null,
+   "part": 2,
+   "chapters": [
+    "BT 1-3"
+   ]
+  },
+  {
+   "arc_title": "Josuke Higashikata! Meets Angelo (Story Arc)",
+   "arc_id": "josuke_higashikata_meets_angelo",
+   "name_en": "Josuke Higashikata! Meets Angelo",
+   "name_display": "Josuke Higashikata! Meets Angelo",
+   "location_title": null,
+   "location_id": null,
+   "part": 4,
+   "chapters": [
+    "DU 4-8"
+   ]
+  },
+  {
+   "arc_title": "Jotaro Kujo (Story Arc)",
+   "arc_id": "jotaro_kujo",
+   "name_en": "Jotaro Kujo",
+   "name_display": "Jotaro Kujo",
+   "location_title": null,
+   "location_id": null,
+   "part": 3,
+   "chapters": [
+    "SC 1-4"
+   ]
+  },
+  {
+   "arc_title": "Jotaro Kujo! Meets Josuke Higashikata (Story Arc)",
+   "arc_id": "jotaro_kujo_meets_josuke_higashikata",
+   "name_en": "Jotaro Kujo! Meets Josuke Higashikata",
+   "name_display": "Jotaro Kujo! Meets Josuke Higashikata",
+   "location_title": null,
+   "location_id": null,
+   "part": 4,
+   "chapters": [
+    "DU 1-3"
+   ]
+  },
+  {
+   "arc_title": "Judgement (Story Arc)",
+   "arc_id": "judgement",
+   "name_en": "Judgement",
+   "name_display": "Judgement",
+   "location_title": null,
+   "location_id": null,
+   "part": 3,
+   "chapters": [
+    "SC 61-65"
+   ]
+  },
+  {
+   "arc_title": "Justice (Story Arc)",
+   "arc_id": "justice",
+   "name_en": "Justice",
+   "name_display": "Justice",
+   "location_title": null,
+   "location_id": null,
+   "part": 3,
+   "chapters": [
+    "SC 41-46"
+   ]
+  },
+  {
+   "arc_title": "Kailua-Kona - Flight Waiting Time (Story Arc)",
+   "arc_id": "kailua_kona_flight_waiting_time",
+   "name_en": "Kailua-Kona - Flight Waiting Time",
+   "name_display": "Kailua-Kona - Flight Waiting Time",
+   "location_title": null,
+   "location_id": null,
+   "part": 9,
+   "chapters": [
+    "TJL 9-11"
+   ]
+  },
+  {
+   "arc_title": "Kars the Superbeing is Born (Story Arc)",
+   "arc_id": "kars_the_superbeing_is_born",
+   "name_en": "Kars the Superbeing is Born",
+   "name_display": "Kars the Superbeing is Born",
+   "location_title": null,
+   "location_id": null,
+   "part": 2,
+   "chapters": [
+    "BT 65-69"
+   ]
+  },
+  {
+   "arc_title": "King Crimson vs. Metallica (Story Arc)",
+   "arc_id": "king_crimson_vs_metallica",
+   "name_en": "King Crimson vs. Metallica",
+   "name_display": "King Crimson vs. Metallica",
+   "location_title": null,
+   "location_id": null,
+   "part": null,
+   "chapters": [
+    "VA 105-111"
+   ]
+  },
+  {
+   "arc_title": "Kiss of Love and Revenge (Story Arc)",
+   "arc_id": "kiss_of_love_and_revenge",
+   "name_en": "Kiss of Love and Revenge",
+   "name_display": "Kiss of Love and Revenge",
+   "location_title": null,
+   "location_id": null,
+   "part": 6,
+   "chapters": [
+    "SO 51-57"
+   ]
+  },
+  {
+   "arc_title": "Koichi Hirose (Echoes) (Story Arc)",
+   "arc_id": "koichi_hirose_echoes",
+   "name_en": "Koichi Hirose (Echoes)",
+   "name_display": "Koichi Hirose (Echoes)",
+   "location_title": null,
+   "location_id": null,
+   "part": 4,
+   "chapters": [
+    "DU 19-23"
+   ]
+  },
+  {
+   "arc_title": "Let's Go Eat Some Italian Food (Story Arc)",
+   "arc_id": "let_s_go_eat_some_italian_food",
+   "name_en": "Lets Go Eat Some Italian Food",
+   "name_display": "Lets Go Eat Some Italian Food",
+   "location_title": null,
+   "location_id": null,
+   "part": 4,
+   "chapters": [
+    "DU 38-41"
+   ]
+  },
+  {
+   "arc_title": "Let's Go Hunting! (Story Arc)",
+   "arc_id": "let_s_go_hunting",
+   "name_en": "Lets Go Hunting!",
+   "name_display": "Lets Go Hunting!",
+   "location_title": null,
+   "location_id": null,
+   "part": 4,
+   "chapters": [
+    "DU 60-64"
+   ]
+  },
+  {
+   "arc_title": "Let's Go to the Manga Artist's House (Story Arc)",
+   "arc_id": "let_s_go_to_the_manga_artist_s_house",
+   "name_en": "Lets Go to the Manga Artists House",
+   "name_display": "Lets Go to the Manga Artists House",
+   "location_title": null,
+   "location_id": null,
+   "part": 4,
+   "chapters": [
+    "DU 53-59"
+   ]
+  },
+  {
+   "arc_title": "Let's Live on a Transmission Tower (Story Arc)",
+   "arc_id": "let_s_live_on_a_transmission_tower",
+   "name_en": "Lets Live on a Transmission Tower",
+   "name_display": "Lets Live on a Transmission Tower",
+   "location_title": null,
+   "location_id": null,
+   "part": 4,
+   "chapters": [
+    "DU 133-138"
+   ]
+  },
+  {
+   "arc_title": "Light Mode Kars (Story Arc)",
+   "arc_id": "light_mode_kars",
+   "name_en": "Light Mode Kars",
+   "name_display": "Light Mode Kars",
+   "location_title": null,
+   "location_id": null,
+   "part": 2,
+   "chapters": [
+    "BT 42-43"
+   ]
+  },
+  {
+   "arc_title": "Love Love Deluxe (Story Arc)",
+   "arc_id": "love_love_deluxe",
+   "name_en": "Love Love Deluxe",
+   "name_display": "Love Love Deluxe",
+   "location_title": null,
+   "location_id": null,
+   "part": 8,
+   "chapters": [
+    "JJL 43-46"
+   ]
+  },
+  {
+   "arc_title": "Lovers (Story Arc)",
+   "arc_id": "lovers",
+   "name_en": "Lovers",
+   "name_display": "Lovers",
+   "location_title": null,
+   "location_id": null,
+   "part": 3,
+   "chapters": [
+    "SC 47-52"
+   ]
+  },
+  {
+   "arc_title": "Lulu and Bobby Jean (Story Arc)",
+   "arc_id": "lulu_and_bobby_jean",
+   "name_en": "Lulu and Bobby Jean",
+   "name_display": "Lulu and Bobby Jean",
+   "location_title": null,
+   "location_id": null,
+   "part": 9,
+   "chapters": [
+    "TJL 18-20"
+   ]
+  },
+  {
+   "arc_title": "Lulu's Bags' Groove (Story Arc)",
+   "arc_id": "lulu_s_bags_groove",
+   "name_en": "Lulus Bags Groove",
+   "name_display": "Lulus Bags Groove",
+   "location_title": null,
+   "location_id": null,
+   "part": 9,
+   "chapters": [
+    "TJL 16-17"
+   ]
+  },
+  {
+   "arc_title": "Made in Heaven (Story Arc)",
+   "arc_id": "made_in_heaven",
+   "name_en": "Made in Heaven",
+   "name_display": "Made in Heaven",
+   "location_title": null,
+   "location_id": null,
+   "part": 6,
+   "chapters": [
+    "SO 149-158"
+   ]
+  },
+  {
+   "arc_title": "Man in the Mirror and Purple Haze (Story Arc)",
+   "arc_id": "man_in_the_mirror_and_purple_haze",
+   "name_en": "Man in the Mirror and Purple Haze",
+   "name_display": "Man in the Mirror and Purple Haze",
+   "location_title": null,
+   "location_id": null,
+   "part": null,
+   "chapters": [
+    "VA 39-46"
+   ]
+  },
+  {
+   "arc_title": "Meet the Gangster Behind the Wall (Story Arc)",
+   "arc_id": "meet_the_gangster_behind_the_wall",
+   "name_en": "Meet the Gangster Behind the Wall",
+   "name_display": "Meet the Gangster Behind the Wall",
+   "location_title": null,
+   "location_id": null,
+   "part": null,
+   "chapters": [
+    "VA 9-10"
+   ]
+  },
+  {
+   "arc_title": "Milagroman (Story Arc)",
+   "arc_id": "milagroman",
+   "name_en": "Milagroman",
+   "name_display": "Milagroman",
+   "location_title": null,
+   "location_id": null,
+   "part": 8,
+   "chapters": [
+    "JJL 56-57"
+   ]
+  },
+  {
+   "arc_title": "Moody Blues Strikes Back (Story Arc)",
+   "arc_id": "moody_blues_strikes_back",
+   "name_en": "Moody Blues Strikes Back",
+   "name_display": "Moody Blues Strikes Back",
+   "location_title": null,
+   "location_id": null,
+   "part": null,
+   "chapters": [
+    "VA 21-22"
+   ]
+  },
+  {
+   "arc_title": "My Dad is Not My Dad (Story Arc)",
+   "arc_id": "my_dad_is_not_my_dad",
+   "name_en": "My Dad is Not My Dad",
+   "name_display": "My Dad is Not My Dad",
+   "location_title": null,
+   "location_id": null,
+   "part": 4,
+   "chapters": [
+    "DU 145-146"
+   ]
+  },
+  {
+   "arc_title": "My Name is Doppio (Story Arc)",
+   "arc_id": "my_name_is_doppio",
+   "name_en": "My Name is Doppio",
+   "name_display": "My Name is Doppio",
+   "location_title": null,
+   "location_id": null,
+   "part": null,
+   "chapters": [
+    "VA 102-104"
+   ]
+  },
+  {
+   "arc_title": "Narancia's Aerosmith (Story Arc)",
+   "arc_id": "narancia_s_aerosmith",
+   "name_en": "Narancias Aerosmith",
+   "name_display": "Narancias Aerosmith",
+   "location_title": null,
+   "location_id": null,
+   "part": null,
+   "chapters": [
+    "VA 30-38"
+   ]
+  },
+  {
+   "arc_title": "Noriaki Kakyoin (Story Arc)",
+   "arc_id": "noriaki_kakyoin",
+   "name_en": "Noriaki Kakyoin",
+   "name_display": "Noriaki Kakyoin",
+   "location_title": null,
+   "location_id": null,
+   "part": 3,
+   "chapters": [
+    "SC 5-8"
+   ]
+  },
+  {
+   "arc_title": "Norisuke Higashikata, Tsurugi Higashikata, and Yotsuyu Yagiyama (Story Arc)",
+   "arc_id": "norisuke_higashikata_tsurugi_higashikata_and_yotsuyu_yagiyama",
+   "name_en": "Norisuke Higashikata, Tsurugi Higashikata, and Yotsuyu Yagiyama",
+   "name_display": "Norisuke Higashikata, Tsurugi Higashikata, and Yotsuyu Yagiyama",
+   "location_title": null,
+   "location_id": null,
+   "part": 8,
+   "chapters": [
+    "JJL 26-30"
+   ]
+  },
+  {
+   "arc_title": "Notorious B.I.G (Story Arc)",
+   "arc_id": "notorious_b_i_g",
+   "name_en": "Notorious B.I.G",
+   "name_display": "Notorious B.I.G",
+   "location_title": null,
+   "location_id": null,
+   "part": null,
+   "chapters": [
+    "VA 93-99"
+   ]
+  },
+  {
+   "arc_title": "Operation Savage Garden (Story Arc)",
+   "arc_id": "operation_savage_garden",
+   "name_en": "Operation Savage Garden",
+   "name_display": "Operation Savage Garden",
+   "location_title": null,
+   "location_id": null,
+   "part": 6,
+   "chapters": [
+    "SO 40-47"
+   ]
+  },
+  {
+   "arc_title": "Ozon Baby's Pressure (Story Arc)",
+   "arc_id": "ozon_baby_s_pressure",
+   "name_en": "Ozon Babys Pressure",
+   "name_display": "Ozon Babys Pressure",
+   "location_title": null,
+   "location_id": null,
+   "part": 8,
+   "chapters": [
+    "JJL 72-76"
+   ]
+  },
+  {
+   "arc_title": "Paper Moon Deception (Story Arc)",
+   "arc_id": "paper_moon_deception",
+   "name_en": "Paper Moon Deception",
+   "name_display": "Paper Moon Deception",
+   "location_title": null,
+   "location_id": null,
+   "part": 8,
+   "chapters": [
+    "JJL 23-25"
+   ]
+  },
+  {
+   "arc_title": "Pluck for Tomorrow and the Successor (Story Arc)",
+   "arc_id": "pluck_for_tomorrow_and_the_successor",
+   "name_en": "Pluck for Tomorrow and the Successor",
+   "name_display": "Pluck for Tomorrow and the Successor",
+   "location_title": null,
+   "location_id": null,
+   "part": 1,
+   "chapters": [
+    "Chapters 31 - 35"
+   ]
+  },
+  {
+   "arc_title": "Point Blank Seal (Story Arc)",
+   "arc_id": "point_blank_seal",
+   "name_en": "Point Blank Seal",
+   "name_display": "Point Blank Seal",
+   "location_title": null,
+   "location_id": null,
+   "part": 9,
+   "chapters": [
+    "TJL 33-38"
+   ]
+  },
+  {
+   "arc_title": "Prisoner FE40536: Jolyne Cujoh (Story Arc)",
+   "arc_id": "prisoner_fe40536_jolyne_cujoh",
+   "name_en": "Prisoner FE40536: Jolyne Cujoh",
+   "name_display": "Prisoner FE40536: Jolyne Cujoh",
+   "location_title": null,
+   "location_id": null,
+   "part": 6,
+   "chapters": [
+    "SO 4-6"
+   ]
+  },
+  {
+   "arc_title": "Pronto! On the Phone (Story Arc)",
+   "arc_id": "pronto_on_the_phone",
+   "name_en": "Pronto! On the Phone",
+   "name_display": "Pronto! On the Phone",
+   "location_title": null,
+   "location_id": null,
+   "part": null,
+   "chapters": [
+    "VA 112-113"
+   ]
+  },
+  {
+   "arc_title": "Red Hot Chili Pepper (Story Arc)",
+   "arc_id": "red_hot_chili_pepper",
+   "name_en": "Red Hot Chili Pepper",
+   "name_display": "Red Hot Chili Pepper",
+   "location_title": null,
+   "location_id": null,
+   "part": 4,
+   "chapters": [
+    "DU 42-49"
+   ]
+  },
+  {
+   "arc_title": "Ripple Overdrive (Story Arc)",
+   "arc_id": "ripple_overdrive",
+   "name_en": "Ripple Overdrive",
+   "name_display": "Ripple Overdrive",
+   "location_title": null,
+   "location_id": null,
+   "part": 1,
+   "chapters": [
+    "Chapters 23 - 25"
+   ]
+  },
+  {
+   "arc_title": "Ripple Teacher Lisa Lisa (Story Arc)",
+   "arc_id": "ripple_teacher_lisa_lisa",
+   "name_en": "Ripple Teacher Lisa Lisa",
+   "name_display": "Ripple Teacher Lisa Lisa",
+   "location_title": null,
+   "location_id": null,
+   "part": 2,
+   "chapters": [
+    "BT 27-32"
+   ]
+  },
+  {
+   "arc_title": "Rock-Paper-Scissors Kid is Coming! (Story Arc)",
+   "arc_id": "rock_paper_scissors_kid_is_coming",
+   "name_en": "Rock-Paper-Scissors Kid is Coming!",
+   "name_display": "Rock-Paper-Scissors Kid is Coming!",
+   "location_title": null,
+   "location_id": null,
+   "part": 4,
+   "chapters": [
+    "DU 106-111"
+   ]
+  },
+  {
+   "arc_title": "Rohan Kishibe's Adventure (Story Arc)",
+   "arc_id": "rohan_kishibe_s_adventure",
+   "name_en": "Rohan Kishibes Adventure",
+   "name_display": "Rohan Kishibes Adventure",
+   "location_title": null,
+   "location_id": null,
+   "part": 4,
+   "chapters": [
+    "DU 65-69"
+   ]
+  },
+  {
+   "arc_title": "San Diego Beach (Story Arc)",
+   "arc_id": "san_diego_beach",
+   "name_en": "San Diego Beach",
+   "name_display": "San Diego Beach",
+   "location_title": "San Diego Beach",
+   "location_id": "san_diego_beach",
+   "part": 7,
+   "chapters": [
+    "SBR 1-4"
+   ]
+  },
+  {
+   "arc_title": "Scary Monsters (Story Arc)",
+   "arc_id": "scary_monsters",
+   "name_en": "Scary Monsters",
+   "name_display": "Scary Monsters",
+   "location_title": null,
+   "location_id": null,
+   "part": 7,
+   "chapters": [
+    "SBR 28-32"
+   ]
+  },
+  {
+   "arc_title": "Sex Pistols Appears (Story Arc)",
+   "arc_id": "sex_pistols_appears",
+   "name_en": "Sex Pistols Appears",
+   "name_display": "Sex Pistols Appears",
+   "location_title": null,
+   "location_id": null,
+   "part": null,
+   "chapters": [
+    "VA 23-29"
+   ]
+  },
+  {
+   "arc_title": "Sheer Heart Attack (Story Arc)",
+   "arc_id": "sheer_heart_attack",
+   "name_en": "Sheer Heart Attack",
+   "name_display": "Sheer Heart Attack",
+   "location_title": null,
+   "location_id": null,
+   "part": 4,
+   "chapters": [
+    "DU 89-99"
+   ]
+  },
+  {
+   "arc_title": "Shigechi's Harvest (Story Arc)",
+   "arc_id": "shigechi_s_harvest",
+   "name_en": "Shigechis Harvest",
+   "name_display": "Shigechis Harvest",
+   "location_title": null,
+   "location_id": null,
+   "part": 4,
+   "chapters": [
+    "DU 70-76"
+   ]
+  },
+  {
+   "arc_title": "Silent Way (Story Arc)",
+   "arc_id": "silent_way",
+   "name_en": "Silent Way",
+   "name_display": "Silent Way",
+   "location_title": null,
+   "location_id": null,
+   "part": 7,
+   "chapters": [
+    "SBR 40-44"
+   ]
+  },
+  {
+   "arc_title": "Silver Chariot (Story Arc)",
+   "arc_id": "silver_chariot",
+   "name_en": "Silver Chariot",
+   "name_display": "Silver Chariot",
+   "location_title": null,
+   "location_id": null,
+   "part": 3,
+   "chapters": [
+    "SC 11-13"
+   ]
+  },
+  {
+   "arc_title": "Sky High (Story Arc)",
+   "arc_id": "sky_high",
+   "name_en": "Sky High",
+   "name_display": "Sky High",
+   "location_title": null,
+   "location_id": null,
+   "part": 6,
+   "chapters": [
+    "SO 111-117"
+   ]
+  },
+  {
+   "arc_title": "Sleeping Slaves (Story Arc)",
+   "arc_id": "sleeping_slaves",
+   "name_en": "Sleeping Slaves",
+   "name_display": "Sleeping Slaves",
+   "location_title": null,
+   "location_id": null,
+   "part": null,
+   "chapters": [
+    "VA 151-155"
+   ]
+  },
+  {
+   "arc_title": "Soft & Wet (Story Arc)",
+   "arc_id": "soft_wet",
+   "name_en": "Soft & Wet",
+   "name_display": "Soft & Wet",
+   "location_title": null,
+   "location_id": null,
+   "part": 8,
+   "chapters": [
+    "JJL 1-6"
+   ]
+  },
+  {
+   "arc_title": "Spice Girl (Story Arc)",
+   "arc_id": "spice_girl",
+   "name_en": "Spice Girl",
+   "name_display": "Spice Girl",
+   "location_title": null,
+   "location_id": null,
+   "part": null,
+   "chapters": [
+    "VA 100-101"
+   ]
+  },
+  {
+   "arc_title": "Spice Girl (Story Arc)/fr",
+   "arc_id": "spice_girl_story_arc_fr",
+   "name_en": "Spice Girl",
+   "name_display": "Spice Girl",
+   "location_title": null,
+   "location_id": null,
+   "part": null,
+   "chapters": [
+    "VA 100-101"
+   ]
+  },
+  {
+   "arc_title": "Stone Free (Story Arc)",
+   "arc_id": "stone_free",
+   "name_en": "Stone Free",
+   "name_display": "Stone Free",
+   "location_title": null,
+   "location_id": null,
+   "part": 6,
+   "chapters": [
+    "SO 7-9"
+   ]
+  },
+  {
+   "arc_title": "Stone Ocean (Story Arc)",
+   "arc_id": "stone_ocean",
+   "name_en": "Stone Ocean",
+   "name_display": "Stone Ocean",
+   "location_title": null,
+   "location_id": null,
+   "part": 6,
+   "chapters": [
+    "SO 1-3"
+   ]
+  },
+  {
+   "arc_title": "Straizo vs. Joseph (Story Arc)",
+   "arc_id": "straizo_vs_joseph",
+   "name_en": "Straizo vs. Joseph",
+   "name_display": "Straizo vs. Joseph",
+   "location_title": null,
+   "location_id": null,
+   "part": 2,
+   "chapters": [
+    "BT 4-8"
+   ]
+  },
+  {
+   "arc_title": "Strength (Story Arc)",
+   "arc_id": "strength",
+   "name_en": "Strength",
+   "name_display": "Strength",
+   "location_title": null,
+   "location_id": null,
+   "part": 3,
+   "chapters": [
+    "SC 17-19"
+   ]
+  },
+  {
+   "arc_title": "Stroheim's Unit Strikes Back (Story Arc)",
+   "arc_id": "stroheim_s_unit_strikes_back",
+   "name_en": "Stroheims Unit Strikes Back",
+   "name_display": "Stroheims Unit Strikes Back",
+   "location_title": null,
+   "location_id": null,
+   "part": 2,
+   "chapters": [
+    "BT 39-41"
+   ]
+  },
+  {
+   "arc_title": "Sun (Story Arc)",
+   "arc_id": "sun",
+   "name_en": "Sun",
+   "name_display": "Sun",
+   "location_title": null,
+   "location_id": null,
+   "part": 3,
+   "chapters": [
+    "SC 53-54"
+   ]
+  },
+  {
+   "arc_title": "Tarkus and the Dark Knight Bruford (Story Arc)",
+   "arc_id": "tarkus_and_the_dark_knight_bruford",
+   "name_en": "Tarkus and the Dark Knight Bruford",
+   "name_display": "Tarkus and the Dark Knight Bruford",
+   "location_title": null,
+   "location_id": null,
+   "part": 1,
+   "chapters": [
+    "Chapters 26 - 30"
+   ]
+  },
+  {
+   "arc_title": "The Bond That Binds Lisa Lisa and JoJo (Story Arc)",
+   "arc_id": "the_bond_that_binds_lisa_lisa_and_jojo",
+   "name_en": "The Bond that Binds Lisa Lisa and JoJo",
+   "name_display": "The Bond that Binds Lisa Lisa and JoJo",
+   "location_title": null,
+   "location_id": null,
+   "part": 2,
+   "chapters": [
+    "BT 61-62"
+   ]
+  },
+  {
+   "arc_title": "The Desert-Born Outlaws (Story Arc)",
+   "arc_id": "the_desert_born_outlaws",
+   "name_en": "The Desert-Born Outlaws",
+   "name_display": "The Desert-Born Outlaws",
+   "location_title": null,
+   "location_id": null,
+   "part": 7,
+   "chapters": [
+    "SBR 15-17"
+   ]
+  },
+  {
+   "arc_title": "The Devil's Palm (Story Arc)",
+   "arc_id": "the_devil_s_palm",
+   "name_en": "The Devils Palm",
+   "name_display": "The Devils Palm",
+   "location_title": null,
+   "location_id": null,
+   "part": 7,
+   "chapters": [
+    "SBR 18-19"
+   ]
+  },
+  {
+   "arc_title": "The Gatekeeper of Hell, Pet Shop (Story Arc)",
+   "arc_id": "the_gatekeeper_of_hell_pet_shop",
+   "name_en": "The Gatekeeper of Hell, Pet Shop",
+   "name_display": "The Gatekeeper of Hell, Pet Shop",
+   "location_title": null,
+   "location_id": null,
+   "part": 3,
+   "chapters": [
+    "SC 109-113"
+   ]
+  },
+  {
+   "arc_title": "The Grateful Dead (Story Arc)",
+   "arc_id": "the_grateful_dead",
+   "name_en": "The Grateful Dead",
+   "name_display": "The Grateful Dead",
+   "location_title": null,
+   "location_id": null,
+   "part": null,
+   "chapters": [
+    "VA 49-60"
+   ]
+  },
+  {
+   "arc_title": "The Green Tomb (Story Arc)",
+   "arc_id": "the_green_tomb",
+   "name_en": "The Green Tomb",
+   "name_display": "The Green Tomb",
+   "location_title": null,
+   "location_id": null,
+   "part": 7,
+   "chapters": [
+    "SBR 36-37"
+   ]
+  },
+  {
+   "arc_title": "The Miasma of the Void, Vanilla Ice (Story Arc)",
+   "arc_id": "the_miasma_of_the_void_vanilla_ice",
+   "name_en": "The Miasma of the Void, Vanilla Ice",
+   "name_display": "The Miasma of the Void, Vanilla Ice",
+   "location_title": null,
+   "location_id": null,
+   "part": 3,
+   "chapters": [
+    "SC 125-133"
+   ]
+  },
+  {
+   "arc_title": "The Mystery of King Crimson (Story Arc)",
+   "arc_id": "the_mystery_of_king_crimson",
+   "name_en": "The Mystery of King Crimson",
+   "name_display": "The Mystery of King Crimson",
+   "location_title": null,
+   "location_id": null,
+   "part": null,
+   "chapters": [
+    "VA 77-84"
+   ]
+  },
+  {
+   "arc_title": "The Mystery of Soft Machine (Story Arc)",
+   "arc_id": "the_mystery_of_soft_machine",
+   "name_en": "The Mystery of Soft Machine",
+   "name_display": "The Mystery of Soft Machine",
+   "location_title": null,
+   "location_id": null,
+   "part": null,
+   "chapters": [
+    "VA 17-20"
+   ]
+  },
+  {
+   "arc_title": "The Nijimura Brothers (Story Arc)",
+   "arc_id": "the_nijimura_brothers",
+   "name_en": "The Nijimura Brothers",
+   "name_display": "The Nijimura Brothers",
+   "location_title": null,
+   "location_id": null,
+   "part": 4,
+   "chapters": [
+    "DU 9-18"
+   ]
+  },
+  {
+   "arc_title": "The Pillar Man, Santana (Story Arc)",
+   "arc_id": "the_pillar_man_santana",
+   "name_en": "The Pillar Man, Santana",
+   "name_display": "The Pillar Man, Santana",
+   "location_title": null,
+   "location_id": null,
+   "part": 2,
+   "chapters": [
+    "BT 9-18"
+   ]
+  },
+  {
+   "arc_title": "The Plant Appraiser - Rai Mamezuku (31) (Story Arc)",
+   "arc_id": "the_plant_appraiser_rai_mamezuku_31",
+   "name_en": "The Plant Appraiser - Rai Mamezuku (31)",
+   "name_display": "The Plant Appraiser - Rai Mamezuku (31)",
+   "location_title": null,
+   "location_id": null,
+   "part": 8,
+   "chapters": [
+    "JJL 64-67"
+   ]
+  },
+  {
+   "arc_title": "The Promised Land: Sugar Mountain (Story Arc)",
+   "arc_id": "the_promised_land_sugar_mountain",
+   "name_en": "The Promised Land: Sugar Mountain",
+   "name_display": "The Promised Land: Sugar Mountain",
+   "location_title": null,
+   "location_id": null,
+   "part": 7,
+   "chapters": [
+    "SBR 45-47"
+   ]
+  },
+  {
+   "arc_title": "The Radio Gaga Incident (Story Arc)",
+   "arc_id": "the_radio_gaga_incident",
+   "name_en": "The Radio Gaga Incident",
+   "name_display": "The Radio Gaga Incident",
+   "location_title": null,
+   "location_id": null,
+   "part": 8,
+   "chapters": [
+    "JJL 109-110"
+   ]
+  },
+  {
+   "arc_title": "The Remains Lurk (Story Arc)",
+   "arc_id": "the_remains_lurk",
+   "name_en": "The Remains Lurk",
+   "name_display": "The Remains Lurk",
+   "location_title": null,
+   "location_id": null,
+   "part": 2,
+   "chapters": [
+    "BT 37-38"
+   ]
+  },
+  {
+   "arc_title": "The Requiem Quietly Plays (Story Arc)",
+   "arc_id": "the_requiem_quietly_plays",
+   "name_en": "The Requiem Quietly Plays",
+   "name_display": "The Requiem Quietly Plays",
+   "location_title": null,
+   "location_id": null,
+   "part": null,
+   "chapters": [
+    "VA 133-140"
+   ]
+  },
+  {
+   "arc_title": "The Secret of Guard Westwood (Story Arc)",
+   "arc_id": "the_secret_of_guard_westwood",
+   "name_en": "The Secret of Guard Westwood",
+   "name_display": "The Secret of Guard Westwood",
+   "location_title": null,
+   "location_id": null,
+   "part": 6,
+   "chapters": [
+    "SO 58-66"
+   ]
+  },
+  {
+   "arc_title": "The Stone Mask (Story Arc)",
+   "arc_id": "the_stone_mask",
+   "name_en": "The Stone Mask",
+   "name_display": "The Stone Mask",
+   "location_title": null,
+   "location_id": null,
+   "part": 1,
+   "chapters": [
+    "Chapters 8 - 11"
+   ]
+  },
+  {
+   "arc_title": "The Terrorist from a Faraway Country (Story Arc)",
+   "arc_id": "the_terrorist_from_a_faraway_country",
+   "name_en": "The Terrorist from a Faraway Country",
+   "name_display": "The Terrorist from a Faraway Country",
+   "location_title": null,
+   "location_id": null,
+   "part": 7,
+   "chapters": [
+    "SBR 22-24"
+   ]
+  },
+  {
+   "arc_title": "The Three from a Faraway Land (Story Arc)",
+   "arc_id": "the_three_from_a_faraway_land",
+   "name_en": "The Three from a Faraway Land",
+   "name_display": "The Three from a Faraway Land",
+   "location_title": null,
+   "location_id": null,
+   "part": 1,
+   "chapters": [
+    "Chapters 36 - 38"
+   ]
+  },
+  {
+   "arc_title": "The Villa on Hawaii Island (Story Arc)",
+   "arc_id": "the_villa_on_hawaii_island",
+   "name_en": "The Villa on Hawaii Island",
+   "name_display": "The Villa on Hawaii Island",
+   "location_title": null,
+   "location_id": null,
+   "part": 9,
+   "chapters": [
+    "TJL 1-5"
+   ]
+  },
+  {
+   "arc_title": "The Visitor (Story Arc)",
+   "arc_id": "the_visitor",
+   "name_en": "The Visitor",
+   "name_display": "The Visitor",
+   "location_title": null,
+   "location_id": null,
+   "part": 6,
+   "chapters": [
+    "SO 10-20"
+   ]
+  },
+  {
+   "arc_title": "The Wind, the Chariot, and Wamuu (Story Arc)",
+   "arc_id": "the_wind_the_chariot_and_wamuu",
+   "name_en": "The Wind, the Chariot, and Wamuu",
+   "name_display": "The Wind, the Chariot, and Wamuu",
+   "location_title": null,
+   "location_id": null,
+   "part": 2,
+   "chapters": [
+    "BT 50-60"
+   ]
+  },
+  {
+   "arc_title": "The Wonder of You (Story Arc)",
+   "arc_id": "the_wonder_of_you",
+   "name_en": "The Wonder of You",
+   "name_display": "The Wonder of You",
+   "location_title": null,
+   "location_id": null,
+   "part": 8,
+   "chapters": [
+    "JJL 83-104"
+   ]
+  },
+  {
+   "arc_title": "The World of Man (Story Arc)",
+   "arc_id": "the_world_of_man",
+   "name_en": "The World of Man",
+   "name_display": "The World of Man",
+   "location_title": null,
+   "location_id": null,
+   "part": 7,
+   "chapters": [
+    "SBR 33-35"
+   ]
+  },
+  {
+   "arc_title": "The World of Stars and Stripes (Story Arc)",
+   "arc_id": "the_world_of_stars_and_stripes",
+   "name_en": "The World of Stars and Stripes",
+   "name_display": "The World of Stars and Stripes",
+   "location_title": null,
+   "location_id": null,
+   "part": 7,
+   "chapters": [
+    "SBR 94-95"
+   ]
+  },
+  {
+   "arc_title": "There's Six of Us! (Story Arc)",
+   "arc_id": "there_s_six_of_us",
+   "name_en": "Theres Six of Us!",
+   "name_display": "Theres Six of Us!",
+   "location_title": null,
+   "location_id": null,
+   "part": 6,
+   "chapters": [
+    "SO 26-30"
+   ]
+  },
+  {
+   "arc_title": "Those Who Lurk in the Gaps (Story Arc)",
+   "arc_id": "those_who_lurk_in_the_gaps",
+   "name_en": "Those Who Lurk in the Gaps",
+   "name_display": "Those Who Lurk in the Gaps",
+   "location_title": null,
+   "location_id": null,
+   "part": 9,
+   "chapters": [
+    "TJL 28-32"
+   ]
+  },
+  {
+   "arc_title": "Ticket to Ride (Story Arc)",
+   "arc_id": "ticket_to_ride",
+   "name_en": "Ticket to Ride",
+   "name_display": "Ticket to Ride",
+   "location_title": null,
+   "location_id": null,
+   "part": 7,
+   "chapters": [
+    "SBR 71-72"
+   ]
+  },
+  {
+   "arc_title": "Torrential Downpour Warning (Story Arc)",
+   "arc_id": "torrential_downpour_warning",
+   "name_en": "Torrential Downpour Warning",
+   "name_display": "Torrential Downpour Warning",
+   "location_title": null,
+   "location_id": null,
+   "part": 6,
+   "chapters": [
+    "SO 48-50"
+   ]
+  },
+  {
+   "arc_title": "Toshikazu Hazamada (Surface) (Story Arc)",
+   "arc_id": "toshikazu_hazamada_surface",
+   "name_en": "Toshikazu Hazamada (Surface)",
+   "name_display": "Toshikazu Hazamada (Surface)",
+   "location_title": null,
+   "location_id": null,
+   "part": 4,
+   "chapters": [
+    "DU 24-28"
+   ]
+  },
+  {
+   "arc_title": "Tower of Gray (Story Arc)",
+   "arc_id": "tower_of_gray",
+   "name_en": "Tower of Gray",
+   "name_display": "Tower of Gray",
+   "location_title": null,
+   "location_id": null,
+   "part": 3,
+   "chapters": [
+    "SC 9-10"
+   ]
+  },
+  {
+   "arc_title": "Tubular Bells (Story Arc)",
+   "arc_id": "tubular_bells",
+   "name_en": "Tubular Bells",
+   "name_display": "Tubular Bells",
+   "location_title": null,
+   "location_id": null,
+   "part": 7,
+   "chapters": [
+    "SBR 48-50"
+   ]
+  },
+  {
+   "arc_title": "Tusk (Story Arc)",
+   "arc_id": "tusk",
+   "name_en": "Tusk",
+   "name_display": "Tusk",
+   "location_title": null,
+   "location_id": null,
+   "part": 7,
+   "chapters": [
+    "SBR 25-27"
+   ]
+  },
+  {
+   "arc_title": "Ultimate Warriors from Ancient Times (Story Arc)",
+   "arc_id": "ultimate_warriors_from_ancient_times",
+   "name_en": "Ultimate Warriors from Ancient Times",
+   "name_display": "Ultimate Warriors from Ancient Times",
+   "location_title": null,
+   "location_id": null,
+   "part": 2,
+   "chapters": [
+    "BT 19-26"
+   ]
+  },
+  {
+   "arc_title": "Under World (Story Arc)",
+   "arc_id": "under_world",
+   "name_en": "Under World",
+   "name_display": "Under World",
+   "location_title": null,
+   "location_id": null,
+   "part": 6,
+   "chapters": [
+    "SO 118-124"
+   ]
+  },
+  {
+   "arc_title": "Urban Guerrilla and Doremifasolati Do (Story Arc)",
+   "arc_id": "urban_guerrilla_and_doremifasolati_do",
+   "name_en": "Urban Guerrilla and Doremifasolati Do",
+   "name_display": "Urban Guerrilla and Doremifasolati Do",
+   "location_title": null,
+   "location_id": null,
+   "part": 8,
+   "chapters": [
+    "JJL 68-71"
+   ]
+  },
+  {
+   "arc_title": "Vitamin C and Killer Queen (Story Arc)",
+   "arc_id": "vitamin_c_and_killer_queen",
+   "name_en": "Vitamin C and Killer Queen",
+   "name_display": "Vitamin C and Killer Queen",
+   "location_title": null,
+   "location_id": null,
+   "part": 8,
+   "chapters": [
+    "JJL 50-53"
+   ]
+  },
+  {
+   "arc_title": "Walking Heart (Story Arc)",
+   "arc_id": "walking_heart",
+   "name_en": "Walking Heart",
+   "name_display": "Walking Heart",
+   "location_title": null,
+   "location_id": null,
+   "part": 8,
+   "chapters": [
+    "JJL 54-55"
+   ]
+  },
+  {
+   "arc_title": "We Picked Up Something Crazy! (Story Arc)",
+   "arc_id": "we_picked_up_something_crazy",
+   "name_en": "We Picked Up Something Crazy!",
+   "name_display": "We Picked Up Something Crazy!",
+   "location_title": null,
+   "location_id": null,
+   "part": 4,
+   "chapters": [
+    "DU 50-52"
+   ]
+  },
+  {
+   "arc_title": "Wheel of Fortune (Story Arc)",
+   "arc_id": "wheel_of_fortune",
+   "name_en": "Wheel of Fortune",
+   "name_display": "Wheel of Fortune",
+   "location_title": null,
+   "location_id": null,
+   "part": 3,
+   "chapters": [
+    "SC 37-40"
+   ]
+  },
+  {
+   "arc_title": "White Album (Story Arc)",
+   "arc_id": "white_album",
+   "name_en": "White Album",
+   "name_display": "White Album",
+   "location_title": null,
+   "location_id": null,
+   "part": null,
+   "chapters": [
+    "VA 69-76"
+   ]
+  },
+  {
+   "arc_title": "Whitesnake - The Pursuer (Story Arc)",
+   "arc_id": "whitesnake_the_pursuer",
+   "name_en": "Whitesnake - The Pursuer",
+   "name_display": "Whitesnake - The Pursuer",
+   "location_title": null,
+   "location_id": null,
+   "part": 6,
+   "chapters": [
+    "SO 89-95"
+   ]
+  },
+  {
+   "arc_title": "Wrecking Ball (Story Arc)",
+   "arc_id": "wrecking_ball",
+   "name_en": "Wrecking Ball",
+   "name_display": "Wrecking Ball",
+   "location_title": null,
+   "location_id": null,
+   "part": 7,
+   "chapters": [
+    "SBR 51-55"
+   ]
+  },
+  {
+   "arc_title": "Yellow Temperance (Story Arc)",
+   "arc_id": "yellow_temperance",
+   "name_en": "Yellow Temperance",
+   "name_display": "Yellow Temperance",
+   "location_title": null,
+   "location_id": null,
+   "part": 3,
+   "chapters": [
+    "SC 23-26"
+   ]
+  },
+  {
+   "arc_title": "Yo-Yo Ma is Coming! (Story Arc)",
+   "arc_id": "yo_yo_ma_is_coming",
+   "name_en": "Yo-Yo Ma is Coming!",
+   "name_display": "Yo-Yo Ma is Coming!",
+   "location_title": null,
+   "location_id": null,
+   "part": 6,
+   "chapters": [
+    "SO 78-82"
+   ]
+  },
+  {
+   "arc_title": "Yoshikage Kira Just Wants to Live Quietly (Story Arc)",
+   "arc_id": "yoshikage_kira_just_wants_to_live_quietly",
+   "name_en": "Yoshikage Kira Just Wants to Live Quietly",
+   "name_display": "Yoshikage Kira Just Wants to Live Quietly",
+   "location_title": null,
+   "location_id": null,
+   "part": 4,
+   "chapters": [
+    "DU 77-82"
+   ]
+  },
+  {
+   "arc_title": "Yoshikage Kira's New Situation (Story Arc)",
+   "arc_id": "yoshikage_kira_s_new_situation",
+   "name_en": "Yoshikage Kiras New Situation",
+   "name_display": "Yoshikage Kiras New Situation",
+   "location_title": null,
+   "location_id": null,
+   "part": 4,
+   "chapters": []
+  },
+  {
+   "arc_title": "Youth with Dio (Story Arc)",
+   "arc_id": "youth_with_dio",
+   "name_en": "Youth with Dio",
+   "name_display": "Youth with Dio",
+   "location_title": null,
+   "location_id": null,
+   "part": 1,
+   "chapters": [
+    "Chapters 12 - 17"
+   ]
+  },
+  {
+   "arc_title": "Yukako Yamagishi Dreams of Cinderella (Story Arc)",
+   "arc_id": "yukako_yamagishi_dreams_of_cinderella",
+   "name_en": "Yukako Yamagishi Dreams of Cinderella",
+   "name_display": "Yukako Yamagishi Dreams of Cinderella",
+   "location_title": null,
+   "location_id": null,
+   "part": 4,
+   "chapters": [
+    "DU 83-88"
+   ]
+  },
+  {
+   "arc_title": "Yukako Yamagishi Falls in Love (Story Arc)",
+   "arc_id": "yukako_yamagishi_falls_in_love",
+   "name_en": "Yukako Yamagishi Falls in Love",
+   "name_display": "Yukako Yamagishi Falls in Love",
+   "location_title": null,
+   "location_id": null,
+   "part": 4,
+   "chapters": [
+    "DU 29-37"
+   ]
+  }
+ ]
+}

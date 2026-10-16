@@ -3,7 +3,7 @@
 [![tests](https://github.com/yeezus-simplicity/fictional-lore-rag/actions/workflows/tests.yml/badge.svg)](https://github.com/yeezus-simplicity/fictional-lore-rag/actions/workflows/tests.yml)
 
 > **JoJo 替身数据混合检索系统** —— 从多源数据清洗到生成式问答的完整链路
-> 187 替身 / 8042 文本块 / 1057 别名 / 混合检索 +18.5% / 证据有效性 88.1pp
+> 187 替身 / 10042 文本块 / 1057 别名 / 混合检索 +18.5% / 证据有效性 88.1pp
 
 一个把「数据质量 → 检索 → 路由 → 冲突消解 → 生成评测」串起来的可运行系统。
 **最有价值的产出不是那些数字，而是三个可迁移的方法论发现**（见下文「三个发现」）。
@@ -58,7 +58,7 @@ python evaluation/collect_metrics.py --check
 | `models/` | bge-m3 等权重（约 7.3 GB） | `retrieval/fetch_model.py` |
 | `index/` | embedding 缓存（199 MB） | **自动生成**，无需手动 |
 
-★ **检索语料 = 基础块 + 文章块 = 8042 块**（355.9 万字符）。
+★ **检索语料 = 基础块 + 文章块 = 10042 块**（556.3 万字符）。
 两个文件都在 `.gitignore` 里，clone 后需重建。
 
 ★ **已提交的结构化数据不用重抓**（`stands.json` / `details.json` /
@@ -85,7 +85,7 @@ python dataset/pipeline/run_pipeline.py
 
 ## 测试与 CI
 
-**本地全套 32 个回归测试**（`evaluation/test_*.py`）；
+**本地全套 34 个回归测试**（`evaluation/test_*.py`）；
 CI（GitHub Actions）在每次 push / PR 时跑其中 **8 套**，**不需要下载 7 GB 模型**：
 
 | 层 | 内容 |
@@ -123,7 +123,7 @@ CI 用严格模式（缺前置即失败）：`CI=true python evaluation/test_gui
 - **跳过 torch**：CI 只装 `requirements-ci.txt`（服务层 + 数据层），
   所有测试以 `--no-vector` 启动（纯 BM25）。
   ★ 这反过来印证了「向量检索是可选增强，不是必需路径」。
-- **合成语料**：真实语料（8042 块描述原文）因版权不入库，
+- **合成语料**：真实语料（10042 块描述原文）因版权不入库，
   CI 里用 `evaluation/make_min_fixture.py` 从**仓库已有的结构化数据**
   现场合成一份最小语料（165 块），足够让服务启动并支撑流程测试。
 
@@ -214,7 +214,7 @@ curl -X POST "localhost:8765/query?q=那它的速度呢&session_id=demo"
 
 ### 为什么答案是英文？以及怎么处理的
 
-**不是 bug**：语料 8042 块**全部来自 jojowiki 英文站**，
+**不是 bug**：语料 10042 块**全部来自 jojowiki 英文站**，
 所以语义检索返回的自然是英文原文。
 
 ★ 我们**没有**用机器翻译把它变中文 —— 那会破坏「证据可追溯」，
@@ -283,7 +283,7 @@ GET /similar/star_platinum?k=5
 | **M7 块大小** | 推荐块长 | 512（权衡分析后） | `m7_chunk_quality.json` |
 | **当前（M64）** | 替身 / 中文名覆盖 | 187 / **99.5%**（186） | `stand_name_zh.json` |
 | | 别名表 | **1057**（含形态名 12 种写法变体） | `aliases.build_alias_table()` |
-| | 检索语料 | 2407 → **8042 块**（436.5 万字符） | `article_chunks.json` |
+| | 检索语料 | 2407 → **10042 块**（556.3 万字符） | `article_chunks.json` |
 | | 图片 | 188 目录 / **2173 张** / 423 MB | `images/*/_images.json` |
 | | **地点**（M65 新增）| **113 个**正传地点（覆盖第 1–9 部） | `locations.json` |
 | | **角色**（M66 新增）| **180 个**角色档案（简介 179 / 背景 114 / 性格 171） | `characters_ext.json` |

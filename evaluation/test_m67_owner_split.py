@@ -148,7 +148,12 @@ def main() -> int:
         check("★ 无名角色（单名）仍合法存在",
               all(k in ids for k in LEGIT_UNNAMED),
               f"缺：{[k for k in LEGIT_UNNAMED if k not in ids]}")
-        check("角色数 186（拆开 7 个粘连替身的持有者后增加）", len(ids) == 186,
+        # ★ M70：186 → 382（补抓 196 个「不是替身持有者」的角色后）。
+        #   写死具体数字会在数据增长时误报，且**测不到真正要守的东西** ——
+        #   上面三条已经分别守住「粘连 id 消失 / 拆出来的都在 / 无名角色合法」，
+        #   这里只需守住下界（防倒退）。
+        check("角色数 ≥186（M67 拆粘连后；M70 补抓非持有者角色后为 382）",
+              len(ids) >= 186,
               f"实际 {len(ids)}")
 
         from aliases import load_char_zh_map

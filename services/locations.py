@@ -133,6 +133,25 @@ def load() -> dict:
             "entity_name_en": nm_en or eid,
         })
 
+    # ---- ★ M70：同名篇章（location ↔ story arc）----
+    #   用户实测「勒索之路的替身是什么」答得不对：源站里"勒索之路"
+    #   **既是地点（杜王町的一条无车街）也是篇章（JoJolion 第 4 个篇章）**，
+    #   两个独立页面靠 hatnote 互相指路。我们只建了地点 →
+    #   把篇章的诉求（这一段里有哪些替身）当成了地点的关联来答。
+    #   → 建 name → arc 索引，答问句时把两种口径都给出并说明区别。
+    arcs_raw = _read("story_arcs.json") or {}
+    arcs_by_id: dict[str, dict] = {}
+    arcs_by_name: dict[str, list[dict]] = {}
+    for a in (arcs_raw.get("arcs") or []):
+        aid = a.get("arc_id")
+        if not aid:
+            continue
+        arcs_by_id[aid] = a
+        for nm in (a.get("name_en"), a.get("arc_id"),
+                   a.get("location_title")):
+            if nm:
+                arcs_by_name.setdefault(str(nm).strip().lower(), []).append(a)
+
     return {
         "by_id": by_id,
         "by_name": by_name,
@@ -140,10 +159,38 @@ def load() -> dict:
         "contained_by": contained_by,
         "place_index": {},          # place_name → location_id（该地名本身也是个地点时）
         "mentions": mentions,
+        "arcs_by_id": arcs_by_id,
+        "arcs_by_name": arcs_by_name,
         "n_included": loc_raw.get("n_included") or len(by_id),
         "n_with_zh": zh_raw.get("n_with_zh") or 0,
         "n_mentions": len(men_raw.get("mentions") or []),
+        "n_arcs": arcs_raw.get("n_arcs") or 0,
+        "n_arcs_linked": arcs_raw.get("n_linked_to_location") or 0,
     }
+
+
+def same_name_arcs(location_id: str) -> list[dict]:
+    """与该地点**同名**的篇章（M70 同名消歧用）。
+
+    ★ 只认「源站 hatnote 明确互指」的那一对，不按名字模糊匹配 ——
+      否则「Anubis」这种地点/替身同名会造出一堆假关联
+      （与 M65「泛地名误匹配」同一类教训）。
+    """
+    st = load()
+    for a in st["arcs_by_id"].values():
+        if a.get("location_id") == location_id:
+            return [a]
+    return []
+
+
+def find_arcs(name: str) -> list[dict]:
+    """按名字查篇章（用户直接打篇章名时用）。"""
+    st = load()
+    return st["arcs_by_name"].get((name or "").strip().lower(), [])
+
+
+def n_arcs() -> int:
+    return load()["n_arcs"]
 
 
 def all_names() -> list[str]:
@@ -332,6 +379,24 @@ def _evidence_from(mentions: list[dict], limit: int = 6) -> list[dict]:
     return out
 
 
+def _arc_hint(rec: dict) -> dict | None:
+    """同名篇章提示（M70）。没有就返回 None —— 不硬造。"""
+    arcs = same_name_arcs(rec["location_id"])
+    if not arcs:
+        return None
+    a = arcs[0]
+    return {
+        "arc_id": a.get("arc_id"),
+        "name": a.get("name_en"),
+        "part": a.get("part"),
+        "chapters": a.get("chapters"),
+        "note": ("⚠ 这个名字在源站里**同时指一个地点和一个篇章**。"
+                 "上面列的是「该**地点**条目里写到的」。"
+                 "若你想问的是「这一**篇章**里有哪些替身/角色」，"
+                 "请补一个字（如「篇章 勒索之路」），口径不同。"),
+    }
+
+
 def answer(q: str, top_k: int = 3):
     """组织地点问句的答案。
 
@@ -380,6 +445,10 @@ def answer(q: str, top_k: int = 3):
             "note": "以上「相关」= **该地点条目正文里写到过**（强证据）；"
                     f"另有 {card['weak_count']} 条是这些实体的条目里提到本地名"
                     "（弱证据，泛地名时会很多，故不展开）。",
+            # ★ M70 同名消歧：源站里这个名字**同时是地点和篇章**
+            #   （两个独立页面，hatnote 互相指路）→ 明确告知有另一种口径，
+            #   免得用户以为「这一段的替身」就是「这条街的关联」。
+            "also_story_arc": _arc_hint(rec),
         }, _evidence_from(ms), card)
 
     # ---- ③ 问某个地点「有哪些地点」（包含关系）----

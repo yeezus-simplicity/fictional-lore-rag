@@ -33,6 +33,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import sys
 import time
 import urllib.error
@@ -78,6 +79,105 @@ def fetch_location_titles() -> list[str]:
     while True:
         p = {"action": "query", "list": "embeddedin",
              "eititle": "Template:Location Infobox", "eilimit": "500",
+             "format": "json", "formatversion": "2"}
+        p.update(cont)
+        d = _api_json(p)
+        titles += [x["title"] for x in d.get("query", {}).get("embeddedin", [])]
+        cont = d.get("continue") or {}
+        if not cont:
+            break
+    bad = ("User:", "Template:", "Category:", "Talk:", "File:", "Module:", "Help:")
+    return sorted({t for t in titles if not t.startswith(bad)})
+
+
+def fetch_character_titles() -> list[str]:
+    """★ M70：角色清单 —— 取 `Category:Part N Characters`（N=1..9）。
+
+    == 为什么必须补这个清单 ==
+    原来的角色名单是**从 `stands.json` 的 `owner_name` 反推**的
+    （`build_targets` 的第二个循环）—— 即「谁是替身持有者就抓谁」。
+    这在 M66 时看不出问题（168 个角色档案，主流角色都在），
+    但它有一个**结构性盲区**：
+
+        **不是任何替身持有者的角色，从来不会进抓取队列。**
+
+    用户实测：`lisalisa 二乔的母亲` 检索不到。
+    查证结果：`Lisa Lisa` 在源站**有独立条目**、在语料里被提到 35 次，
+    但 `523` 个已抓页面里没有她，`characters` 表里也没有。
+    同类还有 `Jonathan Joestar`、`Caesar Anthonio Zeppeli`、`Holly Joestar`
+    —— 第 1、2 部的核心角色几乎全军覆没，因为波纹时代**没有替身**，
+    也就没有任何 `owner_name` 会提到他们。
+
+    ★ 这个盲区和 M65 地点那个坑是**同一个形状**：
+      「用模板/分类反查」比「从业务字段反推」可靠。
+
+    == 为什么用分类而不是 `Category:Characters` ==
+    实测 `Category:Characters` 是**顶层容器**，只有 9 个成员且 8 个是子分类、
+    1 个是 `Minor Characters` —— 直接取会得到近乎空的结果（与 M65 的
+    `Category:Locations` 只有 30 个成员同一形状）。
+    → 必须逐个取 `Category:Part N Characters`（用户口径：**只保留 9 部正传**），
+      实测 9 个分类并集 = **382** 个 ns0 成员。
+
+    == 分类里也不干净，必须过滤 ==
+    实测这 382 个里混着三类非角色页：
+      ① 列表页     `Minor Characters/Part 1`、`Unnamed Characters/Part 5`
+      ② 替身页     `Foo Fighters`、`Weather Report`、`Anubis`（分类交叉）
+      ③ 组织/条目页 `Locacaca Organization`、`List of Horses`
+    → 用下面的排除规则处理；**判定不了的宁可留下**（多一个页面
+      最多浪费一次请求，漏一个角色则是用户检索不到）。
+    """
+    titles: list[str] = []
+    cont: dict = {}
+    for part in range(1, 10):                  # ★ 用户口径：只 9 部正传
+        cat = f"Category:Part {part} Characters"
+        c: dict = {}
+        while True:
+            p = {"action": "query", "list": "categorymembers",
+                 "cmtitle": cat, "cmnamespace": "0",
+                 "cmlimit": "500", "format": "json",
+                 "formatversion": "2"}
+            p.update(c)
+            d = _api_json(p)
+            titles += [x["title"] for x in d.get("query", {}).get("categorymembers", [])]
+            c = d.get("continue") or {}
+            if not c:
+                break
+
+    bad_ns = ("User:", "Template:", "Category:", "Talk:", "File:",
+              "Module:", "Help:", "MediaWiki:")
+    out: set[str] = set()
+    for t in titles:
+        if t.startswith(bad_ns):
+            continue
+        # ① 列表页：斜杠形如 `Minor Characters/Part 1`
+        if "/" in t and t.split("/")[-1].strip().startswith("Part"):
+            continue
+        out.add(t)
+    return sorted(out)
+
+
+def fetch_arc_titles() -> list[str]:
+    """★ M70：篇章页清单 —— 反查所有用了 `{{Story Arc Infobox}}` 的页面。
+
+    为什么必须单独抓：用户实测「勒索之路的替身是什么」答得不对。
+    根因是**同名歧义** —— 源站里 `Shakedown Road` 既是地点也是篇章
+    （两个独立页面，页面顶部各有 `{{Hatnote}}` 互相指路）：
+
+        地点页：For the story arc of the same name, see
+                [["Shakedown Road" (Story Arc)]]
+        篇章页：For the location of the same name, see [[Shakedown Road]]
+
+    我们只建了地点 → 用户问「这一段的替身」，被答成「这个地点关联到的替身」。
+    → 必须把篇章也建起来，才能识别同名并把两种口径都给出。
+
+    ★ 用 `embeddedin` 模板反查而不是分类：`Category:Story Arc` 之类的分类
+      在源站并不完整（与 M65 的 `Category:Locations` 只有 30 个成员同形状）。
+    """
+    titles: list[str] = []
+    cont: dict = {}
+    while True:
+        p = {"action": "query", "list": "embeddedin",
+             "eititle": "Template:Story Arc Infobox", "eilimit": "500",
              "format": "json", "formatversion": "2"}
         p.update(cont)
         d = _api_json(p)
@@ -156,6 +256,20 @@ def build_targets() -> list[dict]:
     sys.path.insert(0, str(ROOT / "database"))
     from load_db import _char_id, _loc_id, split_owner_names   # noqa: E402
 
+    def _arc_id(title: str) -> str:
+        """篇章 id：剥掉源站标题的引号与 `(Story Arc)` 后缀后规范化。
+
+        实测篇章页标题长这样：`"Shakedown Road" (Story Arc)`
+        → 引号只是源站的排版惯例、`(Story Arc)` 是命名空间后缀，
+          两者都不该进 id（否则用户打「勒索之路」就匹配不上）。
+        """
+        t = (title or "").strip()
+        if t.startswith(chr(34)) and t.endswith(chr(34)):
+            t = t[1:-1]
+        t = re.sub(r"\s*\(\s*story arc\s*\)\s*$", "", t, flags=re.I)
+        return re.sub(r"[^a-z0-9]+", "_", t.strip().lower()).strip("_")
+
+
     targets: list[dict] = []
     seen: set[tuple] = set()
 
@@ -196,6 +310,58 @@ def build_targets() -> list[dict]:
                 # 记录原名，便于下游/人复核「这个 id 对应的名字是什么」
                 **({"name_in_stands": orig} if orig != o else {}),
             })
+
+    # ★ M70：补上「分类名单」这条独立来源。
+    #   上面那个循环只覆盖「替身持有者」，而 Lisa Lisa / Jonathan Joestar /
+    #   Caesar Zeppeli 这类**不是任何替身持有者**的角色从来不会进队列
+    #   （第 1、2 部没有替身 → 波纹时代的角色整体缺失）。
+    #   → 再用 `Category:Part N Characters`（9 部正传）补一遍。
+    #   ★ entity_id 一律按**页面标题**算：这些角色在 `stands.json` 里
+    #     没有 owner_name，所以 DB 里也不会有对应行 —— 它们是**新角色**，
+    #     id 由标题生成与 `load_db._char_id` 同规则。
+    try:
+        cat_chars = fetch_character_titles()
+    except Exception as e:                                    # noqa: BLE001
+        print(f"  ⚠ 角色分类清单获取失败（{type(e).__name__}），"
+              f"本次只抓替身持有者：{str(e)[:60]}")
+        cat_chars = []
+    n_new = 0
+    for t in cat_chars:
+        if ("character", t) in seen:
+            continue
+        # 替身页已在第一轮抓过（kind=stand）→ 同一页面不重复抓
+        if ("stand", t) in seen:
+            continue
+        if t in NO_PAGE:
+            continue
+        seen.add(("character", t))
+        n_new += 1
+        targets.append({
+            "title": t, "kind": "character", "entity_id": _char_id(t),
+            "source_of_truth": "category",   # ★ 可复核：这条来自分类而非 owner_name
+        })
+    if n_new:
+        print(f"  M70 分类补入 {n_new} 个此前从未进队列的角色"
+              f"（分类共 {len(cat_chars)} 个）")
+
+    # ★ M70：篇章页 —— 解决「同名歧义」（勒索之路既是地点也是篇章）
+    try:
+        arcs = fetch_arc_titles()
+    except Exception as e:                                    # noqa: BLE001
+        print(f"  ⚠ 篇章清单获取失败（{type(e).__name__}），本次跳过篇章："
+              f"{str(e)[:60]}")
+        arcs = []
+    n_arc_new = 0
+    for t in arcs:
+        if ("arc", t) in seen:
+            continue
+        seen.add(("arc", t))
+        n_arc_new += 1
+        targets.append({"title": t, "kind": "arc",
+                        "entity_id": _arc_id(t)})
+    if n_arc_new:
+        print(f"  M70 篇章页 {n_arc_new} 个"
+              f"（用于同名消歧：地点 ↔ 篇章）")
 
     # ★ M65：地点页 —— 这是「第 1、2 部也能有内容」的关键。
     #   替身天然只覆盖第 3–9 部（第 1、2 部是波纹时代，**没有替身**，

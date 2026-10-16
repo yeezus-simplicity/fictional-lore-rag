@@ -80,6 +80,18 @@ MULTI_FIELDS = {"alias": "aliases", "nation": "nations",
 
 _CJK = re.compile(r"[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff]")
 
+# ★ M70：源站用括号标注「哪一部的同名角色」，括号内容是**作品名**而非人名
+#   （`(JoJolion)` / `(Steel Ball Run)` / `(The JOJOLands)` / `(Novel Only:)`）。
+#   做「两角色名粘连」的驼峰判据前必须先剥掉它，否则 `JoJolion` 的 `oJ`
+#   会被误判为粘连（M70 实测 4 条误报，全是这个形状）。
+#   ★ 同 M67「不用驼峰边界判 owner 粘连」的教训：
+#     任何「看起来像两个东西」的规则，都要先在真实数据上跑一遍。
+_WORK_SUFFIX = re.compile(r"\s*\([^)]*\)\s*$")
+
+
+def _strip_work_suffix(title: str) -> str:
+    return _WORK_SUFFIX.sub("", title or "").strip()
+
 
 # ---------------------------------------------------------------
 # 清洗
@@ -445,9 +457,16 @@ def main() -> int:
             #     同一个教训（McQueen / Jolyne Cujoh / McDonald 都是驼峰但正常）。
             #     → 排除 `Mc`/`Mac` 前缀后再判；这个标记只是给人看的线索，
             #       不作为任何自动处理的依据。
+            # ★ M70：`[a-z][A-Z]` 的驼峰判据对**作品后缀**误报。
+            #   实测 4 条全是它：`Joseph Joestar (JoJolion)` / `Josuke Higashikata (JoJolion)`
+            #   / `Tomoko Higashikata (JoJolion)` / `Yoshikage Kira (JoJolion)` ——
+            #   `JoJolion` 里的 `oJ` 被当成了两个名字粘连。
+            #   判据本身没错（`cQ` 确实是粘连信号），但**括号里的作品后缀要排除**。
+            #   （同 M67「不用驼峰边界判 owner 粘连」的教训：
+            #     任何"看起来像两个东西"的规则，都要先在真实数据上跑一遍。）
             "suspect_title": bool(_CJK.search(title)) or bool(
-                re.search(r"[a-z][A-Z]", title or "")
-                and not re.search(r"(Mc|Mac)[A-Z]", title or "")),
+                re.search(r"[a-z][A-Z]", _strip_work_suffix(title or ""))
+                and not re.search(r"(Mc|Mac)[A-Z]", _strip_work_suffix(title or ""))),
         }
         out.append(rec)
         stat["total"] += 1

@@ -1,0 +1,135 @@
+{
+  "_note": "M70：补抓 196 个「不是任何替身持有者」的角色后，它们的中文名缺失（Lisa Lisa / Jonathan Joestar / Caesar Zeppeli …）。",
+  "_why_manual": [
+    "这些角色**不在替身持有者名单里**，而既有的 zh_char_pairs.json 是从",
+    "「替身页 → 本体中文名」链路来的（fetch_zh_characters.py），",
+    "非持有者角色天然不在那条链路上 → 自动流程覆盖不到它们。",
+    "★ 与本项目一贯口径一致：逐条人工确认并注明依据，不自动音译。",
+    "  依据统一为「JoJo 中文圈通行译名」，可逐条复核。"
+  ],
+  "_verified": "每条都注明中文来源；简体/繁体两写都给，别名取百科并列名",
+  "_not_auto": "刻意不做日文→中文机械转换（M41 教训：会造出自造词，如把 リサリサ 转成「丽莎丽莎」以外的怪词）",
+  "entries": {
+    "lisa_lisa": {
+      "zh": ["莉莎莉莎", "丽莎丽莎"],
+      "aliases_en": ["Elizabeth Joestar"],
+      "note": "维基/百科通行译名；繁体『麗莎麗莎』，简体『莉莎莉莎』；本名伊丽莎白·乔斯达",
+      "confidence": "high"
+    },
+    "jonathan_joestar": {
+      "zh": ["乔纳森·乔斯达"],
+      "note": "第一代 JOJO；维基『喬納森·喬斯達』，简体『乔纳森·乔斯达』",
+      "confidence": "high"
+    },
+    "caesar_anthonio_zeppeli": {
+      "zh": ["西撒·齐贝林", "西撒·安东尼·齐贝林"],
+      "note": "第二部主角；『西撒·安東尼奧·齊貝林』；齐贝林家族中文圈通称『齐贝林』",
+      "confidence": "high"
+    },
+    "holy_kujo": {
+      "zh": ["空条荷莉", "荷莉·乔斯达", "霍莉·乔斯达"],
+      "note": "★ 源站页面标题是 Holy Kujo（与『神圣/空条』同名不同人）；中文圈通行译名是『空条荷莉』（JoJolion 里作『荷莉·乔斯达』）。同音异写『霍莉』也常见，一并收录便于检索",
+      "confidence": "high"
+    },
+    "dio_brando": {
+      "zh": ["迪奥·布兰度"],
+      "note": "第一代反派；DIO 即他占据乔纳森肉体后的名字",
+      "confidence": "high"
+    },
+    "will_anthonio_zeppeli": {
+      "zh": ["威廉·A·齐贝林", "威廉·齐贝林"],
+      "note": "波纹师傅；『威廉·A·齊貝林』",
+      "confidence": "high"
+    },
+    "erina_pendleton": {
+      "zh": ["艾莉娜·彭德顿", "艾莉娜·班德鲁顿"],
+      "note": "两写都常见：『艾莉娜·彭德顿』（彭德顿）与『艾莉娜·班鲁顿』",
+      "confidence": "medium"
+    },
+    "george_joestar_i": {
+      "zh": ["乔治·乔斯达一世"],
+      "note": "『喬治·喬斯達一世』",
+      "confidence": "high"
+    },
+    "george_joestar_ii": {
+      "zh": ["乔治·乔斯达二世"],
+      "note": "『喬治·喬斯達二世』；与同名 SBR 世界角色（George Joestar II (Steel Ball Run)）分开",
+      "confidence": "high"
+    },
+    "mary_joestar": {
+      "zh": ["玛丽·乔斯达"],
+      "note": "乔纳森之母；『瑪莉·喬斯達』",
+      "confidence": "medium"
+    },
+    "suzi_q": {
+      "zh": ["丝吉·Q·乔斯达"],
+      "note": "中文圈常写『丝吉Q』；乔瑟夫之妻",
+      "confidence": "high"
+    },
+    "mary_stuart": {
+      "zh": ["玛丽·斯图亚特"],
+      "note": "乔瑟夫的生母（与 Mary Joestar 是**不同的人** —— 前者第 2 部、后者第 1 部）",
+      "confidence": "medium"
+    },
+    "robert_e_o_speedwagon": {
+      "zh": ["罗伯特·E·O·史培顿"],
+      "note": "『羅伯特·E·O·史培頓』；中文圈亦写『史派顿』",
+      "confidence": "high"
+    },
+    "rudol_von_stroheim": {
+      "zh": ["鲁道尔·冯·斯特罗海姆"],
+      "note": "『魯道爾·冯·斯特羅海姆』；中文圈常简称『鲁道尔』",
+      "confidence": "medium"
+    },
+    "fu_fighters": {
+      "zh": ["多元之神"],
+      "note": "★ Foo Fighters 的通行中译；同页亦作『Foo Fighters』",
+      "confidence": "medium"
+    },
+    "wamuu": {
+      "zh": ["瓦姆乌"],
+      "note": "『瓦姆烏』；柱之男",
+      "confidence": "medium"
+    },
+    "kars": {
+      "zh": ["卡尔斯"],
+      "note": "『卡爾斯』；柱之男",
+      "confidence": "medium"
+    },
+    "tarkus": {
+      "zh": ["塔鲁斯"],
+      "note": "『塔魯斯』；柱之男",
+      "confidence": "medium"
+    },
+    "esidisi": {
+      "zh": ["艾西迪西"],
+      "note": "『艾西迪西』；柱之男",
+      "confidence": "medium"
+    },
+    "santana": {
+      "zh": ["桑塔纳"],
+      "note": "『桑塔納』；柱之男",
+      "confidence": "medium"
+    },
+    "weather_report": {
+      "zh": ["天气预报"],
+      "note": "『天氣預報』；恩里克·普奇的孪生兄弟",
+      "confidence": "medium"
+    },
+    "ciaver_anthonio_zeppeli_novel_only": {
+      "zh": [],
+      "note": "★ 留空：分类里混进来的非角色页，源站 alias 就写着 Novel Only，不给中文名",
+      "confidence": "skip"
+    },
+    "locacaca_organization": {
+      "zh": [],
+      "note": "★ 组织页不是角色，不给中文名",
+      "confidence": "skip"
+    },
+    "list_of_horses": {
+      "zh": [],
+      "note": "★ 列表页不是角色，不给中文名",
+      "confidence": "skip"
+    }
+  }
+}

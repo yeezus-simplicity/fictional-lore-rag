@@ -69,6 +69,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[3]
 SRC = Path(__file__).resolve().parent / "articles.json"
 OUT = ROOT / "dataset" / "processed" / "locations.json"
+ARCS_OUT = ROOT / "dataset" / "processed" / "story_arcs.json"
 
 # 无前缀 `Chapter N` 的编号区间 → 部（jojowiki 编号连续贯穿第 1–6 部）
 BOUNDS = [(1, 44, 1), (45, 116, 2), (117, 265, 3),
@@ -81,7 +82,7 @@ NS = ("JoJo Wiki", "Template", "Category", "User", "File", "Help", "Module")
 LANG_SUFFIX = re.compile(r"/(fr|zh|es|de|it|ja|pt|ru|pl|ko)$", re.I)
 
 
-def infobox(wt: str) -> str:
+def infobox(wt: str, key: str = "{{Location Infobox") -> str:
     """截出 `{{Location Infobox …}}` 的范围 —— **用括号配对，不用正则**。
 
     ★★ 为什么不能用 `\\{\\{Location Infobox(.*?)\\n\\}\\}` ★★
@@ -92,7 +93,10 @@ def infobox(wt: str) -> str:
       而实际上是 **`place` / `mangadebut` / `animedebut` 都在 Infobox 里**（L12-14）。
       → 一次错误的前提，会连带一串错误的结论。**截模板必须数括号。**
     """
-    key = "{{Location Infobox"
+    # ★ M70：key 变成参数 —— 篇章页用的是 `{{Story Arc Infobox}}`，
+    #   之前这里硬编码地点模板 → infobox() 对篇章页返回空串，
+    #   于是 part / chapters / name_en **全部静默为 None**
+    #   （篇章 189 条、字段一个都没抽到，但输出看着仍像个正常文件）。
     i = wt.find(key)
     if i < 0:
         return ""
@@ -244,6 +248,134 @@ def place_chain(place_raw: str | None) -> list[str]:
     return paths[0] if paths else []
 
 
+def _arc_id(title: str) -> str:
+    """篇章 id —— 与 `fetch_articles._arc_id` **完全同一套规则**。
+
+    ★ 为什么必须一致：抓取层用 `_arc_id` 写 `entity_id`，
+      构建层若用另一套规则重算 id → 两边对不上 → 消歧关联全断
+      （M67「改标题顺手改了主键」的同族坑，只是这次在篇章上）。
+
+    源站标题长这样：`"Shakedown Road" (Story Arc)`
+      · 前后的 `"` 是排版惯例
+      · `(Story Arc)` 是命名空间后缀
+    两者都不该进 id —— 用户打「勒索之路」要能匹配上。
+    """
+    t = (title or "").strip()
+    if t.startswith('"') and t.endswith('"'):
+        t = t[1:-1].strip()
+    t = re.sub(r"\s*\(\s*story arc\s*\)\s*$", "", t, flags=re.I)
+    return re.sub(r"[^a-z0-9]+", "_", t.strip().lower()).strip("_")
+
+
+def _arc_title_value(wt: str) -> str | None:
+    """篇章页的显示名：Infobox 的 `title` 字段（常带引号，如 `"Shakedown Road"`）。"""
+    ib = infobox(wt, "{{Story Arc Infobox")
+    if not ib:
+        return None
+    v = clean_text(field(ib, "title"))
+    if not v:
+        return None
+    v = v.strip()
+    # ★ 只剥**首尾**成对的引号：源站篇章名大量内嵌引号
+    #   （`"Bastet" Mariah`、`"Green Day" and "Oasis"`）。
+    #   用 `.strip('"')` 会把中间和末尾的引号也吃掉 →
+    #   名字被截成 `Bastet" Mariah`（实测 3/189 受影响）。
+    if len(v) >= 2 and v.startswith('"') and v.endswith('"'):
+        v = v[1:-1]
+    return v.strip() or None
+
+
+def _arc_part(wt: str) -> int | None:
+    """篇章所属部：`part = [[JoJolion]]` 之类，按部名反查部号。"""
+    ib = infobox(wt, "{{Story Arc Infobox")
+    if not ib:
+        return None
+    # ★ 必须先 clean_text：源站写的是粗体链接 `''[[JoJolion]]''`，
+    #   直接拿原始值去 match 部名会**一个都匹配不上** → part 全为 None
+    #   而输出看着仍像个正常文件（静默失败）。
+    v = clean_text(field(ib, "part")) or ""
+    names = {"phantom blood": 1, "battle tendency": 2,
+             "stardust crusaders": 3, "diamond is unbreakable": 4,
+             "golden wind": 5, "stone ocean": 6,
+             "steel ball run": 7, "jojolion": 8, "the jojolands": 9}
+    low = v.lower()
+    for k, n in names.items():
+        if k in low:
+            return n
+    return None
+
+
+def _arc_chapters(wt: str) -> list[str]:
+    """篇章覆盖章节：`manga = {{Ch3|JJL|18|22}}` → ["JJL 18–22"]。"""
+    ib = infobox(wt, "{{Story Arc Infobox")
+    if not ib:
+        return []
+    out: list[str] = []
+    for m in re.finditer(r"\{\{Ch3\|([^}]*)\}\}", field(ib, "manga") or ""):
+        seg = [x.strip() for x in m.group(1).split("|") if x.strip()]
+        if len(seg) >= 3:
+            a, b = seg[1], seg[2]
+            out.append(f"{seg[0]} {a}" if a == b else f"{seg[0]} {a}-{b}")
+    if not out:
+        v = clean_text(field(ib, "manga"))
+        if v:
+            out.append(v)
+    return out
+
+
+# ★★ M70：同名歧义（location ↔ story arc）★★
+#   源站在同名页之间放了一条 `{{Hatnote}}`：
+#     Shakedown Road 页面：
+#       {{Hatnote|This page is for the location. For the story arc of the
+#        same name, see [["Shakedown Road" (Story Arc)]].}}
+#   用户实测「勒索之路的替身是什么」答得不对 —— 根因就是这个：
+#   「勒索之路」**同时是一个地点和一个篇章**，而我们只建了地点，
+#   于是把篇章的诉求（这一段的替身）当成了地点的关联来答。
+#   → 解析 hatnote 得到「同名兄弟页」，两种口径都给，并说明区别。
+#
+# ★ 只认「指向另一页的消歧」，不泛化成"顺便把所有 hatnote 都解析"：
+#   实测 116 个 hatnote 里只有三类 —— 同名异义 / 角色↔替身（Foo Fighters）
+#   / 消歧页（Name Variants）。后两类与地点无关，硬套会造出无意义的关联。
+_HATNOTE = re.compile(r"\{\{Hatnote\|(.*?)\}\}", re.S)
+_WIKILINK = re.compile(r"\[\[([^\]|]+)(?:\|[^\]]*)?\]\]")
+
+
+def hatnote_targets(wt: str) -> list[str]:
+    """取本页 hatnote 指向的「同名兄弟页」标题。
+
+    只在 hatnote 同时出现 `story arc` 且目标页标题带 `(Story Arc)` 时才算 ——
+    这样窄口径不会把 `Foo Fighters` ↔ `Foo Fighters (Stand)` 那类
+    角色↔替身关系误当成地点消歧。
+    """
+    m = _HATNOTE.search(wt or "")
+    if not m:
+        return []
+    body = m.group(1)
+    if "story arc" not in body.lower():
+        return []
+    out: list[str] = []
+    for t in _WIKILINK.findall(body):
+        t = t.strip()
+        if "(story arc)" in t.lower() and t not in out:
+            out.append(t)
+    return out
+
+
+def arc_title_of(wt: str) -> str | None:
+    """反向：本页若是篇章页，返回它对应的同名地点页标题。"""
+    m = _HATNOTE.search(wt or "")
+    if not m:
+        return None
+    body = m.group(1)
+    if "story arc" not in body.lower():
+        return None
+    for t in _WIKILINK.findall(body):
+        t = t.strip()
+        if "(story arc)" not in t.lower() and t:
+            return t
+    return None
+
+
 def part_of(mangadebut: str | None) -> tuple[int | None, str]:
     """`mangadebut` → (部号, 判据)。部号为 None 表示非正传或判不出。"""
     if not mangadebut:
@@ -277,6 +409,35 @@ def main() -> int:
     data = json.loads(SRC.read_text(encoding="utf-8"))
     locs = [p for p in data.get("pages", []) if p.get("kind") == "location"]
     print(f"读到地点页 {len(locs)} 个")
+
+    # ★ M70：篇章页（`{{Story Arc Infobox}}`）—— 之前完全没建。
+    #   「勒索之路」既是地点也是篇章（源站用 hatnote 互相指路），
+    #   我们只有地点 → 用户问篇章的诉求就答不出来。
+    arcs_raw = [p for p in data.get("pages", [])
+                if "{{Story Arc Infobox" in (p.get("wikitext") or "")[:400]]
+    loc_ids = {_loc_id(p["title"]) for p in locs}
+    arcs = []
+    for p in arcs_raw:
+        wt = p["wikitext"]
+        sib = arc_title_of(wt)
+        arc_id = _arc_id(p["title"])
+        arcs.append({
+            "arc_title": p["title"],
+            "arc_id": arc_id,
+            "name_en": _arc_title_value(wt) or arc_id,
+            # ★ arc_id 是**规范化后的 id**（小写下划线），
+            #   name_en 必须是人看的标题 —— 两者混用会让前端显示成下划线串。
+            "name_display": _arc_title_value(wt) or p["title"],
+            "location_title": sib,
+            # ★ 只在「剥掉引号/后缀后与篇章同名」时才连地点 ——
+            #   否则同名但实为不同事物时会被错连。
+            "location_id": (_loc_id(sib)
+                            if sib and _loc_id(sib) in loc_ids else None),
+            "part": _arc_part(wt),
+            "chapters": _arc_chapters(wt),
+        })
+    print(f"★ M70 读到篇章页 {len(arcs)} 个"
+          f"（其中 {sum(1 for a in arcs if a['location_id'])} 个能对上同名地点）")
 
     entries, stats = [], {"kept": 0, "ns": 0, "lang": 0, "other": 0, "no_md": 0}
     for p in locs:
@@ -336,6 +497,22 @@ def main() -> int:
         "locations": entries,
     }
     OUT.write_text(json.dumps(out, ensure_ascii=False, indent=1), encoding="utf-8")
+
+    # ★ M70：篇章单独落一份 arcs.json —— 「勒索之路」这类名字既是地点又是篇章，
+    #   只建地点会把篇章的诉求答成地点的关联（用户实测踩到的）。
+    arcs_out = {
+        "n_arcs": len(arcs),
+        "n_linked_to_location": sum(1 for a in arcs if a["location_id"]),
+        "_note": ("M70：篇章（Story Arc）维度。源站用 hatnote 在同名地点/篇章之间"
+                  "互相指路（实测 116 个 hatnote 里只有 2 个是 location↔arc："
+                  "Shakedown Road、San Diego Beach）。"
+                  "★ 只认指向 `(Story Arc)` 页的消歧，不泛化 —— "
+                  "`Foo Fighters` ↔ `Foo Fighters (Stand)` 那类角色↔替身关系"
+                  "与地点无关，硬套会造出无意义关联。"),
+        "arcs": arcs,
+    }
+    ARCS_OUT.write_text(json.dumps(arcs_out, ensure_ascii=False, indent=1),
+                        encoding="utf-8")
 
     print(f"\n{'='*62}")
     print(f"保留 {stats['kept']} / 排除 {len(locs)-stats['kept']}"

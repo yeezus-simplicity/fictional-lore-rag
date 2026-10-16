@@ -125,6 +125,24 @@ def resolve(q: str) -> list[dict]:
             for cid, nm in match(q)]
 
 
+# 页面类型 → 给用户看的说明（M72）。
+# ★ 只有**不是个体角色**的才给说明 —— 正常角色不加噪音。
+_KIND_NOTE = {
+    "group": "⚠ 源站把它归在角色分类里，但条目用的是「组织/物种」模板"
+             "——**这是一个群体概念，不是某一个人物**。",
+    "family": "⚠ 源站把它归在角色分类里，但条目用的是「家族」模板"
+              "——**这是一个家族，不是某一个人物**。",
+    "item": "⚠ 源站把它归在角色分类里，但条目用的是「道具」模板"
+            "——**这是一件物品，不是人物**。",
+    "unknown": "⚠ 该条目没有 Infobox，源站分类把它列在角色里，"
+               "但无法确认是独立角色（可能是无名小角色或列表条目）。",
+}
+
+
+def _kind_note(kind: str | None) -> str | None:
+    return _KIND_NOTE.get(kind or "")
+
+
 def list_by_part(part: int) -> list[dict]:
     return sorted((c for c in load()["by_id"].values() if c.get("part") == part),
                   key=lambda c: c.get("name_en") or "")
@@ -306,6 +324,13 @@ def answer(q: str, top_k: int = 3, part_map: dict | None = None):
             "part_note": k.get("part_note"),
             "stands": c.get("stand_names") or [],
             "status": c.get("status"),
+            # ★ M72：如实说明「这一页是什么」。
+            #   源站分类不干净，混着组织/家族/物种（Group/Family Infobox）
+            #   与少数无 Infobox 的文章。它们**不是个体角色** ——
+            #   用户问「岩人是什么」时应该说明这是物种而非某个人，
+            #   而不是含糊地当成角色介绍。
+            "page_kind": c.get("page_kind"),
+            "page_kind_note": _kind_note(c.get("page_kind")),
             # ★ 简介是**英文原文**（不机翻），前端与「角色资料」卡里都显示
             "bio": c.get("bio"),
             "bio_chunk_id": c.get("bio_chunk_id"),

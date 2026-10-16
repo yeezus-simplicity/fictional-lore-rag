@@ -1785,6 +1785,7 @@ function renderStructured(a){
         ${a.name_ja? `<span class="zc-sub">${esc(a.name_ja)}</span>`:''}</div>
       ${meta? `<div class="lc-line">${meta}</div>`:''}
       ${a.part_note? `<div class="cc-note">${esc(a.part_note)}</div>`:''}
+      ${a.page_kind_note? `<div class="cc-note" style="border-left:3px solid #d4a017;padding-left:8px">${esc(a.page_kind_note)}</div>`:''}
       ${a.bio? `<div class="cc-bio">${esc(a.bio)}</div>
         <div class="meta">▲ 以上为源站首段原文（英文）。
           ${a.bio_chunk_id? `语料块 #${esc(String(a.bio_chunk_id))}`:''}

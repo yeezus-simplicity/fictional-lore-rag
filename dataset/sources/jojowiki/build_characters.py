@@ -89,6 +89,53 @@ _CJK = re.compile(r"[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff]")
 _WORK_SUFFIX = re.compile(r"\s*\([^)]*\)\s*$")
 
 
+# 页面类型：Infobox 模板名 → 实体类别（M72）。
+#
+# ★★ 同一类模板有**多个别名**，这是第二次栽在「只认一种写法」上 ★★
+#   实测 368 个角色页里：
+#       355  {{Character Infobox}}      ← 主流
+#         3  {{Group Infobox}}          ← 组织/物种，**不是个体角色**
+#         2  {{Character Info}}         ← ★ 别名！我第一版漏了它
+#         1  {{Family Infobox}}         ← 家族
+#         1  {{Item Infobox}}           ← 道具
+#         6  （无 Infobox）              ← 少数小角色写成纯文章
+#   第一版只列了 4 个模板名 → 8 个页面被判成 "unknown"，
+#   其中 7 个其实是真角色（`Dot Han` / `Mona Lisa` / `Gaucho` …）。
+#   → 用**正则**匹配 `{{...Infobox}}` / `{{...Info}}` 家族，
+#     而不是逐个硬编码模板名。
+_TPL_RE = re.compile(r"\{\{\s*([A-Za-z][A-Za-z ]*?(?:Infobox|Info))\s*[|}\n]")
+
+# 模板名 → 实体类别（按词根匹配，容忍别名）
+_KIND_RULES = (
+    ("character", "character"),
+    ("group", "group"),
+    ("organization", "group"),
+    ("family", "family"),
+    ("item", "item"),
+    ("location", "location"),
+    ("stand", "stand"),
+    ("story arc", "arc"),
+)
+
+
+def _page_kind(wt: str) -> str:
+    """按 Infobox 模板名判定页面实体类别（M72）。
+
+    ★ 为什么按模板名而不是页面名/关键词：
+      这是**结构信号** —— 页面自己声明了它是什么。
+      关键词（含 "Family"/"Group" 就判成组织）会误伤真人名。
+    ★ 找不到 Infobox 时返回 "unknown"（如实记录，不猜）。
+    """
+    m = _TPL_RE.search((wt or "")[:3000])
+    if not m:
+        return "unknown"
+    tpl = m.group(1).strip().lower()
+    for root, kind in _KIND_RULES:
+        if tpl.startswith(root):
+            return kind
+    return "unknown"
+
+
 def _strip_work_suffix(title: str) -> str:
     return _WORK_SUFFIX.sub("", title or "").strip()
 
@@ -464,6 +511,19 @@ def main() -> int:
             #   判据本身没错（`cQ` 确实是粘连信号），但**括号里的作品后缀要排除**。
             #   （同 M67「不用驼峰边界判 owner 粘连」的教训：
             #     任何"看起来像两个东西"的规则，都要先在真实数据上跑一遍。）
+            # ★★ M72：如实记录「这一页到底是什么」★★
+            #   源站的 `Category:Part N Characters` 不干净，混着
+            #   `{{Group Infobox}}`（组织/物种）、`{{Family Infobox}}`（家族）、
+            #   以及纯列表文章（`List of Horses`，无 Infobox）。
+            #   实测 5 个：Locacaca Organization / Rock Human / Rock Organism /
+            #              Boomboom Family / List of Horses
+            #   它们**不是个体角色**，但内容是真的（用户可能问「岩人是什么」）。
+            #   → 不删数据，而是**标记类型**：
+            #     ① 答案可以据此说明「这是一个组织/物种，不是个体角色」
+            #     ② 将来分类再污染时，一眼就能看出是哪一类
+            #   ★ 用 Infobox 模板名判定，不用关键词 —— 模板名是结构信号，
+            #     关键词（"Family"/"Group"）会误伤人名。
+            "page_kind": _page_kind(wt),
             "suspect_title": bool(_CJK.search(title)) or bool(
                 re.search(r"[a-z][A-Z]", _strip_work_suffix(title or ""))
                 and not re.search(r"(Mc|Mac)[A-Z]", _strip_work_suffix(title or ""))),

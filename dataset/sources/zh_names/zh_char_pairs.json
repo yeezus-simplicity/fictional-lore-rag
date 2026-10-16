@@ -12,10 +12,6 @@
  "angelica_attanasio": [
   "安洁莉卡·阿塔纳西欧"
  ],
- "anjuro_angelo_katagiri": [
-  "片桐安十郎",
-  "安杰罗"
- ],
  "arabia_fats": [
   "阿拉伯胖子",
   "多明诺"
@@ -81,10 +77,6 @@
  "diego_brando": [
   "迪亚哥·布兰度"
  ],
- "dio": [
-  "迪奥·布兰度",
-  "迪奥"
- ],
  "donatello_versus": [
   "唐那泰罗·凡赛思",
   "恋人",
@@ -111,9 +103,6 @@
  ],
  "formaggio": [
   "霍尔马吉欧"
- ],
- "former_tama": [
-  "猫草"
  ],
  "funny_valentine": [
   "法尼·瓦伦泰",
@@ -327,10 +316,6 @@
  "sheila_e": [
   "席菈·卡佩兹特"
  ],
- "shigekiyo_shigechi_yangu": [
-  "矢安宫重清",
-  "胖重"
- ],
  "shizuka_joestar": [
   "静·乔斯达"
  ],
@@ -457,7 +442,8 @@
   "霍莉·乔斯达"
  ],
  "dio_brando": [
-  "迪奥·布兰度"
+  "迪奥·布兰度",
+  "迪奥"
  ],
  "will_anthonio_zeppeli": [
   "威廉·A·齐贝林",
@@ -502,5 +488,16 @@
  ],
  "santana": [
   "桑塔纳"
+ ],
+ "anjuro_katagiri": [
+  "片桐安十郎",
+  "安杰罗"
+ ],
+ "shigekiyo_yangu": [
+  "矢安宫重清",
+  "胖重"
+ ],
+ "tama": [
+  "猫草"
  ]
 }

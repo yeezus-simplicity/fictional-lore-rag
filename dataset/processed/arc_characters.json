@@ -1,7 +1,7 @@
 {
  "n_arcs": 188,
- "n_with_characters": 187,
- "n_no_range": 1,
+ "n_with_characters": 188,
+ "n_no_range": 0,
  "n_empty": 0,
  "n_char_pages_with_appearance": 355,
  "n_char_pages_total": 368,
@@ -721,7 +721,7 @@
   },
   {
    "arc_id": "the_fool_iggy_and_geb_n_doul",
-   "name": "\"The Fool\" Iggy and \"Geb\" NDoul",
+   "name": "\"The Fool\" Iggy and \"Geb\" N'Doul",
    "part": 3,
    "location_id": null,
    "chapters": [
@@ -1017,7 +1017,7 @@
   },
   {
    "arc_id": "200_balloons_and_lyin_eyes",
-   "name": "200 Balloons and Lyin Eyes",
+   "name": "200 Balloons and Lyin' Eyes",
    "part": 9,
    "location_id": null,
    "chapters": [
@@ -3703,7 +3703,7 @@
   },
   {
    "arc_id": "d_arby_the_gambler",
-   "name": "DArby the Gambler",
+   "name": "D'Arby the Gambler",
    "part": 3,
    "location_id": null,
    "chapters": [
@@ -3773,7 +3773,7 @@
   },
   {
    "arc_id": "d_arby_the_player",
-   "name": "DArby the Player",
+   "name": "D'Arby the Player",
    "part": 3,
    "location_id": null,
    "chapters": [
@@ -3853,12 +3853,11 @@
    "part": 7,
    "location_id": null,
    "chapters": [
-    "SBR 66-70",
-    "SBR 73-82"
+    "SBR 66-82"
    ],
    "chapters_abs": [
     66,
-    70
+    82
    ],
    "characters": [
     {
@@ -3974,13 +3973,67 @@
      "name_en": "Wekapipo's Sister",
      "chapter": 69,
      "snippet": "SBR Chapter 69"
+    },
+    {
+     "character_id": "president_s_aides",
+     "name_en": "President's Aides",
+     "chapter": 71,
+     "snippet": "SBR Chapter 71"
+    },
+    {
+     "character_id": "hot_pants",
+     "name_en": "Hot Pants",
+     "chapter": 73,
+     "snippet": "SBR Chapter 73"
+    },
+    {
+     "character_id": "dario_steel_ball_run",
+     "name_en": "Dario (Steel Ball Run)",
+     "chapter": 73,
+     "snippet": "SBR Chapter 73"
+    },
+    {
+     "character_id": "pocoloco",
+     "name_en": "Pocoloco",
+     "chapter": 74,
+     "snippet": "SBR Chapter 74"
+    },
+    {
+     "character_id": "norisuke_higashikata_i",
+     "name_en": "Norisuke Higashikata I",
+     "chapter": 74,
+     "snippet": "SBR Chapter 74"
+    },
+    {
+     "character_id": "diego_s_mother",
+     "name_en": "Diego's Mother",
+     "chapter": 75,
+     "snippet": "SBR Chapter 75"
+    },
+    {
+     "character_id": "danny_steel_ball_run",
+     "name_en": "Danny (Steel Ball Run)",
+     "chapter": 79,
+     "snippet": "SBR Chapter 79"
+    },
+    {
+     "character_id": "george_joestar_ii_steel_ball_run",
+     "name_en": "George Joestar II (Steel Ball Run)",
+     "chapter": 79,
+     "snippet": "SBR Chapter 79"
+    },
+    {
+     "character_id": "nicholas_joestar",
+     "name_en": "Nicholas Joestar",
+     "chapter": 79,
+     "snippet": "SBR Chapter 79"
     }
    ],
-   "n_characters": 19
+   "n_characters": 28
   },
   {
    "arc_id": "dio_s_world",
-   "name": "DIOs World",
+   "name": "DIO's World",
    "part": 3,
    "location_id": null,
    "chapters": [
@@ -4636,7 +4689,7 @@
   },
   {
    "arc_id": "dolomite_s_blue_lagoon",
-   "name": "Dolomites Blue Lagoon",
+   "name": "Dolomite's Blue Lagoon",
    "part": 8,
    "location_id": null,
    "chapters": [
@@ -5088,7 +5141,7 @@
   },
   {
    "arc_id": "enter_the_dragon_s_dream",
-   "name": "Enter the Dragons Dream",
+   "name": "Enter the Dragon's Dream",
    "part": 6,
    "location_id": null,
    "chapters": [
@@ -5170,7 +5223,7 @@
   },
   {
    "arc_id": "ermes_s_stickers",
-   "name": "Ermess Stickers",
+   "name": "Ermes's Stickers",
    "part": 6,
    "location_id": null,
    "chapters": [
@@ -5966,7 +6019,7 @@
   },
   {
    "arc_id": "gyro_zeppeli_s_destiny",
-   "name": "Gyro Zeppelis Destiny",
+   "name": "Gyro Zeppeli's Destiny",
    "part": 7,
    "location_id": null,
    "chapters": [
@@ -6794,7 +6847,7 @@
   },
   {
    "arc_id": "i_m_an_alien",
-   "name": "Im an Alien",
+   "name": "I'm an Alien",
    "part": 4,
    "location_id": null,
    "chapters": [
@@ -6864,7 +6917,7 @@
   },
   {
    "arc_id": "it_s_a_summer_vacation_everyday",
-   "name": "Its a Summer Vacation Everyday",
+   "name": "It's a Summer Vacation Everyday",
    "part": 8,
    "location_id": null,
    "chapters": [
@@ -8308,7 +8361,7 @@
   },
   {
    "arc_id": "let_s_go_eat_some_italian_food",
-   "name": "Lets Go Eat Some Italian Food",
+   "name": "Let's Go Eat Some Italian Food",
    "part": 4,
    "location_id": null,
    "chapters": [
@@ -8396,7 +8449,7 @@
   },
   {
    "arc_id": "let_s_go_hunting",
-   "name": "Lets Go Hunting!",
+   "name": "Let's Go Hunting!",
    "part": 4,
    "location_id": null,
    "chapters": [
@@ -8442,7 +8495,7 @@
   },
   {
    "arc_id": "let_s_go_to_the_manga_artist_s_house",
-   "name": "Lets Go to the Manga Artists House",
+   "name": "Let's Go to the Manga Artist's House",
    "part": 4,
    "location_id": null,
    "chapters": [
@@ -8596,7 +8649,7 @@
   },
   {
    "arc_id": "let_s_live_on_a_transmission_tower",
-   "name": "Lets Live on a Transmission Tower",
+   "name": "Let's Live on a Transmission Tower",
    "part": 4,
    "location_id": null,
    "chapters": [
@@ -9036,7 +9089,7 @@
   },
   {
    "arc_id": "lulu_s_bags_groove",
-   "name": "Lulus Bags Groove",
+   "name": "Lulu's Bags' Groove",
    "part": 9,
    "location_id": null,
    "chapters": [
@@ -9584,7 +9637,7 @@
   },
   {
    "arc_id": "narancia_s_aerosmith",
-   "name": "Narancias Aerosmith",
+   "name": "Narancia's Aerosmith",
    "part": 5,
    "location_id": null,
    "chapters": [
@@ -10024,7 +10077,7 @@
   },
   {
    "arc_id": "ozon_baby_s_pressure",
-   "name": "Ozon Babys Pressure",
+   "name": "Ozon Baby's Pressure",
    "part": 8,
    "location_id": null,
    "chapters": [
@@ -10958,7 +11011,7 @@
   },
   {
    "arc_id": "rohan_kishibe_s_adventure",
-   "name": "Rohan Kishibes Adventure",
+   "name": "Rohan Kishibe's Adventure",
    "part": 4,
    "location_id": null,
    "chapters": [
@@ -11512,7 +11565,7 @@
   },
   {
    "arc_id": "shigechi_s_harvest",
-   "name": "Shigechis Harvest",
+   "name": "Shigechi's Harvest",
    "part": 4,
    "location_id": null,
    "chapters": [
@@ -12504,7 +12557,7 @@
   },
   {
    "arc_id": "stroheim_s_unit_strikes_back",
-   "name": "Stroheims Unit Strikes Back",
+   "name": "Stroheim's Unit Strikes Back",
    "part": 2,
    "location_id": null,
    "chapters": [
@@ -12914,7 +12967,7 @@
   },
   {
    "arc_id": "the_devil_s_palm",
-   "name": "The Devils Palm",
+   "name": "The Devil's Palm",
    "part": 7,
    "location_id": null,
    "chapters": [
@@ -15518,7 +15571,7 @@
   },
   {
    "arc_id": "there_s_six_of_us",
-   "name": "Theres Six of Us!",
+   "name": "There's Six of Us!",
    "part": 6,
    "location_id": null,
    "chapters": [
@@ -17492,13 +17545,115 @@
   },
   {
    "arc_id": "yoshikage_kira_s_new_situation",
-   "name": "Yoshikage Kiras New Situation",
-   "part": null,
+   "name": "Yoshikage Kira's New Situation",
+   "part": 4,
    "location_id": null,
-   "chapters": [],
-   "chapters_abs": null,
-   "characters": [],
-   "note": "篇章章节区间无法解析 → 不硬猜（宁空勿错）"
+   "chapters": [
+    "DU 105-112"
+   ],
+   "chapters_abs": [
+    370,
+    377
+   ],
+   "characters": [
+    {
+     "character_id": "yoshikage_kira",
+     "name_en": "Yoshikage Kira",
+     "chapter": 370,
+     "snippet": "Chapter 370"
+    },
+    {
+     "character_id": "hayato_kawajiri",
+     "name_en": "Hayato Kawajiri",
+     "chapter": 370,
+     "snippet": "Chapter 370"
+    },
+    {
+     "character_id": "kosaku_kawajiri",
+     "name_en": "Kosaku Kawajiri",
+     "chapter": 370,
+     "snippet": "Chapter 370"
+    },
+    {
+     "character_id": "shinobu_kawajiri",
+     "name_en": "Shinobu Kawajiri",
+     "chapter": 370,
+     "snippet": "Chapter 370"
+    },
+    {
+     "character_id": "joseph_joestar",
+     "name_en": "Joseph Joestar",
+     "chapter": 371,
+     "snippet": "Chapter 371"
+    },
+    {
+     "character_id": "enya_the_hag",
+     "name_en": "Enya the Hag",
+     "chapter": 371,
+     "snippet": "Chapter 371"
+    },
+    {
+     "character_id": "jotaro_kujo",
+     "name_en": "Jotaro Kujo",
+     "chapter": 371,
+     "snippet": "Chapter 371"
+    },
+    {
+     "character_id": "shizuka_joestar",
+     "name_en": "Shizuka Joestar",
+     "chapter": 371,
+     "snippet": "Chapter 371"
+    },
+    {
+     "character_id": "yoshihiro_kira",
+     "name_en": "Yoshihiro Kira",
+     "chapter": 371,
+     "snippet": "Chapter 371"
+    },
+    {
+     "character_id": "ken_oyanagi",
+     "name_en": "Ken Oyanagi",
+     "chapter": 371,
+     "snippet": "Chapter 371"
+    },
+    {
+     "character_id": "josuke_higashikata",
+     "name_en": "Josuke Higashikata",
+     "chapter": 371,
+     "snippet": "Chapter 371"
+    },
+    {
+     "character_id": "okuyasu_nijimura",
+     "name_en": "Okuyasu Nijimura",
+     "chapter": 371,
+     "snippet": "Chapter 371"
+    },
+    {
+     "character_id": "rohan_kishibe",
+     "name_en": "Rohan Kishibe",
+     "chapter": 371,
+     "snippet": "Chapter 371"
+    },
+    {
+     "character_id": "koichi_hirose",
+     "name_en": "Koichi Hirose",
+     "chapter": 371,
+     "snippet": "Chapter 371"
+    },
+    {
+     "character_id": "yukako_yamagishi",
+     "name_en": "Yukako Yamagishi",
+     "chapter": 372,
+     "snippet": "Chapter 372"
+    },
+    {
+     "character_id": "mikitaka_hazekura",
+     "name_en": "Mikitaka Hazekura",
+     "chapter": 377,
+     "snippet": "Chapter 377"
+    }
+   ],
+   "n_characters": 16
   },
   {
    "arc_id": "youth_with_dio",

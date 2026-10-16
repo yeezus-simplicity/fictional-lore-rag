@@ -63,6 +63,37 @@ def main() -> int:
                 cur.append(n)
                 n_add += 1
 
+    # ★★ M72：把**重定向副本**的中文名搬到规范页上 ★★
+    #   重定向副本（`dio` / `former_tama` …）已从 characters 表清掉，
+    #   但它们身上挂着**更有价值的简称**（`迪奥` / `胖重` / `猫草`）。
+    #   不清走的话：`build_char_alias_table` 用 setdefault，
+    #   字典序在前的 `dio` 会先占据「迪奥·布兰度」这个名字 → 映射到一个
+    #   **已不存在的 character_id** → 路由查不到 → 「迪奥·布兰度的替身是什么」
+    #   从 stand_of 退化成语义片段（实测 test_m21 挂了 2 项）。
+    #   → 合并到规范页 + 删掉副本键（副本已不是合法实体，留着只会再犯）。
+    sys.path.insert(0, str(HERE.parents[0].parent / "pipeline"))
+    from wiki_redirects import REDIRECT_TO_CANONICAL  # noqa: E402
+
+    import re as _re
+
+    def _slug(x: str) -> str:
+        return _re.sub(r"[^a-z0-9]+", "_", (x or "").strip().lower()).strip("_")
+
+    n_moved = 0
+    for redir_title, canon_title in REDIRECT_TO_CANONICAL.items():
+        rid, cid = _slug(redir_title), _slug(canon_title)
+        if rid not in zh or rid == cid:
+            continue
+        names = zh.pop(rid)
+        cur = zh.setdefault(cid, [])
+        for nm in names:
+            if nm and nm not in cur:
+                cur.append(nm)
+                n_moved += 1
+    if n_moved:
+        print(f"✓ 重定向副本的中文名已搬到规范页：{n_moved} 个"
+              f"（副本键已删除，否则 setdefault 会把名字挂到不存在的 id 上）")
+
     PAIRS.write_text(json.dumps(zh, ensure_ascii=False, indent=1),
                      encoding="utf-8")
     print(f"✓ 并入 {n_add} 个中文名（覆盖 {len(entries) - n_skip - n_noid} 个角色）")

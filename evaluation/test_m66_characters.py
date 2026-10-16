@@ -224,9 +224,12 @@ def main() -> int:
     # 「空字段吞下一行」那条也要守（M65 坑 5）
     check("★ 取值正则的空白类不含换行（[^\\S\\n]）",
           "[^\\S\\n]" in (SRC / "build_characters.py").read_text(encoding="utf-8"))
-    # 具体案例：DIO 的身高是两段值，不能被吞成一行脏值
-    dio = next((c for c in chars if c["title"] == "DIO"), None)
-    check("DIO 身高解析出两个值（185 / 195），不是脏串",
+    # 具体案例：Dio Brando 的身高是两段值，不能被吞成一行脏值
+    # ★ M72：页面标题由 "DIO" 改为 "Dio Brando" ——
+    #   源站 `DIO` 是重定向页（→ Dio Brando），已按 wiki_redirects.py
+    #   清掉副本，保留正文页名。测试跟着改成规范名。
+    dio = next((c for c in chars if c["title"] == "Dio Brando"), None)
+    check("Dio Brando 身高解析出两个值（185 / 195），不是脏串",
           bool(dio) and "185" in (dio.get("height") or "")
           and "195" in (dio.get("height") or ""),
           str(dio.get("height") if dio else None))

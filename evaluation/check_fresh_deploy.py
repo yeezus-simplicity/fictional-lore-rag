@@ -115,21 +115,39 @@ def _strip_comments(txt: str) -> str:
 
 
 def tables_in_code() -> dict[str, set[str]]:
-    """扫描代码里的 SQL，收集 FROM/JOIN 引用的表名 → 出现位置。"""
+    """扫描代码里的 SQL，收集 FROM/JOIN 引用的表名 → 出现位置。
+
+    ★★ M72：排除**运行时临时表**（`CREATE TEMP TABLE`）★★
+      本检查的意图是「**持久表**必须由 schema 定义，否则全新部署会缺表」——
+      而代码里 `CREATE TEMP TABLE _keep_chunks` 这种表在同一次运行内
+      建了又删（M72 用它做陈旧块同步清理），**从来不需要 schema 定义**。
+      实测误报：`_keep_chunks ← database/load_db.py`，
+      而我一度以为真是 schema 缺口。
+      → 先扫出临时表名，从引用集合里剔除。
+        （与项目一贯做法一致：检查器的误报也要修，否则会变成"狼来了"。）
+    """
     ref: dict[str, set[str]] = {}
     pat = re.compile(
         r"\b(?:FROM|JOIN|INTO|UPDATE)\s+([a-zA-Z_][a-zA-Z0-9_]*)")
+    temp_pat = re.compile(
+        r"CREATE\s+(?:TEMPORARY\s+|TEMP\s+)+TABLE\s+"
+        r"(?:IF\s+NOT\s+EXISTS\s+)?([a-zA-Z_][a-zA-Z0-9_]*)", re.I)
     for d in CODE_DIRS:
         for f in (ROOT / d).rglob("*.py"):
             try:
-                txt = _strip_comments(f.read_text(encoding="utf-8"))
+                raw = f.read_text(encoding="utf-8")
+                txt = _strip_comments(raw)
             except Exception:
                 continue
+            runtime_temp = {m.group(1).lower()
+                            for m in temp_pat.finditer(raw)}
             for m in pat.finditer(txt):
                 t = m.group(1).lower()
                 if t in NOT_TABLES or len(t) < 3:
                     continue
                 if t.startswith(_SYS_PREFIX):     # pg_* / information_schema.*
+                    continue
+                if t in runtime_temp:             # 运行时临时表 → 不要求进 schema
                     continue
                 ref.setdefault(t, set()).add(
                     str(f.relative_to(ROOT)).replace("\\", "/"))

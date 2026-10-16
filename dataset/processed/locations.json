@@ -1877,13 +1877,13 @@
    "place_paths": [
     [
      "Aloha Tower Pier",
-     "Oahu",
+     "O'ahu",
      "Hawaii"
     ]
    ],
    "place_chain": [
     "Aloha Tower Pier",
-    "Oahu",
+    "O'ahu",
     "Hawaii"
    ],
    "residents": [],
@@ -4549,17 +4549,17 @@
     "Japan"
    ],
    "residents": [],
-   "mangadebut": "Deadmans Questions Chapter 2",
+   "mangadebut": "Deadman's Questions Chapter 2",
    "mangadebuts": [
-    "Deadmans Questions Chapter 2"
+    "Deadman's Questions Chapter 2"
    ],
    "animedebut": null,
    "animedebuts": [],
    "n_infobox_fields": 14,
    "part": null,
-   "part_basis": "非正传前缀 Deadmans Questions",
+   "part_basis": "非正传前缀 Deadman's Questions",
    "included": false,
-   "exclude_reason": "非正传前缀 Deadmans Questions"
+   "exclude_reason": "非正传前缀 Deadman's Questions"
   },
   {
    "location_id": "south_china_sea",
@@ -4862,7 +4862,7 @@
    "location_id": "trattoria_trussardi",
    "title": "Trattoria Trussardi",
    "name_ja": "イタリア料理「トラサルディー」",
-   "name_romaji": "Itaria Ryōri Torasarudī",
+   "name_romaji": "Itaria Ryōri 'Torasarudī'",
    "type": null,
    "types": [],
    "place_raw": "[[Morioh]], Japan {{Flag|Japan}}<hr />[[Morioh (JoJolion)|Morioh]], Japan {{Flag|Japan}}",

@@ -90,8 +90,8 @@
   {
    "arc_title": "\"The Fool\" Iggy and \"Geb\" N'Doul (Story Arc)",
    "arc_id": "the_fool_iggy_and_geb_n_doul",
-   "name_en": "\"The Fool\" Iggy and \"Geb\" NDoul",
-   "name_display": "\"The Fool\" Iggy and \"Geb\" NDoul",
+   "name_en": "\"The Fool\" Iggy and \"Geb\" N'Doul",
+   "name_display": "\"The Fool\" Iggy and \"Geb\" N'Doul",
    "location_title": null,
    "location_id": null,
    "part": 3,
@@ -114,8 +114,8 @@
   {
    "arc_title": "200 Balloons and Lyin' Eyes (Story Arc)",
    "arc_id": "200_balloons_and_lyin_eyes",
-   "name_en": "200 Balloons and Lyin Eyes",
-   "name_display": "200 Balloons and Lyin Eyes",
+   "name_en": "200 Balloons and Lyin' Eyes",
+   "name_display": "200 Balloons and Lyin' Eyes",
    "location_title": null,
    "location_id": null,
    "part": 9,
@@ -414,8 +414,8 @@
   {
    "arc_title": "D'Arby the Gambler (Story Arc)",
    "arc_id": "d_arby_the_gambler",
-   "name_en": "DArby the Gambler",
-   "name_display": "DArby the Gambler",
+   "name_en": "D'Arby the Gambler",
+   "name_display": "D'Arby the Gambler",
    "location_title": null,
    "location_id": null,
    "part": 3,
@@ -426,8 +426,8 @@
   {
    "arc_title": "D'Arby the Player (Story Arc)",
    "arc_id": "d_arby_the_player",
-   "name_en": "DArby the Player",
-   "name_display": "DArby the Player",
+   "name_en": "D'Arby the Player",
+   "name_display": "D'Arby the Player",
    "location_title": null,
    "location_id": null,
    "part": 3,
@@ -444,15 +444,14 @@
    "location_id": null,
    "part": 7,
    "chapters": [
-    "SBR 66-70",
-    "SBR 73-82"
+    "SBR 66-82"
    ]
   },
   {
    "arc_title": "DIO's World (Story Arc)",
    "arc_id": "dio_s_world",
-   "name_en": "DIOs World",
-   "name_display": "DIOs World",
+   "name_en": "DIO's World",
+   "name_display": "DIO's World",
    "location_title": null,
    "location_id": null,
    "part": 3,
@@ -547,8 +546,8 @@
   {
    "arc_title": "Dolomite's Blue Lagoon (Story Arc)",
    "arc_id": "dolomite_s_blue_lagoon",
-   "name_en": "Dolomites Blue Lagoon",
-   "name_display": "Dolomites Blue Lagoon",
+   "name_en": "Dolomite's Blue Lagoon",
+   "name_display": "Dolomite's Blue Lagoon",
    "location_title": null,
    "location_id": null,
    "part": 8,
@@ -607,8 +606,8 @@
   {
    "arc_title": "Enter the Dragon's Dream (Story Arc)",
    "arc_id": "enter_the_dragon_s_dream",
-   "name_en": "Enter the Dragons Dream",
-   "name_display": "Enter the Dragons Dream",
+   "name_en": "Enter the Dragon's Dream",
+   "name_display": "Enter the Dragon's Dream",
    "location_title": null,
    "location_id": null,
    "part": 6,
@@ -619,8 +618,8 @@
   {
    "arc_title": "Ermes's Stickers (Story Arc)",
    "arc_id": "ermes_s_stickers",
-   "name_en": "Ermess Stickers",
-   "name_display": "Ermess Stickers",
+   "name_en": "Ermes's Stickers",
+   "name_display": "Ermes's Stickers",
    "location_title": null,
    "location_id": null,
    "part": 6,
@@ -739,8 +738,8 @@
   {
    "arc_title": "Gyro Zeppeli's Destiny (Story Arc)",
    "arc_id": "gyro_zeppeli_s_destiny",
-   "name_en": "Gyro Zeppelis Destiny",
-   "name_display": "Gyro Zeppelis Destiny",
+   "name_en": "Gyro Zeppeli's Destiny",
+   "name_display": "Gyro Zeppeli's Destiny",
    "location_title": null,
    "location_id": null,
    "part": 7,
@@ -847,8 +846,8 @@
   {
    "arc_title": "I'm an Alien (Story Arc)",
    "arc_id": "i_m_an_alien",
-   "name_en": "Im an Alien",
-   "name_display": "Im an Alien",
+   "name_en": "I'm an Alien",
+   "name_display": "I'm an Alien",
    "location_title": null,
    "location_id": null,
    "part": 4,
@@ -859,8 +858,8 @@
   {
    "arc_title": "It's a Summer Vacation Everyday (Story Arc)",
    "arc_id": "it_s_a_summer_vacation_everyday",
-   "name_en": "Its a Summer Vacation Everyday",
-   "name_display": "Its a Summer Vacation Everyday",
+   "name_en": "It's a Summer Vacation Everyday",
+   "name_display": "It's a Summer Vacation Everyday",
    "location_title": null,
    "location_id": null,
    "part": 8,
@@ -1051,8 +1050,8 @@
   {
    "arc_title": "Let's Go Eat Some Italian Food (Story Arc)",
    "arc_id": "let_s_go_eat_some_italian_food",
-   "name_en": "Lets Go Eat Some Italian Food",
-   "name_display": "Lets Go Eat Some Italian Food",
+   "name_en": "Let's Go Eat Some Italian Food",
+   "name_display": "Let's Go Eat Some Italian Food",
    "location_title": null,
    "location_id": null,
    "part": 4,
@@ -1063,8 +1062,8 @@
   {
    "arc_title": "Let's Go Hunting! (Story Arc)",
    "arc_id": "let_s_go_hunting",
-   "name_en": "Lets Go Hunting!",
-   "name_display": "Lets Go Hunting!",
+   "name_en": "Let's Go Hunting!",
+   "name_display": "Let's Go Hunting!",
    "location_title": null,
    "location_id": null,
    "part": 4,
@@ -1075,8 +1074,8 @@
   {
    "arc_title": "Let's Go to the Manga Artist's House (Story Arc)",
    "arc_id": "let_s_go_to_the_manga_artist_s_house",
-   "name_en": "Lets Go to the Manga Artists House",
-   "name_display": "Lets Go to the Manga Artists House",
+   "name_en": "Let's Go to the Manga Artist's House",
+   "name_display": "Let's Go to the Manga Artist's House",
    "location_title": null,
    "location_id": null,
    "part": 4,
@@ -1087,8 +1086,8 @@
   {
    "arc_title": "Let's Live on a Transmission Tower (Story Arc)",
    "arc_id": "let_s_live_on_a_transmission_tower",
-   "name_en": "Lets Live on a Transmission Tower",
-   "name_display": "Lets Live on a Transmission Tower",
+   "name_en": "Let's Live on a Transmission Tower",
+   "name_display": "Let's Live on a Transmission Tower",
    "location_title": null,
    "location_id": null,
    "part": 4,
@@ -1147,8 +1146,8 @@
   {
    "arc_title": "Lulu's Bags' Groove (Story Arc)",
    "arc_id": "lulu_s_bags_groove",
-   "name_en": "Lulus Bags Groove",
-   "name_display": "Lulus Bags Groove",
+   "name_en": "Lulu's Bags' Groove",
+   "name_display": "Lulu's Bags' Groove",
    "location_title": null,
    "location_id": null,
    "part": 9,
@@ -1243,8 +1242,8 @@
   {
    "arc_title": "Narancia's Aerosmith (Story Arc)",
    "arc_id": "narancia_s_aerosmith",
-   "name_en": "Narancias Aerosmith",
-   "name_display": "Narancias Aerosmith",
+   "name_en": "Narancia's Aerosmith",
+   "name_display": "Narancia's Aerosmith",
    "location_title": null,
    "location_id": null,
    "part": null,
@@ -1303,8 +1302,8 @@
   {
    "arc_title": "Ozon Baby's Pressure (Story Arc)",
    "arc_id": "ozon_baby_s_pressure",
-   "name_en": "Ozon Babys Pressure",
-   "name_display": "Ozon Babys Pressure",
+   "name_en": "Ozon Baby's Pressure",
+   "name_display": "Ozon Baby's Pressure",
    "location_title": null,
    "location_id": null,
    "part": 8,
@@ -1423,8 +1422,8 @@
   {
    "arc_title": "Rohan Kishibe's Adventure (Story Arc)",
    "arc_id": "rohan_kishibe_s_adventure",
-   "name_en": "Rohan Kishibes Adventure",
-   "name_display": "Rohan Kishibes Adventure",
+   "name_en": "Rohan Kishibe's Adventure",
+   "name_display": "Rohan Kishibe's Adventure",
    "location_title": null,
    "location_id": null,
    "part": 4,
@@ -1483,8 +1482,8 @@
   {
    "arc_title": "Shigechi's Harvest (Story Arc)",
    "arc_id": "shigechi_s_harvest",
-   "name_en": "Shigechis Harvest",
-   "name_display": "Shigechis Harvest",
+   "name_en": "Shigechi's Harvest",
+   "name_display": "Shigechi's Harvest",
    "location_title": null,
    "location_id": null,
    "part": 4,
@@ -1615,8 +1614,8 @@
   {
    "arc_title": "Stroheim's Unit Strikes Back (Story Arc)",
    "arc_id": "stroheim_s_unit_strikes_back",
-   "name_en": "Stroheims Unit Strikes Back",
-   "name_display": "Stroheims Unit Strikes Back",
+   "name_en": "Stroheim's Unit Strikes Back",
+   "name_display": "Stroheim's Unit Strikes Back",
    "location_title": null,
    "location_id": null,
    "part": 2,
@@ -1675,8 +1674,8 @@
   {
    "arc_title": "The Devil's Palm (Story Arc)",
    "arc_id": "the_devil_s_palm",
-   "name_en": "The Devils Palm",
-   "name_display": "The Devils Palm",
+   "name_en": "The Devil's Palm",
+   "name_display": "The Devil's Palm",
    "location_title": null,
    "location_id": null,
    "part": 7,
@@ -1963,8 +1962,8 @@
   {
    "arc_title": "There's Six of Us! (Story Arc)",
    "arc_id": "there_s_six_of_us",
-   "name_en": "Theres Six of Us!",
-   "name_display": "Theres Six of Us!",
+   "name_en": "There's Six of Us!",
+   "name_display": "There's Six of Us!",
    "location_title": null,
    "location_id": null,
    "part": 6,
@@ -2215,12 +2214,14 @@
   {
    "arc_title": "Yoshikage Kira's New Situation (Story Arc)",
    "arc_id": "yoshikage_kira_s_new_situation",
-   "name_en": "Yoshikage Kiras New Situation",
-   "name_display": "Yoshikage Kiras New Situation",
+   "name_en": "Yoshikage Kira's New Situation",
+   "name_display": "Yoshikage Kira's New Situation",
    "location_title": null,
    "location_id": null,
    "part": 4,
-   "chapters": []
+   "chapters": [
+    "DU 105-112"
+   ]
   },
   {
    "arc_title": "Youth with Dio (Story Arc)",

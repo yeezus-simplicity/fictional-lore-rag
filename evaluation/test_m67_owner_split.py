@@ -179,9 +179,13 @@ def main() -> int:
                     "WHERE location_id IS NOT NULL")
         check("★ text_chunks.location_id 已写（M65 漏的）",
               cur.fetchone()[0] == 1179, "应 1179")
+        # ★ M72：约束从「三选一」扩成「四选一」（加了 arc_id）——
+        #   篇章块只有 arc_id，按旧的「三无」判据会被当成违规块。
+        #   判据跟着约束走，别落在后面。
         cur.execute("SELECT count(*) FROM text_chunks WHERE stand_id IS NULL "
-                    "AND character_id IS NULL AND location_id IS NULL")
-        check("没有「三无」语料块（违反三选一约束的那种）",
+                    "AND character_id IS NULL AND location_id IS NULL "
+                    "AND arc_id IS NULL")
+        check("没有「四无」语料块（违反四选一约束的那种）",
               cur.fetchone()[0] == 0)
         cur.close()
         conn.close()
@@ -211,8 +215,14 @@ def main() -> int:
     #   （M68 补抓 12 个角色页：角色块 2961 → 3063）。
     #   ★ M64 的教训原话：「断言绑死具体数字 → 新环境/新数据下假失败」。
     #     下限取 M67 时点的值，只防「变少」这个真回归。
+    #   ★ M72：替身块下限 1393 → 1301。
+    #     不是数据变少，是**去掉了重复**：`Tusk ACT1-4` /
+    #     `Star Platinum: The World` 这 5 个页面是重定向
+    #     （→ Tusk / Star Platinum），抓取时 redirects=1 抓成了正文副本，
+    #     内容与目标页**逐字节相同**（92 个块）。
+    #     删副本后替身块 1393 → 1301 —— 内容一条没丢，只是不再重复存。
     check(f"地点块 {len(loc)} / 角色块 {len(ch)} / 替身块 {len(st)}",
-          len(loc) >= 1179 and len(ch) >= 2961 and len(st) >= 1393,
+          len(loc) >= 1179 and len(ch) >= 2961 and len(st) >= 1301,
           f"{len(loc)}/{len(ch)}/{len(st)}")
 
     print()

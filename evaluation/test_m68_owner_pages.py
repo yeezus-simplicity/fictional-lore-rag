@@ -69,7 +69,14 @@ def main() -> int:
     titles = {t["title"] for t in chars}
     # ★ 180 = 探测时的 182 扣掉 NO_PAGE 的 6 个 + 修正表换名的 1 个仍算 1 个
     #   （`Unnamed Mountain Lodge Owner` → `Mountain Lodge Owner`，数量不变）
-    check(f"角色 target {len(chars)} 个（≥180）", len(chars) >= 180,
+    # ★ M72：182 → 179。**不是数据变少，是去掉了重复**：
+    #   ① 分类名单里剔掉 7 个重定向页（DIO / Holy Joestar …）——
+    #      抓它们只会得到目标页的逐字节副本
+    #   ② owner_name 里的重定向名规范化后（The World 的持有者 "DIO"
+    #      → "Dio Brando"）与分类那条**合并**，不再各占一个 target
+    #   ★ 真正该守的数字是「DB 里有多少角色」（374，见 data_facts.json），
+    #     target 数只是「计划抓几页」，随去重策略变化，取下界防倒退即可。
+    check(f"角色 target {len(chars)} 个（≥179）", len(chars) >= 179,
           f"实际 {len(chars)}")
     # ★ M70：判据要**剥掉作品后缀**再判粘连。
     #   源站用括号标注同名角色属于哪一部 —— `(JoJolion)` / `(Steel Ball Run)`

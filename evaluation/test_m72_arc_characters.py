@@ -188,6 +188,66 @@ def main() -> int:
     check("★ 前端渲染 arc_fact 的角色行", "相关角色" in html)
     check("★ 角色标签也带话数", "charTags" in html)
 
+    # ---- ⑦.5 撇号与单章写法（本轮修的两个解析 bug）----
+    print("\n[7.5] 解析 bug 回归锁")
+    src_loc = (ROOT / "dataset" / "sources" / "jojowiki"
+               / "build_locations.py").read_text(encoding="utf-8")
+    # clean_text 里必须是「连续 2 个及以上才删」
+    check("★ 撇号只在成对时删除，不误删英文所有格",
+          "'{2,}" in src_loc,
+          "clean_text 里可能仍是旧写法，会把 Kira's 吃成 Kiras")
+    yk = by_id.get("yoshikage_kira_s_new_situation") or {}
+    check("★ Kira's 的撇号保住了",
+          "'" in (yk.get("name") or ""), f"实得 {yk.get('name')!r}")
+    check("★ 两个单章写法 DU 105 + DU 112 → 区间 370-377",
+          yk.get("chapters_abs") == [370, 377],
+          f"实得 chapters_abs={yk.get('chapters_abs')} "
+          f"chapters={yk.get('chapters')}")
+    # 重定向副本的中文名必须搬到规范页（否则挂在不存在的 id 上）
+    sys.path.insert(0, str(ROOT / "services"))
+    import aliases as _al
+    tbl = _al.build_char_alias_table()
+    for nm, want in (("迪奥·布兰度", "dio_brando"), ("胖重", "shigekiyo_yangu"),
+                     ("猫草", "tama"), ("片桐安十郎", "anjuro_katagiri")):
+        check(f"★ 中文名「{nm}」→ {want}（副本键已清理）",
+              tbl.get(nm) == want, f"实得 {tbl.get(nm)}")
+
+    # ---- ⑦.6 页面类型标记（源站分类不干净）----
+    print("\n[7.6] page_kind：如实记录「这一页是什么」")
+    ext = json.loads((PROC / "characters_ext.json").read_text(encoding="utf-8"))
+    ecs = ext["characters"]
+    kinds = {}
+    for c in ecs:
+        kinds[c.get("page_kind")] = kinds.get(c.get("page_kind"), 0) + 1
+    check("★ 大多数页是 Character Infobox（≥350）",
+          kinds.get("character", 0) >= 350, str(kinds))
+    check("★ 组织/物种页被标为 group（实测 3）",
+          kinds.get("group", 0) >= 3, str(kinds))
+    check("★ 家族页被标为 family",
+          kinds.get("family", 0) >= 1, str(kinds))
+    # 模板别名必须被识别 —— `{{Character Info}}` 是 `Character Infobox` 的别名
+    by_title = {c["title"]: c for c in ecs}
+    check("★ 模板别名 {{Character Info}} 被认成 character"
+          "（Dot Han / Mona Lisa 这类）",
+          (by_title.get("Dot Han") or {}).get("page_kind") == "character",
+          f"实得 {(by_title.get('Dot Han') or {}).get('page_kind')}")
+    check("★ 明确不是角色的页被正确归类",
+          (by_title.get("Locacaca Organization") or {}).get("page_kind") == "group"
+          and (by_title.get("Boomboom Family") or {}).get("page_kind") == "family",
+          f"{by_title.get('Locacaca Organization', {}).get('page_kind')} / "
+          f"{by_title.get('Boomboom Family', {}).get('page_kind')}")
+    # 答案层要如实说明（不把组织当人物介绍）
+    sys.path.insert(0, str(ROOT / "services"))
+    import characters as _ch
+    a1, _, _ = _ch.answer("Rock Human 是什么")
+    check("★ 问组织/物种时给出「不是个体角色」的说明",
+          bool(a1.get("page_kind_note")), str(a1.get("page_kind")))
+    a2, _, _ = _ch.answer("东方仗助是谁")
+    check("★ 正常角色不加这类噪音（page_kind_note 为 None）",
+          a2.get("page_kind_note") is None, str(a2.get("page_kind_note")))
+    html = (ROOT / "api" / "static" / "index.html").read_text(encoding="utf-8")
+    check("★ 前端渲染 page_kind_note", "page_kind_note" in html)
+
     # ---- ⑧ DB（有库才跑）----
     print("\n[8] DB：篇章表与篇章块")
     conn = None

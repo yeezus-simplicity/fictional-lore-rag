@@ -312,6 +312,7 @@ def build_targets() -> list[dict]:
     #   → 改用与 characters 表**完全相同**的 `_char_id(split_owner_names(...))`，
     #     否则生成的 id 对不上外键，入库会被拒。
     sys.path.insert(0, str(ROOT / "database"))
+    sys.path.insert(0, str(ROOT / "dataset" / "pipeline"))
     from load_db import _char_id, _loc_id, split_owner_names   # noqa: E402
 
     def _arc_id(title: str) -> str:
@@ -338,6 +339,14 @@ def build_targets() -> list[dict]:
             seen.add(("stand", nm))
             targets.append({"title": nm, "kind": "stand", "entity_id": sid})
 
+    # ★★ M72：owner_name 循环里也要处理重定向名 ★★
+    #   分类路径已由 fetch_character_titles 过滤，但**这条路径没有** ——
+    #   源站在替身页把持有者写成重定向名（The World 的持有者写作 "DIO"），
+    #   于是 target 里仍出现 `dio` / `former_tama` 等 6 个副本 id，
+    #   而它们已从 DB 清掉 → 语料块会挂在**不存在的 character_id** 上。
+    #   → 用与 load_db **同一张表**（wiki_redirects）规范化。
+    from wiki_redirects import canonical_name as _canon_owner  # noqa: E402
+
     for s in stands:
         raw = (s.get("owner_name") or "").strip()
         if not raw:
@@ -345,6 +354,7 @@ def build_targets() -> list[dict]:
         for o in split_owner_names(raw):
             if not o or o.lower() in ("none", "unknown"):
                 continue
+            o = _canon_owner(o)
             # ★ M68：标题修正 + 跳过确认无条目的
             #   ★ 注意顺序：先修正再查 NO_PAGE —— 修正后的名字仍可能无条目
             #     （目前没有这种情形，但顺序写对能防将来加错表）。

@@ -1,7 +1,7 @@
 {
- "n_arcs": 189,
+ "n_arcs": 188,
  "n_with_stands": 164,
- "n_no_range": 1,
+ "n_no_range": 0,
  "n_empty": 24,
  "_note": "M71：篇章 ↔ 替身语料证据链。★ 章号口径：第1–5部绝对、第6–9部部内相对，两侧都换算到绝对章号后再比（偏移 44/113/265/439）。★ 外传作品（Crazy Heartbreakers 等）已排除 —— 它们章号各自从1起，不排除会与正传撞车（实测只按章号查会把37个替身误圈进第7部ch1-4，实际只有1个）。★ 每条带 chapter + snippet 作为证据，可回查原文。",
  "arcs": [
@@ -64,6 +64,15 @@
    ],
    "stands": [
     {
+     "stand_id": "aerosmith",
+     "name_en": "Aerosmith",
+     "chapter": 553,
+     "snippet": "Chapter 553: Destination: Rome! The Colosseum",
+     "chapter_title": "Destination: Rome! The Colosseum",
+     "stand_part": 5,
+     "n_forms": 1
+    },
+    {
      "stand_id": "green_day",
      "name_en": "Green Day",
      "chapter": 553,
@@ -84,15 +93,6 @@
     {
      "stand_id": "oasis",
      "name_en": "Oasis",
-     "chapter": 553,
-     "snippet": "Chapter 553: Destination: Rome! The Colosseum",
-     "chapter_title": "Destination: Rome! The Colosseum",
-     "stand_part": 5,
-     "n_forms": 1
-    },
-    {
-     "stand_id": "aerosmith",
-     "name_en": "Aerosmith",
      "chapter": 553,
      "snippet": "Chapter 553: Destination: Rome! The Colosseum",
      "chapter_title": "Destination: Rome! The Colosseum",
@@ -396,7 +396,7 @@
   },
   {
    "arc_id": "the_fool_iggy_and_geb_n_doul",
-   "name": "\"The Fool\" Iggy and \"Geb\" NDoul",
+   "name": "\"The Fool\" Iggy and \"Geb\" N'Doul",
    "arc_title": "\"The Fool\" Iggy and \"Geb\" N'Doul (Story Arc)",
    "part": 3,
    "location_id": null,
@@ -445,21 +445,21 @@
      "n_forms": 1
     },
     {
-     "stand_id": "star_platinum_the_world",
-     "name_en": "Star Platinum: The World",
-     "chapter": 185,
-     "snippet": "Chapter 185: \"The Fool\" Iggy and \"Geb\" N'Doul, Part 3",
-     "chapter_title": "\"The Fool\" Iggy and \"Geb\" N'Doul, Part 3",
-     "stand_part": 6,
-     "n_forms": 1
-    },
-    {
      "stand_id": "star_platinum",
      "name_en": "Star Platinum",
      "chapter": 185,
      "snippet": "Chapter 185: \"The Fool\" Iggy and \"Geb\" N'Doul, Part 3",
      "chapter_title": "\"The Fool\" Iggy and \"Geb\" N'Doul, Part 3",
      "stand_part": 3,
+     "n_forms": 1
+    },
+    {
+     "stand_id": "star_platinum_the_world",
+     "name_en": "Star Platinum: The World",
+     "chapter": 185,
+     "snippet": "Chapter 185: \"The Fool\" Iggy and \"Geb\" N'Doul, Part 3",
+     "chapter_title": "\"The Fool\" Iggy and \"Geb\" N'Doul, Part 3",
+     "stand_part": 6,
      "n_forms": 1
     },
     {
@@ -502,7 +502,7 @@
   },
   {
    "arc_id": "200_balloons_and_lyin_eyes",
-   "name": "200 Balloons and Lyin Eyes",
+   "name": "200 Balloons and Lyin' Eyes",
    "arc_title": "200 Balloons and Lyin' Eyes (Story Arc)",
    "part": 9,
    "location_id": null,
@@ -1418,8 +1418,8 @@
      "n_forms": 1
     },
     {
-     "stand_id": "stone_free",
-     "name_en": "Stone Free",
+     "stand_id": "diver_down",
+     "name_en": "Diver Down",
      "chapter": 141,
      "snippet": "Stone Ocean Chapter 141: C-MOON, Part 1",
      "chapter_title": "C-MOON, Part 1",
@@ -1427,8 +1427,8 @@
      "n_forms": 1
     },
     {
-     "stand_id": "diver_down",
-     "name_en": "Diver Down",
+     "stand_id": "stone_free",
+     "name_en": "Stone Free",
      "chapter": 141,
      "snippet": "Stone Ocean Chapter 141: C-MOON, Part 1",
      "chapter_title": "C-MOON, Part 1",
@@ -1895,15 +1895,6 @@
      "n_forms": 1
     },
     {
-     "stand_id": "star_platinum_the_world",
-     "name_en": "Star Platinum: The World",
-     "chapter": 437,
-     "snippet": "Chapter 437: Let Me Remind You (Flashback)",
-     "chapter_title": "Let Me Remind You (Flashback)",
-     "stand_part": 6,
-     "n_forms": 1
-    },
-    {
      "stand_id": "star_platinum",
      "name_en": "Star Platinum",
      "chapter": 437,
@@ -1911,13 +1902,22 @@
      "chapter_title": "Let Me Remind You (Flashback)",
      "stand_part": 3,
      "n_forms": 1
+    },
+    {
+     "stand_id": "star_platinum_the_world",
+     "name_en": "Star Platinum: The World",
+     "chapter": 437,
+     "snippet": "Chapter 437: Let Me Remind You (Flashback)",
+     "chapter_title": "Let Me Remind You (Flashback)",
+     "stand_part": 6,
+     "n_forms": 1
     }
    ],
    "n_stands": 9
   },
   {
    "arc_id": "d_arby_the_gambler",
-   "name": "DArby the Gambler",
+   "name": "D'Arby the Gambler",
    "arc_title": "D'Arby the Gambler (Story Arc)",
    "part": 3,
    "location_id": null,
@@ -1961,7 +1961,7 @@
   },
   {
    "arc_id": "d_arby_the_player",
-   "name": "DArby the Player",
+   "name": "D'Arby the Player",
    "arc_title": "D'Arby the Player (Story Arc)",
    "part": 3,
    "location_id": null,
@@ -2046,12 +2046,11 @@
    "part": 7,
    "location_id": null,
    "chapters": [
-    "SBR 66-70",
-    "SBR 73-82"
+    "SBR 66-82"
    ],
    "chapters_abs": [
     66,
-    70
+    82
    ],
    "stands": [
     {
@@ -2098,13 +2097,40 @@
      "chapter_title": "D4C, Part 3",
      "stand_part": 7,
      "n_forms": 1
+    },
+    {
+     "stand_id": "ticket_to_ride",
+     "name_en": "Ticket to Ride",
+     "chapter": 71,
+     "snippet": "Steel Ball Run Chapter 71: Ticket to Ride, Part 1",
+     "chapter_title": "Ticket to Ride, Part 1",
+     "stand_part": 7,
+     "n_forms": 1
+    },
+    {
+     "stand_id": "cream_starter",
+     "name_en": "Cream Starter",
+     "chapter": 73,
+     "snippet": "Steel Ball Run Chapter 73: D4C, Part 6",
+     "chapter_title": "D4C, Part 6",
+     "stand_part": 7,
+     "n_forms": 1
+    },
+    {
+     "stand_id": "d4c_love_train",
+     "name_en": "D4C Love Train",
+     "chapter": 77,
+     "snippet": "Steel Ball Run Chapter 77: D4C, Part 10 (Ability only)",
+     "chapter_title": "D4C, Part 10 (Ability only)",
+     "stand_part": 7,
+     "n_forms": 1
     }
    ],
-   "n_stands": 5
+   "n_stands": 8
   },
   {
    "arc_id": "dio_s_world",
-   "name": "DIOs World",
+   "name": "DIO's World",
    "arc_title": "DIO's World (Story Arc)",
    "part": 3,
    "location_id": null,
@@ -2295,21 +2321,21 @@
      "n_forms": 1
     },
     {
-     "stand_id": "star_platinum_the_world",
-     "name_en": "Star Platinum: The World",
-     "chapter": 172,
-     "snippet": "Chapter 172: Death Thirteen, Part 5 (Death Thirteen's ability)",
-     "chapter_title": "Death Thirteen, Part 5 (Death Thirteen's ability)",
-     "stand_part": 6,
-     "n_forms": 1
-    },
-    {
      "stand_id": "star_platinum",
      "name_en": "Star Platinum",
      "chapter": 172,
      "snippet": "Chapter 172: Death Thirteen, Part 5 (Death Thirteen's ability)",
      "chapter_title": "Death Thirteen, Part 5 (Death Thirteen's ability)",
      "stand_part": 3,
+     "n_forms": 1
+    },
+    {
+     "stand_id": "star_platinum_the_world",
+     "name_en": "Star Platinum: The World",
+     "chapter": 172,
+     "snippet": "Chapter 172: Death Thirteen, Part 5 (Death Thirteen's ability)",
+     "chapter_title": "Death Thirteen, Part 5 (Death Thirteen's ability)",
+     "stand_part": 6,
      "n_forms": 1
     }
    ],
@@ -2600,7 +2626,7 @@
   },
   {
    "arc_id": "dolomite_s_blue_lagoon",
-   "name": "Dolomites Blue Lagoon",
+   "name": "Dolomite's Blue Lagoon",
    "arc_title": "Dolomite's Blue Lagoon (Story Arc)",
    "part": 8,
    "location_id": null,
@@ -2892,7 +2918,7 @@
   },
   {
    "arc_id": "enter_the_dragon_s_dream",
-   "name": "Enter the Dragons Dream",
+   "name": "Enter the Dragon's Dream",
    "arc_title": "Enter the Dragon's Dream (Story Arc)",
    "part": 6,
    "location_id": null,
@@ -2905,20 +2931,20 @@
    ],
    "stands": [
     {
-     "stand_id": "foo_fighters",
-     "name_en": "Foo Fighters",
-     "chapter": 67,
-     "snippet": "Stone Ocean Chapter 67: Enter the Dragon's Dream, Part 1 (In Atroe's body)",
-     "chapter_title": "Enter the Dragon's Dream, Part 1 (In Atroe's body)",
-     "stand_part": 6,
-     "n_forms": 1
-    },
-    {
      "stand_id": "dragon_s_dream",
      "name_en": "Dragon's Dream",
      "chapter": 67,
      "snippet": "Stone Ocean Chapter 67: Enter the Dragon's Dream, Part 1",
      "chapter_title": "Enter the Dragon's Dream, Part 1",
+     "stand_part": 6,
+     "n_forms": 1
+    },
+    {
+     "stand_id": "foo_fighters",
+     "name_en": "Foo Fighters",
+     "chapter": 67,
+     "snippet": "Stone Ocean Chapter 67: Enter the Dragon's Dream, Part 1 (In Atroe's body)",
+     "chapter_title": "Enter the Dragon's Dream, Part 1 (In Atroe's body)",
      "stand_part": 6,
      "n_forms": 1
     },
@@ -2954,7 +2980,7 @@
   },
   {
    "arc_id": "ermes_s_stickers",
-   "name": "Ermess Stickers",
+   "name": "Ermes's Stickers",
    "arc_title": "Ermes's Stickers (Story Arc)",
    "part": 6,
    "location_id": null,
@@ -3328,20 +3354,20 @@
    ],
    "stands": [
     {
-     "stand_id": "gold_experience",
-     "name_en": "Gold Experience",
-     "chapter": 585,
-     "snippet": "Chapter 585: King of Kings",
-     "chapter_title": "King of Kings",
-     "stand_part": 5,
-     "n_forms": 1
-    },
-    {
      "stand_id": "chariot_requiem",
      "name_en": "Chariot Requiem",
      "chapter": 585,
      "snippet": "Chapter 585: King of Kings (Death)",
      "chapter_title": "King of Kings (Death)",
+     "stand_part": 5,
+     "n_forms": 1
+    },
+    {
+     "stand_id": "gold_experience",
+     "name_en": "Gold Experience",
+     "chapter": 585,
+     "snippet": "Chapter 585: King of Kings",
+     "chapter_title": "King of Kings",
      "stand_part": 5,
      "n_forms": 1
     },
@@ -3430,7 +3456,7 @@
   },
   {
    "arc_id": "gyro_zeppeli_s_destiny",
-   "name": "Gyro Zeppelis Destiny",
+   "name": "Gyro Zeppeli's Destiny",
    "arc_title": "Gyro Zeppeli's Destiny (Story Arc)",
    "part": 7,
    "location_id": null,
@@ -3629,21 +3655,21 @@
      "n_forms": 1
     },
     {
-     "stand_id": "star_platinum_the_world",
-     "name_en": "Star Platinum: The World",
-     "chapter": 179,
-     "snippet": "Chapter 179: High Priestess, Part 1",
-     "chapter_title": "High Priestess, Part 1",
-     "stand_part": 6,
-     "n_forms": 1
-    },
-    {
      "stand_id": "star_platinum",
      "name_en": "Star Platinum",
      "chapter": 179,
      "snippet": "Chapter 179: High Priestess, Part 1",
      "chapter_title": "High Priestess, Part 1",
      "stand_part": 3,
+     "n_forms": 1
+    },
+    {
+     "stand_id": "star_platinum_the_world",
+     "name_en": "Star Platinum: The World",
+     "chapter": 179,
+     "snippet": "Chapter 179: High Priestess, Part 1",
+     "chapter_title": "High Priestess, Part 1",
+     "stand_part": 6,
      "n_forms": 1
     },
     {
@@ -3961,7 +3987,7 @@
   },
   {
    "arc_id": "i_m_an_alien",
-   "name": "Im an Alien",
+   "name": "I'm an Alien",
    "arc_title": "I'm an Alien (Story Arc)",
    "part": 4,
    "location_id": null,
@@ -4005,7 +4031,7 @@
   },
   {
    "arc_id": "it_s_a_summer_vacation_everyday",
-   "name": "Its a Summer Vacation Everyday",
+   "name": "It's a Summer Vacation Everyday",
    "arc_title": "It's a Summer Vacation Everyday (Story Arc)",
    "part": 8,
    "location_id": null,
@@ -4476,21 +4502,21 @@
      "n_forms": 1
     },
     {
-     "stand_id": "star_platinum",
-     "name_en": "Star Platinum",
-     "chapter": 159,
-     "snippet": "Chapter 159: Justice, Part 6",
-     "chapter_title": "Justice, Part 6",
-     "stand_part": 3,
-     "n_forms": 1
-    },
-    {
      "stand_id": "star_platinum_the_world",
      "name_en": "Star Platinum: The World",
      "chapter": 159,
      "snippet": "Chapter 159: Justice, Part 6",
      "chapter_title": "Justice, Part 6",
      "stand_part": 6,
+     "n_forms": 1
+    },
+    {
+     "stand_id": "star_platinum",
+     "name_en": "Star Platinum",
+     "chapter": 159,
+     "snippet": "Chapter 159: Justice, Part 6",
+     "chapter_title": "Justice, Part 6",
+     "stand_part": 3,
      "n_forms": 1
     }
    ],
@@ -4745,7 +4771,7 @@
   },
   {
    "arc_id": "let_s_go_eat_some_italian_food",
-   "name": "Lets Go Eat Some Italian Food",
+   "name": "Let's Go Eat Some Italian Food",
    "arc_title": "Let's Go Eat Some Italian Food (Story Arc)",
    "part": 4,
    "location_id": null,
@@ -4789,7 +4815,7 @@
   },
   {
    "arc_id": "let_s_go_hunting",
-   "name": "Lets Go Hunting!",
+   "name": "Let's Go Hunting!",
    "arc_title": "Let's Go Hunting! (Story Arc)",
    "part": 4,
    "location_id": null,
@@ -4842,7 +4868,7 @@
   },
   {
    "arc_id": "let_s_go_to_the_manga_artist_s_house",
-   "name": "Lets Go to the Manga Artists House",
+   "name": "Let's Go to the Manga Artist's House",
    "arc_title": "Let's Go to the Manga Artist's House (Story Arc)",
    "part": 4,
    "location_id": null,
@@ -4931,7 +4957,7 @@
   },
   {
    "arc_id": "let_s_live_on_a_transmission_tower",
-   "name": "Lets Live on a Transmission Tower",
+   "name": "Let's Live on a Transmission Tower",
    "arc_title": "Let's Live on a Transmission Tower (Story Arc)",
    "part": 4,
    "location_id": null,
@@ -5223,7 +5249,7 @@
   },
   {
    "arc_id": "lulu_s_bags_groove",
-   "name": "Lulus Bags Groove",
+   "name": "Lulu's Bags' Groove",
    "arc_title": "Lulu's Bags' Groove (Story Arc)",
    "part": 9,
    "location_id": null,
@@ -5607,8 +5633,8 @@
      "n_forms": 1
     },
     {
-     "stand_id": "metallica",
-     "name_en": "Metallica",
+     "stand_id": "aerosmith",
+     "name_en": "Aerosmith",
      "chapter": 543,
      "snippet": "Chapter 543: My Name is Doppio, Part 2",
      "chapter_title": "My Name is Doppio, Part 2",
@@ -5616,8 +5642,8 @@
      "n_forms": 1
     },
     {
-     "stand_id": "aerosmith",
-     "name_en": "Aerosmith",
+     "stand_id": "metallica",
+     "name_en": "Metallica",
      "chapter": 543,
      "snippet": "Chapter 543: My Name is Doppio, Part 2",
      "chapter_title": "My Name is Doppio, Part 2",
@@ -5629,7 +5655,7 @@
   },
   {
    "arc_id": "narancia_s_aerosmith",
-   "name": "Narancias Aerosmith",
+   "name": "Narancia's Aerosmith",
    "arc_title": "Narancia's Aerosmith (Story Arc)",
    "part": 5,
    "location_id": null,
@@ -5801,6 +5827,15 @@
    ],
    "stands": [
     {
+     "stand_id": "aerosmith",
+     "name_en": "Aerosmith",
+     "chapter": 532,
+     "snippet": "Chapter 532: No Flightcode! Headed for Sardinia",
+     "chapter_title": "No Flightcode! Headed for Sardinia",
+     "stand_part": 5,
+     "n_forms": 1
+    },
+    {
      "stand_id": "moody_blues",
      "name_en": "Moody Blues",
      "chapter": 532,
@@ -5824,15 +5859,6 @@
      "chapter": 532,
      "snippet": "Chapter 532: No Flightcode! Headed for Sardinia (No.1, No.2, No.6, and one other only)",
      "chapter_title": "No Flightcode! Headed for Sardinia (No.1, No.2, No.6, and one other only)",
-     "stand_part": 5,
-     "n_forms": 1
-    },
-    {
-     "stand_id": "aerosmith",
-     "name_en": "Aerosmith",
-     "chapter": 532,
-     "snippet": "Chapter 532: No Flightcode! Headed for Sardinia",
-     "chapter_title": "No Flightcode! Headed for Sardinia",
      "stand_part": 5,
      "n_forms": 1
     },
@@ -5939,7 +5965,7 @@
   },
   {
    "arc_id": "ozon_baby_s_pressure",
-   "name": "Ozon Babys Pressure",
+   "name": "Ozon Baby's Pressure",
    "arc_title": "Ozon Baby's Pressure (Story Arc)",
    "part": 8,
    "location_id": null,
@@ -6388,7 +6414,7 @@
   },
   {
    "arc_id": "rohan_kishibe_s_adventure",
-   "name": "Rohan Kishibes Adventure",
+   "name": "Rohan Kishibe's Adventure",
    "arc_title": "Rohan Kishibe's Adventure (Story Arc)",
    "part": 4,
    "location_id": null,
@@ -6617,7 +6643,7 @@
   },
   {
    "arc_id": "shigechi_s_harvest",
-   "name": "Shigechis Harvest",
+   "name": "Shigechi's Harvest",
    "arc_title": "Shigechi's Harvest (Story Arc)",
    "part": 4,
    "location_id": null,
@@ -6978,77 +7004,6 @@
    "n_stands": 6
   },
   {
-   "arc_id": "spice_girl_story_arc_fr",
-   "name": "Spice Girl",
-   "arc_title": "Spice Girl (Story Arc)/fr",
-   "part": 5,
-   "location_id": null,
-   "chapters": [
-    "VA 100-101"
-   ],
-   "chapters_abs": [
-    539,
-    540
-   ],
-   "stands": [
-    {
-     "stand_id": "gold_experience",
-     "name_en": "Gold Experience",
-     "chapter": 539,
-     "snippet": "Chapter 539: Spice Girl, Part 1",
-     "chapter_title": "Spice Girl, Part 1",
-     "stand_part": 5,
-     "n_forms": 1
-    },
-    {
-     "stand_id": "moody_blues",
-     "name_en": "Moody Blues",
-     "chapter": 539,
-     "snippet": "Chapter 539: Spice Girl, Part 1",
-     "chapter_title": "Spice Girl, Part 1",
-     "stand_part": 5,
-     "n_forms": 1
-    },
-    {
-     "stand_id": "notorious_b_i_g",
-     "name_en": "Notorious B.I.G",
-     "chapter": 539,
-     "snippet": "Chapter 539: Spice Girl, Part 1",
-     "chapter_title": "Spice Girl, Part 1",
-     "stand_part": 5,
-     "n_forms": 1
-    },
-    {
-     "stand_id": "spice_girl",
-     "name_en": "Spice Girl",
-     "chapter": 539,
-     "snippet": "Chapter 539: Spice Girl, Part 1",
-     "chapter_title": "Spice Girl, Part 1",
-     "stand_part": 5,
-     "n_forms": 1
-    },
-    {
-     "stand_id": "sticky_fingers",
-     "name_en": "Sticky Fingers",
-     "chapter": 539,
-     "snippet": "Chapter 539: Spice Girl, Part 1",
-     "chapter_title": "Spice Girl, Part 1",
-     "stand_part": 5,
-     "n_forms": 1
-    },
-    {
-     "stand_id": "king_crimson",
-     "name_en": "King Crimson",
-     "chapter": 540,
-     "snippet": "Chapter 540: Spice Girl, Part 2",
-     "chapter_title": "Spice Girl, Part 2",
-     "stand_part": 5,
-     "n_forms": 1
-    }
-   ],
-   "n_stands": 6
-  },
-  {
    "arc_id": "stone_free",
    "name": "Stone Free",
    "arc_title": "Stone Free (Story Arc)",
@@ -7181,7 +7136,7 @@
   },
   {
    "arc_id": "stroheim_s_unit_strikes_back",
-   "name": "Stroheims Unit Strikes Back",
+   "name": "Stroheim's Unit Strikes Back",
    "arc_title": "Stroheim's Unit Strikes Back (Story Arc)",
    "part": 2,
    "location_id": null,
@@ -7211,6 +7166,15 @@
    ],
    "stands": [
     {
+     "stand_id": "star_platinum",
+     "name_en": "Star Platinum",
+     "chapter": 166,
+     "snippet": "Chapter 166: Sun, Part 1",
+     "chapter_title": "Sun, Part 1",
+     "stand_part": 3,
+     "n_forms": 1
+    },
+    {
      "stand_id": "star_platinum_the_world",
      "name_en": "Star Platinum: The World",
      "chapter": 166,
@@ -7222,15 +7186,6 @@
     {
      "stand_id": "sun",
      "name_en": "Sun",
-     "chapter": 166,
-     "snippet": "Chapter 166: Sun, Part 1",
-     "chapter_title": "Sun, Part 1",
-     "stand_part": 3,
-     "n_forms": 1
-    },
-    {
-     "stand_id": "star_platinum",
-     "name_en": "Star Platinum",
      "chapter": 166,
      "snippet": "Chapter 166: Sun, Part 1",
      "chapter_title": "Sun, Part 1",
@@ -7329,7 +7284,7 @@
   },
   {
    "arc_id": "the_devil_s_palm",
-   "name": "The Devils Palm",
+   "name": "The Devil's Palm",
    "arc_title": "The Devil's Palm (Story Arc)",
    "part": 7,
    "location_id": null,
@@ -7616,6 +7571,15 @@
    ],
    "stands": [
     {
+     "stand_id": "aerosmith",
+     "name_en": "Aerosmith",
+     "chapter": 516,
+     "snippet": "Chapter 516: The Boss's Last Orders",
+     "chapter_title": "The Boss's Last Orders",
+     "stand_part": 5,
+     "n_forms": 1
+    },
+    {
      "stand_id": "gold_experience",
      "name_en": "Gold Experience",
      "chapter": 516,
@@ -7630,15 +7594,6 @@
      "chapter": 516,
      "snippet": "Chapter 516: The Boss's Last Orders (Ability only)",
      "chapter_title": "The Boss's Last Orders (Ability only)",
-     "stand_part": 5,
-     "n_forms": 1
-    },
-    {
-     "stand_id": "aerosmith",
-     "name_en": "Aerosmith",
-     "chapter": 516,
-     "snippet": "Chapter 516: The Boss's Last Orders",
-     "chapter_title": "The Boss's Last Orders",
      "stand_part": 5,
      "n_forms": 1
     },
@@ -7986,8 +7941,8 @@
      "n_forms": 1
     },
     {
-     "stand_id": "gold_experience",
-     "name_en": "Gold Experience",
+     "stand_id": "aerosmith",
+     "name_en": "Aerosmith",
      "chapter": 573,
      "snippet": "Chapter 573: The Requiem Quietly Plays, Part 2",
      "chapter_title": "The Requiem Quietly Plays, Part 2",
@@ -7995,8 +7950,8 @@
      "n_forms": 1
     },
     {
-     "stand_id": "aerosmith",
-     "name_en": "Aerosmith",
+     "stand_id": "gold_experience",
+     "name_en": "Gold Experience",
      "chapter": 573,
      "snippet": "Chapter 573: The Requiem Quietly Plays, Part 2",
      "chapter_title": "The Requiem Quietly Plays, Part 2",
@@ -8592,7 +8547,7 @@
   },
   {
    "arc_id": "there_s_six_of_us",
-   "name": "Theres Six of Us!",
+   "name": "There's Six of Us!",
    "arc_title": "There's Six of Us! (Story Arc)",
    "part": 6,
    "location_id": null,
@@ -9206,8 +9161,8 @@
      "n_forms": 1
     },
     {
-     "stand_id": "schott_key_no_1",
-     "name_en": "Schott Key No.1",
+     "stand_id": "schott_key_no_2",
+     "name_en": "Schott Key No.2",
      "chapter": 53,
      "snippet": "JoJolion Chapter 53: Vitamin C and Killer Queen, Part 4 (Flashback)",
      "chapter_title": "Vitamin C and Killer Queen, Part 4 (Flashback)",
@@ -9215,8 +9170,8 @@
      "n_forms": 1
     },
     {
-     "stand_id": "schott_key_no_2",
-     "name_en": "Schott Key No.2",
+     "stand_id": "schott_key_no_1",
+     "name_en": "Schott Key No.1",
      "chapter": 53,
      "snippet": "JoJolion Chapter 53: Vitamin C and Killer Queen, Part 4 (Flashback)",
      "chapter_title": "Vitamin C and Killer Queen, Part 4 (Flashback)",
@@ -9294,21 +9249,21 @@
    ],
    "stands": [
     {
-     "stand_id": "hermit_purple",
-     "name_en": "Hermit Purple",
-     "chapter": 315,
-     "snippet": "Chapter 315: We Picked Up Something Crazy!, Part 1",
-     "chapter_title": "We Picked Up Something Crazy!, Part 1",
-     "stand_part": 3,
-     "n_forms": 1
-    },
-    {
      "stand_id": "achtung_baby",
      "name_en": "Achtung Baby",
      "chapter": 315,
      "snippet": "Chapter 315: We Picked Up Something Crazy!, Part 1",
      "chapter_title": "We Picked Up Something Crazy!, Part 1",
      "stand_part": 4,
+     "n_forms": 1
+    },
+    {
+     "stand_id": "hermit_purple",
+     "name_en": "Hermit Purple",
+     "chapter": 315,
+     "snippet": "Chapter 315: We Picked Up Something Crazy!, Part 1",
+     "chapter_title": "We Picked Up Something Crazy!, Part 1",
+     "stand_part": 3,
      "n_forms": 1
     },
     {
@@ -9418,8 +9373,8 @@
      "n_forms": 1
     },
     {
-     "stand_id": "mr_president",
-     "name_en": "Mr.President",
+     "stand_id": "aerosmith",
+     "name_en": "Aerosmith",
      "chapter": 511,
      "snippet": "Chapter 511: White Album, Part 3",
      "chapter_title": "White Album, Part 3",
@@ -9427,8 +9382,8 @@
      "n_forms": 1
     },
     {
-     "stand_id": "aerosmith",
-     "name_en": "Aerosmith",
+     "stand_id": "mr_president",
+     "name_en": "Mr.President",
      "chapter": 511,
      "snippet": "Chapter 511: White Album, Part 3",
      "chapter_title": "White Album, Part 3",
@@ -9714,14 +9669,65 @@
   },
   {
    "arc_id": "yoshikage_kira_s_new_situation",
-   "name": "Yoshikage Kiras New Situation",
+   "name": "Yoshikage Kira's New Situation",
    "arc_title": "Yoshikage Kira's New Situation (Story Arc)",
-   "part": null,
+   "part": 4,
    "location_id": null,
-   "chapters": [],
-   "chapters_abs": null,
-   "stands": [],
-   "note": "篇章章节区间无法解析 → 不硬猜（宁空勿错）"
+   "chapters": [
+    "DU 105-112"
+   ],
+   "chapters_abs": [
+    370,
+    377
+   ],
+   "stands": [
+    {
+     "stand_id": "killer_queen",
+     "name_en": "Killer Queen",
+     "chapter": 370,
+     "snippet": "Chapter 370: Yoshikage Kira's New Situation, Part 1",
+     "chapter_title": "Yoshikage Kira's New Situation, Part 1",
+     "stand_part": 4,
+     "n_forms": 1
+    },
+    {
+     "stand_id": "atom_heart_father",
+     "name_en": "Atom Heart Father",
+     "chapter": 371,
+     "snippet": "Chapter 371: Rock-Paper-Scissors Kid is Coming!, Part 1",
+     "chapter_title": "Rock-Paper-Scissors Kid is Coming!, Part 1",
+     "stand_part": 4,
+     "n_forms": 1
+    },
+    {
+     "stand_id": "boy_ii_man",
+     "name_en": "Boy II Man",
+     "chapter": 372,
+     "snippet": "Chapter 372: Rock-Paper-Scissors Kid is Coming!, Part 2",
+     "chapter_title": "Rock-Paper-Scissors Kid is Coming!, Part 2",
+     "stand_part": 4,
+     "n_forms": 1
+    },
+    {
+     "stand_id": "heaven_s_door",
+     "name_en": "Heaven's Door",
+     "chapter": 372,
+     "snippet": "Chapter 372: Rock-Paper-Scissors Kid is Coming!, Part 2",
+     "chapter_title": "Rock-Paper-Scissors Kid is Coming!, Part 2",
+     "stand_part": 4,
+     "n_forms": 1
+    },
+    {
+     "stand_id": "achtung_baby",
+     "name_en": "Achtung Baby",
+     "chapter": 375,
+     "snippet": "Chapter 375: Rock-Paper-Scissors Kid is Coming!, Part 5",
+     "chapter_title": "Rock-Paper-Scissors Kid is Coming!, Part 5",
+     "stand_part": 4,
+     "n_forms": 1
+    }
+   ],
+   "n_stands": 5
   },
   {
    "arc_id": "youth_with_dio",

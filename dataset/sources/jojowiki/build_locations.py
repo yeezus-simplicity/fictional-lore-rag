@@ -157,7 +157,17 @@ def clean_text(s: str | None) -> str | None:
     s = re.sub(r"\{\{[^}]*\}\}", "", s)                     # 其余未知模板
     s = re.sub(r"\[\[([^\]|]+)\|([^\]]*)\]\]", r"\2", s)     # [[A|B]] → B
     s = re.sub(r"\[\[([^\]]+)\]\]", r"\1", s)                # [[A]] → A
-    s = re.sub(r"'''?|''?", "", s)                           # 粗体/斜体
+    # ★★ M72：撇号必须**成对**才删 ★★
+    #   原写法 `'''?|''?` 里的 `''?` 匹配「1 到 2 个撇号」——
+    #   于是**任何单个撇号都被删掉**：
+    #       `Yoshikage Kira's New Situation` → `Yoshikage Kiras New Situation`
+    #   后果很隐蔽：用户打**正确的**名字反而匹配不上
+    #   （`篇章 Yoshikage Kira's New Situation` 返回 location_hint），
+    #   而库里存的是一串少了个撇号的错名字 —— 输出看着完全正常。
+    #   MediaWiki 的标记是成对的：`''斜体''`(2) / `'''粗体'''`(3) /
+    #   `'''''两者'''''`(5) → 只删**连续 2 个及以上**的撇号，
+    #   单个撇号（英文所有格、缩写）原样保留。
+    s = re.sub(r"'{2,}", "", s)
     return s.strip() or None
 
 
@@ -322,18 +332,45 @@ def _arc_part(wt: str) -> int | None:
 
 
 def _arc_chapters(wt: str) -> list[str]:
-    """篇章覆盖章节：`manga = {{Ch3|JJL|18|22}}` → ["JJL 18–22"]。"""
+    """篇章覆盖章节 → ["JJL 18-22"]。
+
+    ★★ M72 修的第二种写法 ★★
+    源站的 `manga` 字段有**两种**写法，我第一版只处理了第一种：
+
+        ① 区间式：`{{Ch3|JJL|18|22}}`        → "JJL 18-22"（三参数）
+        ② 首尾两点：`{{Ch3|DU|105}}<br />{{Ch3|DU|112}}`
+                                              → "DU 105-112"（两个单章）
+
+    第二种会让第一版**静默产出空列表**（两个 match 都只有 2 段 < 3，
+    被跳过；fallback 的 clean_text 又把模板剥光了）→ 该篇章
+    `chapters=[]` → 「区间判不出」。
+    实测只有 1 个篇章走了这条路（Yoshikage Kira's New Situation），
+    但**输出看着完全正常**（一个空字段而已），不查就发现不了。
+
+    → 现在把同一个作品前缀下的所有章号收齐，取 min-max。
+      两种写法统一成区间，下游 `parse_arc_range` 不用改。
+    """
     ib = infobox(wt, "{{Story Arc Infobox")
     if not ib:
         return []
-    out: list[str] = []
-    for m in re.finditer(r"\{\{Ch3\|([^}]*)\}\}", field(ib, "manga") or ""):
+    raw = field(ib, "manga") or ""
+
+    # 按作品前缀收集章号（同一前缀可能出现在多个 {{Ch3}} 里）
+    by_work: dict[str, list[int]] = {}
+    for m in re.finditer(r"\{\{Ch3\|([^}]*)\}\}", raw):
         seg = [x.strip() for x in m.group(1).split("|") if x.strip()]
-        if len(seg) >= 3:
-            a, b = seg[1], seg[2]
-            out.append(f"{seg[0]} {a}" if a == b else f"{seg[0]} {a}-{b}")
+        if len(seg) < 2 or not seg[1].isdigit():
+            continue
+        nums = [int(x) for x in seg[1:] if x.isdigit()]
+        if nums:
+            by_work.setdefault(seg[0], []).extend(nums)
+
+    out: list[str] = []
+    for work, nums in by_work.items():
+        lo, hi = min(nums), max(nums)
+        out.append(f"{work} {lo}" if lo == hi else f"{work} {lo}-{hi}")
     if not out:
-        v = clean_text(field(ib, "manga"))
+        v = clean_text(raw)
         if v:
             out.append(v)
     return out

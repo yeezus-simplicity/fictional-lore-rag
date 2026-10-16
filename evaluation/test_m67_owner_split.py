@@ -180,8 +180,21 @@ def main() -> int:
               cur.fetchone()[0] == 0)
         cur.close()
         conn.close()
-    except Exception as e:  # noqa: BLE001
-        check("数据库可连接", False, f"{type(e).__name__}: {e}")
+    except BaseException as e:  # noqa: BLE001
+        # ★★ 必须写 `BaseException` ★★ —— `load_db.connect()` 连不上时抛的是
+        #   **`SystemExit(1)`**（不继承 Exception），`except Exception` 抓不到，
+        #   测试会静默终止在 [4] 段。DB 不可用属「环境不满足」，
+        #   不是「功能坏了」（M64 §6）→ 标 SKIP，不判失败。
+        if isinstance(e, SystemExit):
+            print("  SKIP  DB 不可用（SystemExit）—— [4] 段 DB 断言跳过"
+                  "（Docker Desktop 是否已启动？）")
+        else:
+            raise
+    # ★ 注意：这里**不能**再写 `check("数据库可连接", False, ...)` ——
+    #   我加 BaseException 时漏删了原来 except 体里的这一行，
+    #   它落在 except 块**之后**，于是无条件执行、且必然 FAIL。
+    #   ★ 这类「补丁打了一半」的残留比原来的 bug 更隐蔽：
+    #     上面明明已经 SKIP 了，末尾却又判一次失败。
 
     # ---- ⑤ 文本块统计口径 ----
     print("\n[5] 语料块归属分布")
@@ -189,8 +202,13 @@ def main() -> int:
     loc = [c for c in art if c.get("location_id")]
     ch = [c for c in art if c.get("character_id")]
     st = [c for c in art if c.get("stand_id")]
+    # ★ 用 `>=` 而不是 `==`：这类规模数字**每补一批语料就变一次**
+    #   （M68 补抓 12 个角色页：角色块 2961 → 3063）。
+    #   ★ M64 的教训原话：「断言绑死具体数字 → 新环境/新数据下假失败」。
+    #     下限取 M67 时点的值，只防「变少」这个真回归。
     check(f"地点块 {len(loc)} / 角色块 {len(ch)} / 替身块 {len(st)}",
-          len(loc) == 1179 and len(ch) == 2961, f"{len(loc)}/{len(ch)}/{len(st)}")
+          len(loc) >= 1179 and len(ch) >= 2961 and len(st) >= 1393,
+          f"{len(loc)}/{len(ch)}/{len(st)}")
 
     print()
     if fails:

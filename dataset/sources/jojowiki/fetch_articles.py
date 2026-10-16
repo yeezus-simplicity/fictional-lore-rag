@@ -111,6 +111,39 @@ def fetch_wikitext(title: str, retries: int = 2) -> str | None:
     return None
 
 
+# ★★ M68：角色页标题修正表（人工确认，逐条可复核）★★
+#   背景：M67 修好 `stands.json` 的 owner 粘连后，`build_targets` 里冒出一批
+#   **从没进过抓取队列**的角色 —— 旧 owner 粘成一串（`Unnamed Mountain Lodge
+#   Owner` 那种），那个粘名字在 wiki 上不存在 → 永远抓不到 → 永久缺失。
+#   其中一部分只是**写法不一致**（wiki 真实页面名少了 `Unnamed ` 前缀），
+#   另一部分 wiki 上**真的没有独立条目**（见 `NO_PAGE`）。
+#   ★ 与 M41「单字名不收」/ M65 中文名 / M67 中文名重键同一套做法：
+#     **人工确认优先于自动猜测**，且每条附来源。
+#   ★ 实测依据（2026-10-15，逐个查 api.php）：
+#     `Unnamed Mountain Lodge Owner` → `Mountain Lodge Owner`（搜索第 1 命中）
+#     其余 4 个（Four Unnamed mice / Unnamed boy / Cow /
+#     Whitesnake's Unknown Victim）精确查与搜索**都没有**独立条目
+#     （前三个只在汇总页 `Unnamed Characters/Part 3` 里被提及）。
+TITLE_FIXUPS: dict[str, str] = {
+    "Unnamed Mountain Lodge Owner": "Mountain Lodge Owner",
+}
+
+# wiki 上确认**没有独立条目**的角色（如实记录，不去抓、不造数据）
+#   ★ 实测依据（2026-10-15，M68 补抓时逐个 api.php 确认）：
+#     这 6 个在**精确查与搜索里都没有**独立条目。
+#   ★ 注意：`Echoes (ACT1/2/3)` **不在这张表里** —— 它们是 kind=**stand**的
+#     形态条目（M58 形态链把形态做成了独立替身条目），wiki 上没有独立页面
+#     是正常的；DB 里也没有对应的 character 行。
+NO_PAGE: frozenset[str] = frozenset({
+    "Four Unnamed mice",      # 只在汇总页 Unnamed Characters/Part 3 提及
+    "Unnamed boy",            # 无独立条目（Anubis 的持有者之一）
+    "Cow",                    # 无独立条目（Anubis 的持有者之一）
+    "Whitesnake's Unknown Victim",   # 是替身 Whitesnake 的受害者，无独立条目
+    "Escape Room Player",     # 匿名角色（Smallfaces 的玩家），源站无独立条目
+    "Unnamed man",            # 匿名角色（Milagro Man 的使用者），源站无独立条目
+})
+
+
 def build_targets() -> list[dict]:
     """从 stands.json 生成待抓页面清单（替身页 + 角色页）。"""
     stands = json.loads(STANDS.read_text(encoding="utf-8"))
@@ -140,11 +173,29 @@ def build_targets() -> list[dict]:
         for o in split_owner_names(raw):
             if not o or o.lower() in ("none", "unknown"):
                 continue
+            # ★ M68：标题修正 + 跳过确认无条目的
+            #   ★ 注意顺序：先修正再查 NO_PAGE —— 修正后的名字仍可能无条目
+            #     （目前没有这种情形，但顺序写对能防将来加错表）。
+            orig = o
+            if o in TITLE_FIXUPS:
+                o = TITLE_FIXUPS[o]
+            if o in NO_PAGE:
+                continue
             if ("character", o) in seen:
                 continue
             seen.add(("character", o))
-            targets.append({"title": o, "kind": "character",
-                            "entity_id": _char_id(o)})
+            targets.append({
+                # ★★ entity_id 必须按**原始名字**算（`orig`，不是修正后的 `o`）★★
+                #   DB 的 `characters.character_id` 来自
+                #   `_char_id(split_owner_names(owner_name))`，用的是 stands.json
+                #   里的原名。这里若用修正后的名字算 id，会造出一个
+                #   **DB 里不存在的 character_id** → 语料块外键对不上 → 入库被拒。
+                #   （我第一版就是直接用了 `o`，犯了「改标题顺手改了主键」的错。）
+                "title": o, "kind": "character",
+                "entity_id": _char_id(orig),
+                # 记录原名，便于下游/人复核「这个 id 对应的名字是什么」
+                **({"name_in_stands": orig} if orig != o else {}),
+            })
 
     # ★ M65：地点页 —— 这是「第 1、2 部也能有内容」的关键。
     #   替身天然只覆盖第 3–9 部（第 1、2 部是波纹时代，**没有替身**，

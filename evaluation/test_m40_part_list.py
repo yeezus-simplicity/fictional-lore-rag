@@ -27,6 +27,7 @@ from __future__ import annotations
 
 import http.client
 import json
+import os
 import socket
 import subprocess
 import sys
@@ -125,6 +126,35 @@ def main() -> int:
             print("  [FAIL] 服务未就绪")
             return 1
         print(f"  [OK] 127.0.0.1:{PORT} 就绪")
+
+        # ★★ M68：探测 DB 是否真的连上 ★★
+        #   服务在无 DB 时会**优雅降级**（`/health` 报
+        #   `database=disconnected`，查询返回「结构化查询需要数据库」）。
+        #   这不等于功能坏 —— 于是依赖 DB 的断言应标 **SKIP** 而非 FAIL，
+        #   否则一次「Docker Desktop 没启动」会被报成「功能回归」。
+        #   ★ 与 test_gui_e2e / test_m19_thumbs 的
+        #     「⏭ 已跳过（环境不满足）」是同一套惯例。
+        #   ★ `--require-db` / `CI=true` 时严格：缺库算失败。
+        try:
+            import urllib.request as _u
+            _h = json.loads(_u.urlopen(
+                f"http://127.0.0.1:{PORT}/health", timeout=15).read())
+            DB_OK = (_h.get("database") == "connected")
+            _n = _h.get("n_stands")
+        except Exception as _e:                      # noqa: BLE001
+            DB_OK, _n = False, f"（health 读不到：{type(_e).__name__}）"
+        STRICT = ("--require-db" in sys.argv) or (os.environ.get("CI") == "true")
+        if not DB_OK:
+            print("=" * 66)
+            print("⏭ 已跳过（环境不满足）：数据库没连上")
+            print(f"    /health: database=disconnected  n_stands={_n}")
+            print("    启动方式：cd docker && docker compose up -d postgres")
+            if STRICT:
+                print("    （--require-db / CI=true：缺库视为失败）")
+                return 1
+            print("    （未开 --require-db，按「跳过」处理，不计失败）")
+            print("=" * 66)
+            return 0
 
         # -----------------------------------------------------------
         print("\n[3] 中文数字部数：必须识别（原只认阿拉伯数字）")
@@ -237,8 +267,18 @@ def main() -> int:
               f"实际 {db_n}")
         cur.close()
         c.close()
-    except Exception as e:
-        check("DB 断言可执行", False, f"{type(e).__name__}: {e}")
+    except BaseException as e:   # noqa: BLE001
+        # ★★ 必须写 `BaseException` ★★
+        #   `load_db.connect()` 连不上时抛的是 **`SystemExit(1)`**
+        #   （`raise SystemExit(1) from e`），而 SystemExit **不继承
+        #   Exception**（继承 BaseException）→ `except Exception` 抓不到，
+        #   测试会被静默终止在 [8] 段，前面的结论一行都看不到。
+        #   ★ 实测（2026-10-16 Docker Desktop 未启动）就是这样。
+        if isinstance(e, SystemExit):
+            print("  SKIP  DB 不可用（SystemExit）—— [8] 段 DB 断言跳过"
+                  "（Docker Desktop 是否已启动？）")
+        else:
+            check("DB 断言可执行", False, f"{type(e).__name__}: {e}")
 
     print()
     if fails:

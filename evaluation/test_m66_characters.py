@@ -23,6 +23,7 @@ from __future__ import annotations
 
 import http.client
 import json
+import os
 import re
 import subprocess
 import sys
@@ -98,16 +99,79 @@ def main() -> int:
     data = CH.load()
 
     # ---- ① 规模与覆盖 ----
+    #   ★ M68：数字从 168 → 180（补抓了 M67 修 owner 粘连后暴露出的
+    #     12 个「从没进过抓取队列」的角色页）。
+    #     ★ 断言写「≥」而不是「==」：这类**规模数字会随补抓增长**，
+    #       钉死具体值意味着每补一批数据就要改一次测试（M64 的教训：
+    #       断言绑死具体数字 → 新环境/新数据下假失败）。
     print("\n[1] 数据：规模与字段覆盖")
-    check("角色 168 个", data["n"] == 168, f"实际 {data['n']}")
-    check("★ 简介（首段）覆盖 168/168", data["n_with_bio"] == 168,
+    check("角色 ≥168 个（M68 补抓后 180）", data["n"] >= 168,
+          f"实际 {data['n']}")
+    check("★ 简介（首段）覆盖 ≥168/168", data["n_with_bio"] >= 168,
           f"实际 {data['n_with_bio']}")
-    check("背景节 106（源站只有部分条目有该节）",
-          data["n_with_background"] == 106, f"实际 {data['n_with_background']}")
-    check("性格节 162", data["n_with_personality"] == 162,
+    check("背景节 ≥106（源站只有部分条目有该节）",
+          data["n_with_background"] >= 106, f"实际 {data['n_with_background']}")
+    check("性格节 ≥162", data["n_with_personality"] >= 162,
           f"实际 {data['n_with_personality']}")
-    check("中文名 123（既有别名系统的角色中文名）", data["n_with_zh"] == 123,
+    check("中文名 ≥123（既有别名系统的角色中文名）", data["n_with_zh"] >= 123,
           f"实际 {data['n_with_zh']}")
+
+    # ---- ①′ ★ M68：标题修正后 id 仍与 DB 对齐 ----
+    #   抓取层把 `Unnamed Mountain Lodge Owner` 的页面标题换成 wiki 真实名
+    #   `Mountain Lodge Owner`（源站少了 `Unnamed ` 前缀），但 **id 必须仍按
+    #   原名算** —— DB 的 `characters.character_id` 用的是原名。
+    #   ★ 这条断言防的是「改标题顺手改了主键」那类错：
+    #     它不报错，只会让中文名/块号/关联**全部静默对不上**。
+    print("\n[1′] ★ 标题修正后 id 仍与 DB 对齐（M68）")
+    # ★★ M68：必须 `BaseException` ★★ —— `load_db.connect()` 连不上时抛的是
+    #   **`SystemExit(1)`**（不继承 Exception）。原先这里连 try 都没有，
+    #   DB 一不可用整个测试直接终止，后面 40+ 条断言全看不到。
+    #   ★ 实测（2026-10-16 Docker Desktop 未启动）：就是这样死的。
+    import sys as _sys
+    _sys.path.insert(0, str(ROOT / "database"))
+    _db: dict = {}
+    try:
+        from load_db import connect as _connect   # noqa: E402
+        _c = _connect().cursor()
+        _c.execute("SELECT character_id, name_en FROM characters")
+        _db = {a: b for a, b in _c.fetchall()}
+        _c.close()
+    except BaseException as e:   # noqa: BLE001
+        print(f"  SKIP  DB 不可用（{type(e).__name__}）—— [1′] 段 DB 对比跳过，"
+              f"非 DB 断言照跑（Docker Desktop 是否已启动？）")
+    ext = data["by_id"]
+    lodge = ext.get("unnamed_mountain_lodge_owner")
+    if _db:
+        check("★ 修正标题的角色：id 用原名（与 DB 一致）",
+              bool(lodge) and lodge["character_id"] in _db,
+              f"ext={bool(lodge)} in_db={bool(lodge) and lodge['character_id'] in _db}")
+        check("★ 修正标题的角色：name_en 用原名（与 DB 一致）",
+              bool(lodge) and _db.get(lodge["character_id"]) == lodge["name_en"],
+              f"DB={_db.get('unnamed_mountain_lodge_owner')!r} "
+              f"ext={lodge['name_en'] if lodge else None!r}")
+    else:
+        check("★ 修正标题的角色：id 是原名 id（无 DB，退一层验）",
+              bool(lodge) and lodge["character_id"] == "unnamed_mountain_lodge_owner",
+              f"id={lodge['character_id'] if lodge else None!r}")
+    check("★ 修正标题的角色：title 是**真实页面名**（可点回源站）",
+          bool(lodge) and lodge["title"] == "Mountain Lodge Owner",
+          f"title={lodge['title'] if lodge else None!r}")
+    check("★ 修正标题的角色有简介与部信息",
+          bool(lodge) and bool(lodge.get("bio")) and lodge.get("part") is not None,
+          f"bio={bool(lodge and lodge.get('bio'))} part={lodge and lodge.get('part')}")
+    if _db:
+        check("★ 所有 characters_ext 的 id 都在 DB 里（外键能对上）",
+              all(k in _db for k in ext),
+              f"对不上的：{[k for k in ext if k not in _db][:5]}")
+    else:
+        print("  SKIP  「id 都在 DB 里」—— DB 不可用")
+    # 驼峰误报：Thunder McQueen 的 `cQ` 曾被判成「疑两角色名粘连」
+    check("★ McQueen 这类正常驼峰名不再被误判为「粘连」",
+          not (ext.get("thunder_mcqueen") or {}).get("suspect_title"),
+          f"suspect_title={(ext.get('thunder_mcqueen') or {}).get('suspect_title')}")
+    check("★ 标题可疑数为 0（M68 修掉 McQueen 误报后）",
+          sum(1 for r in ext.values() if r.get("suspect_title")) == 0,
+          f"实际 {sum(1 for r in ext.values() if r.get('suspect_title'))}")
 
     # ---- ② ★ 三段原文要能回查语料块 ----
     print("\n[2] ★ 每段原文都能回查语料块（证据可追溯）")
@@ -241,6 +305,27 @@ def main() -> int:
         if not wait_http(PORT):
             check("服务就绪", False, "超时")
             return 1
+        # ★★ M68：探测 DB 是否真的连上（无 DB 时优雅 SKIP，不判失败）★★
+        #   服务在无 DB 时会降级（`/health` 报 `database=disconnected`）。
+        #   ★ 惯例同 test_gui_e2e / test_m40_part_list：
+        #     「⏭ 已跳过（环境不满足）」。`--require-db` / `CI=true` 时严格。
+        try:
+            import urllib.request as _u
+            _h = json.loads(_u.urlopen(
+                f"http://127.0.0.1:{PORT}/health", timeout=15).read())
+            _DB_OK = (_h.get("database") == "connected")
+        except Exception:                          # noqa: BLE001
+            _DB_OK = False
+        if not _DB_OK:
+            print("=" * 66)
+            print("⏭ 已跳过（环境不满足）：数据库没连上")
+            print("    启动方式：cd docker && docker compose up -d postgres")
+            if ("--require-db" in sys.argv) or (os.environ.get("CI") == "true"):
+                print("    （--require-db / CI=true：缺库视为失败）")
+                return 1
+            print("    （未开 --require-db，按「跳过」处理，不计失败）")
+            print("=" * 66)
+            return 0
         d = query("东方仗助是谁", PORT)
         cc = d.get("character_card") or {}
         check("「东方仗助是谁」route=character",

@@ -45,6 +45,7 @@ from __future__ import annotations
 
 import http.client
 import json
+import os
 import re
 import subprocess
 import sys
@@ -163,11 +164,20 @@ def main() -> int:
 
     # ---- ④ 数据侧一致性 ----
     print("\n[4] DB：form_count 与形态链一致")
+    # ★★ M68：整段包 try，且必须 `BaseException` ★★
+    #   `load_db.connect()` 连不上时抛 **`SystemExit(1)`**（不继承 Exception）
+    #   → 原先这里连 try 都没有，DB 一不可用整个测试直接终止在第 [4] 段。
+    #   ★ 实测（2026-10-16 Docker Desktop 未启动）：就是这样死的。
     sys.path.insert(0, str(ROOT / "database"))
-    from load_db import connect
-    conn = connect()
-    cur = conn.cursor()
-    for base, members in FORMS.items():
+    try:
+        from load_db import connect   # noqa: E402
+        conn = connect()
+    except BaseException as e:        # noqa: BLE001
+        print(f"  SKIP  DB 不可用（{type(e).__name__}）—— [4] 段 DB 断言跳过"
+              f"（Docker Desktop 是否已启动？）")
+        conn = None
+    cur = conn.cursor() if conn else None
+    for base, members in (FORMS.items() if cur else []):
         cur.execute("SELECT form_count FROM stands WHERE stand_id=%s", (base,))
         row = cur.fetchone()
         cur.execute("SELECT count(*) FROM stand_forms WHERE stand_id=%s", (base,))
@@ -185,7 +195,7 @@ def main() -> int:
         check(f"{base} 的 {len(members)} 个形态条目都在库里",
               cur.fetchone()[0] == len(members))
     # 形态链完整性
-    for base, members in FORMS.items():
+    for base, members in (FORMS.items() if cur else []):
         cur.execute("SELECT form_id, parent_id FROM stand_forms "
                     "WHERE stand_id=%s ORDER BY COALESCE(raw_order,0), form_id",
                     (base,))
@@ -202,16 +212,19 @@ def main() -> int:
     def _norm(s: str) -> str:
         return re.sub(r"[^a-z0-9]", "", (s or "").lower())
 
-    cur.execute("SELECT name_en FROM stands")
-    db = {_norm(x[0]) for x in cur.fetchall()}
-    miss = [p["title"] for p in pages if _norm(p["title"]) not in db]
-    check(f"爬到的 {len(pages)} 个替身页都在库里（缺 {len(miss)}）",
-          not miss, str(miss[:8]))
-    cur.execute("SELECT count(*) FROM stands")
-    check(f"库里替身数 ≥ 爬到的页数（{cur.fetchone()[0]} ≥ {len(pages)}）",
-          cur.fetchone and True)
-    cur.close()
-    conn.close()
+    if cur:
+        cur.execute("SELECT name_en FROM stands")
+        db = {_norm(x[0]) for x in cur.fetchall()}
+        miss = [p["title"] for p in pages if _norm(p["title"]) not in db]
+        check(f"爬到的 {len(pages)} 个替身页都在库里（缺 {len(miss)}）",
+              not miss, str(miss[:8]))
+        cur.execute("SELECT count(*) FROM stands")
+        check(f"库里替身数 ≥ 爬到的页数（{cur.fetchone()[0]} ≥ {len(pages)}）",
+              cur.fetchone and True)
+        cur.close()
+        conn.close()
+    else:
+        print("  SKIP  [5] 段 DB 审计（DB 不可用）")
 
     # ---- ⑥ 前端渲染 ----
     print("\n[6] 前端：形态行与母体说明")
@@ -236,6 +249,27 @@ def main() -> int:
         if not wait_http(PORT):
             check("服务就绪", False, "超时")
             return 1
+        # ★★ M68：探测 DB 是否真的连上（无 DB 时优雅 SKIP，不判失败）★★
+        #   服务在无 DB 时会降级（`/health` 报 `database=disconnected`）。
+        #   ★ 惯例同 test_gui_e2e / test_m40_part_list：
+        #     「⏭ 已跳过（环境不满足）」。`--require-db` / `CI=true` 时严格。
+        try:
+            import urllib.request as _u
+            _h = json.loads(_u.urlopen(
+                f"http://127.0.0.1:{PORT}/health", timeout=15).read())
+            _DB_OK = (_h.get("database") == "connected")
+        except Exception:                          # noqa: BLE001
+            _DB_OK = False
+        if not _DB_OK:
+            print("=" * 66)
+            print("⏭ 已跳过（环境不满足）：数据库没连上")
+            print("    启动方式：cd docker && docker compose up -d postgres")
+            if ("--require-db" in sys.argv) or (os.environ.get("CI") == "true"):
+                print("    （--require-db / CI=true：缺库视为失败）")
+                return 1
+            print("    （未开 --require-db，按「跳过」处理，不计失败）")
+            print("=" * 66)
+            return 0
         d = query("回声的能力", PORT)
         zc = d.get("zh_card") or {}
         check("「回声的能力」命中 Echoes",

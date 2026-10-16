@@ -372,7 +372,14 @@ def main() -> int:
     for p in pages:
         title = p["title"]
         wt = p["wikitext"]
-        cid = _char_id(title)
+        # ★★ M68：id 必须用语料页自带的 `entity_id`，不能用 `_char_id(title)` ★★
+        #   `fetch_articles` 的标题修正表（TITLE_FIXUPS）会把页面标题换成
+        #   wiki 真实页面名（`Unnamed Mountain Lodge Owner` → `Mountain Lodge Owner`），
+        #   但 **id 仍按原名算**（DB 的 `characters.character_id` 用原名）。
+        #   这里若用标题重算，会造出一个 DB 里不存在的 id → 中文名/块号/关联全部对不上。
+        cid = p.get("entity_id") or _char_id(title)
+        # 展示名用**原名**（与 DB `characters.name_en` 一致），不是页面标题
+        name_en = p.get("name_in_stands") or title
         ib = infobox(wt)
         raw = {k: field(ib, k) for k in SHOW_FIELDS}
         f = {k: clean(v) for k, v in raw.items()}
@@ -400,8 +407,12 @@ def main() -> int:
 
         rec = {
             "character_id": cid,
+            # ★ M68：`title` 保留**页面标题**（可点回源站），
+            #   `name_en` 用**原名**（与 DB `characters.name_en` 一致）。
+            #   两者只在标题被修正表换过时才不同。
             "title": title,
-            "name_en": title,
+            "name_en": name_en,
+            "page_title_changed": bool(p.get("name_in_stands")),
             "name_ja": f.get("ja_kanji"),
             "name_romaji": f.get("ja_romaji"),
             "name_zh": (char_zh.get(cid) or [None])[0],
@@ -429,8 +440,14 @@ def main() -> int:
             "wt_len": p.get("wt_len"),
             # 已知数据问题：13 个页面抓不到（名字像**两个角色名粘连**，
             #   如 `Andre BoomboomL.A. Boomboom` / `Dixie FlatlineN`）
-            "suspect_title": bool(_CJK.search(title)) or
-                             bool(re.search(r"[a-z][A-Z]", title or "")),
+            #   ★ M68：`[a-z][A-Z]` 会把 `Thunder McQueen`（`cQ`）这种
+            #     **正常名字**误判成粘连 —— 与 M67 里"不用驼峰边界判 owner 粘连"
+            #     同一个教训（McQueen / Jolyne Cujoh / McDonald 都是驼峰但正常）。
+            #     → 排除 `Mc`/`Mac` 前缀后再判；这个标记只是给人看的线索，
+            #       不作为任何自动处理的依据。
+            "suspect_title": bool(_CJK.search(title)) or bool(
+                re.search(r"[a-z][A-Z]", title or "")
+                and not re.search(r"(Mc|Mac)[A-Z]", title or "")),
         }
         out.append(rec)
         stat["total"] += 1

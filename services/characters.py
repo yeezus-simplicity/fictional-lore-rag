@@ -33,6 +33,12 @@ _PART_CN = {"一": 1, "二": 2, "三": 3, "四": 4, "五": 5,
 _LIST_ASK = re.compile(r"(哪些|有什么|列表|全部|所有|一览|list)")
 _STAND_ASK = re.compile(r"(替身|stand|能力)", re.I)
 
+# ★★ M78：「有几个 / 多少个」是**问数量**，不是「列出有哪些」★★
+#   用户实测原话：「我问的是几个替身，他直接列出来而非回答我两个」。
+#   「有哪些替身」在中文里两种读法都通（列哪些 / 有几个），
+#   所以：① 标题永远带数量；② 问句出现数量词时，数量单独成行放最上面。
+_COUNT_ASK = re.compile(r"(有几?个|多少个|多少种|几尊|几个替身|数量是多少)")
+
 
 def _read(name: str):
     p = PROC / name
@@ -506,9 +512,20 @@ def answer(q: str, top_k: int = 3, part_map: dict | None = None):
             "type": "character_stands",
             "character_id": c["character_id"],
             "character": c.get("name_zh") or c.get("name_en"),
+            # ★★ M78：英文名与「你问的是什么」一起回传 ★★
+            #   用户实测：输入「使用者 Giorno Giovanna 有哪些替身？」，
+            #   答案标题只写「乔鲁诺·乔巴拿 的替身」→ 他以为系统认错了人
+            #   （Giorno Giovanna 就是乔鲁诺·乔巴拿，只是标题少了英文名）。
+            #   → 标题显示中英双名，并回显命中的写法，让"同一个人"可核对。
+            "character_en": c.get("name_en"),
+            "matched": (from_name[0].get("matched_term")
+                        or c.get("name_zh") or c.get("name_en")),
             "stands": names,
             "stands_zh": names_zh,          # ★ M77：与 stands 同序
             "stand_ids": ids,
+            # ★ M78：数量**永远**给（用户问「有几个」时这是他真正要的答案）
+            "count": len(names),
+            "asked_count": bool(_COUNT_ASK.search(q)),
             "note": note,
         }, _evidence(c), card(c, part_map))
 

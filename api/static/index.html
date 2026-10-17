@@ -2351,10 +2351,29 @@ function renderStructured(a){
       ${a.note? `<div class="meta" style="margin-top:8px">${esc(a.note)}</div>`:''}`;
   }
   if(t==='character_stands'){
-    // ★ M77：优先显示中文名（用户输入的是中文，答案却只有英文名）
+    // ★ M78：标题显示**中英双名** —— 用户输入英文、只看到中文名时会以为认错了人
+    //   （Giorno Giovanna = 乔鲁诺·乔巴拿，实测就被当成 bug 报上来）
     const st = a.stands||[], sz = a.stands_zh||[];
     const label = i => (sz[i] || st[i] || '');
-    return `<div style="margin-bottom:8px">${esc(a.character||'')} 的替身</div>
+    const head = (a.character && a.character_en && a.character !== a.character_en)
+      ? `${esc(a.character)}<span class="zc-sub">${esc(a.character_en)}</span>`
+      : esc(a.character||'');
+    // ★ 只在**确实另一个写法**时才回显（后端按小写存 matched，
+    //   「giorno giovanna」与「Giorno Giovanna」只差大小写，不该显示）
+    const norm = s => (s||'').trim().toLowerCase();
+    const matched = (a.matched && a.character_en
+                     && norm(a.matched)!==norm(a.character_en)
+                     && norm(a.matched)!==norm(a.character))
+      ? `<div class="meta" style="margin:0 0 8px">你问的是「${esc(a.matched)}」——与上面是同一个人</div>` : '';
+    // ★ M78：数量必须显眼。问「有几个」时答案要**先回答数量**再列名字。
+    const n = (typeof a.count==='number') ? a.count : st.length;
+    const lead = a.asked_count
+      ? `<div style="font-size:22px;font-weight:700;margin:0 0 6px">共 ${n} 个替身</div>`
+      : '';
+    const tail = (n && !a.asked_count)
+      ? `<span class="zc-sub" style="margin-left:8px">共 ${n} 个</span>` : '';
+    return `<div style="margin-bottom:8px">${matched}${head} 的替身${tail}</div>
+      ${lead}
       ${st.length? `<div style="font-size:20px;font-weight:700;margin-bottom:8px">${
         st.map((n,i)=>`<span class="tag lc-rel" role="button" tabindex="0"
           data-ask="${esc(label(i)+' 的六维能力')}"

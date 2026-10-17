@@ -122,6 +122,27 @@ def main() -> int:  # noqa: PLR0915
     check("有替身时说明文案**不再**提「没有替身」",
           "没有替身" not in note, f"实得 {note}")
     check("说明文案给出替身数量", "2 个替身" in note, f"实得 {note}")
+    # ★ M78：答案必须显示**中英双名** —— 用户输入英文、只看到中文名
+    #   会以为系统认错了人（Giorno Giovanna = 乔鲁诺·乔巴拿，实测被当成 bug）
+    check("★ 回传英文名（标题显示双名）",
+          ans.get("character_en") == "Giorno Giovanna",
+          f"实得 {ans.get('character_en')}")
+    check("★ 回传命中的写法（用于「你问的是…」回显）",
+          bool(ans.get("matched")), f"实得 {ans.get('matched')}")
+    check("★ 数量永远给（count）", ans.get("count") == 2, f"实得 {ans.get('count')}")
+    # 用户原话：「我问的是几个替身，他直接列出来而非回答我两个」
+    cnt, _, _ = C.answer("Giorno Giovanna 有几个替身")
+    check("★「有几个替身」被识别成**问数量**（asked_count）",
+          cnt.get("asked_count") is True and cnt.get("count") == 2,
+          f"实得 asked_count={cnt.get('asked_count')} count={cnt.get('count')}")
+    lst, _, _ = C.answer("普奇有几个替身")
+    check("★ 普奇 3 个替身（白蛇 / 新月 / 天堂制造）",
+          lst.get("count") == 3 and lst.get("asked_count") is True,
+          f"实得 count={lst.get('count')}")
+    # 「有哪些」也要带数量（两种读法都成立）
+    check("★「有哪些替身」同样回 count（标题会显示「共 2 个」）",
+          ans.get("count") == 2 and ans.get("asked_count") is False,
+          f"实得 {ans.get('count')} / {ans.get('asked_count')}")
     # 没有替身的角色：文案要说明「条目未标注」
     ans2, _, _ = C.answer("乔纳森·乔斯达有哪些替身")
     if ans2.get("type") == "character_stands" and not ans2.get("stands"):

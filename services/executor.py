@@ -132,7 +132,11 @@ INTENT_STAND_TYPE = re.compile(
 #   语义检索 → 返回前一个替身的介绍（答非所问）。
 INTENT_COMPARE = re.compile(
     r"(?:谁|哪个|哪一个|哪一位).{0,6}(更强|更强些|更厉害|厉害|强|好)|"
-    r"(.{2,20}?)(?:和|与|对比|vs)(.{2,20}?)(?:谁|哪个|哪一个)")
+    r"(.{2,20}?)(?:和|与|对比|vs)(.{2,20}?)(?:谁|哪个|哪一个)|"
+    # ★ M81：第三种形态 —— 主语被省略的追问「和疯狂钻石比呢」
+    #   （coref 会把上一轮实体补到句首，句子变成「Gold Experience和疯狂钻石比呢」，
+    #     里面**没有**"谁/哪个"，前两支都不匹配 → 掉进语义检索）
+    r"(?:和|与).{2,20}?(?:比|相比|比比)")
 # ★★ M73：出场章节意图 ★★
 #   M71 建了 `stand_appearances`（4902 条）与 `/appearances/{stand_id}` 端点，
 #   但**没有自然语言入口** —— 用户打「白金之星在哪些章节出场」得到的是
@@ -148,6 +152,11 @@ INTENT_APPEARANCE = re.compile(
     #   之前只认复数（「哪几话」「哪些话」），单数问法落进语义检索 → 返回人物介绍。
     r"哪一话|哪一集|第几话|第几集|在哪一话|在哪一集|"
     r"首次登场|第一次出场|首次出场|初次登场|"
+    # ★ M81：问**数量**（「一共出场多少话」「动画出场多少集」）
+    r"(?:出场|登场).{0,8}(?:多少|几)|"
+    r"(?:多少|几).{0,6}(?:话|集|章).{0,4}(?:出场|登场)|"
+    # ★ M81：布尔（「在漫画里出场吗」「出场过吗」）
+    r"在(?:漫画|动画).{0,4}出场|出场过吗|登场过吗|出没出场|"
     r"的出场|出场记录|登场记录)")
 # ★★ M76：招式 / 必杀技意图 ★★
 #   M37 就建了 `stand_moves` 与 `/moves/{stand_id}` 端点，但**没有自然语言入口**
@@ -863,6 +872,10 @@ class StructuredExecutor:
         head = cur.fetchone()
         if not head:
             return None, [{"note": f"{sid} 不在库中"}]
+        # ★ M81：只问**出没出场**（「白金之星在漫画里出场吗」）→ 先答有没有，
+        #   再附数量。以前这种问法掉进语义检索拿回一段介绍。
+        wants_bool = bool(re.search(
+            r"(吗|是否|有没有|出没出场|出场过吗|登场过吗)", question))
         cur.execute("""
             SELECT kind, chapter_no, episode_no, chapter_title, raw_text
             FROM stand_appearances
@@ -880,6 +893,28 @@ class StructuredExecutor:
                 "动画列集数，均附源站原文。「仅封面出场」不计入。")
         if not manga and not anime:
             note = "源站该替身条目里没有记录漫画/动画出场（只有封面出场或未列）。"
+        if wants_bool:
+            # ★ M81：布尔问法（「在漫画里出场吗」）→ 答案只回答"有没有 + 多少"，
+            #   不要把整张章节表甩出来（用户问的是一个是非题）。
+            if manga or anime:
+                parts = []
+                if manga:
+                    parts.append(f"漫画 {len(manga)} 话")
+                if anime:
+                    parts.append(f"动画 {len(anime)} 集")
+                ans = (f"出场过：{'、'.join(parts)}"
+                       f"（{head[0]}，第 {head[1]} 部）")
+            else:
+                ans = (f"源站没有记录「{head[0]}」的漫画/动画出场"
+                       "（只出现在封面，或条目未列）。")
+            return (
+                {"type": "appearance_bool", "stand_id": sid,
+                 "stand_name": head[0], "part": head[1],
+                 "appeared": bool(manga or anime),
+                 "n_manga": len(manga), "n_anime": len(anime),
+                 "answer": ans},
+                [{"type": "database", "tables": ["stand_appearances"]}],
+            )
         return (
             {"type": "appearance", "stand_id": sid,
              "stand_name": head[0], "part": head[1],

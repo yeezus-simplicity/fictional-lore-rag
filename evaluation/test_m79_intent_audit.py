@@ -109,6 +109,31 @@ CASES = [
     ("第5部有几个角色", {"count", "fact", "part_list"}, "计数-按部角色"),
     ("杜王町有哪些地点", {"location_list", "location_related", "fact"},
      "列表-地点层级"),
+
+    # ===== ★ M81 第三弹：多轮追问 + 时间线 =====
+    #   （14 句体检，不匹配 0 项）
+    ("白金之星一共出场多少话", {"appearance"}, "时间线-出场话数"),
+    ("白金之星动画出场多少集", {"appearance"}, "时间线-动画集数"),
+    ("白金之星在漫画里出场吗", {"appearance_bool", "appearance"},
+     "时间线-是否出场（布尔）"),
+    ("白金之星第一次出场是哪一话", {"appearance"}, "时间线-首次"),
+    ("白金之星最后一次出场是哪一话", {"appearance"}, "时间线-最后"),
+]
+
+# ---- M81：多轮追问（同一 session_id 连问两句）----
+TURNS = [
+    ("白金之星有什么招式", "那它的射程呢", {"fact"}, "追问-替身属性"),
+    ("白金之星有什么招式", "那它有几个形态", {"forms"}, "追问-形态"),
+    ("白金之星有什么招式", "那它一共出场多少话", {"appearance"},
+     "追问-出场话数"),
+    ("乔鲁诺·乔巴拿是谁", "那他的替身是什么", {"stand_of", "character_stands"},
+     "追问-角色替身"),
+    ("白金之星是什么类型的替身", "它的使用者是谁", {"owner"}, "追问-使用者"),
+    ("黄金体验的射程是多少", "和疯狂钻石比呢", {"compare"},
+     "追问-省略主语的比较"),
+    ("白金之星的招式有哪些", "它第一次出场是哪一话", {"appearance"},
+     "追问-出场"),
+    ("白金之星是谁的替身", "它的破坏力呢", {"fact"}, "追问-属性"),
 ]
 
 
@@ -205,6 +230,26 @@ def main() -> int:  # noqa: PLR0915
                   "没有第 2 形态" in (a.get("answer") or "")
                   or "只列了 1 个形态" in (a.get("answer") or ""),
                   f"实得 {a.get('answer')}")
+
+    print("\n[3] ★ 多轮追问（M81：省略主语 + 时间线）")
+    for i, (first, follow, exp, tag) in enumerate(TURNS):
+        sid = f"m79-turn-{i}"
+        d1 = ctx.post("/query", params={"q": first, "session_id": sid}).json()
+        d2 = ctx.post("/query", params={"q": follow, "session_id": sid}).json()
+        t2 = d2.get("answer_type")
+        check(f"{tag}｜{first} → {follow}", t2 in exp, f"实得 {t2}")
+        if t2 in exp and isinstance(d2.get("answer"), dict):
+            a2 = d2["answer"]
+            if follow == "和疯狂钻石比呢":
+                check("  └ coref 补上省略的主语（两个替身都在答案里）",
+                      "Gold Experience" in str(a2.get("answer"))
+                      and "Crazy Diamond" in str(a2.get("answer")),
+                      f"实得 {str(a2.get('answer'))[:80]}")
+            if follow == "那它一共出场多少话":
+                check("  └ 出场话数是真的（不是空壳）",
+                      bool(a2.get("n_manga") or a2.get("n_anime")),
+                      f"实得 n_manga={a2.get('n_manga')} "
+                      f"n_anime={a2.get('n_anime')}")
 
     print("\n" + "=" * 74)
     if FAILS:

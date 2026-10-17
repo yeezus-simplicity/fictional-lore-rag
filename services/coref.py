@@ -198,6 +198,25 @@ def resolve(q: str, session_id: Optional[str], store: SessionStore,
     if ctx is None:
         return q, None, None
 
+    # ★★ M81：省略主语的比较（「和疯狂钻石比呢」）★★
+    #   上一句问「黄金体验的射程是多少」，这一句「和疯狂钻石比呢」把主语省了。
+    #   它**不含代词**（它/他）→ 原来的逻辑直接放行 → 比较只找到疯狂钻石一个
+    #   → 无法比较 → 答非所问（实测返回疯狂钻石的介绍）。
+    #   → 以「和/与」开头、带比较词、且**句子里没有上一轮实体**时，
+    #     把上一轮实体补到句首。
+    #   ★ 判据不能用 guess_stand(q) is None：问句里往往有**第二个**替身
+    #     （「和疯狂钻石比呢」→ 疯狂钻石），那样永远不触发（第一版就踩了）。
+    if re.match(r"^\s*(?:那|那么|再)?\s*(?:和|与)", q or "") \
+            and re.search(r"(比|相比|谁更|哪个更|谁强|哪个强)", q) \
+            and ctx.stand_name and ctx.stand_name not in (q or ""):
+        resolved = f"{ctx.stand_name}{q}"
+        return resolved, {
+            "pronoun": "(省略的主语)",
+            "resolved_to": ctx.stand_name,
+            "from_question": ctx.question,
+            "kind": "stand",
+        }, ctx
+
     pron = find_pronoun(q)
     if not pron:
         return q, None, ctx

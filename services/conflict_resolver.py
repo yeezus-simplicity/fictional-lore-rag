@@ -440,6 +440,17 @@ class Router:
         r"(描述|介绍|概述|历史|性格|外观|来源|设定|怎么|如何|"
         r"运作|方面|是什么|招式|appearance|personality|history)", re.I)
 
+    # ★★ M76：招式 / 必杀技 → 结构化（与 M73 的 appearance 同构）★★
+    #   实测：「白金之星有什么招式」被 `SEMANTIC` 里的「招式」命中
+    #   → 走 entity_semantic → 返回**一段人物介绍**，而库里已有
+    #     263 条结构化招式（M76 刚补到 156 个替身）。
+    #   ★ 只认「招式/必杀技/招数」这类**明确的招式维度词**；
+    #     「能力」不在其中 —— 问「XX 的能力」要的是能力描述（原文长段），
+    #     走语义才是对的。
+    MOVE_ASK = re.compile(
+        r"(招式|必杀技|必殺技|招数|招數|技能|有哪些招|什么招|什麼招|"
+        r"会什么招|會什麼招)")
+
     # ★★★ M16：维度词黑名单
     #   这些词描述的是「问哪个方面」，不是「哪个替身」，
     #   它们会被抽进 candidates，且也在 known_entities 里
@@ -938,6 +949,17 @@ class Router:
 
         # ---------- 2. 混合意图判定（M2 的 T5 全错点） ----------
         # 特征：同时出现「结构化问法」与「语义问法」
+        # ★★ M76：招式问法必须先拦走 ★★
+        #   `SEMANTIC` 里含「招式」，会让「白金之星有什么招式」被判成
+        #   entity_semantic（返回一段人物介绍），而库里已有结构化招式表。
+        #   必须排在 hybrid / entity_semantic 之前，且要求**锚定了替身**
+        #   （否则「招式是什么意思」这种泛问仍走语义）。
+        if stand_hit and self.MOVE_ASK.search(q):
+            return RouteDecision(
+                "structured",
+                "问某替身的招式 → 结构化（M76：stand_moves 已有 263 条）",
+                signals)
+
         has_struct = bool(self.STRUCT_FACT.search(q)) or bool(self.EXTREME.search(q))
         has_sem = bool(self.SEMANTIC.search(q))
         signals["has_struct_pattern"] = has_struct

@@ -112,6 +112,8 @@ def collect_m1() -> dict:
     #   → 单一来源：loader 是唯一知道"到底入库多少行"的人。
     _facts = _load("data_facts.json") or {}
     n_chunks_total = _facts.get("n_text_chunks")
+    # ★ M76：必杀技条数 —— 修前 23 条（覆盖 11 个替身，全库覆盖率最低的一块）
+    n_moves = _facts.get("n_moves")
 
     # ★ M71：出场记录覆盖 —— 从 rendered/ 快照算（与 load_db 同一数据源）。
     #   这个数字必须进闸门：M71 之前它停在 4111/145 个替身，
@@ -195,6 +197,7 @@ def collect_m1() -> dict:
         "n_char_bio": n_char_bio,
         "n_char_zh": n_char_zh,
         "n_entity_images": n_entity_images,
+        "n_moves": n_moves,
         "_facts": _facts,
         "n_stand_types": n_type_total,
         "n_stand_type_residual": n_type_residual,
@@ -637,10 +640,14 @@ PUBLIC_NUMBERS = {
     "数据.角色中文名覆盖": ("M1", "n_char_zh", 236),
     # ★ M74 新增：角色 + 地点头像数（预抓，索引在 media_index.json）
     "数据.实体头像数": ("M1", "n_entity_images", 489),
+    # ★ M76：必杀技 23 → 263（渲染器 3b 判据放宽 + 新增 3d），覆盖 11 → 156
+    "数据.必杀技条数": ("M1", "n_moves", 263),
     # ★ M71：出场记录覆盖。rendered/ 快照补齐后 4111→4902 条、
     #   覆盖替身 145→182 个。这两个数字进闸门，防止再次出现
     #   「上游数据增长、下游产物没重算」而没人发现。
-    "数据.出场记录数": ("M1", "n_appearances", 4902),
+    # ★ M76：4902 → 4911（--force 全量重抓后，源站 Appearance 段有细微变化：
+    #   动画 +8 / 仅封面 +1 / 漫画 +2；覆盖替身仍 182，**没有减少**）
+    "数据.出场记录数": ("M1", "n_appearances", 4911),
     "数据.有出场记录的替身": ("M1", "n_stands_with_appearances", 182),
     # ★ M69 新增：替身类型结构化。
     #   n_stand_type_residual 必须恒为 0 —— 它是「词表能解释每一个字符」

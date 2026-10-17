@@ -162,9 +162,27 @@ const EXTRACT = () => {
 
   // 3b. 列表/段落型招式（兜底）："Name (Alias) : desc"
   const isToc = s => /^\d+(\.\d+)*\s/.test(s);
+  // ★★ M76：段名判据从「白名单关键词」改成「**在 ABILITIES 这个 h2 之下**」★★
+  //   实测漏掉的段名（全都是 `== Abilities ==` 下的 h3，只是名字不叫 abilities）：
+  //       LIFE GIVER（Gold Experience，18 个 list 被整段丢掉）
+  //       SUPERHUMAN CAPABILITIES（Star Platinum）
+  //       SPECIFIC USES / BUBBLE GENERATION / RESTORATION / TIME STOP …
+  //   原判据 `/attack|move|abilit|technique|method|form/i` 只认识那几个词
+  //   → 实测只有 **11 / 185** 个替身能提到招式。
+  //   ★ 判据换成「h2 是 Abilities 就算」+ **反向黑名单**（这些段不是招式）。
+  //     反向比正向稳：能力段名是**开放集合**（每个替身自己起名），
+  //     而非能力段是**封闭集合**（Appearance / Personality / History …）。
+  const NON_ABILITY = new RegExp(
+    '^(appearance|personality|color|contents|chapters?|gallery|trivia|' +
+    'navigation|references|site|history|merchandise|video|games?|' +
+    'quotes|creation|design|conception|other media|e?tymology)', 'i');
+  let curH2 = '';
   for (const sec of sections) {
+    if (sec.level === 'h2') curH2 = sec.heading || '';
     const h = sec.heading || '';
-    if (!/attack|move|abilit|technique|method|form/i.test(h)) continue;
+    if (NON_ABILITY.test(h) || NON_ABILITY.test(curH2)) continue;
+    const inAbilities = /^abilit/i.test(curH2);
+    if (!inAbilities && !/attack|move|abilit|technique|method|form/i.test(h)) continue;
     const flat = [];
     for (const lst of sec.lists) for (const it of lst) flat.push(it);
     for (const item of flat) {
@@ -187,6 +205,36 @@ const EXTRACT = () => {
     if (seenMove.has(key)) continue;
     seenMove.add(key);
     moves.push({ section: '(paragraph)', name: m[1], phonetic: null, alias: m[2] || null, debut: null, text: p });
+  }
+
+  // 3d. ★★ M76：能力段下的 **h3 标题本身就是招式** ★★
+  //   实测 Gold Experience：
+  //     == Abilities ==
+  //       === Life Giver ===   ← 招式名就在标题上
+  //       === Life Shot ===
+  //       === Life Sensor ===
+  //   它**没有** techBox，而 list 里装的是
+  //   "Turning bank notes into butterflies" 这类**用例**（不是 "Name: desc"）
+  //   → 3a/3b/3c 全部提不到，整页 moves=0。
+  //   ★ 只在**该页一个招式都没提到**时启用：
+  //     Star Platinum 有 4 个 techBox 真招式，不该再补一条
+  //     "Superhuman Capabilities"（那是章节名，不是招式）。
+  if (moves.length === 0) {
+    let h2 = '';
+    for (const sec of sections) {
+      if (sec.level === 'h2') h2 = sec.heading || '';
+      if (sec.level !== 'h3') continue;
+      if (!/^abilit/i.test(h2)) continue;
+      const h = (sec.heading || '').trim();
+      if (!h || NON_ABILITY.test(h)) continue;
+      const key = h.toLowerCase();
+      if (seenMove.has(key)) continue;
+      const first = (sec.paras || []).find(t => t && t.length > 40) || '';
+      if (!first) continue;            // 只有标题没有内容 → 不是招式
+      seenMove.add(key);
+      moves.push({ section: h2, name: h, phonetic: null, alias: null,
+                   debut: null, text: first });
+    }
   }
 
   // 4. 战斗表现：★实测 wiki 用 ul>li 列表，格式

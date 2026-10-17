@@ -129,6 +129,17 @@ INTENT_APPEARANCE = re.compile(
     r"(?:出场|登场|出现)\s*(?:记录|章节|话数|集数|在哪)|"
     r"在哪些(?:章节|话|集|漫画)|"
     r"的出场|出场记录|登场记录)")
+# ★★ M76：招式 / 必杀技意图 ★★
+#   M37 就建了 `stand_moves` 与 `/moves/{stand_id}` 端点，但**没有自然语言入口**
+#   → 实测「Star Platinum 有什么招式」是 `unknown`（降级语义）。
+#   同时 M76 把招式覆盖从 12 个替身提到 156 个，不接入口等于白补。
+#   ★ 判据**刻意不收「能力」**：
+#     「疯狂钻石的能力是什么」问的是能力**描述**（原文长段），
+#     收了会被招式列表抢走 —— 那里只有招式名+一句原文，反而答得更差。
+#     能力描述继续走语义检索（M14/M16 已经调好了）。
+INTENT_MOVES = re.compile(
+    r"(招式|必杀技|必殺技|招数|招數|技能|有哪些招|什么招|什麼招|"
+    r"招式的名字|会什么招|會什麼招)")
 INTENT_EXTREME = re.compile(
     r"(最高|最大|最强|最低|最小|最弱|多少个|几个|排名|综合|总分|"
     r"所有替身|同时满足|达到)")
@@ -194,6 +205,9 @@ def detect_intent(question: str) -> str:
     # ★ M73：出场章节（M71 的 stand_appearances 的 NL 入口）
     if INTENT_APPEARANCE.search(question):
         return "appearance"
+    # ★ M76：招式 / 必杀技（M37 的 stand_moves 的 NL 入口）
+    if INTENT_MOVES.search(question):
+        return "moves"
     # ★ 「第X部有哪些替身」→ 列表。必须放在 stand_of 之前：
     #   它含「替身」，若主体被当成部数名会诱使 stand_of 抢走。
     if INTENT_PART.search(question) and INTENT_PART_LIST.search(question) \
@@ -427,6 +441,8 @@ class StructuredExecutor:
             "part_list": self._part_list,
             # ★ M73：出场章节（M71 数据的自然语言入口）
             "appearance": self._appearance,
+            # ★ M76：招式 / 必杀技（M37 数据的自然语言入口）
+            "moves": self._moves,
         }.get(intent)
         # ★ M14：认不出意图时**明确说不知道**，不给无关答案
         if fn is None:
@@ -836,6 +852,47 @@ class StructuredExecutor:
              "manga": manga, "anime": anime, "note": note},
             [{"type": "database", "tables": ["stand_appearances"]}],
         )
+
+    def _moves(self, question: str, name2id: dict[str, str]):
+        """★ M76：某替身的**招式 / 必杀技**。
+
+        M37 建了 `stand_moves` 与 `/moves/{stand_id}` 端点，但自然语言
+        **没有入口** —— 实测「Star Platinum 有什么招式」是 `unknown`。
+        M76 同时把招式覆盖从 12 个替身提到 **156 个**（见 render_fetch.js 的 3d），
+        不接入口等于白补。
+
+        ★ 口径：
+          · 招式名 + 读音 + 别名 + 首次登场话数 + **源站原文描述**
+          · 没有招式小节的替身（31 个）如实说明「能力写在正文里」，
+            并提示可以改问「XX 的能力」 —— 不硬凑。
+        """
+        sid = extract_stand_name(question, name2id)
+        if not sid:
+            return None, [{"note": "未能识别替身名 —— 招式按替身查，"
+                                   "例如「Star Platinum 有什么招式」"}]
+        cur = self.conn.cursor()
+        cur.execute("SELECT name_en, part FROM stands WHERE stand_id = %s",
+                    (sid,))
+        head = cur.fetchone()
+        if not head:
+            return None, [{"note": f"{sid} 不在库中"}]
+        cur.execute("""
+            SELECT name, phonetic, alias, debut_chapter, text
+            FROM stand_moves WHERE stand_id = %s ORDER BY move_id
+        """, (sid,))
+        items = [{"name": r[0], "phonetic": r[1], "alias": r[2],
+                  "debut": r[3], "text": (r[4] or "")[:700]}
+                 for r in cur.fetchall()]
+        base = {"type": "moves", "stand_id": sid,
+                "stand_name": head[0], "part": head[1],
+                "count": len(items), "items": items}
+        if not items:
+            base["note"] = ("源站该替身条目没有独立的招式小节"
+                            "（能力写在正文里）→ 可以改问「XX 的能力」。")
+        else:
+            base["note"] = ("招式取自源站替身条目 Abilities 段的小节名；"
+                            "描述为源站原文（英文），未做机器翻译。")
+        return (base, [{"type": "database", "tables": ["stand_moves"]}])
 
     def _owner(self, question: str, name2id: dict[str, str]):
         sid = extract_stand_name(question, name2id)

@@ -135,7 +135,11 @@ def main() -> int:
           "addEventListener('scroll'" in src and "requestAnimationFrame" in src)
     check("板块异步增加时自动补建索引",
           "MutationObserver" in src and "observe(_resMain" in src)
-    check("索引项带序号（1. 2. …）", "i + 1}. ${esc(s.dataset.secname" in src)
+    # ★ M76：索引项改成**胶囊导航**（前端重设计），不再显示「1. 2. …」序号
+    #   —— 胶囊式标签带序号反而挤。断言改为「渲染板块名（secname 回退 sec）」。
+    check("索引项渲染板块名（secname 回退 sec）",
+          "s.dataset.secname || s.dataset.sec" in src,
+          "没找到 `esc(s.dataset.secname || s.dataset.sec)`")
 
     # ---- ④ 五个板块的锚点与名称 ----
     print("\n[4] 五个板块")

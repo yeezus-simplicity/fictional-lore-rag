@@ -55,6 +55,9 @@
  "boomboom_family": [
   "祊玢一家"
  ],
+ "bruford": [
+  "布拉霍"
+ ],
  "bruno_bucciarati": [
   "布罗诺·布加拉提",
   "布鲁诺·布加拉提"
@@ -78,6 +81,9 @@
   "卡涅尔",
   "卡尔涅"
  ],
+ "ch_rie_polnareff": [
+  "雪莉"
+ ],
  "charming_man": [
   "查明曼"
  ],
@@ -98,6 +104,9 @@
   "丹尼尔·J·达比"
  ],
  "danny": [
+  "丹尼"
+ ],
+ "danny_steel_ball_run": [
   "丹尼"
  ],
  "dario_brando": [
@@ -148,14 +157,16 @@
   "神秘11人众"
  ],
  "emporio_alnino": [
-  "安波里欧·亚曼纽"
+  "安波里欧·亚曼纽",
+  "安波里欧·阿尔尼"
  ],
  "enrico_pucci": [
   "恩里克·普奇",
   "神父"
  ],
  "enya_the_hag": [
-  "恩亚婆婆"
+  "恩亚婆婆",
+  "恩雅婆婆"
  ],
  "erina_pendleton": [
   "艾莉娜·班鲁多",
@@ -275,11 +286,16 @@
   "东方常秀"
  ],
  "josuke_higashikata": [
-  "东方仗助",
+  "东方仗助"
+ ],
+ "josuke_higashikata_jojolion": [
   "东方定助"
  ],
  "jotaro_kujo": [
   "空条承太郎"
+ ],
+ "kaato_higashikata": [
+  "东方花都"
  ],
  "karera_sakunami": [
   "作并卡蕾拉"
@@ -303,8 +319,14 @@
  "key_west": [
   "基·韦斯特"
  ],
+ "kiyomi_kujo": [
+  "空条圣美"
+ ],
  "koichi_hirose": [
   "广濑康一"
+ ],
+ "kosaku_kawajiri": [
+  "川尻浩作"
  ],
  "l_a_boomboom": [
   "L·A·祊玢"
@@ -331,6 +353,12 @@
  ],
  "lulu": [
   "露露"
+ ],
+ "magent_magent": [
+  "马杰特·马杰特"
+ ],
+ "mannish_boy": [
+  "曼尼"
  ],
  "marco": [
   "马尔可"
@@ -384,6 +412,9 @@
  "mountain_tim": [
   "曼登·提姆"
  ],
+ "mrs_robinson": [
+  "密森斯·罗宾斯"
+ ],
  "muhammad_avdol": [
   "穆罕默德·阿布德尔"
  ],
@@ -435,6 +466,9 @@
  ],
  "pannacotta_fugo": [
   "潘纳科达·福葛"
+ ],
+ "paolo_bucciarati": [
+  "保罗·布加拉提"
  ],
  "pesci": [
   "贝西"
@@ -491,6 +525,9 @@
  "rohan_kishibe": [
   "岸边露伴"
  ],
+ "rohan_kishibe_the_jojolands": [
+  "岸边露伴"
+ ],
  "romeo_jisso": [
   "罗密欧"
  ],
@@ -499,6 +536,9 @@
  ],
  "rudol_von_stroheim": [
   "鲁道尔·冯·斯特罗海姆"
+ ],
+ "ryohei_higashikata": [
+  "东方良平"
  ],
  "sale": [
   "沙雷"
@@ -558,6 +598,9 @@
  "steely_dan": [
   "钢铁阿丹"
  ],
+ "steven_steel": [
+  "史帝芬·史提尔"
+ ],
  "straizo": [
   "史特雷"
  ],
@@ -602,6 +645,9 @@
   "东尼欧·托拉萨迪",
   "托尼欧·托拉萨迪"
  ],
+ "tonpetty": [
+  "多配地"
+ ],
  "toru": [
   "透龙"
  ],
@@ -626,6 +672,9 @@
  ],
  "urban_guerrilla": [
   "都市游击队"
+ ],
+ "urmd_avdul": [
+  "乌尔穆德·阿布德尔"
  ],
  "usagi_alohaoe": [
   "乌萨奇·阿罗哈欧艾"
@@ -658,6 +707,10 @@
  "wild_cat_size": [
   "3只猫"
  ],
+ "will_anthonio_zeppeli": [
+  "威廉·A·齐贝林",
+  "威廉·齐贝林"
+ ],
  "wilson_phillips": [
   "威尔森·菲利浦斯"
  ],
@@ -672,6 +725,9 @@
   "吉良吉广"
  ],
  "yoshikage_kira": [
+  "吉良吉影"
+ ],
+ "yoshikage_kira_jojolion": [
   "吉良吉影"
  ],
  "yotsuyu_yagiyama": [
@@ -690,10 +746,6 @@
   "空条荷莉",
   "荷莉·乔斯达",
   "霍莉·乔斯达"
- ],
- "will_anthonio_zeppeli": [
-  "威廉·A·齐贝林",
-  "威廉·齐贝林"
  ],
  "mary_joestar": [
   "玛丽·乔斯达"

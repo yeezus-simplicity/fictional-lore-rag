@@ -408,26 +408,48 @@ def split_template_args(body: str) -> list[str]:
     return args
 
 
-def extract_nihongo(wt: str) -> list[tuple[str, str]]:
-    """抽 {{nihongo|中文|日文|英文}} → [(中文, 英文)]。
+def extract_nihongo(wt: str) -> list[tuple[str, str, str]]:
+    """抽 {{nihongo|中文|日文|英文}} → [(中文, 日文, 英文)]。
 
     实测形态：
         {{nihongo|支倉未起隆|支倉 未起隆（はぜくら みきたか）|Hazekura Mikitaka}}
         {{nihongo|空条承太郎|空条 承太郎（くうじょう…）|Jotaro Kujo|}}
         {{nihongo|迪奧·布蘭度|ディオ・ブランドー|Dio Brando}}
-    → 参数 0=中文、2=英文（英文可能缺失）。
+    → 参数 0=中文、1=日文、2=英文（英文可能缺失）。
+
+    ★★ M75：加**日文名**（第 2 参数）★★
+      JoJolion 部条目的 nihongo **大多不带英文名**：
+        `{{nihongo|東方定助|東方 定助（ひがしかた じょうすけ）}}`
+      而原代码只取第 3 参数、且主循环 `if not en: continue`
+      → 这些条目**被整条跳过**，第 8 部 4 个「与前面部同名」的角色
+        （东方定助 / 吉良吉影 / 仗世文 / 伴子）一个中文名都拿不到。
+      日文名是**同源**的（源站 `name_ja` ↔ 中文维基第 2 参数），
+      而且**能区分同名系列**（「仗助」vs「定助」）—— 比英文名更可靠
+      （第 4/8 部 Josuke 的英文名都是 "Josuke Higashikata"）。
     """
-    out: list[tuple[str, str]] = []
+    out: list[tuple[str, str, str]] = []
     for m in re.finditer(r"\{\{\s*nihongo\s*\|", wt, re.I):
         inner, _ = _balanced(wt, m.end())
         args = split_template_args(inner)
         if len(args) < 2:
             continue
         zh = clean_cell(args[0])
+        ja = clean_cell(args[1]) if len(args) >= 2 else ""
         en = clean_cell(args[2]) if len(args) >= 3 else ""
         if zh and re.search(r"[\u4e00-\u9fff]", zh):
-            out.append((zh, en))
+            out.append((zh, ja, en))
     return out
+
+
+def ja_key(s: str) -> str:
+    """日文名归一化键：去括号注音 + 去空格 + 繁转简。
+
+    DB 存 `東方 定助`，中文维基 nihongo 写
+    `東方 定助（ひがしかた じょうすけ）` —— 去掉括号里的假名注音后，
+    两侧只差空格。
+    """
+    s = re.sub(r"[（(][^）)]*[）)]", "", s or "")
+    return to_simplified(re.sub(r"\s+", "", s))
 
 
 def name_key(en: str) -> str:
@@ -519,8 +541,10 @@ def main() -> int:
                    FROM stands s JOIN characters c
                      ON c.character_id = s.owner_id""")
     db = cur.fetchall()
-    cur.execute("SELECT character_id, name_en FROM characters")
-    all_chars = {r[0]: r[1] for r in cur.fetchall()}
+    cur.execute("SELECT character_id, name_en, name_ja FROM characters")
+    _rows = cur.fetchall()
+    all_chars = {r[0]: r[1] for r in _rows}
+    all_ja = {r[0]: r[2] for r in _rows}      # ★ M75：日文名（路径 E 用）
     cur.close()
     conn.close()
 
@@ -633,7 +657,7 @@ def main() -> int:
 
     # ---- 数据源 2：各部条目的 nihongo 模板 ----
     parts_wt = fetch_parts_wikitext()
-    nihongo: list[tuple[str, str]] = []
+    nihongo: list[tuple[str, str, str]] = []
     for pg, wtxt in parts_wt.items():
         nihongo.extend(extract_nihongo(wtxt))
     char_by_namekey: dict[str, str] = {}
@@ -642,8 +666,30 @@ def main() -> int:
         if cen:
             char_by_namekey.setdefault(name_key(cen), cid)
             char_by_loose.setdefault(loose_key(cen), cid)
+    # ★ M75：日文名索引（**多值**）—— 第 4/8 部「吉良吉影」的日文名完全相同，
+    #   两个角色都该拿到这个中文名（真同名，用户要「都返回」）。
+    char_by_ja: dict[str, list[str]] = {}
+    for cid, cja in all_ja.items():
+        if cja:
+            char_by_ja.setdefault(ja_key(cja), []).append(cid)
     stats["D"] = 0
-    for zh, en in nihongo:
+    stats["E"] = 0
+    for zh, ja, en in nihongo:
+        # ★★ M75：**先给日文名一次机会**，再走英文名 ★★
+        #   为什么放在前面：第 4/8 部 Josuke 的英文名都是 "Josuke Higashikata"，
+        #   英文名匹配只会命中**第 4 部**那一个 → 「東方定助」被挂到
+        #   东方仗助名下（实测：josuke_higashikata 同时挂着「东方仗助」
+        #   和「东方定助」，而 josuke_higashikata_jojolion 是 None）。
+        #   日文名（仗助 / 定助）是**唯一能区分**的信号。
+        if ja:
+            tgt = char_by_ja.get(ja_key(ja))
+            if tgt:
+                for c in tgt:
+                    before = len(result.get(c, []))
+                    add(c, [to_simplified(zh)])
+                    if len(result.get(c, [])) > before:
+                        stats["E"] += 1
+                continue
         if not en:
             continue
         # ① 严格键（排序 + 去冠词）
@@ -673,6 +719,8 @@ def main() -> int:
             if len(result.get(cid, [])) > before:
                 stats["D"] += 1
     print(f"  nihongo 模板 {len(nihongo)} 个 → 命中 {stats['D']} 条")
+    print(f"  ★ 路径E（日文名匹配，M75）：{stats['E']} 条"
+          f"（覆盖 nihongo 无英文名的条目，如 JoJolion 部）")
 
     print(f"\n  路径A（替身名→stand→owner，本行有中文）：{stats['A']} 条"
           f"（替身名匹配 {len(matched_en)}/{len(wiki)}）")

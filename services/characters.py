@@ -234,6 +234,36 @@ def match(q: str) -> list[tuple[str, str]]:
         seen.add(cid)
         out.append((cid, nm))
 
+    # ★★ M75：**精确名也可能一对多**（第 4/8 部「吉良吉影」中文名完全相同）★★
+    #   `by_name` 是 `dict[str, str]`，构建时用 `setdefault` → 只留第一个 cid
+    #   → 第 8 部那位**永远搜不到**（实测：搜「吉良吉影」只出第 4 部）。
+    #   `build_char_alias_index()` 是多值的（M74 为"搜索"建的），这里用它补齐。
+    if out:
+        try:
+            from aliases import build_char_alias_index as _idx
+            _multi = {k.strip().lower(): v for k, v in _idx().items()}
+            for cid, nm in list(out):
+                for cid2 in _multi.get(nm, ()):
+                    if cid2 not in seen:
+                        seen.add(cid2)
+                        out.append((cid2, nm))
+        except Exception:  # noqa: BLE001
+            pass
+
+    # ★★ M75：排除「被另一个命中名包含」的短名 ★★
+    #   实测：搜「吉良吉影」会同时命中
+    #     · 「吉良吉影」（yoshikage_kira / _jojolion）
+    #     · 「吉良」——`holy_joestar_kira` 的简称
+    #       （来自「吉良·荷莉·乔斯达」按间隔号拆出的姓氏）
+    #   两者是子串关系，短的那个纯属噪声 → 「吉良吉影是谁」会多出
+    #   一个「荷莉·乔斯达」的候选卡片。
+    #   ★ 只排除**被同一轮命中的更长名字包含**的，不影响「东方」这类
+    #     独立查询（搜「东方」时没有任何更长的命中名包含它）。
+    _hit_names = [nm for _, nm in out]
+    out = [(cid, nm) for cid, nm in out
+           if not any(nm != o and nm in o for o in _hit_names)]
+    seen = {cid for cid, _ in out}
+
     # ★ 第二轮：模糊（简称/姓氏）—— 已命中的不重复
     # ★★ 只在**第一轮没有任何精确命中**时才跑 ★★
     #   踩坑：`Rock Human 是什么` 第一轮已精确命中 rock_human，

@@ -113,13 +113,18 @@ def main() -> int:
     print("\n[3] ★ 简称（用户不打「布罗诺·布加拉提」）")
     import aliases as _al
     tbl = _al.build_char_alias_table()
+    # ★ M75：改测 `build_char_alias_index()`（多值）而不是 table（单值）。
+    #   原因：「布加拉提」在 M75 补进 `paolo_bucciarati`（布鲁诺的父亲，
+    #   「保罗·布加拉提」）后成了**真歧义** → table 按设计不收（无唯一答案），
+    #   但**搜索**必须能命中（index 里两个都在）。这正是 M74 定的分工。
+    idx_al = _al.build_char_alias_index()
     for short, want in (("布加拉提", "bruno_bucciarati"),
                         ("西撒", "caesar_anthonio_zeppeli"),
                         ("乔尼", "johnny_joestar"),
                         ("乔鲁诺", "giorno_giovanna"),
                         ("布罗诺·布加拉提", "bruno_bucciarati")):
-        check(f"简称「{short}」→ {want}", tbl.get(short) == want,
-              f"实得 {tbl.get(short)}")
+        check(f"简称「{short}」命中 {want}", want in idx_al.get(short, []),
+              f"实得 {idx_al.get(short)}")
     # 歧义简称**必须不收**（收了必然把「齐贝林的替身」答成某一位）
     for amb in ("齐贝林", "乔斯达", "达比", "布兰度"):
         check(f"★ 歧义简称「{amb}」未被收录", tbl.get(amb) is None,

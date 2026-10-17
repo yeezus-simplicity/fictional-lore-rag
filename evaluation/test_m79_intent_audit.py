@@ -93,6 +93,22 @@ CASES = [
     ("今天天气怎么样", {"abstain"}, "守门-无关问句"),
     ("特朗普的替身是什么", {"abstain"}, "守门-不存在的人"),
     ("Ora Ora 是什么", {"abstain", "snippet", "fact"}, "招式名不在结构化维度里"),
+
+    # ===== ★ M80 第二弹：关系 / 结局 / 比较 / 类型 / 第 N 形态 =====
+    #   （19 句体检，不匹配 0 项）
+    ("谁和空条承太郎认识", {"abstain"}, "关系-泛（库里没有）"),
+    ("空条承太郎和乔瑟夫是什么关系", {"abstain"}, "关系-两实体（库里没有）"),
+    ("空条承太郎的结局是什么", {"abstain"}, "结局（库里没有）"),
+    ("普奇最后怎么样了", {"abstain"}, "结局-口语（库里没有）"),
+    ("白金之星和黄金体验谁更强", {"compare"}, "比较-两替身（六维逐项）"),
+    ("白金之星是近战型吗", {"stand_type"}, "布尔-替身类型"),
+    ("白金之星是自动型吗", {"stand_type"}, "布尔-否定也要给类型"),
+    ("哪些替身是自动型", {"stand_type_list"}, "筛选-按类型"),
+    ("杀手皇后第二形态是什么", {"forms"}, "第 N 形态（只有基础形态要说清）"),
+    ("一共有多少个替身", {"count", "fact"}, "计数-总量"),
+    ("第5部有几个角色", {"count", "fact", "part_list"}, "计数-按部角色"),
+    ("杜王町有哪些地点", {"location_list", "location_related", "fact"},
+     "列表-地点层级"),
 ]
 
 
@@ -162,6 +178,33 @@ def main() -> int:  # noqa: PLR0915
             check("  └ 歧义姓氏明确要求全名，不随机答一个",
                   bool(a.get("ambiguous")) and not a.get("stands"),
                   f"实得 {a}")
+        # ---- M80 的内容核对（新答案不能只有类型、没有内容）----
+        if ok and isinstance(a, dict) and q == "白金之星和黄金体验谁更强":
+            check("  └ 比较结论用**替身名**（不是内部 id）",
+                  "star_platinum" not in (a.get("verdict") or "")
+                  and "Star Platinum" in (a.get("verdict") or ""),
+                  f"实得 {a.get('verdict')}")
+            check("  └ 缺维度不按 0 计（共同维度数写进答案）",
+                  isinstance(a.get("n_common"), int)
+                  and a.get("n_excluded") == 6 - a.get("n_common"),
+                  f"实得 n_common={a.get('n_common')} "
+                  f"n_excluded={a.get('n_excluded')}")
+        if ok and isinstance(a, dict) and q == "白金之星是近战型吗":
+            check("  └ 布尔判断给出**源站类型原文**（不只说是）",
+                  a.get("match") is True and "近距离型" in (a.get("type_cn") or ""),
+                  f"实得 {a}")
+        if ok and isinstance(a, dict) and q == "白金之星是自动型吗":
+            check("  └ 否定也要给出源站类型（不空手说不是）",
+                  a.get("match") is False and bool(a.get("type_cn")),
+                  f"实得 {a}")
+        if ok and isinstance(a, dict) and q == "哪些替身是自动型":
+            check("  └ 筛选给出数量与名单", a.get("count", 0) > 5,
+                  f"实得 {a.get('count')}")
+        if ok and isinstance(a, dict) and q == "杀手皇后第二形态是什么":
+            check("  └ 只有基础形态时**明说**没有第 2 形态",
+                  "没有第 2 形态" in (a.get("answer") or "")
+                  or "只列了 1 个形态" in (a.get("answer") or ""),
+                  f"实得 {a.get('answer')}")
 
     print("\n" + "=" * 74)
     if FAILS:

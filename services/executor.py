@@ -116,7 +116,23 @@ INTENT_AGG_GUARD = re.compile(
 #   返回一堆无关 wiki 片段（补进去的第9部替身完全查不到）。
 INTENT_PART_LIST = re.compile(
     r"(有哪些|是哪些|都有(哪些|什么)|都是(什么|哪些)|列出|列一下|列表)")
-INTENT_FORMS = re.compile(r"(几个形态|有哪些形态|形态链)")
+INTENT_FORMS = re.compile(r"(几个形态|有哪些形态|形态链|"
+                          # ★ M80：「杀手皇后第二形态是什么」—— 第 N 形态
+                          r"第\s*[0-9一二三四五六七八九十]+\s*个?形态)")
+# ★★ M80：替身**类型**问法（布尔 + 筛选）★★
+#   stands 表有 stand_type_cn（168/188 个替身有中文类型：近距离型/远距离型/
+#   精神攻击/有自主意识…），但从来没有 NL 入口 ——
+#   「白金之星是近战型吗」只能掉进语义检索拿回一段介绍。
+INTENT_STAND_TYPE = re.compile(
+    r"(近战|近距|远战|远距|远程|远程型|自动|自主|人形|非人形|"
+    r"精神攻击|精神|现象|束缚|侦查|近距离|远距离)"
+    r"(型|类型|系|替身)?")
+# ★★ M80：两个替身**谁更强** ★★
+#   六维都在 stand_stats 里，但「白金之星和黄金体验谁更强」以前掉进
+#   语义检索 → 返回前一个替身的介绍（答非所问）。
+INTENT_COMPARE = re.compile(
+    r"(?:谁|哪个|哪一个|哪一位).{0,6}(更强|更强些|更厉害|厉害|强|好)|"
+    r"(.{2,20}?)(?:和|与|对比|vs)(.{2,20}?)(?:谁|哪个|哪一个)")
 # ★★ M73：出场章节意图 ★★
 #   M71 建了 `stand_appearances`（4902 条）与 `/appearances/{stand_id}` 端点，
 #   但**没有自然语言入口** —— 用户打「白金之星在哪些章节出场」得到的是
@@ -217,6 +233,13 @@ def detect_intent(question: str) -> str:
     # ★ M76：招式 / 必杀技（M37 的 stand_moves 的 NL 入口）
     if INTENT_MOVES.search(question):
         return "moves"
+    # ★ M80：替身类型（布尔 / 筛选）与两替身比较
+    #   ★ 顺序：类型问法里常带「是/哪些」，放 MOVES 后面避免抢招式；
+    #     比较问法放最后（它最容易误伤，靠 Router 的 stand_hit 兜底）。
+    if INTENT_COMPARE.search(question):
+        return "compare"
+    if INTENT_STAND_TYPE.search(question):
+        return "stand_type"
     # ★ 「第X部有哪些替身」→ 列表。必须放在 stand_of 之前：
     #   它含「替身」，若主体被当成部数名会诱使 stand_of 抢走。
     if INTENT_PART.search(question) and INTENT_PART_LIST.search(question) \
@@ -452,6 +475,9 @@ class StructuredExecutor:
             "appearance": self._appearance,
             # ★ M76：招式 / 必杀技（M37 数据的自然语言入口）
             "moves": self._moves,
+            # ★ M80：类型（布尔/筛选）与两替身比较
+            "stand_type": self._stand_type,
+            "compare": self._compare,
         }.get(intent)
         # ★ M14：认不出意图时**明确说不知道**，不给无关答案
         if fn is None:
@@ -1084,6 +1110,168 @@ class StructuredExecutor:
         )
 
     # ---------------------------------------------------------
+    # ★★ M80：替身类型（布尔判断 / 按类型筛选）★★
+    _TYPE_CN = {
+        "近战": "近距离型", "近距": "近距离型", "近距离": "近距离型",
+        "远战": "远距离型", "远距": "远距离型", "远程": "远距离型",
+        "远程型": "远距离型", "远距离": "远距离型",
+        "自动": "有自主意识", "自主": "有自主意识",
+        "人形": "人型", "非人形": "非人型",
+        "精神": "精神攻击", "精神攻击": "精神攻击",
+        "现象": "现象", "束缚": "束缚型", "侦查": "侦查型",
+    }
+
+    def _stand_type(self, question: str, name2id: dict[str, str]):
+        """「白金之星是近战型吗」/「哪些替身是自动型」。
+
+        ★ 数据来自 stands.stand_type_cn（168/188 个替身有中文类型标签）。
+        ★ 判**布尔**还是**筛选**：问句含「哪些 / 有哪些 / 多少 / 几个」→ 筛选。
+        """
+        m = INTENT_STAND_TYPE.search(question)
+        label = self._TYPE_CN.get(m.group(1)) if m else None
+        cur = self.conn.cursor()
+        if not label:
+            return self._unknown(question, name2id)
+
+        wants_list = bool(re.search(r"(哪些|有哪些|多少|几个|都有|列出)", question))
+
+        if wants_list:
+            cur.execute("""
+                SELECT name_en, part, stand_type_cn FROM stands
+                WHERE stand_type_cn LIKE %s ORDER BY part, name_en
+            """, (f"%{label}%",))
+            rows = cur.fetchall()
+            if not rows:
+                return ({"type": "stand_type_list", "label": label, "count": 0,
+                         "stands": [],
+                         "answer": f"库里没有标注为「{label}」的替身"
+                                   "（类型字段源站未提供时会留空）。"},
+                        [{"type": "database", "tables": ["stands"]}])
+            return (
+                {"type": "stand_type_list", "label": label,
+                 "count": len(rows),
+                 "stands": [{"name": r[0], "part": r[1], "type_cn": r[2]}
+                            for r in rows],
+                 "answer": f"共 {len(rows)} 个替身标注为「{label}」："
+                           + "、".join(r[0] for r in rows[:12])
+                           + ("…" if len(rows) > 12 else "")},
+                [{"type": "database", "tables": ["stands"]}],
+            )
+
+        sid = extract_stand_name(question, name2id)
+        if not sid:
+            return self._unknown(question, name2id)
+        cur.execute("SELECT name_en, stand_type_cn FROM stands WHERE stand_id=%s",
+                    (sid,))
+        row = cur.fetchone()
+        if not row or not row[1]:
+            return (
+                {"type": "stand_type", "stand_id": sid, "stand_name": row[0],
+                 "answer": f"源站没有标注「{row[0]}」的类型。",
+                 "unknown_type": True},
+                [{"type": "database", "tables": ["stands"]}],
+            )
+        hit = label in row[1]
+        return (
+            {"type": "stand_type", "stand_id": sid, "stand_name": row[0],
+             "type_cn": row[1], "label": label, "match": hit,
+             "answer": (("是，" if hit else "不是，")
+                        + f"「{row[0]}」的类型是：{row[1]}")},
+            [{"type": "database", "tables": ["stands"]}],
+        )
+
+    # ---------------------------------------------------------
+    # ★★ M80：两个替身谁更强（六维逐项比较）★★
+    def _compare(self, question: str, name2id: dict[str, str]):
+        """「白金之星和黄金体验谁更强」。
+
+        ★ 六维都在 stand_stats 里，以前这类问句掉进语义检索
+          → 返回第一个替身的介绍（答非所问）。
+        ★ **缺维度不按 0 计**：只比较两边都有值的维度，
+          并明确说排除了几个（与 /similar 同一条口径）。
+        """
+        cur = self.conn.cursor()
+        # 找出问句里出现的替身名（长名优先，取前两个）
+        found: list[tuple[str, str]] = []
+        for nm in sorted(name2id, key=len, reverse=True):
+            if re.search(r"[a-z]", nm):
+                if not re.search(r"(?<![a-z0-9])" + re.escape(nm)
+                                 + r"(?![a-z0-9])", question, re.I):
+                    continue
+            elif nm not in question:
+                continue
+            sid = name2id[nm]
+            if sid not in [s for s, _ in found]:
+                found.append((sid, nm))
+            if len(found) == 2:
+                break
+        if len(found) < 2:
+            return self._unknown(question, name2id)
+
+        dims = ["PWR", "SPD", "RNG", "STA", "PRC", "DEV"]
+        rows: dict[str, dict] = {}
+        for sid, _nm in found:
+            cur.execute("""
+                SELECT pwr,spd,rng,sta,prc,dev FROM stand_stats
+                WHERE stand_id=%s
+            """, (sid,))
+            r = cur.fetchone()
+            if r:
+                rows[sid] = {d: r[i] for i, d in enumerate(dims)}
+        if len(rows) < 2:
+            return ({"type": "compare", "stands": [s for s, _ in found],
+                     "answer": "至少一个替身的六维数据缺失，无法比较。"},
+                    [{"type": "database", "tables": ["stand_stats"]}])
+
+        (a, b) = [s for s, _ in found]
+        # 替身名先取好（verdict 里要用，不能等下面才定义）
+        cur.execute("SELECT name_en FROM stands WHERE stand_id=%s", (a,))
+        na = (cur.fetchone() or [a])[0]
+        cur.execute("SELECT name_en FROM stands WHERE stand_id=%s", (b,))
+        nb = (cur.fetchone() or [b])[0]
+        common = [d for d in dims
+                  if rows[a].get(d) is not None and rows[b].get(d) is not None]
+        if len(common) < 3:
+            return (
+                {"type": "compare", "stands": [a, b],
+                 "answer": f"两边都有值的六维维度只有 {len(common)} 个，"
+                           "少于 3 个不作比较（缺维度不按 0 计）。"},
+                [{"type": "database", "tables": ["stand_stats"]}],
+            )
+        wins = {a: 0, b: 0}
+        detail = []
+        for d in common:
+            va, vb = rows[a][d], rows[b][d]
+            if va == vb:
+                detail.append(f"{d} {va} = {vb}")
+            elif va > vb:
+                wins[a] += 1
+                detail.append(f"{d} {va} > {vb}")
+            else:
+                wins[b] += 1
+                detail.append(f"{d} {va} < {vb}")
+        if wins[a] == wins[b]:
+            verdict = (f"打平：{len(common)} 个共同维度里各赢 "
+                       f"{wins[a]} 项")
+        else:
+            lead = a if wins[a] > wins[b] else b
+            other = b if lead == a else a
+            # ★ 用**替身名**而不是 id（第一版 verdict 里显示 star_platinum，
+            #   用户看到的是内部 id）
+            lead_nm = na if lead == a else nb
+            verdict = f"{lead_nm} 更占优：{wins[lead]} : {wins[other]}"
+        return (
+            {"type": "compare", "stands": [a, b],
+             "names": [na, nb],
+             "n_common": len(common),
+             "n_excluded": len(dims) - len(common),
+             "detail": detail, "verdict": verdict,
+             "answer": f"{na} vs {nb}（只比两边都有值的 {len(common)} 个维度）："
+                       + "；".join(detail) + f" → {verdict}"},
+            [{"type": "database", "tables": ["stand_stats"]}],
+        )
+
+    # ---------------------------------------------------------
     def _forms(self, question: str, name2id: dict[str, str]):
         sid = extract_stand_name(question, name2id)
         cur = self.conn.cursor()
@@ -1108,9 +1296,21 @@ class StructuredExecutor:
         rows = cur.fetchall()
         # ★ 反查替身名（name2id 是 name → id，需反向查）
         name = next((n for n, i in name2id.items() if i == sid), sid)
+        # ★ M80：问「第二形态」时，源站只列了基础形态 → **要说清楚**
+        #   （杀手皇后的「败者食尘」是能力、不是形态，源站只列 1 条）
+        m_n = re.search(r"第\s*([0-9一二三四五六七八九十]+)\s*个?形态", question)
+        asked = part_to_int(m_n.group(1)) if m_n else None
+        if asked and len(rows) < asked:
+            ans_text = (f"「{name}」在源站只列了 {len(rows)} 个形态"
+                        f"（基础形态），没有第 {asked} 形态。")
+        elif len(rows) <= 1:
+            ans_text = f"「{name}」在源站只列了 1 个形态（基础形态）。"
+        else:
+            ans_text = f"「{name}」共 {len(rows)} 个形态：" + "、".join(
+                (r[1] or f"形态 {r[0]}") for r in rows)
         return (
             {"type": "forms", "stand_id": sid, "stand_name": name,
-             "count": len(rows),
+             "count": len(rows), "answer": ans_text,
              "items": [{
                  "form_id": r[0], "form_name": r[1], "form_type": r[2],
                  "dims": {d: {"value": r[3 + i],

@@ -466,7 +466,27 @@ class Router:
     #   **没有**战况、死因、宿敌、胜负关系。
     NO_DATA_ASK = re.compile(
         r"(谁打败了|谁击败了|谁杀了|被谁杀|杀死.{0,4}的是|怎么死的|死因|"
-        r"宿敌是谁|敌人是谁|谁赢了|哪场战斗|战斗结果|结局如何)")
+        r"宿敌是谁|敌人是谁|谁赢了|哪场战斗|战斗结果|结局如何|"
+        # ★ M80 补充：人物关系与剧情结局 —— 库里只有亲属（families），
+        #   没有"谁认识谁""两人什么关系""结局如何"这类数据。
+        #   实测「谁和空条承太郎认识」→ 返回承太郎档案（拿不相干内容充数）。
+        r"和.{1,12}(是什么关系|认识吗|认识)|谁和.{1,12}认识|"
+        r"的结局|最后怎么|后来怎么|最后去哪|下场如何)")
+
+    # ★★ M80：替身类型问法（布尔 / 筛选）★★
+    TYPE_ASK = re.compile(
+        r"(近战|近距|远战|远距|远程|自动|自主|人形|非人形|精神|现象|束缚|侦查)"
+        r"(型|类型|系|替身)?")
+    # ★★ M80：两个替身谁更强 ★★
+    COMPARE_ASK = re.compile(
+        r"(?:谁|哪个|哪一个|哪一位).{0,6}(更强|更强些|更厉害|厉害|强|好)|"
+        r"(.{2,20}?)(?:和|与|对比|vs)(.{2,20}?)(?:谁|哪个|哪一个)")
+
+    # ★★ M80：形态问法 ★★
+    #   「有几个形态」靠 EXTREME 的「几个」已经能进 structured；
+    #   「第二形态是什么」**没有任何触发词** → 掉进语义检索（实测答非所问）。
+    FORMS_ASK = re.compile(
+        r"(几个形态|有哪些形态|形态链|第\s*[0-9一二三四五六七八九十]+\s*个?形态)")
 
     # ★★★ M16：维度词黑名单
     #   这些词描述的是「问哪个方面」，不是「哪个替身」，
@@ -1012,6 +1032,33 @@ class Router:
         has_sem = bool(self.SEMANTIC.search(q))
         signals["has_struct_pattern"] = has_struct
         signals["has_semantic_pattern"] = has_sem
+
+        # ---------- ★ M80：类型 / 比较（放在 hybrid 之前）----------
+        #   「白金之星是近战型吗」「哪些替身是自动型」「白金之星和黄金体验谁更强」
+        #   都有结构化数据（stand_type_cn / stand_stats），但以前全掉进语义检索
+        #   → 返回一段替身介绍。★ 布尔/比较要求**锚定替身**，否则
+        #   「近战型是什么」这种泛问会拿不到实体（交给下面的语义分支）。
+        if stand_hit and self.TYPE_ASK.search(q):
+            return RouteDecision(
+                "structured",
+                "问替身的类型（布尔判断）→ 结构化（M80：stand_type_cn）",
+                signals)
+        if self.TYPE_ASK.search(q) and "替身" in q and not stand_hit:
+            return RouteDecision(
+                "structured",
+                "按类型**筛选**替身 → 结构化（M80：stand_type_cn）",
+                signals)
+        if stand_hit and self.COMPARE_ASK.search(q):
+            return RouteDecision(
+                "structured",
+                "两个替身比六维 → 结构化（M80：stand_stats，缺维度不按 0 计）",
+                signals)
+        # ★ M80：形态问法（「第二形态是什么」没有任何触发词，以前掉进语义检索）
+        if stand_hit and self.FORMS_ASK.search(q):
+            return RouteDecision(
+                "structured",
+                "问替身的形态 → 结构化（M80：stand_forms）",
+                signals)
 
         if has_struct and has_sem:
             return RouteDecision(

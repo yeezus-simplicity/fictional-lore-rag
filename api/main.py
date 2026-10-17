@@ -1667,6 +1667,56 @@ def serve_image(stand_id: str, filename: str):
                         headers={"Cache-Control": "public, max-age=604800"})
 
 
+# ★★ M74：角色 / 地点头像 ★★
+#   用户反馈「搜索人物时不会返回人物的图片」「地点要是有图片也加上吧」。
+#   替身图片（M17）一直有，角色/地点没有 —— 而它们的 infobox 里**本来就有图**。
+#   图片由 `dataset/sources/images/fetch_entity_images.py` **预抓**
+#   （实测 363 角色 + 157 地点），这里只按索引服务文件。
+#   ★ 刻意不做「没有就现场抓」：同步抓一张要 3 秒，首屏会被拖住；
+#     预抓一次之后图片内容就不可变了。
+_MEDIA_IDX: dict | None = None
+
+
+def _media_index() -> dict:
+    global _MEDIA_IDX
+    if _MEDIA_IDX is None:
+        try:
+            _MEDIA_IDX = json.loads(
+                (ROOT / "dataset" / "processed" / "media_index.json")
+                .read_text(encoding="utf-8"))
+        except Exception:  # noqa: BLE001
+            _MEDIA_IDX = {}
+    return _MEDIA_IDX
+
+
+@app.get("/media/{kind}/{entity_id}",
+         summary="角色/地点头像（M74：fetch_entity_images.py 预抓）")
+def serve_media(kind: str, entity_id: str):
+    """返回角色或地点的 infobox 头像。
+
+    ★ 安全：`entity_id` 走白名单校验；文件名虽然来自我们自己的索引，
+      仍然只取 `Path(fname).name`（去掉任何目录成分），不做路径拼接信任。
+    """
+    if kind not in ("character", "location"):
+        raise HTTPException(400, "kind 只能是 character / location")
+    safe = re.compile(r"^[A-Za-z0-9_\-.]+$")
+    if not safe.match(entity_id):
+        raise HTTPException(400, "非法路径")
+    fname = (_media_index().get(kind) or {}).get(entity_id)
+    if not fname:
+        raise HTTPException(404, "该实体没有头像")
+    p = IMG_DIR / entity_id / Path(fname).name
+    if not p.exists() or not p.is_file():
+        raise HTTPException(404, "图片未抓取（跑 fetch_entity_images.py）")
+    mime = {".png": "image/png", ".jpg": "image/jpeg",
+            ".jpeg": "image/jpeg", ".gif": "image/gif",
+            ".webp": "image/webp"}.get(p.suffix.lower())
+    if not mime:
+        raise HTTPException(400, "不支持的图片格式")
+    return FileResponse(p, media_type=mime,
+                        headers={"Cache-Control": "public, max-age=604800"})
+
+
 @app.get("/conflicts", summary="查冲突（支持按状态过滤）")
 def get_conflicts(
     status: str = Query("all", pattern="^(all|pending|resolved)$"),

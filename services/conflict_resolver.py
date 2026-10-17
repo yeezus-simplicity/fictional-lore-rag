@@ -856,6 +856,26 @@ class Router:
             None)
         signals["character_entity"] = character_hit
 
+        # ★★ M74：角色**模糊**兜底（用户打简称/姓氏）★★
+        #   `candidates` 是「名字 ⊂ 问句」抽出来的，用户打「承太郎」
+        #   「齐贝林」时方向反了 → 抽不到 → character_hit=None
+        #   → 下面 `has_domain` 判 False → **直接 abstain**（实测三条全被拒答）。
+        #   → 用 `characters.match()` 兜一层（它含「问句片段 ⊂ 名字」那一轮，
+        #     且带子串索引，能认「承太郎 ⊂ 空条承太郎」）。
+        #   ★ 只在 character_hit 为空时跑，不覆盖精确结果。
+        #   ★ 守门仍成立：「今天天气怎么样」→ match 返回空 → 仍 abstain
+        #     （子串索引只含**角色名**的片段，不含「天气」这种词；
+        #       「天气预报」是替身名，不在角色表里）。
+        if character_hit is None:
+            try:
+                from characters import match as _cm
+                _fh = _cm(q)
+                if _fh:
+                    character_hit = _fh[0][1]
+                    signals["character_fuzzy"] = [c for c, _ in _fh[:8]]
+            except Exception:  # noqa: BLE001
+                pass
+
         # ★★ M14 前置：领域相关性检查（放在所有意图判定之前）
         #   没有领域信号 → 明确拒答，而不是强行匹配某个意图
         #   ★ M65/M66：两类**明确的列表问法**也算领域信号
@@ -865,7 +885,11 @@ class Router:
         #       否则「华盛顿在哪里」也会变成有答案的。
         has_domain = (bool(self.DOMAIN_HINT.search(q))
                       or bool(self.ROLE_LIST.search(q))
-                      or bool(self.LOC_LIST.search(q)))
+                      or bool(self.LOC_LIST.search(q))
+                      # ★ M74：角色**模糊**命中也算领域信号 ——
+                      #   否则「齐贝林是谁」「承太郎」会在这里被拒答
+                      #   （它们不含六维词、也没有精确实体名）。
+                      or bool(character_hit))
         signals["has_domain_hint"] = has_domain
         # 已知实体也算领域信号（「Tusk 的外观」有实体）
         has_entity = bool(candidates) and unknown_hit is None

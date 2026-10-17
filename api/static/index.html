@@ -574,6 +574,21 @@ td.num { font-family: var(--mono); font-size: 12px; text-align: right; }
 .cc-body { margin-top: 6px; font-size: 12.5px; line-height: 1.75;
   color: var(--text); white-space: pre-wrap; }
 .cc-bio { font-size: 13px; line-height: 1.8; color: var(--text); margin-top: 4px; }
+/* ★ M74：实体头像（角色/地点）。float 而不是 flex —— 答案块的结构各不相同，
+   float 能在不改动原有布局的前提下把图放到左上角。 */
+.ent-av { width: 76px; height: 76px; object-fit: cover; border-radius: 8px;
+          border: 1px solid var(--border); background: var(--bg-panel);
+          float: left; margin: 0 14px 10px 0; }
+/* ★ M74：多候选卡片（同名/同姓角色全部列出） */
+.cc-cands { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; clear: both; }
+.cc-cand { display: flex; gap: 10px; align-items: center; width: 300px;
+           padding: 8px; border: 1px solid var(--border); border-radius: 8px;
+           cursor: pointer; background: var(--bg-panel); }
+.cc-cand:hover { border-color: var(--accent); background: var(--bg-hover); }
+.cc-cand img { width: 52px; height: 52px; object-fit: cover; border-radius: 6px;
+               background: var(--bg-hover); flex: none; }
+.cc-cand-nm { font-weight: 600; }
+.cc-cand-sub { font-size: 11.5px; color: var(--text-dim); }
 .zc-form.no-link { cursor: default; opacity: .65; }
 .zc-form-arrow { color: var(--text-faint); font-size: 11px; }
 @media (max-width: 560px) {
@@ -1707,7 +1722,11 @@ function renderStructured(a){
       .map(p=>p.join(' → ')).join(' ／ ');
     const ps = a.part? `第 ${esc(String(a.part))} 部` : '部数未知';
     const types = (a.types||[]).slice(0,4);
-    return `<div style="margin-bottom:8px"><b style="font-size:20px">${nm}</b>
+    // ★ M74：地点图（用户反馈「地点要是有图片也加上吧」）
+    const av = a.image
+      ? `<img class="ent-av" src="${esc(a.image)}" alt="" loading="lazy"
+           onerror="this.style.display='none'">` : '';
+    return `${av}<div style="margin-bottom:8px"><b style="font-size:20px">${nm}</b>
         <span class="zc-sub">${esc(a.name_en||'')}</span></div>
       <div class="lc-line">${ps}${types.length? ' · '+types.map(esc).join('／') : ''}
         ${path? ` · 位于 <b>${esc(path)}</b>` : ' · <span class="lc-na">源站未提供归属</span>'}</div>
@@ -1775,12 +1794,39 @@ function renderStructured(a){
   }
   // ★★ M66：角色类答案（route=character）★★
   //   完整档案在上方「角色资料」卡里，这里只给**结论 + 首段简介**。
+  // ★★ M74：多个同名/同姓角色 → **全部列出**（用户明确要求）★★
+  //   「齐贝林」5 个（西撒/杰洛/格雷戈里奥/马力欧/威廉）、「东方」11 个。
+  //   以前只答一个（M73 更早时干脆判成"有歧义"查不到）。
+  if(t==='character_candidates'){
+    const items = a.items||[];
+    return `<div style="margin-bottom:6px">「<b>${esc(a.matched||a.query||'')}</b>」
+        匹配到 <b>${esc(String(a.count))}</b> 个角色，全部列出
+        <span class="zc-sub">（点一个看详情）</span></div>
+      <div class="cc-cands">${items.map(x=>`<div class="cc-cand" role="button" tabindex="0"
+          data-ask="${esc((x.name||x.name_en)+' 是谁')}">
+          ${x.image? `<img src="${esc(x.image)}" alt="" loading="lazy"
+              onerror="this.style.display='none'">`
+            : `<div style="width:52px;height:52px;border-radius:6px;
+                background:var(--bg-hover);flex:none"></div>`}
+          <div style="min-width:0;overflow:hidden">
+            <div class="cc-cand-nm">${esc(x.name||x.name_en||'')}
+              ${x.part? `<span class="lc-p">第${esc(String(x.part))}部</span>`:''}</div>
+            <div class="cc-cand-sub">${esc(x.name_en||'')}</div>
+            ${(x.stands||[]).length? `<div class="cc-cand-sub">替身 ${
+              esc((x.stands||[]).slice(0,3).join('、'))}</div>`:''}
+          </div></div>`).join('')}</div>
+      ${a.note? `<div class="meta" style="margin-top:8px;clear:both">${esc(a.note)}</div>`:''}`;
+  }
   if(t==='character_fact'){
     const nm = esc(a.name_zh || a.name_en || '—');
     const meta = [a.part? `第 ${esc(String(a.part))} 部` : '',
                   (a.stands||[]).length? `替身 ${esc((a.stands||[]).join('、'))}` : '',
                   a.status? esc(a.status) : ''].filter(Boolean).join(' · ');
-    return `<div style="margin-bottom:8px"><b style="font-size:20px">${nm}</b>
+    // ★ M74：头像（用户反馈「搜索人物时不会返回人物的图片」）
+    const av = a.image
+      ? `<img class="ent-av" src="${esc(a.image)}" alt="" loading="lazy"
+           onerror="this.style.display='none'">` : '';
+    return `${av}<div style="margin-bottom:8px"><b style="font-size:20px">${nm}</b>
         <span class="zc-sub">${esc(a.name_en||'')}</span>
         ${a.name_ja? `<span class="zc-sub">${esc(a.name_ja)}</span>`:''}</div>
       ${meta? `<div class="lc-line">${meta}</div>`:''}

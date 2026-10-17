@@ -249,6 +249,24 @@ def split_short_aliases(name: str) -> list[str]:
             if len(p) >= 2 and _CJK.search(p)]
 
 
+def _short_alias_map() -> dict[str, set[str]]:
+    """简称 → **拥有它的角色集合**（含歧义，M74）。
+
+    ★ 从 `build_char_alias_table()` 抽出来，让两处用同一份统计：
+      · `build_char_alias_table()` 只收**唯一归属**的（歧义姓氏不收）
+      · `build_char_alias_index()` **全量**收录（歧义姓氏要能查到「有这些人」）
+    """
+    by_short: dict[str, set[str]] = {}
+    for cid, names in load_char_zh_map().items():
+        for n in names:
+            if not n:
+                continue
+            for variant in (n, simplify_zh(n)):
+                for s in split_short_aliases(variant.strip()):
+                    by_short.setdefault(s, set()).add(cid)
+    return by_short
+
+
 def build_char_alias_table() -> dict[str, str]:
     """构建 (角色中文名 → character_id)。
 
@@ -257,11 +275,15 @@ def build_char_alias_table() -> dict[str, str]:
       歧义简称**一律不收录** —— 实测 10 个有歧义：
         「齐贝林」→ 5 个角色、「乔斯达」→ 12 个角色、「布兰度」→ 3 个
       这些是**姓氏**，收了只会让路由把「齐贝林的替身」答成某一位。
-      宁可漏一个简称，也不引入一个必然答错的名字。
+
+    ★★ M74（用户反馈）：歧义**不是**"不收"，而是"**都返回**" ★★
+      用户实测搜「齐贝林」搜不到 —— 因为上面这条规则把它整条丢掉了。
+      "不收"对**精确反查**（by_name 一对一）是对的，但对**搜索**是错的。
+      → 新增 `build_char_alias_index()`（多值、含歧义），
+        搜索/路由走 index，精确反查仍走 table。两者并存，各司其职。
     """
     out: dict[str, str] = {}
-    zh = load_char_zh_map()
-    for cid, names in zh.items():
+    for cid, names in load_char_zh_map().items():
         for n in names:
             if not n:
                 continue
@@ -270,24 +292,36 @@ def build_char_alias_table() -> dict[str, str]:
                 if v:
                     out.setdefault(v, cid)
 
-    # ---- ★ M73：简称扩展（唯一归属才收）----
-    #   先统计每个简称候选被多少角色拥有，再决定收不收。
-    by_short: dict[str, set[str]] = {}
-    for cid, names in zh.items():
-        for n in names:
-            if not n:
-                continue
-            for variant in (n, simplify_zh(n)):
-                for s in split_short_aliases(variant.strip()):
-                    by_short.setdefault(s, set()).add(cid)
-
-    for s, cids in by_short.items():
-        if len(cids) != 1:          # 歧义 → 不收（见 docstring）
+    for s, cids in _short_alias_map().items():
+        if len(cids) != 1:          # 歧义 → table 不收（见 docstring）
             continue
         if s in out:                # 已被某个全名占用 → 不动（全名优先）
             continue
         out[s] = next(iter(cids))
     return out
+
+
+def build_char_alias_index() -> dict[str, list[str]]:
+    """(角色名字写法 → [character_id, ...]) —— **多值、含歧义**（M74）。
+
+    用途：**搜索**。用户搜「齐贝林」应当得到 5 个候选，而不是"查不到"。
+
+    ★ 与 `build_char_alias_table()` 的分工（两者并存，别合并）：
+      table()  按名字查**一个人**（一对一）：精确反查、`by_name` 索引
+      index()  查这个名字**属于哪些人**（一对多）：搜索、路由判定
+    """
+    idx: dict[str, set[str]] = {}
+    for cid, names in load_char_zh_map().items():
+        for n in names:
+            if not n:
+                continue
+            for variant in (n, simplify_zh(n)):
+                v = variant.strip()
+                if v:
+                    idx.setdefault(v, set()).add(cid)
+    for s, cids in _short_alias_map().items():
+        idx.setdefault(s, set()).update(cids)
+    return {k: sorted(v) for k, v in idx.items()}
 
 
 def build_alias_table() -> tuple[dict[str, str], dict[str, list[str]]]:

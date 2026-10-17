@@ -114,8 +114,106 @@ def n_characters() -> int:
     return load()["n"]
 
 
+# ============================================================
+# ★★ M74：模糊匹配（用户反馈「搜承太郎/齐贝林搜不到，根本没有模糊搜索」）★★
+# ============================================================
+
+# 问句里的中文连续段
+_CJK_RUN = re.compile(r"[\u4e00-\u9fff]{2,}")
+# 片段里出现这些字 → 一定是**问法词**，不是名字
+_NON_NAME = re.compile(
+    r"(的|是|谁|替身|使者|本体|有|什么|哪些|哪个|哪几|第|部|吗|呢|吧|"
+    r"能力|介绍|背景|性格|出场|登场|章节|话|集|多少|一共|列出|相关|"
+    r"角色|人物|所有|全部|最高|最强|最低|最弱|排名|是几|几级)")
+
+
+@lru_cache(maxsize=1)
+def _zh_substr_index() -> dict[str, tuple[str, ...]]:
+    """中文名**子串** → (cid, ...)，用于「用户打简称/姓氏」（M74）。
+
+    ★ 为什么需要：现有 `match()` 是「**名字 ⊂ 问句**」（用户打了全名）。
+      而用户打「承太郎」「齐贝林」时方向是反的 —— **问句片段 ⊂ 名字**
+      → 精确匹配一条都命中不了（实测三条全空）。
+
+    ★ 只索引 ≥2 字的片段，并过滤问法词（`_NON_NAME`）：
+      不过滤时「的替身」「是谁」这类片段会把一票角色拉进来。
+    ★ 同时索引「去间隔号形」：用户不会打「布罗诺·布加拉提」中间那个点。
+    """
+    idx: dict[str, list[str]] = {}
+    for nm, cid in load()["by_name"].items():
+        if not _CJK_RUN.search(nm):
+            continue
+        for variant in {nm, re.sub(r"[·・]", "", nm)}:
+            for i in range(len(variant)):
+                for L in range(2, min(8, len(variant) - i) + 1):
+                    seg = variant[i:i + L]
+                    if _NON_NAME.search(seg):
+                        continue
+                    lst = idx.setdefault(seg, [])
+                    if cid not in lst:
+                        lst.append(cid)
+    return {k: tuple(v) for k, v in idx.items()}
+
+
+def fuzzy_hits(q: str, limit: int = 12) -> list[tuple[str, str]]:
+    """从问句里找角色名片段（简称 / 姓氏 / 英文前缀）→ [(cid, 片段)]。
+
+    ★ 与 `match()` 的分工（方向相反，别合并）：
+      match()      = **名字 ⊂ 问句**（用户打了全名）
+      fuzzy_hits() = **问句片段 ⊂ 名字**（用户打了简称/姓氏/英文前半）
+
+    ★ 贪心取**最长**且不重叠的片段：
+      「齐贝林是谁」先命中「齐贝林」(3 字)，就不会再用「贝林」(2 字) 去撞别人。
+      不做这层的话，2 字片段会把大量无关角色拉进来。
+    """
+    idx = _zh_substr_index()
+    ql = q.lower()
+    spans: list[tuple[int, int, str]] = []
+    for m in _CJK_RUN.finditer(ql):
+        run, base = m.group(0), m.start()
+        for i in range(len(run)):
+            for L in range(min(8, len(run) - i), 1, -1):
+                seg = run[i:i + L]
+                if seg in idx:
+                    spans.append((base + i, base + i + L, seg))
+    spans.sort(key=lambda x: (-(x[1] - x[0]), x[0]))
+
+    out: list[tuple[str, str]] = []
+    seen: set[str] = set()
+    taken: list[tuple[int, int]] = []
+    for s, e, seg in spans:
+        if any(not (e <= ts or s >= te) for ts, te in taken):
+            continue
+        taken.append((s, e))
+        for cid in idx[seg]:
+            if cid not in seen:
+                seen.add(cid)
+                out.append((cid, seg))
+        if len(out) >= limit:
+            return out[:limit]
+
+    # ---- 英文：问句里的英文词是某英文名的**前缀/整词**（大小写不敏感）----
+    #   实测：「dio」查不到 Dio Brando（只做全名匹配）。
+    for w in re.findall(r"[a-z][a-z0-9'’\-]{2,}", ql):
+        for nm, cid in load()["by_name"].items():
+            if cid in seen or not re.match(r"[a-z]", nm):
+                continue
+            if nm == w or nm.startswith(w + " ") or nm.replace(" ", "") == w:
+                seen.add(cid)
+                out.append((cid, w))
+                if len(out) >= limit:
+                    return out[:limit]
+    return out[:limit]
+
+
 def match(q: str) -> list[tuple[str, str]]:
-    """从问句里找出角色 → [(character_id, 命中的写法)]，长名优先。"""
+    """从问句里找出角色 → [(character_id, 命中的写法)]，长名优先。
+
+    ★★ M74：两轮匹配 ★★
+      ① 精确：**名字 ⊂ 问句**（全名/别名）
+      ② 模糊：**问句片段 ⊂ 名字**（简称/姓氏/英文前缀）
+      精确结果排在前面 —— 打了全名就该命中全名那条。
+    """
     data = load()
     ql = q.lower()
     hits: list[tuple[str, str]] = []
@@ -135,6 +233,19 @@ def match(q: str) -> list[tuple[str, str]]:
             continue
         seen.add(cid)
         out.append((cid, nm))
+
+    # ★ 第二轮：模糊（简称/姓氏）—— 已命中的不重复
+    # ★★ 只在**第一轮没有任何精确命中**时才跑 ★★
+    #   踩坑：`Rock Human 是什么` 第一轮已精确命中 rock_human，
+    #   第二轮又用英文前缀 "rock" 把 **rock_organism** 也拉了进来
+    #   → 答案从 character_fact 变成 2 个候选，M72 的
+    #   「问组织/物种时给出『不是个体角色』说明」当场挂掉。
+    #   → 精确优先：能按全名/别名认出来，就不该再猜简称。
+    if not out:
+        for cid, seg in fuzzy_hits(q):
+            if cid not in seen:
+                seen.add(cid)
+                out.append((cid, seg))
     return out
 
 
@@ -160,6 +271,15 @@ _KIND_NOTE = {
 
 def _kind_note(kind: str | None) -> str | None:
     return _KIND_NOTE.get(kind or "")
+
+
+def image_url(character_id: str | None) -> str | None:
+    """角色头像 URL（M74）。图片由 fetch_entity_images.py 预抓，走 /media 端点。
+
+    ★ 不做「索引里有没有」的检查：前端 `<img onerror>` 会隐藏坏图，
+      比后端每次多读一次 JSON 便宜。
+    """
+    return f"/media/character/{character_id}" if character_id else None
 
 
 def list_by_part(part: int) -> list[dict]:
@@ -282,6 +402,37 @@ def answer(q: str, top_k: int = 3, part_map: dict | None = None):
     wants_list = bool(_LIST_ASK.search(q))
     wants_stand = bool(_STAND_ASK.search(q))
 
+    # ---- ★★ M74：多个角色同名/同姓 → **全部返回**（用户明确要求）★★
+    #   实测「齐贝林」命中 5 个（西撒 / 杰洛 / 格雷戈里奥 / 马力欧 / 威廉），
+    #   「东方」命中一票东方家成员。
+    #   以前的行为：M73 之前直接查不到（歧义简称不收）；
+    #               之后只取 `from_name[0]` → **随机答一个**。
+    #   用户要求原话：「要是有重名的角色，如齐贝林、乔斯达、东方仗助，
+    #                    就都返回就行了」。
+    #   ★ 条件里排除 `part`：问「第 4 部有哪些角色」时不该被候选列表抢走。
+    if len(from_name) > 1 and not wants_list and not part:
+        first = from_name[0]
+        matched = first.get("matched_term") or ""
+        return ({
+            "type": "character_candidates",
+            "query": q.strip(),
+            "matched": matched,
+            "count": len(from_name),
+            "items": [{
+                "character_id": c["character_id"],
+                "name": c.get("name_zh") or c.get("name_en"),
+                "name_en": c.get("name_en"),
+                "part": _part_of_char(c, part_map)[0],
+                "stands": c.get("stand_names") or [],
+                "page_kind": c.get("page_kind"),
+                "image": image_url(c["character_id"]),   # ★ M74 头像
+            } for c in from_name],
+            "note": (f"「{matched}」匹配到 **{len(from_name)}** 个角色"
+                     "（同名或同姓），已全部列出。带上全名可以精确提问，"
+                     "例如「" + (first.get("name_zh") or first.get("name_en")
+                                  or "") + " 的替身是什么」。"),
+        }, _evidence(first), None)
+
     # ---- ① 问某角色「的替身是什么」/「有什么能力」----
     #   ★ 注意：「X的替身是什么」在路由层已被 STAND_OF_ASK 拦走（那是**结构化反查**，
     #     用户要的就是一个替身名）。这里兜的是另一种问法：
@@ -350,6 +501,8 @@ def answer(q: str, top_k: int = 3, part_map: dict | None = None):
             #   而不是含糊地当成角色介绍。
             "page_kind": c.get("page_kind"),
             "page_kind_note": _kind_note(c.get("page_kind")),
+            # ★ M74：头像（用户反馈「搜索人物时不会返回人物的图片」）
+            "image": image_url(c["character_id"]),
             # ★ 简介是**英文原文**（不机翻），前端与「角色资料」卡里都显示
             "bio": c.get("bio"),
             "bio_chunk_id": c.get("bio_chunk_id"),

@@ -650,6 +650,8 @@ def answer(q: str, top_k: int = 3):
             "animedebuts": card["animedebuts"],
             "related_stands": [s["name"] for s in card["stands"]],
             "related_characters": [c["name"] for c in card["characters"]],
+            # ★ M74：地点图（用户反馈「地点要是有图片也加上吧」）
+            "image": f"/media/location/{rec['location_id']}",
         }, _evidence_from(ms), card)
 
     # ---- ⑥ 提到「地点」但没识别出具体地点 ----

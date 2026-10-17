@@ -859,6 +859,23 @@ class Router:
         location_hit = next(
             (c for c in candidates if c.lower() in self.known_locations),
             None)
+        # ★★ M77：地点**模糊**兜底（用户少打一个字）★★
+        #   实测「虹村宅在哪」：库里有「虹村宅邸」，但地点只有精确匹配 →
+        #   精确落空 → 角色的「虹村」子串（M74 的模糊）命中 → 路由到
+        #   character，返回 4 个虹村家角色卡片。**不是数据缺，是地点太窄。**
+        #   ★ 只在「问的是地点」时才补：LOCATION_ASK（在哪/什么地方）或
+        #     地点列表问法。否则「承太郎的替身」这类会被地名片段抢走。
+        #   ★ 守门：「华盛顿在哪里」→ 地名表里没有可少一字的近邻 → 仍 abstain。
+        loc_ask = bool(self.LOCATION_ASK.search(q))
+        if location_hit is None and (loc_ask or self.LOC_LIST.search(q)):
+            try:
+                from locations import match as _lm
+                _lh = _lm(q)
+                if _lh:
+                    location_hit = _lh[0][1]
+                    signals["location_fuzzy"] = [nm for _, nm in _lh[:6]]
+            except Exception:  # noqa: BLE001
+                pass
         signals["location_entity"] = location_hit
 
         # ★ M66：角色锚定
@@ -900,7 +917,10 @@ class Router:
                       # ★ M74：角色**模糊**命中也算领域信号 ——
                       #   否则「齐贝林是谁」「承太郎」会在这里被拒答
                       #   （它们不含六维词、也没有精确实体名）。
-                      or bool(character_hit))
+                      or bool(character_hit)
+                      # ★ M77：地点**模糊**命中也算（「虹村宅在哪」的
+                      #   「虹村宅」不在 known_locations 里，但确实指向库内地点）
+                      or bool(location_hit))
         signals["has_domain_hint"] = has_domain
         # 已知实体也算领域信号（「Tusk 的外观」有实体）
         has_entity = bool(candidates) and unknown_hit is None
@@ -935,7 +955,7 @@ class Router:
         #     → 那等于凭空作答（M21 「无关问句必须拒答」的守门测试会挂）。
         #   ★ 与替身名的关系：若同句锚定了替身且**没问地点**，
         #     仍按替身走（例：「Tusk 的破坏力」），不能被地名抢走。
-        loc_ask = bool(self.LOCATION_ASK.search(q))
+        #   ★ loc_ask 已在上面（M77 地点模糊兜底处）算过，这里复用。
         if location_hit or (loc_ask and self.PART_ANY.search(q)) \
                 or self.LOC_LIST.search(q):
             if not (stand_hit and not loc_ask):

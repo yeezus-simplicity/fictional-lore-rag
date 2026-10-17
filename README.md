@@ -85,7 +85,7 @@ python dataset/pipeline/run_pipeline.py
 
 ## 测试与 CI
 
-**本地全套 40 个回归测试**（`evaluation/test_*.py`）；
+**本地全套 41 个回归测试**（`evaluation/test_*.py`）；
 CI（GitHub Actions）在每次 push / PR 时跑其中 **8 套**，**不需要下载 7 GB 模型**：
 
 | 层 | 内容 |

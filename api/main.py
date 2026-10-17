@@ -454,6 +454,10 @@ class QueryResponse(BaseModel):
     zh_card: Optional[dict] = Field(
         None, description=("中文摘要：{name_zh, name_zh_variants, name_zh_level, "
                            "name_ja, owner, part, stats_cn}"))
+    # ★★ M77：中文要点（成句的中文，放在英文原文之前）
+    #   —— {kind, lines:[中文句子], note}；不机翻，只拼库内已有中文事实
+    zh_summary: Optional[dict] = Field(
+        None, description="中文要点：{kind, lines, note}（结构化字段拼句）")
     stand_images: Optional[dict] = Field(
         None, description="替身图片：{stand,user,manga,anime} 分组 + URL")
     # ★★ M58：形态链（ACT1→ACT2…）—— 母体与形态成员都能看到"我有几个阶段"
@@ -783,6 +787,11 @@ def query(
     location_card: Optional[dict] = None
     # ★★ M66：角色档案卡（route=character 时填）
     character_card: Optional[dict] = None
+    # ★★ M77：中文要点（结构化字段拼句，放在英文原文之前）★
+    #   与 zh_card 的区别：zh_card 是「字段表」，zh_summary 是「**成句的中文**」。
+    #   用户要的是能读的一句话，不是一张标签表。
+    zh_summary: Optional[dict] = None
+    _moves_out: Optional[list] = None
 
     # ---------- M25：指代消解（必须最早做）----------
     # ★ 时机很关键：必须在 router.route() 之前。
@@ -1150,6 +1159,19 @@ def query(
                     except Exception:  # noqa: BLE001
                         zh_card = None
 
+                    # ★ M77：招式名（中文要点里要列出来；保留源站原名不译）
+                    #   ★ 必须**新开** cursor —— 上面那个 c2 已经 close() 了
+                    #     （close 在 `if row:` 之前），复用会静默抛异常 →
+                    #     招式数永远拿不到（实测第一版就是这样）。
+                    try:
+                        _c3 = STATE["conn"].cursor()
+                        _c3.execute("SELECT name FROM stand_moves "
+                                    "WHERE stand_id=%s ORDER BY move_id", (sid,))
+                        _moves_out = [r[0] for r in _c3.fetchall() if r[0]]
+                        _c3.close()
+                    except Exception:  # noqa: BLE001
+                        _moves_out = None
+
                     # ★ M18：异步取图 —— 没缓存就起后台任务、立即返回 pending
                     stand_imgs = image_payload(
                         row[0], sid, (row[1] or "").split(",")[0].strip())
@@ -1221,6 +1243,23 @@ def query(
         except Exception:  # noqa: BLE001
             _forms_out = None
 
+    # ---------- ★★ M77：中文要点（成句的中文，放在英文原文之前）----------
+    #   ★ 为什么单独做而不并进 zh_card：
+    #     zh_card 是「字段表」（破坏力 C / 速度 A…），用户还得自己读成句子；
+    #     而且只在**认得出替身**时才有 —— 角色/地点问句里它一直是 None。
+    #   ★ 不机翻：只拿库内已有中文事实拼句，描述正文保持英文原文并标注。
+    try:
+        from zh_layer import build as _zh_build
+        # ★ character_stands 直接就是中文答案（「乔鲁诺·乔巴拿的替身：…」），
+        #   再叠一层要点等于同一句话说两遍 → 这类不生成。
+        zh_summary = (None if answer_type == "character_stands"
+                      else _zh_build(zh_card=zh_card,
+                                     character_card=character_card,
+                                     location_card=location_card,
+                                     moves=_moves_out))
+    except Exception:  # noqa: BLE001
+        zh_summary = None
+
     return {
         "question": q,
         "route": route,
@@ -1247,6 +1286,8 @@ def query(
         # ★★ M32：中文摘要卡（名称/使用者/分部/六维中文等级）
         #   —— 与英文原文并列，不替换它（证据链保持可追溯）
         "zh_card": zh_card,
+        # ★★ M77：中文要点（**成句**的中文；英文原文仍在其下）
+        "zh_summary": zh_summary,
         # ★★ M65：地点档案卡（route=location 时才有）
         "location_card": location_card,
         # ★★ M66：角色档案卡（route=character 时才有）

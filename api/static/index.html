@@ -277,6 +277,19 @@ button.go:disabled { opacity: .5; cursor: wait; }
 .route.abstain   { background: #4a1f1f; color: var(--err); }
 /* 答案 */
 .answer { font-size: 15px; line-height: 1.75; white-space: pre-wrap; }
+/* ★ M77：中文要点（成句的中文，排在英文原文之前）
+   语料是英文站，用户先看到能读的中文句子，再决定要不要展开原文 */
+.zh-sum { margin: 0 0 10px; padding: 10px 12px; border-radius: 8px;
+  background: var(--bg-hover); border: 1px solid var(--border); }
+.zh-sum p { margin: 0 0 5px; font-size: 14px; line-height: 1.8; color: var(--text); }
+.zh-sum p:last-of-type { margin-bottom: 0; }
+.zh-sum .zh-note { margin-top: 7px; padding-left: 8px; font-size: 11.5px;
+  line-height: 1.6; color: var(--text-dim); border-left: 2px solid var(--border-strong); }
+/* ★ M77：亲属关系行 */
+.rel-row { padding: 5px 0; font-size: 15px; border-bottom: 1px dashed var(--border); }
+.rel-row:last-child { border-bottom: none; }
+.rel-role { margin-left: 8px; font-size: 12px; color: var(--text-dim); }
+.rel-contrast { margin-top: 6px; font-size: 12.5px; color: var(--text-dim); }
 /* ★★ M51：结构化答案必须关掉 pre-wrap ★★
    .answer 用 pre-wrap 是为了保留**纯文本**答案里的换行（如 \n\n 空行）；
    但结构化答案是**多行模板字符串**拼出来的 HTML 片段，
@@ -1928,8 +1941,19 @@ function renderAnswer(d){
   // ★★ M55/M57：搜索结果按**板块**组织，每块带 data-sec（供左侧索引跳转）★★
   //   板块顺序按用户原话：「如答案 替身资料 检索过程 图片」
   //     ① 答案 ② 替身资料 ③ 检索过程 ④ 图片 ⑤ 相似替身
+  // ★★ M77：中文要点（成句的中文）—— 排在答案正文之前 ★★
+  //   ★ 只在这几种情况下可能为空：答案本身已是中文（character_stands）、
+  //     或没认出实体（abstain）。
+  let zhBlock = '';
+  if(d.zh_summary && (d.zh_summary.lines||[]).length){
+    zhBlock = `<div class="zh-sum">${
+        d.zh_summary.lines.map(l=>`<p>${esc(l)}</p>`).join('')
+      }${d.zh_summary.note?`<div class="zh-note">${esc(d.zh_summary.note)}</div>`:''}</div>`;
+  }
+
   let html = `<div class="card" data-sec="sec-answer" data-secname="答案">
     <h3>答案${d.mode==='generate'?' <span style="color:var(--warn);font-weight:400">（生成式）</span>':''}</h3>
+    ${zhBlock}
     <div class="answer ${refused?'answer-refused':''}${isHtml?' ans-html':''}">${body}</div>`;
   if(d.warning) html += `<div class="alert">⚠ ${esc(d.warning)}</div>`;
   if(d.generation) html += renderGeneration(d.generation, d.faithfulness);
@@ -2327,13 +2351,36 @@ function renderStructured(a){
       ${a.note? `<div class="meta" style="margin-top:8px">${esc(a.note)}</div>`:''}`;
   }
   if(t==='character_stands'){
-    const st = a.stands||[];
+    // ★ M77：优先显示中文名（用户输入的是中文，答案却只有英文名）
+    const st = a.stands||[], sz = a.stands_zh||[];
+    const label = i => (sz[i] || st[i] || '');
     return `<div style="margin-bottom:8px">${esc(a.character||'')} 的替身</div>
       ${st.length? `<div style="font-size:20px;font-weight:700;margin-bottom:8px">${
-        st.map(n=>`<span class="tag lc-rel" role="button" tabindex="0"
-          data-ask="${esc(n+' 的六维能力')}">${esc(n)}</span>`).join('')}</div>`
+        st.map((n,i)=>`<span class="tag lc-rel" role="button" tabindex="0"
+          data-ask="${esc(label(i)+' 的六维能力')}"
+          title="${esc(st[i]||'')}">${esc(label(i))}${
+            sz[i] && sz[i]!==st[i]
+              ? `<span style="font-weight:400;font-size:12px;color:var(--text-dim);margin-left:5px">${esc(st[i])}</span>`
+              : ''}</span>`).join('')}</div>`
         : '<div>该角色条目未标注替身。</div>'}
       ${a.note? `<div class="meta">${esc(a.note)}</div>`:''}`;
+  }
+  if(t==='character_relatives'){
+    // ★ M77：亲属关系（「普奇的弟弟是谁」）
+    //   ★ matched=false 时列表是「该角色的全部已知亲属」——
+    //     标题必须跟着改，否则会出现「X 的弟弟」下面列着爸爸/妹妹。
+    const items = a.items||[], contrast = a.contrast||[];
+    const title = a.matched===false
+      ? `${esc(a.character||'')} 的亲属（源站未标注${esc(a.relation||'该关系')}）`
+      : `${esc(a.character||'')} 的${esc(a.relation||'亲属')}`;
+    return `<div style="margin-bottom:8px">${title}</div>
+      ${items.length? items.map(i=>`<div class="rel-row">
+          <b>${esc(i.name)}</b>${i.role?`<span class="rel-role">${esc(i.role)}</span>`:''}
+        </div>`).join('') : '<div>源站未提供。</div>'}
+      ${contrast.length? `<div class="rel-contrast">另有${contrast.map(i=>
+          `<span>${esc(i.name)}<span class="rel-role">${esc(i.role)}</span></span>`).join('、')}
+        —— 长幼与你问的相反</div>` : ''}
+      ${a.note? `<div class="meta" style="margin-top:8px">${esc(a.note)}</div>`:''}`;
   }
   if(t==='character_hint'){
     return `<div>${esc(a.note)}</div>`;

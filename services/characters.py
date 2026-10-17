@@ -303,6 +303,19 @@ def _kind_note(kind: str | None) -> str | None:
     return _KIND_NOTE.get(kind or "")
 
 
+@lru_cache(maxsize=1)
+def _stand_zh() -> dict[str, dict]:
+    """替身 id → 中文名记录（`zh_wiki_pairs`，离线可用）。
+
+    ★ 走 aliases.load_zh_map 而不是查库：降级模式（DB 不可用）下也要能显示中文名。
+    """
+    try:
+        from aliases import load_zh_map
+        return load_zh_map()
+    except Exception:  # noqa: BLE001
+        return {}
+
+
 def image_url(character_id: str | None) -> str | None:
     """角色头像 URL（M74）。图片由 fetch_entity_images.py 预抓，走 /media 端点。
 
@@ -471,13 +484,32 @@ def answer(q: str, top_k: int = 3, part_map: dict | None = None):
     #     列表词，加了就会掉到档案分支去（和 M65 地点那处同型的 bug）。
     if from_name and wants_stand:
         c = from_name[0]
+        names = c.get("stand_names") or []
+        ids = c.get("stand_ids") or []
+        # ★★ M77：连中文名一起给 ★★
+        #   实测用户问「使用者 Giorno Giovanna 有哪些替身？」，
+        #   答案只有英文 Gold Experience —— 与界面上其它地方的中文名对不上。
+        _zh = _stand_zh()
+        names_zh = [(_zh.get(i) or {}).get("name_zh") for i in ids]
+        if names:
+            # ★ 说明文案必须**跟着数据变**：原来是一句固定的
+            #   「没有替身说明其条目未标（…）」，挂在 2 个替身下面
+            #   读起来像「系统认为他没有替身」—— 用户当场反馈「对不上」。
+            #   ★ 不举具体例子：中文译名不统一（「镇魂歌 / 镇魂曲」），
+            #     写一个错的例子比不写更糟（实测一开始就踩到）。
+            note = (f"共 {len(names)} 个替身（同一替身的不同形态或进化会并列）。"
+                    "数据来自源站角色条目的 Infobox（stand 字段）。")
+        else:
+            note = ("该角色条目未标注替身"
+                    "（例如第 1、2 部使用波纹的角色本来就没有替身）。")
         return ({
             "type": "character_stands",
             "character_id": c["character_id"],
             "character": c.get("name_zh") or c.get("name_en"),
-            "stands": c.get("stand_names") or [],
-            "note": ("该角色的替身来自源站角色条目的 Infobox（stand 字段）；"
-                     "没有替身说明其条目未标（如第 1、2 部的波纹使者）。"),
+            "stands": names,
+            "stands_zh": names_zh,          # ★ M77：与 stands 同序
+            "stand_ids": ids,
+            "note": note,
         }, _evidence(c), card(c, part_map))
 
     # ---- ② 「第 X 部有哪些角色」----
@@ -509,6 +541,22 @@ def answer(q: str, top_k: int = 3, part_map: dict | None = None):
                        "name_en": c.get("name_en"),
                        "part": c.get("part")} for c in items],
         }, [], None)
+
+    # ---- ★★ M77：亲属关系（「普奇的弟弟是谁」）★★ ----
+    #   用户实测：问「普奇的弟弟是谁」只返回普奇的档案。
+    #   数据其实在 `families` 里（`Domenico Pucci (Twin Brother)`），
+    #   但从来没有代码读它 —— 问句于是被当成「普奇 是谁」。
+    #   ★ 必须放在**档案兜底之前**，且不影响 ①（问替身）/②（问列表）。
+    if from_name:
+        try:
+            from relations import detect as _rel_detect, relatives_of as _rel_of
+            _role = _rel_detect(q)
+            if _role:
+                c = from_name[0]
+                return _rel_of(c, _role), _evidence(c), card(c, part_map)
+        except Exception:  # noqa: BLE001
+            # 亲属是增强项，出错不能影响主答案（继续走档案分支）
+            pass
 
     # ---- ④ 单角色档案（默认）----
     if from_name:

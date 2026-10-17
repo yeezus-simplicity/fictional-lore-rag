@@ -339,12 +339,85 @@ def n_locations() -> int:
 # ------------------------------------------------------------------
 # 匹配
 # ------------------------------------------------------------------
+_CJK_RUN = re.compile(r"[一-鿿]+")
+
+# 问句里出现这些词时，不做「少一个字」的模糊 —— 它们太短、太泛，
+# 容易把「在哪里」「的地方」拆成片段撞上地名。
+_FUZZY_STOP = {
+    "在哪里", "在哪儿", "什么地", "是什么", "什么", "地方", "哪些", "在哪",
+    "里的", "里的地", "这个", "那个", "怎么",
+}
+
+
+def fuzzy_hits(q: str, limit: int = 6) -> list[tuple[str, str]]:
+    """从问句里找地名片段 → [(lid, 追问片段 ⊂ 地名)]。
+
+    ★ 为什么需要（M77）：地点匹配一直是**精确**的（名字 ⊂ 问句），
+      而角色在 M74 就有了模糊匹配 → 两条路宽窄不一。
+      实测「虹村宅在哪」：库里明明有「虹村宅邸」，但因为少打一个「邸」
+      精确匹配落空，反而是角色的「虹村」子串命中 → 路由到 character，
+      返回 4 个虹村家角色卡片。**问题不是数据缺，是地点这一侧太窄。**
+
+    ★ 判据刻意很紧：片段必须**至少 3 个字**，且比地名本身只少一个字
+      （`len(name) - len(seg) == 1`）。
+      理由 1：地名短（2-6 字），放宽成「任意子串」会把「监狱」
+      （⊂ 绿海豚街监狱）也算命中，太泛。
+      理由 2：**片段不能是 2 个字** —— 「虹村」比「虹村邸」正好少一个字，
+      但「虹村」是**姓氏**（4 个角色），把它当地点会把角色候选整批吞掉。
+      实测就是这么踩的：加完模糊后「虹村」直接返回「虹村邸」。
+      → 「虹村宅」「吉良宅」「杜王町」这类真实输入仍能命中。
+    """
+    data = load()
+    by_name = data["by_name"]
+    cands = [(nm, lid) for nm, lid in by_name.items()
+             if len(nm) >= 4 and not re.search(r"[a-z]", nm)]
+    out: list[tuple[str, str]] = []
+    seen: set[str] = set()
+    ql = q.lower()
+
+    for m in _CJK_RUN.finditer(q):
+        run = m.group(0)
+        for i in range(len(run)):
+            # 片段从长到短，命中即止（同一位置不再用更短的片段撞别人）
+            for L in range(min(8, len(run) - i), 1, -1):
+                seg = run[i:i + L]
+                if len(seg) < 3 or seg in _FUZZY_STOP:
+                    continue
+                hit = None
+                for nm, lid in cands:
+                    if len(nm) - len(seg) == 1 and seg in nm:
+                        hit = (lid, nm)
+                        break
+                if hit and hit[0] not in seen:
+                    seen.add(hit[0])
+                    out.append(hit)
+                    if len(out) >= limit:
+                        return out[:limit]
+
+    # ---- 英文：词是地名的前缀（少 1-2 个字母）----
+    for w in re.findall(r"[a-z][a-z0-9'’\-]{2,}", ql):
+        for nm, lid in by_name.items():
+            nl = nm.lower()
+            if lid in seen or not re.match(r"[a-z]", nl):
+                continue
+            if nl.startswith(w) and 0 < len(nl) - len(w) <= 2:
+                seen.add(lid)
+                out.append((lid, nm))
+                if len(out) >= limit:
+                    return out[:limit]
+    return out[:limit]
+
+
 def match(q: str) -> list[tuple[str, str]]:
     """从问句里找出提到的地点 → [(location_id, 命中的写法)]，长名优先。
 
     ★ 与替身别名一致：长名优先，避免「Morioh」抢走「Morioh (JoJolion)」。
     ★ 拉丁名要求词边界（避免 `Rome` 命中 `Romeo`）—— 这条在 M65 的
       关联脚本里已经验证过必要性，这里沿用。
+    ★★ M77：两轮匹配（与 characters.match 同构）★★
+      ① 精确：**名字 ⊂ 问句**（用户打了全名）
+      ② 模糊：**问句片段 ⊂ 名字**（用户少打一个字）—— 只在①全空时跑
+      不做②的后果见 fuzzy_hits 的 docstring（「虹村宅在哪」被角色抢走）。
     """
     data = load()
     ql = q.lower()
@@ -367,7 +440,9 @@ def match(q: str) -> list[tuple[str, str]]:
             continue
         seen.add(lid)
         out.append((lid, nm))
-    return out
+    if out:                      # ① 有精确命中就不跑模糊（避免多拉进别的）
+        return out
+    return [(lid, nm) for lid, nm in fuzzy_hits(q)]
 
 
 def resolve(q: str) -> list[dict]:

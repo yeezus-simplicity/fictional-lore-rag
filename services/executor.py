@@ -128,6 +128,10 @@ INTENT_APPEARANCE = re.compile(
     r"(在哪几话|哪几话|在哪几集|哪几集|哪些章节|哪些话|哪些集|"
     r"(?:出场|登场|出现)\s*(?:记录|章节|话数|集数|在哪)|"
     r"在哪些(?:章节|话|集|漫画)|"
+    # ★ M79：**单数**也算 —— 「在哪一话出场」「首次登场是第几话」
+    #   之前只认复数（「哪几话」「哪些话」），单数问法落进语义检索 → 返回人物介绍。
+    r"哪一话|哪一集|第几话|第几集|在哪一话|在哪一集|"
+    r"首次登场|第一次出场|首次出场|初次登场|"
     r"的出场|出场记录|登场记录)")
 # ★★ M76：招式 / 必杀技意图 ★★
 #   M37 就建了 `stand_moves` 与 `/moves/{stand_id}` 端点，但**没有自然语言入口**
@@ -139,7 +143,12 @@ INTENT_APPEARANCE = re.compile(
 #     能力描述继续走语义检索（M14/M16 已经调好了）。
 INTENT_MOVES = re.compile(
     r"(招式|必杀技|必殺技|招数|招數|技能|有哪些招|什么招|什麼招|"
-    r"招式的名字|会什么招|會什麼招)")
+    r"招式的名字|会什么招|會什麼招|"
+    # ★ M79：「黄金体验有几招」是问数量，同样属于招式问法。
+    #   之前 Router 认了（判成 structured），**执行器却不认** → intent=unknown
+    #   → 降级语义检索 → 返回一段人物介绍。
+    #   ★ 两处正则必须同步，否则会出现「路由对了、答案还是错的」。
+    r"几招|幾招|多少招|多少个招式|几个招式|招式数)")
 INTENT_EXTREME = re.compile(
     r"(最高|最大|最强|最低|最小|最弱|多少个|几个|排名|综合|总分|"
     r"所有替身|同时满足|达到)")
@@ -1002,6 +1011,63 @@ class StructuredExecutor:
                 ORDER BY s.name_en LIMIT 8
             """, (f"%{owner}%",))
             rows = cur.fetchall()
+        if not rows:
+            # ★★ M79：主体是**角色简称**时的兜底（「承太郎的替身是什么」）★★
+            #   实测症状：上面两条路都失败（char_zh 无「承太郎」→ 是简称不是全名；
+            #   characters.name_en 是英文，中文简称更查不到）→ 返回 unknown
+            #   → **降级语义检索** → 拿回 Sun 的介绍（完全不相干的替身）。
+            #   characters.match 有模糊匹配（M74），认「承太郎 ⊂ 空条承太郎」。
+            #   ★ 放在执行器而不是路由层：路由一改就把 answer_type 从
+            #     `stand_of` 变成 `character_stands`，会打破 M20/M21/M25 的契约
+            #     （实测第一次改在路由上，5 个测试文件当场变红）。
+            try:
+                from characters import load as _cl, match as _cm
+                _by_id = _cl()["by_id"]
+                _hits = _cm(question)
+            except Exception:  # noqa: BLE001
+                _by_id, _hits = {}, []
+            uniq, seen = [], set()
+            for _cid, _nm in _hits:
+                _c = _by_id.get(_cid)
+                if _c and _c.get("stand_ids") and _cid not in seen:
+                    seen.add(_cid)
+                    uniq.append(_c)
+
+            if len(uniq) == 1:
+                _c = uniq[0]
+                rows2 = []
+                for _sid in (_c.get("stand_ids") or []):
+                    cur.execute("SELECT name_en,name_ja,part,stand_id "
+                                "FROM stands WHERE stand_id=%s", (_sid,))
+                    _r = cur.fetchone()
+                    if _r:
+                        rows2.append(_r)
+                if rows2:
+                    _owner = owner or _c.get("name_zh") or _c.get("name_en") or ""
+                    return (
+                        {"type": "stand_of", "owner": _owner, "count": len(rows2),
+                         "stands": [{"name": r[0], "ja": r[1], "part": r[2],
+                                     "stand_id": r[3], "zh": _stand_zh(r[3])}
+                                    for r in rows2],
+                         "answer": "、".join(r[0] for r in rows2)},
+                        [{"type": "database",
+                          "tables": ["stands", "characters"]}],
+                    )
+            elif len(uniq) > 1:
+                # ★ 歧义姓氏（「乔斯达的替身」命中 12 个）→
+                #   **不随机答一个**（以前就是随机，所以才答歪）
+                names = [(_c.get("name_zh") or _c.get("name_en") or "") for _c in uniq]
+                return (
+                    {"type": "stand_of", "owner": owner, "count": 0, "stands": [],
+                     "ambiguous": names,
+                     "answer": (f"「{owner}」匹配到 {len(names)} 个角色"
+                                f"（{'、'.join(names[:6])}…），"
+                                "没法确定是谁 —— 请带上全名，例如"
+                                "「乔瑟夫·乔斯达的替身是什么」。")},
+                    [{"type": "database",
+                      "tables": ["stands", "characters"]}],
+                )
+
         if not rows:
             return self._unknown(question, name2id)
 

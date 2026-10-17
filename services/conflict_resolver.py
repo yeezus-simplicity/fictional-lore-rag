@@ -449,7 +449,24 @@ class Router:
     #     走语义才是对的。
     MOVE_ASK = re.compile(
         r"(招式|必杀技|必殺技|招数|招數|技能|有哪些招|什么招|什麼招|"
-        r"会什么招|會什麼招)")
+        r"会什么招|會什麼招|"
+        # ★ M79：「黄金体验有几招」是**问数量**，也属于招式问法。
+        #   之前只认「招数 / 有哪些招」，「有几招」落进 SEMANTIC → 返回一段人物介绍。
+        r"几招|幾招|多少招|多少个招式|几个招式|招式数)")
+
+    # ★ M79：问「首次登场 / 第一次出场」，但主体是**角色**时走角色维度
+    #   （角色卡里有 mangadebut / animedebut；替身才有 stand_appearances）
+    CHAR_DEBUT = re.compile(
+        r"(首次登场|第一次出场|首次出场|初次登场|第几话出场|第几话开始)")
+
+    # ★★ M79：本库**没有**的数据类型，说清楚而不是硬答 ★★
+    #   实测：「谁打败了普奇」→ 路由到 character → 返回普奇档案
+    #   （用户看到的是"完全不相干的介绍"，比拒答更糟）。
+    #   本库只有：六维 / 招式 / 出场章节 / 角色档案 / 地点 / 篇章；
+    #   **没有**战况、死因、宿敌、胜负关系。
+    NO_DATA_ASK = re.compile(
+        r"(谁打败了|谁击败了|谁杀了|被谁杀|杀死.{0,4}的是|怎么死的|死因|"
+        r"宿敌是谁|敌人是谁|谁赢了|哪场战斗|战斗结果|结局如何)")
 
     # ★★★ M16：维度词黑名单
     #   这些词描述的是「问哪个方面」，不是「哪个替身」，
@@ -947,6 +964,17 @@ class Router:
                 signals)
 
         # ---------- 2′. 地点意图（M65）----------
+        # ★★ M79：先处理「本库没有的数据类型」★★
+        #   放在这里而不是最后：这类问句常带着实体名（"谁打败了普奇"），
+        #   后面任何分支都会拿它去查角色/替身，然后返回一段不相干的介绍。
+        if self.NO_DATA_ASK.search(q):
+            return RouteDecision(
+                "abstain",
+                "本库只收录替身六维 / 招式 / 出场章节 / 角色档案 / 地点 / 篇章，"
+                "**不含战况、死因与人物胜负关系** → 不拿不相干的介绍充数",
+                signals)
+
+        # ---------- 2′. 地点意图（M65）----------
         #   判据（两者取一）：
         #     ① 抽到了**已知地名** —— 「安杰罗岩是什么地方」「恶魔掌心在哪里」
         #     ② 问句在问「某部的地点」但没有具体地名 —— 「第 1 部有哪些地点」
@@ -1013,6 +1041,12 @@ class Router:
             subject = (m_ask.group(1) if m_ask else "").strip()
             is_stand_name = subject.lower() in self.known
             if not is_stand_name:
+                # ★ M79 曾在这里改成「命中角色就改走 character 路由」——
+                #   **实测是错的**（M20/M21/M25/M66 五个测试文件当场变红）：
+                #   那会把 answer_type 从 `stand_of` 换成 `character_stands`，
+                #   打破既有契约（多轮追问还依赖 stand_of 的 stands 列表建上下文）。
+                #   → 兜底放在 **executor._stand_of**：那里抽不到名字时
+                #     用角色表反查（认「承太郎」这类简称），**类型保持 stand_of**。
                 return RouteDecision(
                     "structured",
                     "问「某人的替身是哪个」→ 直接查库给替身名"
@@ -1029,10 +1063,17 @@ class Router:
         #   ★ 与地点守门同一原则：不能只因为出现「角色/是谁」就路由，
         #     否则无关问句会变成"有答案"的（M21 的守门测试就是这么挂的）。
         _role_list = bool(self.ROLE_LIST.search(q))
-        if not stand_hit and not location_hit and (character_hit or _role_list):
+        # ★ M79：「X 第一次出场是第几话」问的是**角色** → 角色卡里有 mangadebut。
+        #   不加这条时它会掉进语义检索 → 返回角色介绍（答非所问）。
+        _char_debut = bool(self.CHAR_DEBUT.search(q))
+        if not stand_hit and not location_hit \
+                and (character_hit or _role_list or (_char_debut and character_hit)):
             return RouteDecision(
                 "character",
-                (f"识别到角色「{character_hit}」→ 查角色档案" if character_hit
+                (f"识别到角色「{character_hit}」→ 查角色档案"
+                 + ("（M79：问首次登场章节，卡片里有 mangadebut）"
+                    if _char_debut else "")
+                 if character_hit
                  else "问句要角色列表 → 按部/全库列出"),
                 signals)
 
